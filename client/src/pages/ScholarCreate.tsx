@@ -179,9 +179,12 @@ export default function ScholarCreate() {
               <ArrowLeft className="w-4 h-4" /> Modes
             </Button>
           </Link>
-          <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">
-            SCHOLAR — {phase === "fits_assessment" ? "FITS ASSESSMENT" : phase === "dice_roll" ? "ABILITY SCORES" : phase === "character_sheet" ? "CHARACTER SHEET" : "THESIS TRACKER"}
-          </h1>
+          <div className="flex items-center gap-3">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">
+              SCHOLAR — {phase === "fits_assessment" ? "FITS ASSESSMENT" : phase === "dice_roll" ? "ABILITY SCORES" : phase === "character_sheet" ? "CHARACTER SHEET" : "THESIS TRACKER"}
+            </h1>
+          </div>
           <Button variant="ghost" size="sm" onClick={() => setShowChat(!showChat)} className="text-muted-foreground gap-1">
             <MessageCircle className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">DAVID</span>

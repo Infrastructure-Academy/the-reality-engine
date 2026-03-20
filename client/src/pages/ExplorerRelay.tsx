@@ -6,10 +6,10 @@ import { RELAYS } from "@shared/gameData";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronRight, Zap, Star, BookOpen,
-  ArrowLeft, Sparkles, MessageCircle
+  ArrowLeft, Sparkles, MessageCircle, Shuffle
 } from "lucide-react";
 
-// Simple guest ID generator stored in localStorage
+// ─── Guest ID ───
 function getGuestId(): string {
   let id = localStorage.getItem("tre_guest_id");
   if (!id) {
@@ -19,6 +19,346 @@ function getGuestId(): string {
   return id;
 }
 
+// ─── Layout Variant System (Jonathan Green's suggestion) ───
+// 3 distinct layouts: same content blocks, different arrangements
+// Randomized on each visit so "no two journeys are the same"
+type LayoutVariant = 1 | 2 | 3;
+
+function pickLayout(relayNum: number): LayoutVariant {
+  // Combine relay number with session-random seed for variety
+  const sessionSeed = Math.random();
+  const pick = Math.floor(sessionSeed * 3) + 1;
+  return pick as LayoutVariant;
+}
+
+// ─── Shared Sub-Components ───
+
+function RelayHeader({
+  relayMeta, relayNum, canGoPrev, canGoNext, navigate
+}: {
+  relayMeta: typeof RELAYS[number]; relayNum: number;
+  canGoPrev: boolean; canGoNext: boolean; navigate: (to: string) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between mb-6">
+      <Button variant="ghost" size="sm" disabled={!canGoPrev} onClick={() => navigate(`/explore/${relayNum - 1}`)}>
+        <ChevronLeft className="w-5 h-5" />
+      </Button>
+      <div className="text-center">
+        <div className="text-4xl mb-1">{relayMeta.emoji}</div>
+        <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide text-gold-gradient">
+          Relay {relayNum}: {relayMeta.name}
+        </h2>
+        <p className="text-sm text-muted-foreground">{relayMeta.subtitle}</p>
+        <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
+      </div>
+      <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
+        <ChevronRight className="w-5 h-5" />
+      </Button>
+    </div>
+  );
+}
+
+function NarrativeBlock({ relay }: { relay: any }) {
+  if (!relay?.narrative) return null;
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className="p-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm"
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <BookOpen className="w-4 h-4 text-gold" />
+        <span className="text-xs uppercase tracking-wider text-gold font-bold">The Story</span>
+      </div>
+      <p className="text-sm leading-relaxed text-foreground/90 italic">{relay.narrative}</p>
+      {relay.quote && (
+        <blockquote className="mt-3 pl-3 border-l-2 border-gold/40">
+          <p className="text-xs text-muted-foreground italic">"{relay.quote}"</p>
+          <p className="text-[10px] text-muted-foreground/60 mt-1">— {relay.quoteAuthor}</p>
+        </blockquote>
+      )}
+    </motion.div>
+  );
+}
+
+function MissionBlock({ relay }: { relay: any }) {
+  if (!relay?.missionObjective) return null;
+  return (
+    <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5">
+      <p className="text-xs uppercase tracking-wider text-amber-400 mb-1 font-bold">Mission Objective</p>
+      <p className="text-sm text-foreground/80">{relay.missionObjective}</p>
+    </div>
+  );
+}
+
+function DiscoveryGrid({
+  inventions, discoveredItems, handleDiscover, xpPerItem, columns = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+}: {
+  inventions: string[]; discoveredItems: Set<number>; handleDiscover: (idx: number) => void;
+  xpPerItem: number; columns?: string;
+}) {
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+        <Sparkles className="w-3.5 h-3.5 text-gold" />
+        Tap to Discover — {inventions.length} Inventions
+      </p>
+      <div className={`grid ${columns} gap-3`}>
+        {inventions.map((inv, idx) => {
+          const isDiscovered = discoveredItems.has(idx);
+          return (
+            <motion.button
+              key={idx}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleDiscover(idx)}
+              className={`relative p-3 rounded-lg border text-left transition-all duration-300 ${
+                isDiscovered
+                  ? "border-gold/40 bg-gold/10"
+                  : "border-border/50 bg-card/30 hover:border-border"
+              }`}
+            >
+              <AnimatePresence>
+                {isDiscovered && (
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute top-1.5 right-1.5">
+                    <Star className="w-3.5 h-3.5 text-gold fill-gold" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <p className={`text-sm font-medium ${isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
+                {isDiscovered ? inv : "???"}
+              </p>
+              {isDiscovered && (
+                <p className="text-[10px] text-muted-foreground mt-1 font-mono">+{xpPerItem.toLocaleString()} XP</p>
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ProgressBar({ discovered, total, completionPct }: { discovered: number; total: number; completionPct: number }) {
+  return (
+    <div>
+      <div className="flex justify-between text-xs text-muted-foreground mb-1">
+        <span>Relay Progress</span>
+        <span>{discovered}/{total}</span>
+      </div>
+      <div className="h-2 bg-muted rounded-full overflow-hidden">
+        <motion.div
+          className="h-full rounded-full"
+          style={{ background: "linear-gradient(90deg, oklch(0.82 0.12 85), oklch(0.65 0.2 30))" }}
+          initial={{ width: 0 }}
+          animate={{ width: `${completionPct}%` }}
+          transition={{ duration: 0.5 }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function RelayNavigator({ currentRelay }: { currentRelay: number }) {
+  return (
+    <div className="flex flex-wrap justify-center gap-1.5">
+      {RELAYS.map((r) => (
+        <Link key={r.number} href={`/explore/${r.number}`}>
+          <button
+            className={`w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all ${
+              r.number === currentRelay
+                ? "border-2 border-gold/60 bg-gold/10 scale-110"
+                : "border border-border/30 hover:border-border/60"
+            }`}
+            title={r.name}
+          >
+            {r.emoji}
+          </button>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function WebTypeTag({ webType, color }: { webType: string; color: string }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-mono"
+      style={{ borderColor: `${color}40`, color, backgroundColor: `${color}10` }}
+    >
+      {webType} Web
+    </span>
+  );
+}
+
+function EraTimeline({ relayNum }: { relayNum: number }) {
+  return (
+    <div className="flex items-center gap-1 overflow-x-auto py-2">
+      {RELAYS.map((r) => (
+        <div key={r.number} className={`shrink-0 h-1.5 rounded-full transition-all ${
+          r.number <= relayNum ? "bg-gold/60 w-6" : "bg-muted w-4"
+        } ${r.number === relayNum ? "bg-gold w-8" : ""}`}
+          title={`${r.name} (${r.era})`}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// LAYOUT VARIANT 1 — "Classic Scroll"
+// Top-down: Header → Narrative → Mission → Discovery Grid → Progress → Navigator
+// The original linear layout — clean, predictable, story-first
+// ═══════════════════════════════════════════════════════════
+function LayoutClassic({
+  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+}: LayoutProps) {
+  return (
+    <div className="space-y-6">
+      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} />
+      <NarrativeBlock relay={relay} />
+      <MissionBlock relay={relay} />
+      <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
+      <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
+      <RelayNavigator currentRelay={relayNum} />
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// LAYOUT VARIANT 2 — "Split Horizon"
+// Two-column: Left = big discovery grid, Right = stacked narrative + mission + progress
+// Discovery-first — emphasizes the tap-to-explore mechanic
+// ═══════════════════════════════════════════════════════════
+function LayoutSplitHorizon({
+  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+}: LayoutProps) {
+  return (
+    <div className="space-y-6">
+      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} />
+
+      {/* Web type + era context bar */}
+      <div className="flex items-center justify-between">
+        <WebTypeTag webType={relayMeta.webType} color={relayMeta.color} />
+        <EraTimeline relayNum={relayNum} />
+      </div>
+
+      {/* Two-column split */}
+      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6">
+        {/* Left: Discovery Grid (hero position) */}
+        <div className="space-y-4">
+          <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
+            xpPerItem={xpPerItem} columns="grid-cols-2 sm:grid-cols-3" />
+        </div>
+
+        {/* Right: Narrative + Mission + Progress stacked */}
+        <div className="space-y-4">
+          <NarrativeBlock relay={relay} />
+          <MissionBlock relay={relay} />
+          <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
+        </div>
+      </div>
+
+      <RelayNavigator currentRelay={relayNum} />
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+// LAYOUT VARIANT 3 — "Mission Briefing"
+// Immersive: Full-width mission banner → side-by-side narrative + progress → discovery below
+// Feels like a military briefing — mission-first, then context, then action
+// ═══════════════════════════════════════════════════════════
+function LayoutMissionBriefing({
+  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+}: LayoutProps) {
+  return (
+    <div className="space-y-6">
+      {/* Compact header with era timeline */}
+      <div className="flex items-center justify-between">
+        <Button variant="ghost" size="sm" disabled={!canGoPrev} onClick={() => navigate(`/explore/${relayNum - 1}`)}>
+          <ChevronLeft className="w-5 h-5" />
+        </Button>
+        <div className="text-center flex-1">
+          <div className="flex items-center justify-center gap-3">
+            <span className="text-3xl">{relayMeta.emoji}</span>
+            <div>
+              <h2 className="font-heading text-xl md:text-2xl font-bold tracking-wide text-gold-gradient">
+                {relayMeta.name}
+              </h2>
+              <p className="text-[10px] text-muted-foreground font-mono">{relayMeta.era}</p>
+            </div>
+          </div>
+        </div>
+        <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
+          <ChevronRight className="w-5 h-5" />
+        </Button>
+      </div>
+
+      {/* Full-width mission banner (hero position) */}
+      {relay?.missionObjective && (
+        <div className="p-5 rounded-xl border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 rounded bg-amber-500/20 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider text-amber-400 font-bold">Mission Briefing</p>
+              <p className="text-[10px] text-muted-foreground">Relay {relayNum} of 12 — {relayMeta.subtitle}</p>
+            </div>
+          </div>
+          <p className="text-sm text-foreground/90 leading-relaxed">{relay.missionObjective}</p>
+        </div>
+      )}
+
+      {/* Side-by-side: Narrative + Progress */}
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4">
+        <NarrativeBlock relay={relay} />
+        <div className="space-y-4">
+          <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
+          <WebTypeTag webType={relayMeta.webType} color={relayMeta.color} />
+          <div className="text-center p-3 rounded-lg border border-border/50 bg-card/30">
+            <p className="text-2xl font-bold font-mono text-gold-gradient">{discoveredItems.size}</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Found</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Discovery grid (wider) */}
+      <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
+        xpPerItem={xpPerItem} columns="grid-cols-3 sm:grid-cols-4 md:grid-cols-5" />
+
+      {/* Relay navigator */}
+      <EraTimeline relayNum={relayNum} />
+      <RelayNavigator currentRelay={relayNum} />
+    </div>
+  );
+}
+
+// ─── Layout Props Type ───
+interface LayoutProps {
+  relay: any;
+  relayMeta: typeof RELAYS[number];
+  relayNum: number;
+  inventions: string[];
+  discoveredItems: Set<number>;
+  handleDiscover: (idx: number) => void;
+  xpPerItem: number;
+  completionPct: number;
+  canGoPrev: boolean;
+  canGoNext: boolean;
+  navigate: (to: string) => void;
+}
+
+const LAYOUT_NAMES: Record<LayoutVariant, string> = {
+  1: "Classic Scroll",
+  2: "Split Horizon",
+  3: "Mission Briefing",
+};
+
+// ═══════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════
 export default function ExplorerRelay() {
   const params = useParams<{ relayNum: string }>();
   const [, navigate] = useLocation();
@@ -30,6 +370,9 @@ export default function ExplorerRelay() {
   const [chatInput, setChatInput] = useState("");
   const [chatMessages, setChatMessages] = useState<{ role: string; content: string }[]>([]);
   const [discoveredItems, setDiscoveredItems] = useState<Set<number>>(new Set());
+
+  // Randomize layout per relay visit — changes each time you navigate
+  const [layoutVariant] = useState<LayoutVariant>(() => pickLayout(relayNum));
 
   // Fetch relay data from DB
   const { data: relay, isLoading } = trpc.relays.getByNumber.useQuery({ number: relayNum });
@@ -70,7 +413,7 @@ export default function ExplorerRelay() {
     });
   }, []);
 
-  // Sample inventions for each relay (client-side for instant 2-tap experience)
+  // Inventions per relay
   const inventions = useMemo(() => {
     const inventionSets: Record<number, string[]> = {
       1: ["Hearth", "Torch", "Kiln", "Charcoal", "Smelting", "Forge", "Signal Fire", "Cremation", "Slash-and-Burn"],
@@ -92,7 +435,6 @@ export default function ExplorerRelay() {
   const xpPerItem = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(inventions.length, 1)) : 10000;
   const totalXpEarned = discoveredItems.size * xpPerItem;
   const completionPct = inventions.length > 0 ? Math.round((discoveredItems.size / inventions.length) * 100) : 0;
-
   const canGoPrev = relayNum > 1;
   const canGoNext = relayNum < 12;
 
@@ -107,6 +449,11 @@ export default function ExplorerRelay() {
     );
   }
 
+  const layoutProps: LayoutProps = {
+    relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+    xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative">
       {/* Top Bar */}
@@ -117,157 +464,32 @@ export default function ExplorerRelay() {
               <ArrowLeft className="w-4 h-4" /> Modes
             </Button>
           </Link>
-          <div className="flex items-center gap-2 font-mono text-sm">
-            <Zap className="w-4 h-4 text-gold" />
-            <span className="text-gold-gradient font-bold">{totalXpEarned.toLocaleString()} XP</span>
-            <span className="text-muted-foreground">|</span>
-            <span className="text-muted-foreground">{completionPct}%</span>
+          <div className="flex items-center gap-3">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <div className="flex items-center gap-2 font-mono text-sm">
+              <Zap className="w-4 h-4 text-gold" />
+              <span className="text-gold-gradient font-bold">{totalXpEarned.toLocaleString()} XP</span>
+              <span className="text-muted-foreground">|</span>
+              <span className="text-muted-foreground">{completionPct}%</span>
+            </div>
           </div>
-          <Button
-            variant="ghost" size="sm"
-            className="gap-1.5 text-muted-foreground"
-            onClick={() => setShowChat(!showChat)}
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">DAVID</span>
-          </Button>
+          <div className="flex items-center gap-1">
+            <span className="text-[9px] text-muted-foreground/50 font-mono hidden sm:inline" title="Layout variant">
+              <Shuffle className="w-3 h-3 inline mr-0.5" />{LAYOUT_NAMES[layoutVariant]}
+            </span>
+            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => setShowChat(!showChat)}>
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">DAVID</span>
+            </Button>
+          </div>
         </div>
       </header>
 
       <div className="container py-6 max-w-4xl mx-auto">
-        {/* Relay Navigation */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            variant="ghost" size="sm" disabled={!canGoPrev}
-            onClick={() => navigate(`/explore/${relayNum - 1}`)}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
-
-          <div className="text-center">
-            <div className="text-4xl mb-1">{relayMeta.emoji}</div>
-            <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide text-gold-gradient">
-              Relay {relayNum}: {relayMeta.name}
-            </h2>
-            <p className="text-sm text-muted-foreground">{relayMeta.subtitle}</p>
-            <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
-          </div>
-
-          <Button
-            variant="ghost" size="sm" disabled={!canGoNext}
-            onClick={() => navigate(`/explore/${relayNum + 1}`)}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </Button>
-        </div>
-
-        {/* Narrative */}
-        {relay?.narrative && (
-          <motion.div
-            key={relayNum}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm"
-          >
-            <p className="text-sm leading-relaxed text-foreground/90 italic">{relay.narrative}</p>
-            {relay.quote && (
-              <blockquote className="mt-3 pl-3 border-l-2 border-gold/40">
-                <p className="text-xs text-muted-foreground italic">"{relay.quote}"</p>
-                <p className="text-[10px] text-muted-foreground/60 mt-1">— {relay.quoteAuthor}</p>
-              </blockquote>
-            )}
-          </motion.div>
-        )}
-
-        {/* Mission Objective */}
-        {relay?.missionObjective && (
-          <div className="mb-6 p-3 rounded-lg border border-amber-500/20 bg-amber-500/5">
-            <p className="text-xs uppercase tracking-wider text-amber-400 mb-1 font-bold">Mission Objective</p>
-            <p className="text-sm text-foreground/80">{relay.missionObjective}</p>
-          </div>
-        )}
-
-        {/* Discovery Grid — TAP TO DISCOVER */}
-        <div className="mb-8">
-          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-gold" />
-            Tap to Discover — {inventions.length} Inventions
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {inventions.map((inv, idx) => {
-              const isDiscovered = discoveredItems.has(idx);
-              return (
-                <motion.button
-                  key={idx}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleDiscover(idx)}
-                  className={`
-                    relative p-3 rounded-lg border text-left transition-all duration-300
-                    ${isDiscovered
-                      ? "border-gold/40 bg-gold/10"
-                      : "border-border/50 bg-card/30 hover:border-border"
-                    }
-                  `}
-                >
-                  <AnimatePresence>
-                    {isDiscovered && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute top-1.5 right-1.5"
-                      >
-                        <Star className="w-3.5 h-3.5 text-gold fill-gold" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  <p className={`text-sm font-medium ${isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
-                    {isDiscovered ? inv : "???"}
-                  </p>
-                  {isDiscovered && (
-                    <p className="text-[10px] text-muted-foreground mt-1 font-mono">+{xpPerItem.toLocaleString()} XP</p>
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Relay Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-            <span>Relay Progress</span>
-            <span>{discoveredItems.size}/{inventions.length}</span>
-          </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: "linear-gradient(90deg, oklch(0.82 0.12 85), oklch(0.65 0.2 30))" }}
-              initial={{ width: 0 }}
-              animate={{ width: `${completionPct}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
-
-        {/* Relay Navigator */}
-        <div className="flex flex-wrap justify-center gap-1.5">
-          {RELAYS.map((r) => (
-            <Link key={r.number} href={`/explore/${r.number}`}>
-              <button
-                className={`
-                  w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all
-                  ${r.number === relayNum
-                    ? "border-2 border-gold/60 bg-gold/10 scale-110"
-                    : "border border-border/30 hover:border-border/60"
-                  }
-                `}
-                title={r.name}
-              >
-                {r.emoji}
-              </button>
-            </Link>
-          ))}
-        </div>
+        {/* Render the randomly selected layout */}
+        {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
+        {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
+        {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
       </div>
 
       {/* DAVID Chat Panel */}
@@ -305,9 +527,7 @@ export default function ExplorerRelay() {
               {chatMessages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[80%] px-3 py-2 rounded-lg text-sm ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground"
+                    msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
                   }`}>
                     {msg.content}
                   </div>

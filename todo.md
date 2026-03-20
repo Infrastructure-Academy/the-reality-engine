@@ -67,3 +67,8 @@
 - [x] Unit tests for tRPC procedures
 - [x] Shared game data validation tests
 - [x] Router structure tests
+
+## Post-Launch Updates
+- [x] Add BETA TEST badge to global header (liability protection for PoC)
+- [x] Implement 3 randomized Explorer relay layout variants (Jonathan Green feedback)
+- [x] Ensure "no two journeys are the same" — randomize layout on each visit

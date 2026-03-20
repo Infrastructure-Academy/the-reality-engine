@@ -72,7 +72,10 @@ export default function Leaderboard() {
               <ArrowLeft className="w-4 h-4" /> Home
             </Button>
           </Link>
-          <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">LEADERBOARD</h1>
+          <div className="flex items-center gap-3">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">LEADERBOARD</h1>
+          </div>
           <div />
         </div>
       </header>
