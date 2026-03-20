@@ -72,3 +72,6 @@
 - [x] Add BETA TEST badge to global header (liability protection for PoC)
 - [x] Implement 3 randomized Explorer relay layout variants (Jonathan Green feedback)
 - [x] Ensure "no two journeys are the same" — randomize layout on each visit
+- [x] Activate DAVID AI with invokeLLM — mode-specific system prompts (narrator/co-pilot/DM) [already wired]
+- [x] Add historical descriptions for all 91+ inventions across 12 relays
+- [x] Guide domain binding for play.iaai.world

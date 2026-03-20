@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 import { RELAYS, WEBS, FITS_TYPES, CRAFTS, ABILITY_SCORES, MODES } from "../shared/gameData";
+import { INVENTIONS, TOTAL_INVENTIONS, getInventionsForRelay } from "../shared/inventions";
 
 // ─── Shared Game Data Tests ───
 describe("Shared Game Data Constants", () => {
@@ -76,6 +77,47 @@ describe("Shared Game Data Constants", () => {
   it("Dearden Field produces 60 nodes (12 relays x 5 webs)", () => {
     const nodeCount = RELAYS.length * WEBS.length;
     expect(nodeCount).toBe(60);
+  });
+});
+
+// ─── Invention Descriptions Tests ───
+describe("Invention Descriptions", () => {
+  it("has inventions for all 12 relays", () => {
+    for (let i = 1; i <= 12; i++) {
+      const inv = INVENTIONS[i];
+      expect(inv).toBeDefined();
+      expect(inv.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("has at least 91 total inventions", () => {
+    expect(TOTAL_INVENTIONS).toBeGreaterThanOrEqual(91);
+  });
+
+  it("every invention has name, description, date, and significance", () => {
+    for (let i = 1; i <= 12; i++) {
+      INVENTIONS[i].forEach(inv => {
+        expect(inv.name).toBeTruthy();
+        expect(inv.description.length).toBeGreaterThan(20);
+        expect(inv.date).toBeTruthy();
+        expect(["foundational", "transformative", "revolutionary", "paradigm-shift"]).toContain(inv.significance);
+      });
+    }
+  });
+
+  it("invention names match the relay inventions in gameData order", () => {
+    const relay1Names = INVENTIONS[1].map(i => i.name);
+    expect(relay1Names).toContain("Hearth");
+    expect(relay1Names).toContain("Forge");
+    expect(relay1Names).toContain("Slash-and-Burn");
+  });
+
+  it("getInventionsForRelay helper works", () => {
+    const relay7 = getInventionsForRelay(7);
+    expect(relay7.length).toBeGreaterThan(0);
+    expect(relay7[0].name).toBe("Spinning Jenny");
+    const invalid = getInventionsForRelay(99);
+    expect(invalid).toEqual([]);
   });
 });
 

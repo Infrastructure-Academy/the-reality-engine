@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
+import { INVENTIONS, type Invention } from "@shared/inventions";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronRight, Zap, Star, BookOpen,
@@ -91,11 +92,12 @@ function MissionBlock({ relay }: { relay: any }) {
 }
 
 function DiscoveryGrid({
-  inventions, discoveredItems, handleDiscover, xpPerItem, columns = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+  inventions, inventionData, discoveredItems, handleDiscover, xpPerItem, columns = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
 }: {
-  inventions: string[]; discoveredItems: Set<number>; handleDiscover: (idx: number) => void;
+  inventions: string[]; inventionData?: Invention[]; discoveredItems: Set<number>; handleDiscover: (idx: number) => void;
   xpPerItem: number; columns?: string;
 }) {
+  const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   return (
     <div>
       <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
@@ -105,16 +107,32 @@ function DiscoveryGrid({
       <div className={`grid ${columns} gap-3`}>
         {inventions.map((inv, idx) => {
           const isDiscovered = discoveredItems.has(idx);
+          const meta = inventionData?.[idx];
+          const isExpanded = expandedIdx === idx && isDiscovered;
+          const sigColors: Record<string, string> = {
+            "foundational": "text-emerald-400",
+            "transformative": "text-sky-400",
+            "revolutionary": "text-amber-400",
+            "paradigm-shift": "text-purple-400",
+          };
           return (
             <motion.button
               key={idx}
               whileTap={{ scale: 0.95 }}
-              onClick={() => handleDiscover(idx)}
+              onClick={() => {
+                if (!isDiscovered) {
+                  handleDiscover(idx);
+                  setExpandedIdx(idx);
+                } else {
+                  setExpandedIdx(isExpanded ? null : idx);
+                }
+              }}
               className={`relative p-3 rounded-lg border text-left transition-all duration-300 ${
                 isDiscovered
                   ? "border-gold/40 bg-gold/10"
                   : "border-border/50 bg-card/30 hover:border-border"
-              }`}
+              } ${isExpanded ? "col-span-2 sm:col-span-2 md:col-span-2 row-span-2" : ""}`}
+              layout
             >
               <AnimatePresence>
                 {isDiscovered && (
@@ -126,9 +144,28 @@ function DiscoveryGrid({
               <p className={`text-sm font-medium ${isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
                 {isDiscovered ? inv : "???"}
               </p>
-              {isDiscovered && (
+              {isDiscovered && !isExpanded && (
                 <p className="text-[10px] text-muted-foreground mt-1 font-mono">+{xpPerItem.toLocaleString()} XP</p>
               )}
+              <AnimatePresence>
+                {isExpanded && meta && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-2 space-y-1.5 overflow-hidden"
+                  >
+                    <p className="text-xs text-foreground/80 leading-relaxed">{meta.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-muted-foreground">{meta.date}</span>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider ${sigColors[meta.significance] || "text-muted-foreground"}`}>
+                        {meta.significance.replace("-", " ")}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground font-mono">+{xpPerItem.toLocaleString()} XP</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.button>
           );
         })}
@@ -208,7 +245,7 @@ function EraTimeline({ relayNum }: { relayNum: number }) {
 // The original linear layout — clean, predictable, story-first
 // ═══════════════════════════════════════════════════════════
 function LayoutClassic({
-  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
   xpPerItem, completionPct, canGoPrev, canGoNext, navigate
 }: LayoutProps) {
   return (
@@ -216,7 +253,7 @@ function LayoutClassic({
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} />
       <NarrativeBlock relay={relay} />
       <MissionBlock relay={relay} />
-      <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
+      <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
       <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
       <RelayNavigator currentRelay={relayNum} />
     </div>
@@ -229,7 +266,7 @@ function LayoutClassic({
 // Discovery-first — emphasizes the tap-to-explore mechanic
 // ═══════════════════════════════════════════════════════════
 function LayoutSplitHorizon({
-  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
   xpPerItem, completionPct, canGoPrev, canGoNext, navigate
 }: LayoutProps) {
   return (
@@ -246,7 +283,7 @@ function LayoutSplitHorizon({
       <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-6">
         {/* Left: Discovery Grid (hero position) */}
         <div className="space-y-4">
-          <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
+          <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
             xpPerItem={xpPerItem} columns="grid-cols-2 sm:grid-cols-3" />
         </div>
 
@@ -269,7 +306,7 @@ function LayoutSplitHorizon({
 // Feels like a military briefing — mission-first, then context, then action
 // ═══════════════════════════════════════════════════════════
 function LayoutMissionBriefing({
-  relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+  relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
   xpPerItem, completionPct, canGoPrev, canGoNext, navigate
 }: LayoutProps) {
   return (
@@ -325,7 +362,7 @@ function LayoutMissionBriefing({
       </div>
 
       {/* Discovery grid (wider) */}
-      <DiscoveryGrid inventions={inventions} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
+      <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
         xpPerItem={xpPerItem} columns="grid-cols-3 sm:grid-cols-4 md:grid-cols-5" />
 
       {/* Relay navigator */}
@@ -341,6 +378,7 @@ interface LayoutProps {
   relayMeta: typeof RELAYS[number];
   relayNum: number;
   inventions: string[];
+  inventionData: Invention[];
   discoveredItems: Set<number>;
   handleDiscover: (idx: number) => void;
   xpPerItem: number;
@@ -413,24 +451,9 @@ export default function ExplorerRelay() {
     });
   }, []);
 
-  // Inventions per relay
-  const inventions = useMemo(() => {
-    const inventionSets: Record<number, string[]> = {
-      1: ["Hearth", "Torch", "Kiln", "Charcoal", "Smelting", "Forge", "Signal Fire", "Cremation", "Slash-and-Burn"],
-      2: ["Longhouse", "Palisade", "Dugout Canoe", "Wooden Plough", "Timber Frame", "Charcoal Kiln", "Mast", "Barrel"],
-      3: ["Irrigation Canal", "Aqueduct", "Dam", "Shaduf", "Qanat", "Nilometer", "Reservoir", "Water Mill"],
-      4: ["Chariot", "Saddle", "Stirrup", "Horseshoe", "Postal Relay", "Cavalry", "Horse Collar"],
-      5: ["Paved Road", "Milestone", "Bridge", "Drainage", "Tunnel", "Causeway", "Way Station", "Toll Gate"],
-      6: ["Keel", "Lateen Sail", "Compass", "Caravel", "Astrolabe", "Dry Dock", "Lighthouse", "Sextant", "Anchor"],
-      7: ["Spinning Jenny", "Power Loom", "Jacquard Mechanism", "Flying Shuttle", "Cotton Gin", "Spinning Mule", "Punch Card"],
-      8: ["Steam Locomotive", "Standard Gauge", "Signal System", "Steel Rail", "Railway Bridge", "Turntable", "Sleeper Car", "Telegraph"],
-      9: ["Assembly Line", "Highway", "Fuel Station", "Traffic Light", "Diesel Engine", "Tractor", "Automobile"],
-      10: ["Biplane", "Jet Engine", "Radio Broadcast", "Television", "Radar", "Motorway", "Airport", "Satellite Dish", "Transistor"],
-      11: ["GPS", "Internet Protocol", "Cloud Computing", "Fibre Optic", "Solar Panel", "Space Station", "Microprocessor", "Smartphone"],
-      12: ["Neural Interface", "Quantum Computer", "Collective Intelligence", "Bio-Digital Mesh", "Torus Network", "Consciousness Map", "AI Symbiosis", "Ethical Framework", "Planetary Node", "Digital Twin", "Empathy Engine", "Human Node"],
-    };
-    return inventionSets[relayNum] || [];
-  }, [relayNum]);
+  // Inventions per relay — from shared data with historical descriptions
+  const inventionData = useMemo(() => INVENTIONS[relayNum] || [], [relayNum]);
+  const inventions = useMemo(() => inventionData.map(i => i.name), [inventionData]);
 
   const xpPerItem = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(inventions.length, 1)) : 10000;
   const totalXpEarned = discoveredItems.size * xpPerItem;
@@ -450,7 +473,7 @@ export default function ExplorerRelay() {
   }
 
   const layoutProps: LayoutProps = {
-    relay, relayMeta, relayNum, inventions, discoveredItems, handleDiscover,
+    relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
     xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
   };
 
