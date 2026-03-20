@@ -233,6 +233,21 @@
       radial-gradient(1px 1px at 85% 15%, oklch(0.75 0.15 200 / 25%), transparent);
   }
 
+  /* Safe area for iOS notch/home indicator */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Mobile bottom padding when tab bar is present */
+  @media (max-width: 767px) {
+    .mobile-content-pad {
+      padding-bottom: 5rem;
+    }
+  }
+
   /* Animated pulse border */
   .border-pulse-gold {
     animation: borderPulseGold 3s ease-in-out infinite;

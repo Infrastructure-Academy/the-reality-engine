@@ -39,7 +39,7 @@ export default function Home() {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
       {/* Ambient gradient overlay */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px]" />

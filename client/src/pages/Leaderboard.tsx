@@ -63,7 +63,7 @@ export default function Leaderboard() {
   const guruCount = DEMO_ENTRIES.filter(e => e.isGuru).length;
 
   return (
-    <div className="min-h-screen bg-background text-foreground bg-starfield">
+    <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield">
       {/* Header */}
       <header className="border-b border-border/50 backdrop-blur-md bg-background/80">
         <div className="container flex items-center justify-between h-12">

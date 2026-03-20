@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -9,6 +9,7 @@ import {
   ArrowLeft, Dices, BookOpen, Brain, Scroll, Lock,
   ChevronRight, MessageCircle, GraduationCap, Star, Sparkles
 } from "lucide-react";
+import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
 
@@ -145,7 +146,7 @@ export default function ScholarCreate() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground bg-starfield flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <GraduationCap className="w-16 h-16 text-amber-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">Scholar Access Required</h2>
@@ -170,7 +171,7 @@ export default function ScholarCreate() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground bg-starfield relative">
+    <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield relative">
       {/* Header */}
       <header className="sticky top-0 z-20 border-b border-amber-500/20 backdrop-blur-md bg-background/80">
         <div className="container flex items-center justify-between h-12">

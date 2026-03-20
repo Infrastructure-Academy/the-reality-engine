@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -9,11 +9,13 @@ import {
   ArrowLeft, Zap, Shield, Radio, Compass, Eye, Gauge,
   ChevronRight, MessageCircle, Lock, Rocket
 } from "lucide-react";
+import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 
 type Phase = "craft_select" | "hud";
 
 export default function FlightDeck() {
   const { user, isAuthenticated } = useAuth();
+  const [, navigate] = useLocation();
   const [phase, setPhase] = useState<Phase>("craft_select");
   const [selectedCraft, setSelectedCraft] = useState<typeof CRAFTS[number] | null>(null);
   const [activeNode, setActiveNode] = useState<{ relay: number; web: string } | null>(null);
@@ -21,6 +23,37 @@ export default function FlightDeck() {
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState<{ role: string; content: string }[]>([]);
   const [chatInput, setChatInput] = useState("");
+  const [cursorRelay, setCursorRelay] = useState(1);
+  const [cursorWeb, setCursorWeb] = useState(0);
+
+  // Gamepad support for Flight Deck
+  const handleGamepadButton = useCallback(
+    (button: GamepadButtonName) => {
+      if (phase === "craft_select") {
+        // In craft select: D-pad to pick, A to confirm
+        if (button === "B") navigate("/");
+        return;
+      }
+      // HUD mode: navigate the 60-node matrix
+      if (button === "DPAD_UP" || button === "LB") {
+        setCursorRelay((prev) => Math.max(1, prev - 1));
+      } else if (button === "DPAD_DOWN" || button === "RB") {
+        setCursorRelay((prev) => Math.min(12, prev + 1));
+      } else if (button === "DPAD_LEFT") {
+        setCursorWeb((prev) => Math.max(0, prev - 1));
+      } else if (button === "DPAD_RIGHT") {
+        setCursorWeb((prev) => Math.min(4, prev + 1));
+      } else if (button === "A") {
+        handleNodeClick(cursorRelay, WEBS[cursorWeb].name);
+      } else if (button === "X") {
+        setShowChat((prev) => !prev);
+      } else if (button === "B") {
+        setPhase("craft_select");
+      }
+    },
+    [phase, cursorRelay, cursorWeb, navigate]
+  );
+  useGamepad(handleGamepadButton);
 
   const handleSelectCraft = useCallback((craft: typeof CRAFTS[number]) => {
     setSelectedCraft(craft);
@@ -50,7 +83,7 @@ export default function FlightDeck() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground bg-starfield flex items-center justify-center">
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <Rocket className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">Flight Deck Access Required</h2>
@@ -77,7 +110,7 @@ export default function FlightDeck() {
   // ─── CRAFT SELECTION PHASE ───
   if (phase === "craft_select") {
     return (
-      <div className="min-h-screen bg-background text-foreground bg-starfield">
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield">
         <header className="border-b border-border/50 backdrop-blur-md bg-background/80">
           <div className="container flex items-center justify-between h-12">
             <Link href="/">
@@ -157,7 +190,7 @@ export default function FlightDeck() {
 
   // ─── HUD PHASE — DEARDEN FIELD ───
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground mobile-content-pad relative overflow-hidden">
       {/* HUD Scanline overlay */}
       <div className="fixed inset-0 pointer-events-none hud-scanline z-50" />
 

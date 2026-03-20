@@ -9,6 +9,8 @@ import {
   ChevronLeft, ChevronRight, Zap, Star, BookOpen,
   ArrowLeft, Sparkles, MessageCircle, Shuffle
 } from "lucide-react";
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -477,8 +479,26 @@ export default function ExplorerRelay() {
     xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
   };
 
+  // Swipe navigation between relays
+  const swipeRef = useSwipeNavigation<HTMLDivElement>({
+    onSwipeLeft: canGoNext ? () => navigate(`/explore/${relayNum + 1}`) : undefined,
+    onSwipeRight: canGoPrev ? () => navigate(`/explore/${relayNum - 1}`) : undefined,
+  });
+
+  // Gamepad navigation
+  const handleGamepadButton = useCallback(
+    (button: GamepadButtonName) => {
+      if (button === "RB" && canGoNext) navigate(`/explore/${relayNum + 1}`);
+      else if (button === "LB" && canGoPrev) navigate(`/explore/${relayNum - 1}`);
+      else if (button === "X") setShowChat((prev) => !prev);
+      else if (button === "B") navigate("/");
+    },
+    [canGoNext, canGoPrev, relayNum, navigate]
+  );
+  useGamepad(handleGamepadButton);
+
   return (
-    <div className="min-h-screen bg-background text-foreground bg-starfield relative">
+    <div ref={swipeRef} className="min-h-screen bg-background text-foreground bg-starfield relative mobile-content-pad">
       {/* Top Bar */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
         <div className="container flex items-center justify-between h-12">
