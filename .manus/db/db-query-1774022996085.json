@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO webs (name, description, color, icon) VALUES\n('Natural', 'The organic web of biological systems, ecosystems, and natural forces that underpin civilisation', '#22c55e', '🌿'),\n('Machine', 'The mechanical web of engines, structures, and physical infrastructure that builds civilisation', '#f59e0b', '⚙️'),\n('Digital', 'The information web of communications, computing, and signal networks that connect civilisation', '#3b82f6', '💻'),\n('Biological', 'The human web of medicine, genetics, and biological engineering that sustains civilisation', '#ec4899', '🧬'),\n('Consciousness', 'The meta-web of awareness, philosophy, and collective intelligence that transcends civilisation', '#a855f7', '🧠');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute INSERT INTO webs (name, description, color, icon) VALUES\n('Natural', 'The organic web of biological systems, ecosystems, and natural forces that underpin civilisation', '#22c55e', '🌿'),\n('Machine', 'The mechanical web of engines, structures, and physical infrastructure that builds civilisation', '#f59e0b', '⚙️'),\n('Digital', 'The information web of communications, computing, and signal networks that connect civilisation', '#3b82f6', '💻'),\n('Biological', 'The human web of medicine, genetics, and biological engineering that sustains civilisation', '#ec4899', '🧬'),\n('Consciousness', 'The meta-web of awareness, philosophy, and collective intelligence that transcends civilisation', '#a855f7', '🧠');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1584
+}
