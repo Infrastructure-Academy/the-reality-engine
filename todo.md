@@ -134,3 +134,13 @@
 - [x] Add sound effects for relay transitions (sawtooth sweep on swipe/gamepad nav)
 - [x] Add haptic feedback via navigator.vibrate() for mobile discovery taps + transitions
 - [x] Write vitest tests for sound effects, haptics, and BitPoint earning logic (50 tests passing)
+
+## Flight Deck DB + XP Counter + Sound Toggle
+- [x] Wire Flight Deck node activations to DB — persist node_activations table per profile
+- [x] Restore activated nodes from DB when returning to Flight Deck
+- [x] Log XP transactions for Flight Deck node activations (50,000 XP per node)
+- [x] Build animated XP counter component (pinball-machine style, pulses on XP gain)
+- [x] Integrate XP counter into Explorer and Flight Deck headers
+- [x] Add sound toggle (mute/unmute) with localStorage persistence
+- [x] Add sound toggle button to Explorer and Flight Deck headers
+- [x] Write vitest tests for new features (59 tests passing — mute toggle, XP formatting, Flight Deck XP math)

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -10,7 +10,10 @@ import {
   ChevronRight, MessageCircle, Lock, Rocket
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
-import { playNodeActivationSound, hapticTap } from "@/hooks/useSoundEffects";
+import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoundEffects";
+import { trpc } from "@/lib/trpc";
+import { XpCounter } from "@/components/XpCounter";
+import { SoundToggle } from "@/components/SoundToggle";
 
 type Phase = "craft_select" | "hud";
 
@@ -26,6 +29,48 @@ export default function FlightDeck() {
   const [chatInput, setChatInput] = useState("");
   const [cursorRelay, setCursorRelay] = useState(1);
   const [cursorWeb, setCursorWeb] = useState(0);
+
+  // ─── Profile & DB persistence ───
+  const profileMutation = trpc.profile.getOrCreate.useMutation();
+  const [profileId, setProfileId] = useState<number | null>(null);
+  const activateNodeMutation = trpc.dearden.activate.useMutation();
+
+  useEffect(() => {
+    if (user?.id) {
+      profileMutation.mutate({ mode: "flight_deck" }, {
+        onSuccess: (data) => { if (data) setProfileId(data.id); }
+      });
+    }
+  }, [user?.id]);
+
+  // Load saved node activations from DB
+  const { data: savedActivations } = trpc.dearden.activations.useQuery(
+    { profileId: profileId! },
+    { enabled: !!profileId }
+  );
+
+  // Fetch all dearden nodes to map relay+web to nodeId
+  const { data: deardenNodesData } = trpc.dearden.nodes.useQuery();
+
+  // Restore activated nodes from DB
+  useEffect(() => {
+    if (savedActivations && savedActivations.length > 0 && deardenNodesData) {
+      const restoredKeys = new Set<string>();
+      savedActivations.forEach((act: any) => {
+        const node = deardenNodesData.find((n: any) => n.id === act.nodeId);
+        if (node) {
+          restoredKeys.add(`${node.relayNumber}-${node.webName}`);
+        }
+      });
+      if (restoredKeys.size > 0) {
+        setActivatedNodes(prev => {
+          const merged = new Set(prev);
+          restoredKeys.forEach(k => merged.add(k));
+          return merged;
+        });
+      }
+    }
+  }, [savedActivations, deardenNodesData]);
 
   // Gamepad support for Flight Deck
   const handleGamepadButton = useCallback(
@@ -73,10 +118,24 @@ export default function FlightDeck() {
       if (isNew) {
         playNodeActivationSound();
         hapticTap(25);
+
+        // Persist to DB
+        if (profileId && deardenNodesData) {
+          const nodeRecord = deardenNodesData.find(
+            (n: any) => n.relayNumber === relay && n.webName === web
+          );
+          if (nodeRecord) {
+            activateNodeMutation.mutate({
+              profileId, nodeId: nodeRecord.id,
+              relayNumber: relay, webName: web,
+            });
+            setTimeout(() => playXpSound(), 200);
+          }
+        }
       }
       return next;
     });
-  }, []);
+  }, [profileId, deardenNodesData]);
 
   const totalActivated = activatedNodes.size;
   const totalNodes = 60;
@@ -220,13 +279,17 @@ export default function FlightDeck() {
               <span className="text-green-400">ONLINE</span>
             </div>
             <span className="text-cyan-400">{totalActivated}/{totalNodes} NODES</span>
+            <XpCounter value={totalActivated * 50000} compact color="cyan" />
             <span className="text-muted-foreground">{activationPct}%</span>
           </div>
 
-          <Button variant="ghost" size="sm" onClick={() => setShowChat(!showChat)} className="text-muted-foreground gap-1">
-            <MessageCircle className="w-4 h-4" />
-            <span className="hidden sm:inline text-xs">DAVID</span>
-          </Button>
+          <div className="flex items-center gap-1">
+            <SoundToggle compact color="cyan" />
+            <Button variant="ghost" size="sm" onClick={() => setShowChat(!showChat)} className="text-muted-foreground gap-1">
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline text-xs">DAVID</span>
+            </Button>
+          </div>
         </div>
       </header>
 

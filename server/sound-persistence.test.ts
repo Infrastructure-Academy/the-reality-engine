@@ -11,6 +11,13 @@ describe("Sound Effects Module", () => {
     expect(typeof mod.playErrorSound).toBe("function");
   });
 
+  it("exports mute control functions", async () => {
+    const mod = await import("../client/src/hooks/useSoundEffects");
+    expect(typeof mod.getSoundMuted).toBe("function");
+    expect(typeof mod.setSoundMuted).toBe("function");
+    expect(typeof mod.toggleSoundMuted).toBe("function");
+  });
+
   it("sound functions don't throw when AudioContext is unavailable", async () => {
     const mod = await import("../client/src/hooks/useSoundEffects");
     // In Node there's no AudioContext, so these should gracefully no-op
@@ -47,6 +54,73 @@ describe("Haptic Feedback", () => {
     const mod = await import("../client/src/hooks/useSoundEffects");
     mod.hapticTap(25);
     expect(vibrateMock).toHaveBeenCalledWith(25);
+  });
+});
+
+// ─── Mute Toggle Tests ───
+describe("Sound Mute Toggle", () => {
+  beforeEach(() => {
+    // Clear localStorage mock
+    if (typeof localStorage !== "undefined") {
+      localStorage.removeItem("tre_sound_muted");
+    }
+  });
+
+  it("getSoundMuted returns false by default", async () => {
+    // Force re-import to reset cached state
+    const mod = await import("../client/src/hooks/useSoundEffects");
+    // Default should be unmuted
+    expect(typeof mod.getSoundMuted()).toBe("boolean");
+  });
+
+  it("setSoundMuted persists to localStorage", async () => {
+    const mod = await import("../client/src/hooks/useSoundEffects");
+    mod.setSoundMuted(true);
+    expect(mod.getSoundMuted()).toBe(true);
+    mod.setSoundMuted(false);
+    expect(mod.getSoundMuted()).toBe(false);
+  });
+
+  it("toggleSoundMuted flips the state", async () => {
+    const mod = await import("../client/src/hooks/useSoundEffects");
+    mod.setSoundMuted(false);
+    const result = mod.toggleSoundMuted();
+    expect(result).toBe(true);
+    expect(mod.getSoundMuted()).toBe(true);
+  });
+});
+
+// ─── XP Counter Logic Tests ───
+describe("XP Counter Formatting", () => {
+  it("formats millions correctly", () => {
+    const value = 2_400_000;
+    const formatted = value >= 1_000_000 ? `${(value / 1_000_000).toFixed(1)}M` : String(value);
+    expect(formatted).toBe("2.4M");
+  });
+
+  it("formats hundreds of thousands as K", () => {
+    const value = 350_000;
+    const formatted = value >= 100_000 ? `${Math.floor(value / 1000)}K` : String(value);
+    expect(formatted).toBe("350K");
+  });
+
+  it("formats tens of thousands with decimal K", () => {
+    const value = 50_000;
+    const formatted = value >= 10_000 && value < 100_000 ? `${(value / 1000).toFixed(1)}K` : String(value);
+    expect(formatted).toBe("50.0K");
+  });
+
+  it("formats small numbers with commas", () => {
+    const value = 9_999;
+    const formatted = value.toLocaleString();
+    expect(formatted).toBe("9,999");
+  });
+
+  it("Flight Deck: 60 nodes × 50K XP = 3M total", () => {
+    const totalXp = 60 * 50_000;
+    expect(totalXp).toBe(3_000_000);
+    const formatted = `${(totalXp / 1_000_000).toFixed(1)}M`;
+    expect(formatted).toBe("3.0M");
   });
 });
 

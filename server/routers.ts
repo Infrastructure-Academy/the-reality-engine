@@ -86,6 +86,20 @@ export const appRouter = router({
     activations: publicProcedure.input(z.object({ profileId: z.number() })).query(async ({ input }) => {
       return db.getNodeActivationsForProfile(input.profileId);
     }),
+    activate: publicProcedure
+      .input(z.object({
+        profileId: z.number(),
+        nodeId: z.number(),
+        relayNumber: z.number(),
+        webName: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        await db.activateNode(input.profileId, input.nodeId);
+        // Award 50,000 XP per node activation
+        await db.updateProfileXp(input.profileId, 50000);
+        await db.logXpTransaction(input.profileId, 50000, "node_activation", `node-${input.relayNumber}-${input.webName}`, `Activated node R${input.relayNumber}-${input.webName}`);
+        return { success: true };
+      }),
   }),
 
   // ─── Character Procedures ───

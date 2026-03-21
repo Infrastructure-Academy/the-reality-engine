@@ -1,12 +1,52 @@
 /**
  * Sound Effects & Haptics — Web Audio API synthesized sounds
  * No external audio files needed. All sounds are generated procedurally.
+ * Includes a global mute toggle persisted to localStorage.
  */
 
+// ─── Global Mute State ───
+const MUTE_KEY = "tre_sound_muted";
+
+let _muted: boolean | null = null;
+
+function isMuted(): boolean {
+  if (_muted === null) {
+    if (typeof localStorage !== "undefined") {
+      _muted = localStorage.getItem(MUTE_KEY) === "true";
+    } else {
+      _muted = false;
+    }
+  }
+  return _muted;
+}
+
+export function getSoundMuted(): boolean {
+  return isMuted();
+}
+
+export function setSoundMuted(muted: boolean) {
+  _muted = muted;
+  if (typeof localStorage !== "undefined") {
+    localStorage.setItem(MUTE_KEY, muted ? "true" : "false");
+  }
+  // Dispatch a custom event so React components can listen for changes
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("tre-sound-mute-change", { detail: muted }));
+  }
+}
+
+export function toggleSoundMuted(): boolean {
+  const next = !isMuted();
+  setSoundMuted(next);
+  return next;
+}
+
+// ─── Audio Context ───
 let audioCtx: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
+  if (isMuted()) return null;
   if (!audioCtx) {
     try {
       audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -124,7 +164,7 @@ export function playErrorSound() {
   osc.stop(now + 0.25);
 }
 
-// ─── Haptic Feedback ───
+// ─── Haptic Feedback (not affected by mute — separate modality) ───
 export function hapticTap(duration = 15) {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) {
     navigator.vibrate(duration);

@@ -147,6 +147,15 @@ export async function getNodeActivationsForProfile(profileId: number) {
   return db.select().from(nodeActivations).where(eq(nodeActivations.profileId, profileId));
 }
 
+export async function activateNode(profileId: number, nodeId: number) {
+  const db = await getDb();
+  if (!db) return;
+  const existing = await db.select().from(nodeActivations)
+    .where(and(eq(nodeActivations.profileId, profileId), eq(nodeActivations.nodeId, nodeId))).limit(1);
+  if (existing[0]) return; // already activated
+  await db.insert(nodeActivations).values({ profileId, nodeId, activated: true, activatedAt: new Date() });
+}
+
 // ─── Character Queries ───
 export async function createCharacter(profileId: number, name: string, fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced", abilityScores: Record<string, number>) {
   const db = await getDb();
