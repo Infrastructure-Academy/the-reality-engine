@@ -510,3 +510,112 @@ describe("Bridge Status Procedures", () => {
     expect(result.type).toBe("profile");
   });
 });
+
+
+// ─── Bridge Sync Tests ───
+describe("Bridge Sync", () => {
+  it("bridge.syncHistory returns an array", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.syncHistory({ limit: 5 });
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("bridge.syncHistory accepts optional bridge filter", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.syncHistory({ bridge: "MEMORIAL", limit: 5 });
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("bridge.syncAll requires authentication", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(caller.bridge.syncAll()).rejects.toThrow();
+  });
+
+  it("bridge.syncMemorial requires authentication", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(caller.bridge.syncMemorial()).rejects.toThrow();
+  });
+
+  it("bridge.syncChartRoom requires authentication", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(caller.bridge.syncChartRoom()).rejects.toThrow();
+  });
+
+  it("bridge.syncAll returns memorial and chartRoom results when authenticated", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.syncAll();
+    expect(result).toHaveProperty("memorial");
+    expect(result).toHaveProperty("chartRoom");
+  }, 30000);
+
+  it("bridge.registry includes all 4 bridges", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.registry();
+    expect(result).toHaveLength(4);
+    const names = result.map((b: any) => b.name);
+    expect(names).toContain("ACAD SITE");
+    expect(names).toContain("MEMORIAL SITE");
+    expect(names).toContain("TRE GAME");
+    expect(names).toContain("CHART ROOM");
+  });
+
+  it("each bridge in registry has required fields", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.registry();
+    for (const bridge of result) {
+      expect(bridge).toHaveProperty("name");
+      expect(bridge).toHaveProperty("subtitle");
+      expect(bridge).toHaveProperty("domain");
+      expect(bridge).toHaveProperty("dbAccess");
+      expect(bridge).toHaveProperty("status");
+    }
+  });
+});
+
+// ─── Bridge Sync Log Schema Tests ───
+describe("Bridge Sync Log Schema", () => {
+  it("bridgeSyncLog table exists in schema", async () => {
+    const { bridgeSyncLog } = await import("../drizzle/schema");
+    expect(bridgeSyncLog).toBeDefined();
+  });
+
+  it("bridgeSyncLog has required columns", async () => {
+    const { bridgeSyncLog } = await import("../drizzle/schema");
+    expect(bridgeSyncLog.bridge).toBeDefined();
+    expect(bridgeSyncLog.syncType).toBeDefined();
+    expect(bridgeSyncLog.status).toBeDefined();
+    expect(bridgeSyncLog.recordsFound).toBeDefined();
+    expect(bridgeSyncLog.recordsUpdated).toBeDefined();
+    expect(bridgeSyncLog.errorMessage).toBeDefined();
+    expect(bridgeSyncLog.responseData).toBeDefined();
+    expect(bridgeSyncLog.syncedAt).toBeDefined();
+  });
+});
+
+// ─── Vite Config Chunk Fix Test ───
+describe("Vite Config - Chunk Splitting Fix", () => {
+  it("vite.config.ts exists and can be read", async () => {
+    const fs = await import("fs");
+    const config = fs.readFileSync("vite.config.ts", "utf-8");
+    expect(config).toContain("manualChunks");
+  });
+
+  it("radix-ui is bundled with react to prevent forwardRef crash", async () => {
+    const fs = await import("fs");
+    const config = fs.readFileSync("vite.config.ts", "utf-8");
+    // radix-ui should be in the vendor-react chunk, not a separate vendor-radix chunk
+    if (config.includes("@radix-ui")) {
+      expect(config).toMatch(/vendor-react.*@radix-ui|@radix-ui.*vendor-react/s);
+    }
+    // There should NOT be a separate vendor-radix chunk
+    expect(config).not.toMatch(/['"]vendor-radix['"]/);
+  });
+});

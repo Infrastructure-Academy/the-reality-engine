@@ -4,7 +4,7 @@ import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
-  agnContacts, contactTags, contactTagAssignments, mediaCatalogue
+  agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -553,4 +553,143 @@ export async function getLinkedProfileStats(contactId: number) {
     totalXp: profile[0].totalXp ?? 0,
     lastActive: profile[0].updatedAt,
   };
+}
+
+// ─── Bridge Sync Helpers ───
+
+export async function logBridgeSync(entry: {
+  bridge: string;
+  syncType: string;
+  status: "success" | "failed" | "partial";
+  recordsFound?: number;
+  recordsUpdated?: number;
+  errorMessage?: string;
+  responseData?: any;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(bridgeSyncLog).values({
+    bridge: entry.bridge,
+    syncType: entry.syncType,
+    status: entry.status,
+    recordsFound: entry.recordsFound ?? 0,
+    recordsUpdated: entry.recordsUpdated ?? 0,
+    errorMessage: entry.errorMessage ?? null,
+    responseData: entry.responseData ?? null,
+  }).$returningId();
+  return result;
+}
+
+export async function getSyncHistory(bridge?: string, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = bridge ? eq(bridgeSyncLog.bridge, bridge) : undefined;
+  return db.select().from(bridgeSyncLog)
+    .where(conditions)
+    .orderBy(sql`syncedAt DESC`)
+    .limit(limit);
+}
+
+export async function syncMemorialSite() {
+  try {
+    const res = await fetch("https://nigelmemorial-ucmtq9dn.manus.space/api/trpc/memorial.stats", {
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(10000),
+    });
+    
+    if (!res.ok) {
+      // Try scraping the public page instead
+      const pageRes = await fetch("https://nigelmemorial-ucmtq9dn.manus.space/", {
+        signal: AbortSignal.timeout(10000),
+      });
+      const html = await pageRes.text();
+      const data = {
+        status: pageRes.ok ? "reachable" : "unreachable",
+        statusCode: pageRes.status,
+        contentLength: html.length,
+        hasContent: html.includes("Principia Tectonica") || html.includes("memorial"),
+        syncedAt: new Date().toISOString(),
+      };
+      await logBridgeSync({
+        bridge: "MEMORIAL",
+        syncType: "health_check",
+        status: pageRes.ok ? "success" : "failed",
+        recordsFound: 1,
+        recordsUpdated: 0,
+        responseData: data,
+      });
+      return data;
+    }
+
+    const json = await res.json();
+    await logBridgeSync({
+      bridge: "MEMORIAL",
+      syncType: "stats",
+      status: "success",
+      recordsFound: 1,
+      recordsUpdated: 1,
+      responseData: json,
+    });
+    return json;
+  } catch (err: any) {
+    await logBridgeSync({
+      bridge: "MEMORIAL",
+      syncType: "health_check",
+      status: "failed",
+      errorMessage: err.message,
+    });
+    return { status: "error", error: err.message };
+  }
+}
+
+export async function syncChartRoom() {
+  try {
+    const res = await fetch("https://xgrowthtrk-2a93yo5z.manus.space/api/trpc/dashboard.stats", {
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!res.ok) {
+      // Try scraping the public page instead
+      const pageRes = await fetch("https://xgrowthtrk-2a93yo5z.manus.space/", {
+        signal: AbortSignal.timeout(10000),
+      });
+      const html = await pageRes.text();
+      const data = {
+        status: pageRes.ok ? "reachable" : "unreachable",
+        statusCode: pageRes.status,
+        contentLength: html.length,
+        hasContent: html.includes("Chartered Chart") || html.includes("growth"),
+        syncedAt: new Date().toISOString(),
+      };
+      await logBridgeSync({
+        bridge: "CHART_ROOM",
+        syncType: "health_check",
+        status: pageRes.ok ? "success" : "failed",
+        recordsFound: 1,
+        recordsUpdated: 0,
+        responseData: data,
+      });
+      return data;
+    }
+
+    const json = await res.json();
+    await logBridgeSync({
+      bridge: "CHART_ROOM",
+      syncType: "stats",
+      status: "success",
+      recordsFound: 1,
+      recordsUpdated: 1,
+      responseData: json,
+    });
+    return json;
+  } catch (err: any) {
+    await logBridgeSync({
+      bridge: "CHART_ROOM",
+      syncType: "health_check",
+      status: "failed",
+      errorMessage: err.message,
+    });
+    return { status: "error", error: err.message };
+  }
 }

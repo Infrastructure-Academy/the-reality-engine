@@ -255,3 +255,18 @@ export const mediaCatalogue = mysqlTable("media_catalogue", {
 });
 
 export type MediaCatalogueEntry = typeof mediaCatalogue.$inferSelect;
+
+// ─── Bridge Sync Log ───
+export const bridgeSyncLog = mysqlTable("bridge_sync_log", {
+  id: int("id").autoincrement().primaryKey(),
+  bridge: varchar("bridge", { length: 64 }).notNull(),
+  syncType: varchar("syncType", { length: 64 }).notNull(),
+  status: mysqlEnum("status", ["success", "failed", "partial"]).notNull(),
+  recordsFound: int("recordsFound").default(0),
+  recordsUpdated: int("recordsUpdated").default(0),
+  errorMessage: text("errorMessage"),
+  responseData: json("responseData"),
+  syncedAt: timestamp("syncedAt").defaultNow().notNull(),
+});
+
+export type BridgeSyncLogEntry = typeof bridgeSyncLog.$inferSelect;

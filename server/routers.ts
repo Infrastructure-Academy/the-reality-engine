@@ -434,6 +434,27 @@ export const appRouter = router({
         { name: "CHART ROOM", subtitle: "The Chartered Chart", domain: "xgrowthtrk-2a93yo5z.manus.space", dbAccess: "API BRIDGE", status: "operational" },
       ];
     }),
+    syncMemorial: protectedProcedure.mutation(async () => {
+      return db.syncMemorialSite();
+    }),
+    syncChartRoom: protectedProcedure.mutation(async () => {
+      return db.syncChartRoom();
+    }),
+    syncAll: protectedProcedure.mutation(async () => {
+      const [memorial, chartRoom] = await Promise.allSettled([
+        db.syncMemorialSite(),
+        db.syncChartRoom(),
+      ]);
+      return {
+        memorial: memorial.status === "fulfilled" ? memorial.value : { status: "error", error: (memorial as PromiseRejectedResult).reason?.message },
+        chartRoom: chartRoom.status === "fulfilled" ? chartRoom.value : { status: "error", error: (chartRoom as PromiseRejectedResult).reason?.message },
+      };
+    }),
+    syncHistory: publicProcedure
+      .input(z.object({ bridge: z.string().optional(), limit: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getSyncHistory(input?.bridge, input?.limit);
+      }),
   }),
 });
 export type AppRouter = typeof appRouter;

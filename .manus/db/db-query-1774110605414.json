@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `bridge_sync_log` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`bridge` varchar(64) NOT NULL,\n\t`syncType` varchar(64) NOT NULL,\n\t`status` enum('success','failed','partial') NOT NULL,\n\t`recordsFound` int DEFAULT 0,\n\t`recordsUpdated` int DEFAULT 0,\n\t`errorMessage` text,\n\t`responseData` json,\n\t`syncedAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `bridge_sync_log_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute CREATE TABLE `bridge_sync_log` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`bridge` varchar(64) NOT NULL,\n\t`syncType` varchar(64) NOT NULL,\n\t`status` enum('success','failed','partial') NOT NULL,\n\t`recordsFound` int DEFAULT 0,\n\t`recordsUpdated` int DEFAULT 0,\n\t`errorMessage` text,\n\t`responseData` json,\n\t`syncedAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `bridge_sync_log_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1837
+}

@@ -243,8 +243,8 @@
 - [x] Bridge endpoints compiled and running (TypeScript clean)
 
 ## Evidence Print PDF (Block 398)
-- [ ] Download all 3 EVIDENCE iCards from CDN
-- [ ] Combine into single A4 PDF (one card per page, landscape)
+- [x] Download all 3 EVIDENCE iCards from CDN (converted WebP to PNG)
+- [x] Combine into single A4 landscape PDF (3 pages, evidence-package-police.pdf)
 - [ ] Upload PDF to CDN and record in HARD_PROTOCOLS
 
 ## Check All Bridge Sites for Common Database (Block 398)
@@ -253,3 +253,14 @@
 - [x] Check CHART ROOM (xgrowthtrk-2a93yo5z.manus.space) — data dashboard, Day 9/60, 42 followers
 - [x] Check TRE GAME (realityeng-epdhlkrn.manus.space) — 3 pathways, 777 contacts, DAVID voice
 - [x] Save all discovered assets and data references to bridge_catalogue.txt (39+ CDN images)
+
+## Bug Fix — Blank Screen on Deployed Site
+- [x] Diagnose blank screen — vendor-radix chunk loaded before vendor-react, React.forwardRef undefined
+- [x] Fix: merged @radix-ui into vendor-react chunk in vite.config.ts manualChunks
+- [ ] Verify deployed site loads correctly (needs republish)
+
+## Bridge API Sync — Scheduled Data Pulls
+- [x] Build sync endpoint to pull data from Memorial Site (nigelmemorial-ucmtq9dn.manus.space)
+- [x] Build sync endpoint to pull data from Chart Room (xgrowthtrk-2a93yo5z.manus.space)
+- [x] Store synced data in TRE database via bridge_sync_log table
+- [x] Add sync status tracking to Bridge Hub page (sync buttons, history, per-bridge sync)
