@@ -72,9 +72,11 @@ function Router() {
 function ServiceWorkerRegistrar() {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
+      // Force update on every load to clear stale caches from v2
       navigator.serviceWorker
-        .register("/sw.js")
+        .register("/sw.js", { updateViaCache: "none" })
         .then((reg) => {
+          reg.update(); // Force check for new SW immediately
           console.log("[SW] Registered:", reg.scope);
         })
         .catch((err) => {

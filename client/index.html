@@ -38,6 +38,19 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Emergency SW cache buster v3 — nuke ALL caches and force SW update
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          keys.forEach(function(k) { caches.delete(k); });
+        });
+      }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(r) { r.update(); });
+        });
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <script
       defer
