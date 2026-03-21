@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { XpCounter } from "@/components/XpCounter";
 import { ShareCard } from "@/components/ShareCard";
+import { ChallengeButton } from "@/components/ChallengeButton";
 
 // ─── Civilizational Perspective Classification ───
 // Each relay maps to a civilizational perspective based on its historical context
@@ -250,6 +251,28 @@ export default function Synthesis() {
 
   const [showDetails, setShowDetails] = useState(false);
 
+  // Dynamic OG meta tags for social sharing
+  useEffect(() => {
+    if (!synthesis || !patternTitle) return;
+    const desc = `I'm "${patternTitle}" in The Reality Engine! ${synthesis.completionCount}/12 relays explored, ${synthesis.totalDiscoveries} discoveries. What's your civilisational pattern?`;
+    const setMeta = (prop: string, content: string, attr = "property") => {
+      let el = document.querySelector(`meta[${attr}="${prop}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, prop);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+    document.title = `${patternTitle} — The Reality Engine`;
+    setMeta("og:title", `${patternTitle} — The Reality Engine`);
+    setMeta("og:description", desc);
+    setMeta("og:url", window.location.href);
+    setMeta("twitter:title", `${patternTitle} — The Reality Engine`, "name");
+    setMeta("twitter:description", desc, "name");
+    return () => { document.title = "The Reality Engine"; };
+  }, [synthesis, patternTitle]);
+
   if (!synthesis) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center mobile-content-pad">
@@ -461,6 +484,25 @@ export default function Synthesis() {
             completedRelays={synthesis.completionCount}
             isComplete={synthesis.isComplete}
           />
+        </motion.div>
+
+        {/* Challenge a Friend */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.65 }}
+          className="mb-8"
+        >
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3 text-center">CHALLENGE A FRIEND</p>
+          {profileId && (
+            <ChallengeButton
+              profileId={profileId}
+              senderName={`Explorer-${guestId.slice(0, 6)}`}
+              senderArchetype={patternTitle}
+              senderXp={synthesis.totalXpEarned}
+              senderRelays={synthesis.completionCount}
+            />
+          )}
         </motion.div>
 
         {/* Thesis Materials */}

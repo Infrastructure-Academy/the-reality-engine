@@ -172,3 +172,12 @@
 - [x] Code-split bundle with React.lazy() — 9 pages lazy-loaded, main bundle 1186KB→874KB (-26%)
 - [x] Build shareable pattern card on synthesis page — canvas-rendered 1200x630 OG image with radar, stats, native share + download
 - [x] Write vitest tests for new features (108 tests passing — share card, confetti callback, code-split, perspective distribution)
+
+## Vendor Chunks + OG Meta + Challenge a Friend
+- [x] Vendor chunk splitting — main bundle 874KB→158KB (-82%), vendor-react 471KB, vendor-motion 118KB, vendor-trpc 85KB, vendor-icons 26KB, vendor-ui 25KB
+- [x] Add OG meta tags to synthesis page — static in index.html + dynamic in Synthesis.tsx (og:title, og:description, twitter:card)
+- [x] Build "Challenge a Friend" invite flow — unique link from synthesis page drops friend into Explorer R1
+- [x] challenge_invites DB table, tRPC procedures (create/getByCode/accept)
+- [x] ChallengeButton component on Synthesis page with optional message
+- [x] ChallengeLanding page at /challenge/:code showing sender archetype + accept CTA
+- [x] Write vitest tests for new features (125 tests passing — challenge codes, OG meta, share text, vendor chunks)

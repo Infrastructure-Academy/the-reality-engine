@@ -23,6 +23,7 @@ const CardCollection = lazy(() => import("./pages/CardCollection"));
 const GovernanceDeck = lazy(() => import("./pages/GovernanceDeck"));
 const Synthesis = lazy(() => import("./pages/Synthesis"));
 const MobileExplorer = lazy(() => import("./pages/MobileExplorer"));
+const ChallengeLanding = lazy(() => import("./pages/ChallengeLanding"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -52,6 +53,7 @@ function Router() {
         <Route path={"/synthesis"} component={Synthesis} />
         <Route path={"/m/explore"} component={MobileExplorer} />
         <Route path={"/m/explore/:relayNum"} component={MobileExplorer} />
+        <Route path={"/challenge/:code"} component={ChallengeLanding} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

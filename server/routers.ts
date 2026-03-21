@@ -246,7 +246,37 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getLiveLeaderboard(input?.mode);
       }),
+   }),
+
+  // ─── Challenge Invites ───
+  challenge: router({
+    create: publicProcedure
+      .input(z.object({
+        profileId: z.number(),
+        senderName: z.string(),
+        senderArchetype: z.string(),
+        senderXp: z.number(),
+        senderRelays: z.number(),
+        message: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const result = await db.createChallengeInvite(
+          input.profileId, input.senderName, input.senderArchetype,
+          input.senderXp, input.senderRelays, input.message
+        );
+        return result;
+      }),
+    getByCode: publicProcedure
+      .input(z.object({ code: z.string() }))
+      .query(async ({ input }) => {
+        return db.getChallengeByCode(input.code);
+      }),
+    accept: publicProcedure
+      .input(z.object({ code: z.string(), acceptorProfileId: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.acceptChallenge(input.code, input.acceptorProfileId);
+        return { success: true };
+      }),
   }),
 });
-
 export type AppRouter = typeof appRouter;

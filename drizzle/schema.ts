@@ -182,3 +182,20 @@ export const leaderboard = mysqlTable("leaderboard", {
 });
 
 export type LeaderboardEntry = typeof leaderboard.$inferSelect;
+
+// ─── Challenge Invites ───
+export const challengeInvites = mysqlTable("challenge_invites", {
+  id: int("id").autoincrement().primaryKey(),
+  code: varchar("code", { length: 16 }).notNull().unique(),
+  senderProfileId: int("senderProfileId").notNull(),
+  senderName: varchar("senderName", { length: 128 }),
+  senderArchetype: varchar("senderArchetype", { length: 128 }),
+  senderXp: bigint("senderXp", { mode: "number" }).default(0),
+  senderRelays: int("senderRelays").default(0),
+  message: text("message"),
+  acceptedBy: int("acceptedBy"),
+  acceptedAt: timestamp("acceptedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ChallengeInvite = typeof challengeInvites.$inferSelect;

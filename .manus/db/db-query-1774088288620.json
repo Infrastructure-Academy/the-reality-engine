@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `challenge_invites` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`code` varchar(16) NOT NULL,\n\t`senderProfileId` int NOT NULL,\n\t`senderName` varchar(128),\n\t`senderArchetype` varchar(128),\n\t`senderXp` bigint DEFAULT 0,\n\t`senderRelays` int DEFAULT 0,\n\t`message` text,\n\t`acceptedBy` int,\n\t`acceptedAt` timestamp,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `challenge_invites_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `challenge_invites_code_unique` UNIQUE(`code`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute CREATE TABLE `challenge_invites` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`code` varchar(16) NOT NULL,\n\t`senderProfileId` int NOT NULL,\n\t`senderName` varchar(128),\n\t`senderArchetype` varchar(128),\n\t`senderXp` bigint DEFAULT 0,\n\t`senderRelays` int DEFAULT 0,\n\t`message` text,\n\t`acceptedBy` int,\n\t`acceptedAt` timestamp,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `challenge_invites_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `challenge_invites_code_unique` UNIQUE(`code`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1730
+}

@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
-  xpTransactions, chatMessages, leaderboard
+  xpTransactions, chatMessages, leaderboard, challengeInvites
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -240,6 +240,42 @@ export async function getLiveLeaderboard(mode?: "explorer" | "flight_deck" | "sc
     };
   }));
   return results;
+}
+
+// ─── Challenge Invites ───
+export async function createChallengeInvite(
+  senderProfileId: number,
+  senderName: string,
+  senderArchetype: string,
+  senderXp: number,
+  senderRelays: number,
+  message?: string
+) {
+  const db = await getDb();
+  if (!db) return null;
+  // Generate a short unique code
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  const [result] = await db.insert(challengeInvites).values({
+    code, senderProfileId, senderName, senderArchetype, senderXp, senderRelays, message,
+  }).$returningId();
+  return { id: result.id, code };
+}
+
+export async function getChallengeByCode(code: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select().from(challengeInvites).where(eq(challengeInvites.code, code.toUpperCase())).limit(1);
+  return result[0] || null;
+}
+
+export async function acceptChallenge(code: string, acceptorProfileId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(challengeInvites)
+    .set({ acceptedBy: acceptorProfileId, acceptedAt: new Date() })
+    .where(eq(challengeInvites.code, code.toUpperCase()));
 }
 
 export async function upsertLeaderboard(profileId: number, displayName: string, mode: "explorer" | "flight_deck" | "scholar", totalXp: number, relaysCompleted: number, isGuru: boolean) {
