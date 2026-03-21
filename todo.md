@@ -160,3 +160,9 @@
 
 ## BUG — Flight Deck Stuck on Mobile
 - [x] Fix Flight Deck getting stuck on mobile — reduced min-width 700→520px, smaller cells, scroll hint arrow, compact header, progress prompt with instructions, synthesis link at 60/60
+
+## Flight Deck Enhancements — Zoom, Tooltips, Confetti
+- [x] Pinch-to-zoom on the Dearden Field matrix for mobile (usePinchZoom hook)
+- [x] Long-press node tooltip showing relay name, web name, and XP value (mobile long-press + desktop right-click)
+- [x] Confetti celebration animation when all 60 nodes activated (FIELD COMPLETE burst)
+- [x] Write vitest tests for new features (96 tests passing — zoom, long-press, confetti, tooltip)

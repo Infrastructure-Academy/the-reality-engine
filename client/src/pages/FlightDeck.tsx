@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -14,6 +14,9 @@ import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoun
 import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { usePinchZoom } from "@/hooks/usePinchZoom";
+import { Confetti } from "@/components/Confetti";
+import { NodeTooltip } from "@/components/NodeTooltip";
 
 type Phase = "craft_select" | "hud";
 
@@ -29,6 +32,21 @@ export default function FlightDeck() {
   const [chatInput, setChatInput] = useState("");
   const [cursorRelay, setCursorRelay] = useState(1);
   const [cursorWeb, setCursorWeb] = useState(0);
+
+  // Pinch-to-zoom on the matrix
+  const { containerRef: zoomRef, transform: zoomTransform, isZoomed, reset: resetZoom } = usePinchZoom(1, 3);
+
+  // Long-press tooltip state
+  const [tooltip, setTooltip] = useState<{
+    visible: boolean;
+    relay: number;
+    web: string;
+    position: { x: number; y: number };
+  }>({ visible: false, relay: 1, web: "Natural", position: { x: 0, y: 0 } });
+
+  // Confetti state — triggers once when 60/60 is first reached
+  const [showConfetti, setShowConfetti] = useState(false);
+  const prevActivatedRef = useRef(0);
 
   // ─── Profile & DB persistence ───
   const profileMutation = trpc.profile.getOrCreate.useMutation();
@@ -140,6 +158,31 @@ export default function FlightDeck() {
   const totalActivated = activatedNodes.size;
   const totalNodes = 60;
   const activationPct = Math.round((totalActivated / totalNodes) * 100);
+
+  // Trigger confetti when reaching 60/60 for the first time this session
+  useEffect(() => {
+    if (totalActivated >= totalNodes && prevActivatedRef.current < totalNodes) {
+      setShowConfetti(true);
+    }
+    prevActivatedRef.current = totalActivated;
+  }, [totalActivated]);
+
+  // Long-press handler for nodes
+  const handleNodeLongPress = useCallback((relay: number, web: string, e: React.TouchEvent | React.MouseEvent) => {
+    let x = 0, y = 0;
+    if ("touches" in e) {
+      x = e.touches[0].clientX;
+      y = e.touches[0].clientY;
+    } else {
+      x = e.clientX;
+      y = e.clientY;
+    }
+    setTooltip({ visible: true, relay, web, position: { x, y } });
+  }, []);
+
+  const closeTooltip = useCallback(() => {
+    setTooltip(prev => ({ ...prev, visible: false }));
+  }, []);
 
   // Stat icons
   const statIcons: Record<string, React.ElementType> = {
@@ -330,13 +373,27 @@ export default function FlightDeck() {
           </motion.div>
         )}
 
-        {/* Dearden Field Grid — Mobile-Responsive */}
-        <div className="overflow-x-auto pb-4 relative">
-          {/* Scroll hint for mobile */}
-          <div className="sm:hidden absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none flex items-center justify-center">
-            <ChevronRight className="w-4 h-4 text-cyan-400/60 animate-pulse" />
+        {/* Zoom Reset Button */}
+        {isZoomed && (
+          <div className="mb-2 text-center">
+            <button
+              onClick={resetZoom}
+              className="px-3 py-1 rounded-full text-[10px] font-mono bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
+            >
+              Reset Zoom (pinch to zoom)
+            </button>
           </div>
-          <div className="min-w-[520px]">
+        )}
+
+        {/* Dearden Field Grid — Mobile-Responsive + Pinch-to-Zoom */}
+        <div className="overflow-x-auto pb-4 relative" ref={zoomRef}>
+          {/* Scroll hint for mobile */}
+          {!isZoomed && (
+            <div className="sm:hidden absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none flex items-center justify-center">
+              <ChevronRight className="w-4 h-4 text-cyan-400/60 animate-pulse" />
+            </div>
+          )}
+          <div className="min-w-[520px] origin-top-left" style={{ transform: zoomTransform }}>
             {/* Web Headers */}
             <div className="grid grid-cols-[60px_repeat(5,1fr)] sm:grid-cols-[100px_repeat(5,1fr)] gap-0.5 sm:gap-1 mb-1">
               <div />
@@ -360,18 +417,45 @@ export default function FlightDeck() {
                   </div>
                 </div>
 
-                {/* Node Cells */}
+                {/* Node Cells — with long-press for tooltip */}
                 {WEBS.map(web => {
                   const key = nodeKey(relay.number, web.name);
                   const isActivated = activatedNodes.has(key);
                   const isActive = activeNode?.relay === relay.number && activeNode?.web === web.name;
                   const isMatchingWeb = selectedCraft?.web === web.name;
 
+                  // Long-press timer ref per node
+                  let longPressTimer: ReturnType<typeof setTimeout> | null = null;
+                  let isLong = false;
+
                   return (
                     <motion.button
                       key={key}
                       whileTap={{ scale: 0.9 }}
-                      onClick={() => handleNodeClick(relay.number, web.name)}
+                      onTouchStart={(e) => {
+                        isLong = false;
+                        longPressTimer = setTimeout(() => {
+                          isLong = true;
+                          handleNodeLongPress(relay.number, web.name, e);
+                        }, 400);
+                      }}
+                      onTouchMove={() => {
+                        if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+                      }}
+                      onTouchEnd={() => {
+                        if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+                        if (!isLong) handleNodeClick(relay.number, web.name);
+                      }}
+                      onClick={(e) => {
+                        // Desktop only — mobile handled by touch events
+                        if ('ontouchstart' in window) return;
+                        handleNodeClick(relay.number, web.name);
+                      }}
+                      onContextMenu={(e) => {
+                        // Right-click on desktop = tooltip
+                        e.preventDefault();
+                        handleNodeLongPress(relay.number, web.name, e as any);
+                      }}
                       className={`
                         relative h-8 sm:h-10 rounded border transition-all duration-200
                         ${isActive
@@ -396,6 +480,24 @@ export default function FlightDeck() {
             ))}
           </div>
         </div>
+
+        {/* Node Tooltip (long-press / right-click) */}
+        <NodeTooltip
+          visible={tooltip.visible}
+          relayName={RELAYS.find(r => r.number === tooltip.relay)?.name || ""}
+          relayEmoji={RELAYS.find(r => r.number === tooltip.relay)?.emoji || ""}
+          relayNumber={tooltip.relay}
+          webName={tooltip.web}
+          webColor={WEBS.find(w => w.name === tooltip.web)?.color || "#06b6d4"}
+          webIcon={WEBS.find(w => w.name === tooltip.web)?.icon || ""}
+          isActivated={activatedNodes.has(nodeKey(tooltip.relay, tooltip.web))}
+          isMatchingWeb={selectedCraft?.web === tooltip.web}
+          position={tooltip.position}
+          onClose={closeTooltip}
+        />
+
+        {/* Confetti at 60/60 */}
+        <Confetti active={showConfetti} />
 
         {/* Active Node Detail */}
         <AnimatePresence>
@@ -524,3 +626,4 @@ export default function FlightDeck() {
     </div>
   );
 }
+
