@@ -218,3 +218,24 @@ export const agnContacts = mysqlTable("agn_contacts", {
 });
 
 export type AgnContact = typeof agnContacts.$inferSelect;
+
+// ─── Contact Tags (for categorizing AGN contacts) ───
+export const contactTags = mysqlTable("contact_tags", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 64 }).notNull().unique(),
+  color: varchar("color", { length: 16 }).default("#6b7280"),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ContactTag = typeof contactTags.$inferSelect;
+
+// ─── Contact Tag Assignments (junction table) ───
+export const contactTagAssignments = mysqlTable("contact_tag_assignments", {
+  id: int("id").autoincrement().primaryKey(),
+  contactId: int("contactId").notNull(),
+  tagId: int("tagId").notNull(),
+  assignedAt: timestamp("assignedAt").defaultNow().notNull(),
+});
+
+export type ContactTagAssignment = typeof contactTagAssignments.$inferSelect;

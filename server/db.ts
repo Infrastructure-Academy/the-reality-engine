@@ -4,7 +4,7 @@ import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
-  agnContacts
+  agnContacts, contactTags, contactTagAssignments
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -303,7 +303,7 @@ export async function getJourneyTimeline(profileId: number) {
 }
 
 // ─── AGN Network Contacts ───
-export async function getAgnContacts(opts: { search?: string; page?: number; limit?: number; hasNameOnly?: boolean }) {
+export async function getAgnContacts(opts: { search?: string; page?: number; limit?: number; hasNameOnly?: boolean; contactIds?: number[] }) {
   const db = await getDb();
   if (!db) return { contacts: [], total: 0 };
   const page = opts.page ?? 1;
@@ -317,6 +317,9 @@ export async function getAgnContacts(opts: { search?: string; page?: number; lim
   }
   if (opts.hasNameOnly) {
     conditions.push(sql`name != ''`);
+  }
+  if (opts.contactIds && opts.contactIds.length > 0) {
+    conditions.push(sql`id IN (${sql.join(opts.contactIds.map(id => sql`${id}`), sql`, `)})`);
   }
 
   const where = conditions.length > 0 ? sql.join(conditions, sql` AND `) : undefined;
@@ -360,4 +363,136 @@ export async function markAgnContactPlayed(id: number, profileId: number | null)
   const db = await getDb();
   if (!db) return;
   await db.update(agnContacts).set({ hasPlayed: true, linkedProfileId: profileId }).where(eq(agnContacts.id, id));
+}
+
+// ─── Contact Tags ───
+export async function getAllContactTags() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contactTags).orderBy(contactTags.name);
+}
+
+export async function createContactTag(name: string, color: string, description?: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const [result] = await db.insert(contactTags).values({ name, color, description }).$returningId();
+  const tag = await db.select().from(contactTags).where(eq(contactTags.id, result.id)).limit(1);
+  return tag[0] || null;
+}
+
+export async function updateContactTag(id: number, data: { name?: string; color?: string; description?: string }) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(contactTags).set(data).where(eq(contactTags.id, id));
+}
+
+export async function deleteContactTag(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  // Remove all assignments first
+  await db.delete(contactTagAssignments).where(eq(contactTagAssignments.tagId, id));
+  await db.delete(contactTags).where(eq(contactTags.id, id));
+}
+
+export async function getTagsForContact(contactId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const assignments = await db.select({
+    tagId: contactTagAssignments.tagId,
+    tagName: contactTags.name,
+    tagColor: contactTags.color,
+  })
+    .from(contactTagAssignments)
+    .innerJoin(contactTags, eq(contactTagAssignments.tagId, contactTags.id))
+    .where(eq(contactTagAssignments.contactId, contactId));
+  return assignments;
+}
+
+export async function getTagsForContacts(contactIds: number[]) {
+  const db = await getDb();
+  if (!db || contactIds.length === 0) return new Map<number, { tagId: number; tagName: string | null; tagColor: string | null }[]>();
+  const assignments = await db.select({
+    contactId: contactTagAssignments.contactId,
+    tagId: contactTagAssignments.tagId,
+    tagName: contactTags.name,
+    tagColor: contactTags.color,
+  })
+    .from(contactTagAssignments)
+    .innerJoin(contactTags, eq(contactTagAssignments.tagId, contactTags.id))
+    .where(sql`${contactTagAssignments.contactId} IN (${sql.join(contactIds.map(id => sql`${id}`), sql`, `)})`);
+  const map = new Map<number, { tagId: number; tagName: string | null; tagColor: string | null }[]>();
+  for (const a of assignments) {
+    if (!map.has(a.contactId)) map.set(a.contactId, []);
+    map.get(a.contactId)!.push({ tagId: a.tagId, tagName: a.tagName, tagColor: a.tagColor });
+  }
+  return map;
+}
+
+export async function assignTagToContact(contactId: number, tagId: number) {
+  const db = await getDb();
+  if (!db) return;
+  // Check if already assigned
+  const existing = await db.select().from(contactTagAssignments)
+    .where(and(eq(contactTagAssignments.contactId, contactId), eq(contactTagAssignments.tagId, tagId))).limit(1);
+  if (existing[0]) return; // already assigned
+  await db.insert(contactTagAssignments).values({ contactId, tagId });
+}
+
+export async function removeTagFromContact(contactId: number, tagId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(contactTagAssignments)
+    .where(and(eq(contactTagAssignments.contactId, contactId), eq(contactTagAssignments.tagId, tagId)));
+}
+
+export async function getContactsByTag(tagId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const assignments = await db.select({ contactId: contactTagAssignments.contactId })
+    .from(contactTagAssignments)
+    .where(eq(contactTagAssignments.tagId, tagId));
+  return assignments.map(a => a.contactId);
+}
+
+// ─── Auto-Link AGN Contacts to Player Profiles ───
+export async function autoLinkContactToProfile(profileId: number, displayName: string) {
+  const db = await getDb();
+  if (!db) return null;
+  // Try to match by name (case-insensitive fuzzy match)
+  const term = `%${displayName}%`;
+  const matches = await db.select().from(agnContacts)
+    .where(and(
+      sql`(name LIKE ${term} OR displayName LIKE ${term})`,
+      sql`linkedProfileId IS NULL`
+    ))
+    .limit(5);
+  if (matches.length === 0) return null;
+  // Find best match (exact name match preferred)
+  const exactMatch = matches.find(m =>
+    m.name?.toLowerCase() === displayName.toLowerCase() ||
+    m.displayName?.toLowerCase() === displayName.toLowerCase()
+  );
+  const match = exactMatch || matches[0];
+  // Link the contact
+  await db.update(agnContacts).set({
+    hasPlayed: true,
+    linkedProfileId: profileId,
+  }).where(eq(agnContacts.id, match.id));
+  return match;
+}
+
+export async function getLinkedProfileStats(contactId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const contact = await db.select().from(agnContacts).where(eq(agnContacts.id, contactId)).limit(1);
+  if (!contact[0]?.linkedProfileId) return null;
+  const profile = await db.select().from(playerProfiles).where(eq(playerProfiles.id, contact[0].linkedProfileId)).limit(1);
+  if (!profile[0]) return null;
+  return {
+    profileId: profile[0].id,
+    displayName: profile[0].displayName,
+    mode: profile[0].mode,
+    totalXp: profile[0].totalXp ?? 0,
+    lastActive: profile[0].updatedAt,
+  };
 }

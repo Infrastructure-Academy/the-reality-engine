@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `contact_tag_assignments` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`contactId` int NOT NULL,\n\t`tagId` int NOT NULL,\n\t`assignedAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `contact_tag_assignments_id` PRIMARY KEY(`id`)\n);\n\nCREATE TABLE `contact_tags` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`name` varchar(64) NOT NULL,\n\t`color` varchar(16) DEFAULT '#6b7280',\n\t`description` text,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `contact_tags_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `contact_tags_name_unique` UNIQUE(`name`)\n);\n\nCREATE INDEX idx_tag_assignments_contact ON contact_tag_assignments(contactId);\nCREATE INDEX idx_tag_assignments_tag ON contact_tag_assignments(tagId);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute CREATE TABLE `contact_tag_assignments` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`contactId` int NOT NULL,\n\t`tagId` int NOT NULL,\n\t`assignedAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `contact_tag_assignments_id` PRIMARY KEY(`id`)\n);\n\nCREATE TABLE `contact_tags` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`name` varchar(64) NOT NULL,\n\t`color` varchar(16) DEFAULT '#6b7280',\n\t`description` text,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `contact_tags_id` PRIMARY KEY(`id`),\n\tCONSTRAINT `contact_tags_name_unique` UNIQUE(`name`)\n);\n\nCREATE INDEX idx_tag_assignments_contact ON contact_tag_assignments(contactId);\nCREATE INDEX idx_tag_assignments_tag ON contact_tag_assignments(tagId);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2860
+}

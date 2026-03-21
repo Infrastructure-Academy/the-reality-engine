@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO contact_tags (name, color, description) VALUES\n('Active Member', '#22c55e', 'Regularly participates in group discussions'),\n('Committee', '#3b82f6', 'AGN committee member'),\n('Regional Lead', '#a855f7', 'Regional chapter leader'),\n('Beta Tester', '#f59e0b', 'Signed up for TRE beta testing'),\n('VIP', '#ef4444', 'Key stakeholder or influential member'),\n('Inactive', '#6b7280', 'Has not been active recently');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute INSERT INTO contact_tags (name, color, description) VALUES\n('Active Member', '#22c55e', 'Regularly participates in group discussions'),\n('Committee', '#3b82f6', 'AGN committee member'),\n('Regional Lead', '#a855f7', 'Regional chapter leader'),\n('Beta Tester', '#f59e0b', 'Signed up for TRE beta testing'),\n('VIP', '#ef4444', 'Key stakeholder or influential member'),\n('Inactive', '#6b7280', 'Has not been active recently');",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

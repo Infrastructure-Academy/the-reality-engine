@@ -197,3 +197,22 @@
 - [x] Import 777 contacts from WhatsApp chat export (586 named, 191 phone-only)
 - [x] Build admin Network Directory page to search/filter contacts
 - [x] Cross-reference contacts with player_profiles to track who has played (hasPlayed + linkedProfileId fields)
+
+## Contact Tagging & Categorization
+- [x] Create contact_tags table (id, name, color, description)
+- [x] Create contact_tag_assignments junction table (contactId, tagId)
+- [x] Add tRPC procedures for CRUD tags and assign/remove tags from contacts
+- [x] Add tag management UI in Network Directory (create tags, assign via multi-select)
+- [x] Add tag filter chips to Network Directory search
+
+## Auto-Link AGN Contacts to Player Profiles
+- [x] Add linkedProfileId column to agn_contacts table (already existed)
+- [x] On player signup/profile creation, auto-match by name to AGN contacts
+- [x] Show linked status in Network Directory (who has played, who hasn't)
+- [x] Add engagement stats (last active, XP earned) for linked contacts
+
+## DAVID Voice End-to-End Verification
+- [x] Test DAVID voice narration in browser on Explorer relay page
+- [x] Verify voice toggle persists across page navigations (localStorage-based)
+- [x] Confirm relay intro narration triggers on relay load
+- [x] Confirm discovery narration triggers on invention tap

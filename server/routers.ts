@@ -51,7 +51,14 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const userId = ctx.user?.id ?? null;
         const guestId = input.guestId ?? null;
-        return db.getOrCreateProfile(userId, guestId, input.mode);
+        const profile = await db.getOrCreateProfile(userId, guestId, input.mode);
+        // Auto-link to AGN contact if user has a name
+        if (profile && ctx.user?.name) {
+          try {
+            await db.autoLinkContactToProfile(profile.id, ctx.user.name);
+          } catch { /* ignore link failures */ }
+        }
+        return profile;
       }),
     addXp: publicProcedure
       .input(z.object({ profileId: z.number(), amount: z.number(), source: z.string(), sourceId: z.string().optional(), description: z.string().optional() }))
@@ -296,9 +303,27 @@ export const appRouter = router({
         page: z.number().default(1),
         limit: z.number().default(50),
         hasNameOnly: z.boolean().optional(),
+        tagId: z.number().optional(),
       }))
       .query(async ({ input }) => {
-        return db.getAgnContacts(input);
+        let result;
+        if (input.tagId) {
+          // Filter by tag first, then apply other filters
+          const contactIds = await db.getContactsByTag(input.tagId);
+          if (contactIds.length === 0) return { contacts: [], total: 0, tags: new Map() };
+          // Get contacts with tag filter applied at DB level
+          result = await db.getAgnContacts({ ...input, contactIds });
+        } else {
+          result = await db.getAgnContacts(input);
+        }
+        // Enrich with tags
+        const ids = result.contacts.map((c: any) => c.id);
+        const tagsMap = await db.getTagsForContacts(ids);
+        const enriched = result.contacts.map((c: any) => ({
+          ...c,
+          tags: tagsMap.get(c.id) || [],
+        }));
+        return { contacts: enriched, total: result.total };
       }),
     stats: protectedProcedure.query(async () => {
       return db.getAgnContactStats();
@@ -314,6 +339,59 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await db.markAgnContactPlayed(input.id, input.profileId);
         return { success: true };
+      }),
+
+    // ─── Tag Management ───
+    tags: protectedProcedure.query(async () => {
+      return db.getAllContactTags();
+    }),
+    createTag: protectedProcedure
+      .input(z.object({ name: z.string().min(1), color: z.string().default("#6b7280"), description: z.string().optional() }))
+      .mutation(async ({ input }) => {
+        return db.createContactTag(input.name, input.color, input.description);
+      }),
+    updateTag: protectedProcedure
+      .input(z.object({ id: z.number(), name: z.string().optional(), color: z.string().optional(), description: z.string().optional() }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateContactTag(id, data);
+        return { success: true };
+      }),
+    deleteTag: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteContactTag(input.id);
+        return { success: true };
+      }),
+    assignTag: protectedProcedure
+      .input(z.object({ contactId: z.number(), tagId: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.assignTagToContact(input.contactId, input.tagId);
+        return { success: true };
+      }),
+    removeTag: protectedProcedure
+      .input(z.object({ contactId: z.number(), tagId: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.removeTagFromContact(input.contactId, input.tagId);
+        return { success: true };
+      }),
+    bulkAssignTag: protectedProcedure
+      .input(z.object({ contactIds: z.array(z.number()), tagId: z.number() }))
+      .mutation(async ({ input }) => {
+        for (const contactId of input.contactIds) {
+          await db.assignTagToContact(contactId, input.tagId);
+        }
+        return { success: true, count: input.contactIds.length };
+      }),
+    contactTags: protectedProcedure
+      .input(z.object({ contactId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getTagsForContact(input.contactId);
+      }),
+    linkedProfile: protectedProcedure
+      .input(z.object({ contactId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getLinkedProfileStats(input.contactId);
       }),
   }),
 });

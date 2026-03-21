@@ -242,6 +242,116 @@ describe("AGN Network Contacts Procedures", () => {
 });
 
 // ═══════════════════════════════════════════════════════════
+// CONTACT TAGGING SYSTEM TESTS
+// ═══════════════════════════════════════════════════════════
+describe("Contact Tagging System", () => {
+  it("agn.tags requires authentication", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(caller.agn.tags()).rejects.toThrow();
+  });
+
+  it("agn.tags returns array for authenticated user", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const tags = await caller.agn.tags();
+    expect(Array.isArray(tags)).toBe(true);
+  });
+
+  it("agn.createTag creates a new tag", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const tag = await caller.agn.createTag({ name: `test-tag-${Date.now()}`, color: "#ff0000" });
+    expect(tag).not.toBeNull();
+    expect(tag!.name).toContain("test-tag-");
+    expect(tag!.color).toBe("#ff0000");
+    // Cleanup
+    await caller.agn.deleteTag({ id: tag!.id });
+  });
+
+  it("agn.assignTag and removeTag work for a contact", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    // Get a tag and a contact
+    const tags = await caller.agn.tags();
+    const contacts = await caller.agn.contacts({ page: 1, limit: 1 });
+    if (tags.length === 0 || contacts.contacts.length === 0) return; // skip if no data
+    const tagId = tags[0].id;
+    const contactId = contacts.contacts[0].id;
+    // Assign
+    const assignResult = await caller.agn.assignTag({ contactId, tagId });
+    expect(assignResult.success).toBe(true);
+    // Check tags on contact
+    const contactTags = await caller.agn.contactTags({ contactId });
+    expect(contactTags.some((t: any) => t.tagId === tagId)).toBe(true);
+    // Remove
+    const removeResult = await caller.agn.removeTag({ contactId, tagId });
+    expect(removeResult.success).toBe(true);
+  });
+
+  it("agn.bulkAssignTag assigns to multiple contacts", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const tags = await caller.agn.tags();
+    const contacts = await caller.agn.contacts({ page: 1, limit: 3 });
+    if (tags.length === 0 || contacts.contacts.length < 2) return;
+    const tagId = tags[0].id;
+    const contactIds = contacts.contacts.map((c: any) => c.id);
+    const result = await caller.agn.bulkAssignTag({ contactIds, tagId });
+    expect(result.success).toBe(true);
+    expect(result.count).toBe(contactIds.length);
+    // Cleanup
+    for (const cid of contactIds) {
+      await caller.agn.removeTag({ contactId: cid, tagId });
+    }
+  });
+
+  it("agn.contacts supports tagId filter", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    // Filter by a non-existent tag should return empty
+    const result = await caller.agn.contacts({ page: 1, limit: 10, tagId: 999999 });
+    expect(result.contacts.length).toBe(0);
+    expect(result.total).toBe(0);
+  });
+
+  it("agn.contacts enriches results with tags array", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.agn.contacts({ page: 1, limit: 5 });
+    for (const c of result.contacts) {
+      expect(Array.isArray((c as any).tags)).toBe(true);
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// AUTO-LINK CONTACTS TO PROFILES TESTS
+// ═══════════════════════════════════════════════════════════
+describe("Auto-Link AGN Contacts to Profiles", () => {
+  it("agn.linkedProfile requires authentication", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(caller.agn.linkedProfile({ contactId: 1 })).rejects.toThrow();
+  });
+
+  it("agn.linkedProfile returns null for unlinked contact", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.agn.linkedProfile({ contactId: 999999 });
+    expect(result).toBeNull();
+  });
+
+  it("agn.stats includes hasPlayed count", async () => {
+    const { ctx } = createAuthContext("admin");
+    const caller = appRouter.createCaller(ctx);
+    const stats = await caller.agn.stats();
+    expect(typeof stats.hasPlayed).toBe("number");
+    expect(stats.hasPlayed).toBeGreaterThanOrEqual(0);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
 // GAME DATA INTEGRITY TESTS
 // ═══════════════════════════════════════════════════════════
 describe("Game Data Integrity", () => {
