@@ -119,7 +119,7 @@
 - [x] Embed Tetrahedral Observer, INCIDENT-001, Equipment Index, Memorial Audit, Posters in GovernanceDeck
 - [x] Embed Tetrahedral Observer iCard in Frameworks page (laws tab)
 - [x] iCard collection page with BitPoint costs and unlock conditions
-- [ ] BitPoint earning tied to relay completion and discovery milestones (future: needs DB transaction wiring)
+- [x] BitPoint earning tied to relay completion and discovery milestones (wired via xp_transactions + relay_progress in Post-Fix phase)
 
 ## BUG — Production Crash on Mobile
 - [x] Fix "AN UNEXPECTED ERROR OCCURRED" crash on published site — React error #310: hooks called after early return in ExplorerRelay.tsx
