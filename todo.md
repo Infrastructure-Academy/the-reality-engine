@@ -157,3 +157,6 @@
 - [x] Create tRPC procedure for leaderboard query (leaderboard.live from player_profiles)
 - [x] Replace mock leaderboard data with live DB results (30s auto-refresh, LIVE badge)
 - [x] Write vitest tests for all new features (79 tests passing — synthesis, DAVID context, leaderboard)
+
+## BUG — Flight Deck Stuck on Mobile
+- [x] Fix Flight Deck getting stuck on mobile — reduced min-width 700→520px, smaller cells, scroll hint arrow, compact header, progress prompt with instructions, synthesis link at 60/60

@@ -272,15 +272,15 @@ export default function FlightDeck() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 font-mono text-xs">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2 sm:gap-4 font-mono text-xs">
+            <span className="hidden sm:inline px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <div className="hidden sm:flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-green-400">ONLINE</span>
             </div>
-            <span className="text-cyan-400">{totalActivated}/{totalNodes} NODES</span>
+            <span className="text-cyan-400 text-[10px] sm:text-xs">{totalActivated}/{totalNodes}</span>
             <XpCounter value={totalActivated * 50000} compact color="cyan" />
-            <span className="text-muted-foreground">{activationPct}%</span>
+            <span className="text-muted-foreground text-[10px] sm:text-xs">{activationPct}%</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -300,29 +300,63 @@ export default function FlightDeck() {
           <p className="text-xs text-muted-foreground">12 Relays x 5 Great Webs</p>
         </div>
 
-        {/* Dearden Field Grid */}
-        <div className="overflow-x-auto pb-4">
-          <div className="min-w-[700px]">
+        {/* Progress Prompt */}
+        {totalActivated < totalNodes && (
+          <div className="mb-4 p-3 rounded-lg border border-cyan-500/20 bg-cyan-500/5 text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <div className="h-1.5 flex-1 max-w-[200px] bg-muted rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-cyan-500 to-cyan-400 rounded-full transition-all duration-500" style={{ width: `${activationPct}%` }} />
+              </div>
+              <span className="text-xs font-mono text-cyan-400">{totalActivated}/{totalNodes}</span>
+            </div>
+            <p className="text-[10px] text-muted-foreground">
+              Tap each node to activate. Complete all 60 to unlock the Synthesis page.
+            </p>
+          </div>
+        )}
+        {totalActivated >= totalNodes && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-4 p-4 rounded-lg border border-amber-500/40 bg-amber-500/10 text-center"
+          >
+            <p className="text-sm font-heading font-bold text-gold-gradient mb-1">ALL NODES ACTIVATED</p>
+            <p className="text-xs text-muted-foreground mb-2">The Dearden Field is fully mapped. View your civilizational pattern.</p>
+            <Link href="/synthesis">
+              <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white font-heading tracking-wider">
+                View Synthesis <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </Link>
+          </motion.div>
+        )}
+
+        {/* Dearden Field Grid — Mobile-Responsive */}
+        <div className="overflow-x-auto pb-4 relative">
+          {/* Scroll hint for mobile */}
+          <div className="sm:hidden absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none flex items-center justify-center">
+            <ChevronRight className="w-4 h-4 text-cyan-400/60 animate-pulse" />
+          </div>
+          <div className="min-w-[520px]">
             {/* Web Headers */}
-            <div className="grid grid-cols-[100px_repeat(5,1fr)] gap-1 mb-1">
+            <div className="grid grid-cols-[60px_repeat(5,1fr)] sm:grid-cols-[100px_repeat(5,1fr)] gap-0.5 sm:gap-1 mb-1">
               <div />
               {WEBS.map(web => (
-                <div key={web.name} className="text-center px-1 py-1.5 rounded-t-lg" style={{ backgroundColor: `${web.color}15` }}>
-                  <span className="text-sm">{web.icon}</span>
-                  <p className="text-[9px] font-bold uppercase tracking-wider" style={{ color: web.color }}>{web.name}</p>
+                <div key={web.name} className="text-center px-0.5 sm:px-1 py-1 sm:py-1.5 rounded-t-lg" style={{ backgroundColor: `${web.color}15` }}>
+                  <span className="text-xs sm:text-sm">{web.icon}</span>
+                  <p className="text-[7px] sm:text-[9px] font-bold uppercase tracking-wider" style={{ color: web.color }}>{web.name}</p>
                 </div>
               ))}
             </div>
 
             {/* Relay Rows */}
             {RELAYS.map(relay => (
-              <div key={relay.number} className="grid grid-cols-[100px_repeat(5,1fr)] gap-1 mb-1">
+              <div key={relay.number} className="grid grid-cols-[60px_repeat(5,1fr)] sm:grid-cols-[100px_repeat(5,1fr)] gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
                 {/* Relay Label */}
-                <div className="flex items-center gap-1.5 pr-2">
-                  <span className="text-sm">{relay.emoji}</span>
+                <div className="flex items-center gap-1 sm:gap-1.5 pr-1 sm:pr-2">
+                  <span className="text-xs sm:text-sm">{relay.emoji}</span>
                   <div>
-                    <p className="text-[10px] font-bold leading-tight">{relay.name}</p>
-                    <p className="text-[8px] text-muted-foreground font-mono">R{relay.number}</p>
+                    <p className="text-[8px] sm:text-[10px] font-bold leading-tight truncate">{relay.name}</p>
+                    <p className="text-[7px] sm:text-[8px] text-muted-foreground font-mono">R{relay.number}</p>
                   </div>
                 </div>
 
@@ -339,7 +373,7 @@ export default function FlightDeck() {
                       whileTap={{ scale: 0.9 }}
                       onClick={() => handleNodeClick(relay.number, web.name)}
                       className={`
-                        relative h-10 rounded border transition-all duration-200
+                        relative h-8 sm:h-10 rounded border transition-all duration-200
                         ${isActive
                           ? "border-white/60 bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                           : isActivated
@@ -352,7 +386,7 @@ export default function FlightDeck() {
                     >
                       {isActivated && (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: web.color, opacity: 0.8 }} />
+                          <div className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full" style={{ backgroundColor: web.color, opacity: 0.8 }} />
                         </div>
                       )}
                     </motion.button>
