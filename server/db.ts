@@ -216,6 +216,32 @@ export async function getLeaderboardEntries(mode?: "explorer" | "flight_deck" | 
   return db.select().from(leaderboard).orderBy(desc(leaderboard.totalXp)).limit(limit);
 }
 
+// ─── Live Leaderboard from player_profiles ───
+export async function getLiveLeaderboard(mode?: "explorer" | "flight_deck" | "scholar", limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = mode ? eq(playerProfiles.mode, mode) : undefined;
+  const profiles = conditions
+    ? await db.select().from(playerProfiles).where(conditions).orderBy(desc(playerProfiles.totalXp)).limit(limit)
+    : await db.select().from(playerProfiles).orderBy(desc(playerProfiles.totalXp)).limit(limit);
+
+  // For each profile, count completed relays
+  const results = await Promise.all(profiles.map(async (p) => {
+    const progress = await db.select().from(relayProgress)
+      .where(and(eq(relayProgress.profileId, p.id), sql`completionPct >= 100`));
+    return {
+      id: p.id,
+      displayName: p.displayName || `Player-${p.id}`,
+      mode: p.mode,
+      totalXp: p.totalXp ?? 0,
+      bitPoints: p.bitPoints ?? 0,
+      relaysCompleted: progress.length,
+      isGuru: p.isGuru ?? false,
+    };
+  }));
+  return results;
+}
+
 export async function upsertLeaderboard(profileId: number, displayName: string, mode: "explorer" | "flight_deck" | "scholar", totalXp: number, relaysCompleted: number, isGuru: boolean) {
   const db = await getDb();
   if (!db) return;

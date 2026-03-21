@@ -13,6 +13,7 @@ import YodaControl from "./pages/YodaControl";
 import Frameworks from "./pages/Frameworks";
 import CardCollection from "./pages/CardCollection";
 import GovernanceDeck from "./pages/GovernanceDeck";
+import Synthesis from "./pages/Synthesis";
 import MobileExplorer from "./pages/MobileExplorer";
 import { BottomTabBar } from "./components/BottomTabBar";
 import { InstallBanner } from "./components/InstallBanner";
@@ -31,6 +32,7 @@ function Router() {
       <Route path={"/frameworks"} component={Frameworks} />
       <Route path={"/cards"} component={CardCollection} />
       <Route path={"/governance"} component={GovernanceDeck} />
+      <Route path={"/synthesis"} component={Synthesis} />
       <Route path={"/m/explore"} component={MobileExplorer} />
       <Route path={"/m/explore/:relayNum"} component={MobileExplorer} />
       <Route path={"/404"} component={NotFound} />

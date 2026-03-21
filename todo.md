@@ -144,3 +144,16 @@
 - [x] Add sound toggle (mute/unmute) with localStorage persistence
 - [x] Add sound toggle button to Explorer and Flight Deck headers
 - [x] Write vitest tests for new features (59 tests passing — mute toggle, XP formatting, Flight Deck XP math)
+
+## End-Game Synthesis + DAVID Context + Real Leaderboard
+- [x] Build end-game synthesis page — /synthesis route with pattern visualization
+- [x] Show civilizational pattern visualization (West/East/Nomadic radar triangle)
+- [x] Display discovered pattern summary with relay completion stats + archetype title
+- [x] Offer thesis materials links (Perspective/Guide/Game sections)
+- [x] Wire DAVID AI narrator with player discovery history in system prompt
+- [x] Feed relay progress, XP, discovered items, perspective lean, node activations, and character data into DAVID context
+- [x] DAVID references player's previous choices when giving guidance (instruction in system prompt)
+- [x] Connect leaderboard to real player_profiles DB data
+- [x] Create tRPC procedure for leaderboard query (leaderboard.live from player_profiles)
+- [x] Replace mock leaderboard data with live DB results (30s auto-refresh, LIVE badge)
+- [x] Write vitest tests for all new features (79 tests passing — synthesis, DAVID context, leaderboard)
