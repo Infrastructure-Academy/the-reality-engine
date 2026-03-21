@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation, useRoute } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -496,8 +496,10 @@ export default function FlightDeck() {
           onClose={closeTooltip}
         />
 
-        {/* Confetti at 60/60 */}
-        <Confetti active={showConfetti} />
+        {/* Confetti at 60/60 — auto-redirect to synthesis after */}
+        <Confetti active={showConfetti} onComplete={() => {
+          window.location.href = "/synthesis";
+        }} />
 
         {/* Active Node Detail */}
         <AnimatePresence>

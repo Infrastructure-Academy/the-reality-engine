@@ -166,3 +166,9 @@
 - [x] Long-press node tooltip showing relay name, web name, and XP value (mobile long-press + desktop right-click)
 - [x] Confetti celebration animation when all 60 nodes activated (FIELD COMPLETE burst)
 - [x] Write vitest tests for new features (96 tests passing — zoom, long-press, confetti, tooltip)
+
+## Auto-Redirect + Code-Split + Share Card
+- [x] Auto-redirect to /synthesis after confetti finishes (4s delay via onComplete callback)
+- [x] Code-split bundle with React.lazy() — 9 pages lazy-loaded, main bundle 1186KB→874KB (-26%)
+- [x] Build shareable pattern card on synthesis page — canvas-rendered 1200x630 OG image with radar, stats, native share + download
+- [x] Write vitest tests for new features (108 tests passing — share card, confetti callback, code-split, perspective distribution)

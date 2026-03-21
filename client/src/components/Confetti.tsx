@@ -5,6 +5,7 @@ interface ConfettiProps {
   active: boolean;
   duration?: number;
   particleCount?: number;
+  onComplete?: () => void;
 }
 
 interface Particle {
@@ -22,16 +23,19 @@ const COLORS = [
   "#ec4899", "#3b82f6", "#f97316", "#fbbf24", "#34d399",
 ];
 
-export function Confetti({ active, duration = 4000, particleCount = 60 }: ConfettiProps) {
+export function Confetti({ active, duration = 4000, particleCount = 60, onComplete }: ConfettiProps) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (active) {
       setShow(true);
-      const timer = setTimeout(() => setShow(false), duration);
+      const timer = setTimeout(() => {
+        setShow(false);
+        onComplete?.();
+      }, duration);
       return () => clearTimeout(timer);
     }
-  }, [active, duration]);
+  }, [active, duration, onComplete]);
 
   const particles = useMemo<Particle[]>(() => {
     return Array.from({ length: particleCount }, (_, i) => ({

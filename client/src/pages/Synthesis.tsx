@@ -9,6 +9,7 @@ import {
   Sparkles, ChevronRight, Award, Target, Map as MapIcon
 } from "lucide-react";
 import { XpCounter } from "@/components/XpCounter";
+import { ShareCard } from "@/components/ShareCard";
 
 // ─── Civilizational Perspective Classification ───
 // Each relay maps to a civilizational perspective based on its historical context
@@ -440,6 +441,26 @@ export default function Synthesis() {
               </motion.div>
             )}
           </AnimatePresence>
+        </motion.div>
+
+        {/* Share Card */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mb-8 text-center"
+        >
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">SHARE YOUR JOURNEY</p>
+          <ShareCard
+            patternTitle={patternTitle}
+            dominant={synthesis.dominant}
+            isBalanced={synthesis.isBalanced}
+            perspectives={synthesis.perspectives}
+            totalXp={synthesis.totalXpEarned}
+            discoveries={synthesis.totalDiscoveries}
+            completedRelays={synthesis.completionCount}
+            isComplete={synthesis.isComplete}
+          />
         </motion.div>
 
         {/* Thesis Materials */}
