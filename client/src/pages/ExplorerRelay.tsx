@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
+import { playDiscoverySound, playRelayTransitionSound, playXpSound, hapticDiscovery, hapticTransition } from "@/hooks/useSoundEffects";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -444,18 +445,77 @@ export default function ExplorerRelay() {
     });
   }, [chatInput, profileId, guestId, relayNum]);
 
-  // Discovery tap handler
-  const handleDiscover = useCallback((idx: number) => {
-    setDiscoveredItems(prev => {
-      const next = new Set(prev);
-      next.add(idx);
-      return next;
-    });
-  }, []);
-
   // Inventions per relay — from shared data with historical descriptions
   const inventionData = useMemo(() => INVENTIONS[relayNum] || [], [relayNum]);
   const inventions = useMemo(() => inventionData.map(i => i.name), [inventionData]);
+
+  // Persist progress to DB mutations
+  const addXpMutation = trpc.profile.addXp.useMutation();
+  const progressMutation = trpc.progress.upsert.useMutation();
+
+  // Load saved progress from DB when profile is ready
+  const { data: savedProgress } = trpc.progress.getForProfile.useQuery(
+    { profileId: profileId! },
+    { enabled: !!profileId }
+  );
+
+  // Restore discovered items from DB on load
+  useEffect(() => {
+    if (savedProgress && savedProgress.length > 0) {
+      const relayProg = savedProgress.find((p: any) => p.relayNumber === relayNum);
+      if (relayProg && relayProg.discoveredItems) {
+        try {
+          const items = typeof relayProg.discoveredItems === 'string'
+            ? JSON.parse(relayProg.discoveredItems)
+            : relayProg.discoveredItems;
+          if (Array.isArray(items)) {
+            setDiscoveredItems(new Set(items));
+          }
+        } catch { /* ignore parse errors */ }
+      }
+    }
+  }, [savedProgress, relayNum]);
+
+  // Discovery tap handler — now persists to DB + plays sound + haptic
+  const handleDiscover = useCallback((idx: number) => {
+    setDiscoveredItems(prev => {
+      if (prev.has(idx)) return prev; // already discovered
+      const next = new Set(prev);
+      next.add(idx);
+
+      // Sound + haptic feedback
+      playDiscoverySound();
+      hapticDiscovery();
+
+      // Persist to DB if we have a profile
+      if (profileId) {
+        const discoveredArr = Array.from(next);
+        const totalItems = inventions.length || 1;
+        const pct = Math.round((discoveredArr.length / totalItems) * 100);
+        const xpEach = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(totalItems, 1)) : 10000;
+        const totalXp = discoveredArr.length * xpEach;
+
+        // Save progress
+        progressMutation.mutate({
+          profileId, relayNumber: relayNum,
+          discoveredItems: discoveredArr, completionPct: pct, xpEarned: totalXp,
+        });
+
+        // Log XP transaction for this single discovery
+        addXpMutation.mutate({
+          profileId, amount: xpEach,
+          source: "relay_discovery",
+          sourceId: `relay-${relayNum}-item-${idx}`,
+          description: `Discovered invention #${idx + 1} in Relay ${relayNum}`,
+        });
+
+        // Play XP sound after a short delay
+        setTimeout(() => playXpSound(), 200);
+      }
+
+      return next;
+    });
+  }, [profileId, relayNum, inventions.length, relay?.xpReward]);
 
   const xpPerItem = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(inventions.length, 1)) : 10000;
   const totalXpEarned = discoveredItems.size * xpPerItem;
@@ -467,15 +527,15 @@ export default function ExplorerRelay() {
 
   // Swipe navigation between relays
   const swipeRef = useSwipeNavigation<HTMLDivElement>({
-    onSwipeLeft: canGoNext ? () => navigate(`/explore/${relayNum + 1}`) : undefined,
-    onSwipeRight: canGoPrev ? () => navigate(`/explore/${relayNum - 1}`) : undefined,
+    onSwipeLeft: canGoNext ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); } : undefined,
+    onSwipeRight: canGoPrev ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); } : undefined,
   });
 
   // Gamepad navigation
   const handleGamepadButton = useCallback(
     (button: GamepadButtonName) => {
-      if (button === "RB" && canGoNext) navigate(`/explore/${relayNum + 1}`);
-      else if (button === "LB" && canGoPrev) navigate(`/explore/${relayNum - 1}`);
+      if (button === "RB" && canGoNext) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); }
+      else if (button === "LB" && canGoPrev) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); }
       else if (button === "X") setShowChat((prev) => !prev);
       else if (button === "B") navigate("/");
     },

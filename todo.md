@@ -123,3 +123,14 @@
 
 ## BUG — Production Crash on Mobile
 - [x] Fix "AN UNEXPECTED ERROR OCCURRED" crash on published site — React error #310: hooks called after early return in ExplorerRelay.tsx
+
+## Post-Fix — BitPoint DB Wiring + Sound Effects + Haptics
+- [x] Test all 3 modes on published site to confirm crash fix (Explorer loads, Flight Deck + Scholar show auth gates)
+- [x] Wire BitPoint earning to database — uses existing xp_transactions + relay_progress tables
+- [x] Create DB helpers for recording discoveries and XP transactions (already existed in db.ts)
+- [x] Create tRPC procedures for earning BitPoints on relay discovery (profile.addXp + progress.upsert)
+- [x] Frontend: persist discoveries to DB (Explorer wired — saves progress + XP on each tap)
+- [x] Add sound effects for discovery taps (Web Audio API — ascending chime + XP ding)
+- [x] Add sound effects for relay transitions (sawtooth sweep on swipe/gamepad nav)
+- [x] Add haptic feedback via navigator.vibrate() for mobile discovery taps + transitions
+- [x] Write vitest tests for sound effects, haptics, and BitPoint earning logic (50 tests passing)

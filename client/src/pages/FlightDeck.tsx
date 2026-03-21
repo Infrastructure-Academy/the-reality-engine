@@ -10,6 +10,7 @@ import {
   ChevronRight, MessageCircle, Lock, Rocket
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
+import { playNodeActivationSound, hapticTap } from "@/hooks/useSoundEffects";
 
 type Phase = "craft_select" | "hud";
 
@@ -66,8 +67,13 @@ export default function FlightDeck() {
     const key = nodeKey(relay, web);
     setActiveNode({ relay, web });
     setActivatedNodes(prev => {
+      const isNew = !prev.has(key);
       const next = new Set(prev);
       next.add(key);
+      if (isNew) {
+        playNodeActivationSound();
+        hapticTap(25);
+      }
       return next;
     });
   }, []);
