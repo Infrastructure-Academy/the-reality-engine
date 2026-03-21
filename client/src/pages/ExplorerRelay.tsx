@@ -463,21 +463,7 @@ export default function ExplorerRelay() {
   const canGoPrev = relayNum > 1;
   const canGoNext = relayNum < 12;
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground text-sm">Loading relay data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const layoutProps: LayoutProps = {
-    relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-    xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
-  };
+  // ─── Hooks MUST be called before any early return (React rules of hooks) ───
 
   // Swipe navigation between relays
   const swipeRef = useSwipeNavigation<HTMLDivElement>({
@@ -496,6 +482,22 @@ export default function ExplorerRelay() {
     [canGoNext, canGoPrev, relayNum, navigate]
   );
   useGamepad(handleGamepadButton);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground text-sm">Loading relay data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const layoutProps: LayoutProps = {
+    relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
+    xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
+  };
 
   return (
     <div ref={swipeRef} className="min-h-screen bg-background text-foreground bg-starfield relative mobile-content-pad">
