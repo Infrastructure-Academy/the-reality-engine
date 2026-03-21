@@ -278,5 +278,43 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // ─── Journey Timeline ───
+  journey: router({
+    timeline: publicProcedure
+      .input(z.object({ profileId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getJourneyTimeline(input.profileId);
+      }),
+  }),
+
+  // ─── AGN Network Contacts (admin only) ───
+  agn: router({
+    contacts: protectedProcedure
+      .input(z.object({
+        search: z.string().optional(),
+        page: z.number().default(1),
+        limit: z.number().default(50),
+        hasNameOnly: z.boolean().optional(),
+      }))
+      .query(async ({ input }) => {
+        return db.getAgnContacts(input);
+      }),
+    stats: protectedProcedure.query(async () => {
+      return db.getAgnContactStats();
+    }),
+    updateNotes: protectedProcedure
+      .input(z.object({ id: z.number(), notes: z.string() }))
+      .mutation(async ({ input }) => {
+        await db.updateAgnContactNotes(input.id, input.notes);
+        return { success: true };
+      }),
+    markPlayed: protectedProcedure
+      .input(z.object({ id: z.number(), profileId: z.number().nullable() }))
+      .mutation(async ({ input }) => {
+        await db.markAgnContactPlayed(input.id, input.profileId);
+        return { success: true };
+      }),
+  }),
 });
 export type AppRouter = typeof appRouter;

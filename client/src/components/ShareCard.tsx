@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Download, Check, Loader2 } from "lucide-react";
+import { getPlayerBadge, getAllEarnedBadges } from "@shared/badges";
 
 interface ShareCardProps {
   patternTitle: string;
@@ -230,6 +231,27 @@ export function ShareCard({
       ctx.textAlign = "right";
       ctx.fillText(stat.value, statsX + statsW - 24, y);
     });
+
+    // ─── Achievement Badge ───
+    const badge = getPlayerBadge(totalXp);
+    if (badge) {
+      const badgeX = W / 2;
+      const badgeY = 200;
+      // Badge background pill
+      const badgeText = `${badge.emoji} ${badge.name}`;
+      ctx.font = "bold 18px monospace";
+      const badgeWidth = ctx.measureText(badgeText).width + 40;
+      ctx.fillStyle = badge.bgColor;
+      ctx.beginPath();
+      ctx.roundRect(badgeX - badgeWidth / 2, badgeY - 14, badgeWidth, 32, 16);
+      ctx.fill();
+      ctx.strokeStyle = badge.borderColor;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = badge.color;
+      ctx.textAlign = "center";
+      ctx.fillText(badgeText, badgeX, badgeY + 7);
+    }
 
     // ─── Footer ───
     ctx.fillStyle = "rgba(255, 255, 255, 0.25)";

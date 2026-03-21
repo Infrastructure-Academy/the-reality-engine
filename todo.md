@@ -181,3 +181,19 @@
 - [x] ChallengeButton component on Synthesis page with optional message
 - [x] ChallengeLanding page at /challenge/:code showing sender archetype + accept CTA
 - [x] Write vitest tests for new features (125 tests passing — challenge codes, OG meta, share text, vendor chunks)
+
+## Achievement Badges + My Journey + DAVID Voice
+- [x] Achievement badges at XP milestones (100K Bronze, 500K Silver, 1M Gold, 5M Platinum, 10M Diamond)
+- [x] Display badges on leaderboard next to player names (BadgeChip component)
+- [x] Display badges on share card in Synthesis page (canvas-rendered badge pill)
+- [x] Build "My Journey" timeline page — chronological discoveries, node activations, XP milestones
+- [x] Add route /journey and navigation link
+- [x] DAVID voice narration — text-to-speech for key discovery moments using Web Speech API
+- [x] Voice toggle alongside existing sound toggle
+- [x] Write vitest tests for all new features (26 tests: voice, badges, journey, AGN contacts, game data)
+
+## AGN Network Contacts Import (811 members from WhatsApp export)
+- [x] Create agn_contacts database table (name, phone, display_name, message_count, first_message, last_message, source)
+- [x] Import 777 contacts from WhatsApp chat export (586 named, 191 phone-only)
+- [x] Build admin Network Directory page to search/filter contacts
+- [x] Cross-reference contacts with player_profiles to track who has played (hasPlayed + linkedProfileId fields)

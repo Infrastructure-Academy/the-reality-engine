@@ -14,6 +14,8 @@ import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { playDiscoverySound, playRelayTransitionSound, playXpSound, hapticDiscovery, hapticTransition } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { VoiceToggle } from "@/components/VoiceToggle";
+import { narrateDiscovery, narrateRelayIntro, narrateRelayComplete, davidStop } from "@/hooks/useDavidVoice";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -489,6 +491,11 @@ export default function ExplorerRelay() {
       playDiscoverySound();
       hapticDiscovery();
 
+      // DAVID voice narration for discovery
+      const invName = inventionData[idx]?.name || `Invention ${idx + 1}`;
+      const relName = relayMeta.name;
+      narrateDiscovery(invName, relName);
+
       // Persist to DB if we have a profile
       if (profileId) {
         const discoveredArr = Array.from(next);
@@ -517,7 +524,15 @@ export default function ExplorerRelay() {
 
       return next;
     });
-  }, [profileId, relayNum, inventions.length, relay?.xpReward]);
+  }, [profileId, relayNum, inventions.length, relay?.xpReward, inventionData, relayMeta.name]);
+
+  // DAVID voice: narrate relay intro on first visit
+  useEffect(() => {
+    if (relay && relayMeta) {
+      narrateRelayIntro(relayMeta.name, relayMeta.era);
+    }
+    return () => { davidStop(); };
+  }, [relayNum]);
 
   const xpPerItem = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(inventions.length, 1)) : 10000;
   const totalXpEarned = discoveredItems.size * xpPerItem;
@@ -579,6 +594,7 @@ export default function ExplorerRelay() {
           </div>
           <div className="flex items-center gap-1">
             <SoundToggle compact color="gold" />
+            <VoiceToggle compact color="gold" />
             <span className="text-[9px] text-muted-foreground/50 font-mono hidden sm:inline" title="Layout variant">
               <Shuffle className="w-3 h-3 inline mr-0.5" />{LAYOUT_NAMES[layoutVariant]}
             </span>

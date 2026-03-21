@@ -8,6 +8,8 @@ import {
   ArrowLeft, Trophy, Zap, Star, Crown, Flame, Rocket, Brain,
   Medal, TrendingUp, Loader2
 } from "lucide-react";
+import { getPlayerBadge } from "@shared/badges";
+import { BadgeChip } from "@/components/BadgeDisplay";
 
 type ModeFilter = "all" | "explorer" | "flight_deck" | "scholar";
 
@@ -173,7 +175,10 @@ export default function Leaderboard() {
                   <div className="flex items-center gap-2 min-w-0">
                     <ModeIcon className="w-4 h-4 shrink-0" style={{ color: modeColors[entry.mode] }} />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{entry.displayName}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-medium truncate">{entry.displayName}</p>
+                        {getPlayerBadge(entry.totalXp) && <BadgeChip badge={getPlayerBadge(entry.totalXp)!} />}
+                      </div>
                       <p className="text-[10px] text-muted-foreground">{modeLabels[entry.mode]}</p>
                     </div>
                   </div>

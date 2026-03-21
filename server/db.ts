@@ -3,7 +3,8 @@ import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
-  xpTransactions, chatMessages, leaderboard, challengeInvites
+  xpTransactions, chatMessages, leaderboard, challengeInvites,
+  agnContacts
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -287,4 +288,76 @@ export async function upsertLeaderboard(profileId: number, displayName: string, 
   } else {
     await db.insert(leaderboard).values({ profileId, displayName, mode, totalXp, relaysCompleted, isGuru });
   }
+}
+
+// ─── Journey Timeline ───
+export async function getJourneyTimeline(profileId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  // Fetch XP transactions as timeline events
+  const txns = await db.select().from(xpTransactions)
+    .where(eq(xpTransactions.profileId, profileId))
+    .orderBy(desc(xpTransactions.createdAt))
+    .limit(200);
+  return txns;
+}
+
+// ─── AGN Network Contacts ───
+export async function getAgnContacts(opts: { search?: string; page?: number; limit?: number; hasNameOnly?: boolean }) {
+  const db = await getDb();
+  if (!db) return { contacts: [], total: 0 };
+  const page = opts.page ?? 1;
+  const limit = opts.limit ?? 50;
+  const offset = (page - 1) * limit;
+
+  let conditions: any[] = [];
+  if (opts.search) {
+    const term = `%${opts.search}%`;
+    conditions.push(sql`(name LIKE ${term} OR phone LIKE ${term} OR displayName LIKE ${term})`);
+  }
+  if (opts.hasNameOnly) {
+    conditions.push(sql`name != ''`);
+  }
+
+  const where = conditions.length > 0 ? sql.join(conditions, sql` AND `) : undefined;
+
+  const countResult = where
+    ? await db.select({ count: sql<number>`COUNT(*)` }).from(agnContacts).where(where)
+    : await db.select({ count: sql<number>`COUNT(*)` }).from(agnContacts);
+  const total = Number(countResult[0]?.count ?? 0);
+
+  const contacts = where
+    ? await db.select().from(agnContacts).where(where).orderBy(desc(agnContacts.messageCount), agnContacts.name).limit(limit).offset(offset)
+    : await db.select().from(agnContacts).orderBy(desc(agnContacts.messageCount), agnContacts.name).limit(limit).offset(offset);
+
+  return { contacts, total };
+}
+
+export async function getAgnContactStats() {
+  const db = await getDb();
+  if (!db) return { total: 0, named: 0, phoneOnly: 0, hasPlayed: 0 };
+  const result = await db.select({
+    total: sql<number>`COUNT(*)`,
+    named: sql<number>`SUM(CASE WHEN name != '' THEN 1 ELSE 0 END)`,
+    phoneOnly: sql<number>`SUM(CASE WHEN name = '' THEN 1 ELSE 0 END)`,
+    hasPlayed: sql<number>`SUM(CASE WHEN hasPlayed = true THEN 1 ELSE 0 END)`,
+  }).from(agnContacts);
+  return {
+    total: Number(result[0]?.total ?? 0),
+    named: Number(result[0]?.named ?? 0),
+    phoneOnly: Number(result[0]?.phoneOnly ?? 0),
+    hasPlayed: Number(result[0]?.hasPlayed ?? 0),
+  };
+}
+
+export async function updateAgnContactNotes(id: number, notes: string) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(agnContacts).set({ notes }).where(eq(agnContacts.id, id));
+}
+
+export async function markAgnContactPlayed(id: number, profileId: number | null) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(agnContacts).set({ hasPlayed: true, linkedProfileId: profileId }).where(eq(agnContacts.id, id));
 }

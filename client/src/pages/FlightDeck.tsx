@@ -14,6 +14,8 @@ import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoun
 import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { VoiceToggle } from "@/components/VoiceToggle";
+import { narrateBadgeEarned, davidSpeak, davidStop } from "@/hooks/useDavidVoice";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { Confetti } from "@/components/Confetti";
 import { NodeTooltip } from "@/components/NodeTooltip";
@@ -328,6 +330,7 @@ export default function FlightDeck() {
 
           <div className="flex items-center gap-1">
             <SoundToggle compact color="cyan" />
+            <VoiceToggle compact color="cyan" />
             <Button variant="ghost" size="sm" onClick={() => setShowChat(!showChat)} className="text-muted-foreground gap-1">
               <MessageCircle className="w-4 h-4" />
               <span className="hidden sm:inline text-xs">DAVID</span>

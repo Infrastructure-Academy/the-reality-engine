@@ -1,0 +1,15 @@
+{
+  "query": "SELECT COUNT(*) as total, SUM(CASE WHEN name != '' THEN 1 ELSE 0 END) as named_contacts, SUM(CASE WHEN name = '' THEN 1 ELSE 0 END) as phone_only FROM agn_contacts;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT COUNT(*) as total, SUM(CASE WHEN name != '' THEN 1 ELSE 0 END) as named_contacts, SUM(CASE WHEN name = '' THEN 1 ELSE 0 END) as phone_only FROM agn_contacts;",
+  "rows": [
+    {
+      "total": "777",
+      "named_contacts": "586",
+      "phone_only": "191"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\tnamed_contacts\tphone_only\n777\t586\t191\n",
+  "stderr": "",
+  "execution_time_ms": 1571
+}

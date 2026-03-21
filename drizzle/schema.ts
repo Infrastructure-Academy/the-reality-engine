@@ -199,3 +199,22 @@ export const challengeInvites = mysqlTable("challenge_invites", {
 });
 
 export type ChallengeInvite = typeof challengeInvites.$inferSelect;
+
+// ─── AGN Network Contacts (WhatsApp group members) ───
+export const agnContacts = mysqlTable("agn_contacts", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 256 }),
+  phone: varchar("phone", { length: 32 }),
+  displayName: varchar("displayName", { length: 256 }),
+  messageCount: int("messageCount").default(0),
+  firstMessage: varchar("firstMessage", { length: 32 }),
+  lastMessage: varchar("lastMessage", { length: 32 }),
+  source: varchar("source", { length: 64 }).default("whatsapp_agn"),
+  hasPlayed: boolean("hasPlayed").default(false),
+  linkedProfileId: int("linkedProfileId"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AgnContact = typeof agnContacts.$inferSelect;
