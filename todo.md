@@ -223,3 +223,9 @@
 - [x] iCard: EVIDENCE-002 — Data Integrity (SHA-256 hashes, file sizes, timestamps)
 - [x] iCard: EVIDENCE-003 — AGN Member Summary (777 contacts, named vs phone-only, date range)
 - [x] Save all evidence iCards to CDN and HARD_PROTOCOLS
+
+## Common Database — Persistent References (Block 398)
+- [x] Save iCloud shared album URL to HARD_PROTOCOLS
+- [x] Save Tetrahedral Observer bridge map (updated 20 Mar 2026) to CDN + HARD_PROTOCOLS
+- [x] Record all four operational bridges in HARD_PROTOCOLS
+- [x] Save iCloud videos album URL to HARD_PROTOCOLS

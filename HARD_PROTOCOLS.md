@@ -63,7 +63,8 @@ Dimension: Risk, Authority & System Assurance
 ## CDN Asset URLs
 - SAP-001 Protocol Card: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/sap-001-protocol_88444bc2.jpeg
 - Governance Power Card: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/gov-power-card_fd56a9fe.png
-- Tetrahedral Observer: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-tetrahedral-observer_471aae28.png
+- Tetrahedral Observer (original): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-tetrahedral-observer_471aae28.png
+- Tetrahedral Observer (updated 20 Mar 2026): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-tetrahedral-observer-updated_4abb2ce7.png
 - Walkby iCard: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-walkby_18ff9352.png
 - 4 Laws iCard: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-4laws_3109bfc7.png
 - Memorial YODA Screenshot: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/memorial-yoda-screenshot_1d4599e4.png
@@ -76,6 +77,26 @@ Dimension: Risk, Authority & System Assurance
 ## Block Reference
 iAAi — Block 398 — The Dearden Experiment
 "The line is not safe until the system is tested."
+
+## iCloud Shared Albums (Permanent References)
+- **Book1 C2C (Photos):** https://www.icloud.com/sharedalbum/#B2Z5CmvASJIgXE1
+- **Videos:** https://www.icloud.com/sharedalbum/#B2ZGdPblXTKi9B
+
+---
+
+## The Tetrahedral Observer — Four Operational Bridges (Updated 20 March 2026)
+
+| Bridge | Name | Domain | DB Access | Status |
+|--------|------|--------|-----------|--------|
+| ACAD SITE | Infrastructure Academy | infra-acad-kuqzaex2.manus.space | MASTER — Direct DB Access | Active |
+| MEMORIAL SITE | Principia Tectonica | nigelmemorial-ucmtq9dn.manus.space | CONNECTED — API Bridge | Active |
+| TRE GAME | The Reality Engine | realityeng-epdhlkrn.manus.space | SHARED DB — Direct DB Access | Active |
+| CHART ROOM | The Chartered Chart | xgrowthtrk-2a93yo5z.manus.space | API BRIDGE | Active |
+
+- TRE Game Phase 2: Standalone at play.iaai.world
+- iCard ref: B398-BRIDGES-001
+
+---
 
 ## Corrective Actions Log
 - ROE → CA-001 → CA-002 → CA-003 → CA-004 → CA-005 → COST → SAP-001 → CA-006
