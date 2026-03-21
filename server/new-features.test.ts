@@ -390,3 +390,123 @@ describe("Game Data Integrity", () => {
     }
   });
 });
+
+// ═══════════════════════════════════════════════════════════
+// MEDIA CATALOGUE tRPC TESTS
+// ═══════════════════════════════════════════════════════════
+describe("Media Catalogue Procedures", () => {
+  it("media.list is public and returns array", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.media.list();
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("media.list returns items with required fields", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.media.list();
+    if (result.length > 0) {
+      const item = result[0];
+      expect(item).toHaveProperty("id");
+      expect(item).toHaveProperty("title");
+      expect(item).toHaveProperty("cdnUrl");
+      expect(item).toHaveProperty("category");
+      expect(item).toHaveProperty("bridge");
+    }
+  });
+
+  it("media.list supports bridge filter", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.media.list({ bridge: "ACAD" });
+    for (const item of result) {
+      expect(item.bridge).toBe("ACAD");
+    }
+  });
+
+  it("media.list supports category filter", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.media.list({ category: "icard" });
+    for (const item of result) {
+      expect(item.category).toBe("icard");
+    }
+  });
+
+  it("media.list supports search filter", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.media.list({ search: "zzzznonexistent" });
+    expect(result.length).toBe(0);
+  });
+
+  it("media.stats returns total and breakdowns", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const stats = await caller.media.stats();
+    expect(typeof stats.total).toBe("number");
+    expect(stats.total).toBeGreaterThan(0);
+    expect(typeof stats.bridges).toBe("object");
+    expect(typeof stats.categories).toBe("object");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// BRIDGE STATUS tRPC TESTS
+// ═══════════════════════════════════════════════════════════
+describe("Bridge Status Procedures", () => {
+  it("bridge.status is public and returns stats", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.status();
+    expect(result).toHaveProperty("stats");
+    expect(result).toHaveProperty("timestamp");
+    expect(typeof result.stats.players).toBe("number");
+    expect(typeof result.stats.relays).toBe("number");
+    expect(typeof result.stats.contacts).toBe("number");
+    expect(typeof result.stats.mediaAssets).toBe("number");
+    expect(typeof result.stats.totalXpEarned).toBe("number");
+  });
+
+  it("bridge.registry returns all 4 bridges", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.registry();
+    expect(result.length).toBe(4);
+    const names = result.map((b: any) => b.name);
+    expect(names).toContain("ACAD SITE");
+    expect(names).toContain("MEMORIAL SITE");
+    expect(names).toContain("TRE GAME");
+    expect(names).toContain("CHART ROOM");
+  });
+
+  it("bridge.registry entries have required fields", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.registry();
+    for (const bridge of result) {
+      expect(bridge).toHaveProperty("name");
+      expect(bridge).toHaveProperty("subtitle");
+      expect(bridge).toHaveProperty("domain");
+      expect(bridge).toHaveProperty("dbAccess");
+      expect(bridge).toHaveProperty("status");
+      expect(bridge.status).toBe("operational");
+    }
+  });
+
+  it("bridge.playerStats returns leaderboard when no profileId", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.playerStats();
+    expect(result.type).toBe("leaderboard");
+    expect(Array.isArray(result.data)).toBe(true);
+  });
+
+  it("bridge.playerStats returns profile data with profileId", async () => {
+    const { ctx } = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.bridge.playerStats({ profileId: 99999 });
+    expect(result.type).toBe("profile");
+  });
+});

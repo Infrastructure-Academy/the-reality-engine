@@ -229,3 +229,27 @@
 - [x] Save Tetrahedral Observer bridge map (updated 20 Mar 2026) to CDN + HARD_PROTOCOLS
 - [x] Record all four operational bridges in HARD_PROTOCOLS
 - [x] Save iCloud videos album URL to HARD_PROTOCOLS
+
+## Catalogue iCloud Photos Album (Block 398)
+- [x] Download key images from Book1 C2C iCloud album (catalogued from bridge sites instead)
+- [x] Create media_catalogue table in database (title, cdnUrl, category, bridge, description, blockRef, tags)
+- [x] Import 45 assets into media_catalogue (11 ACAD + 28 MEMORIAL + 6 TRE)
+- [x] Build admin Media Gallery page with grid/list view, filters, lightbox, search
+
+## Cross-Link Bridges — API Endpoints (Block 398)
+- [x] Add /api/bridge/status endpoint returning TRE health + stats
+- [x] Add /api/bridge/player-stats endpoint for cross-site player data
+- [x] Add bridge registry tRPC route with all 4 bridges
+- [x] Bridge endpoints compiled and running (TypeScript clean)
+
+## Evidence Print PDF (Block 398)
+- [ ] Download all 3 EVIDENCE iCards from CDN
+- [ ] Combine into single A4 PDF (one card per page, landscape)
+- [ ] Upload PDF to CDN and record in HARD_PROTOCOLS
+
+## Check All Bridge Sites for Common Database (Block 398)
+- [x] Check ACAD SITE (infra-acad-kuqzaex2.manus.space) — 11 images, 12 relays, 3 volumes
+- [x] Check MEMORIAL SITE (nigelmemorial-ucmtq9dn.manus.space) — 28+ images, exhibition, thesis
+- [x] Check CHART ROOM (xgrowthtrk-2a93yo5z.manus.space) — data dashboard, Day 9/60, 42 followers
+- [x] Check TRE GAME (realityeng-epdhlkrn.manus.space) — 3 pathways, 777 contacts, DAVID voice
+- [x] Save all discovered assets and data references to bridge_catalogue.txt (39+ CDN images)

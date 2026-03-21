@@ -26,6 +26,8 @@ const MobileExplorer = lazy(() => import("./pages/MobileExplorer"));
 const ChallengeLanding = lazy(() => import("./pages/ChallengeLanding"));
 const NetworkDirectory = lazy(() => import("./pages/NetworkDirectory"));
 const Journey = lazy(() => import("./pages/Journey"));
+const MediaGallery = lazy(() => import("./pages/MediaGallery"));
+const BridgeHub = lazy(() => import("./pages/BridgeHub"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -58,6 +60,8 @@ function Router() {
         <Route path={"/challenge/:code"} component={ChallengeLanding} />
         <Route path={"/network"} component={NetworkDirectory} />
         <Route path={"/journey"} component={Journey} />
+        <Route path={"/media"} component={MediaGallery} />
+        <Route path={"/bridges"} component={BridgeHub} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

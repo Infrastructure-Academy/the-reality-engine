@@ -239,3 +239,19 @@ export const contactTagAssignments = mysqlTable("contact_tag_assignments", {
 });
 
 export type ContactTagAssignment = typeof contactTagAssignments.$inferSelect;
+
+// ─── Media Catalogue (common database for all bridge assets) ───
+export const mediaCatalogue = mysqlTable("media_catalogue", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 256 }).notNull(),
+  cdnUrl: text("cdnUrl").notNull(),
+  category: varchar("category", { length: 64 }).notNull(),
+  bridge: varchar("bridge", { length: 64 }).notNull(),
+  description: text("description"),
+  blockRef: varchar("blockRef", { length: 32 }),
+  tags: text("tags"),
+  sortOrder: int("sortOrder").default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MediaCatalogueEntry = typeof mediaCatalogue.$inferSelect;

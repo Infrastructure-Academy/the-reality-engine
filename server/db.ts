@@ -4,7 +4,7 @@ import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
-  agnContacts, contactTags, contactTagAssignments
+  agnContacts, contactTags, contactTagAssignments, mediaCatalogue
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -479,6 +479,64 @@ export async function autoLinkContactToProfile(profileId: number, displayName: s
     linkedProfileId: profileId,
   }).where(eq(agnContacts.id, match.id));
   return match;
+}
+
+// ─── Media Catalogue ───
+export async function getMediaCatalogue(opts?: { bridge?: string; category?: string; search?: string }) {
+  const db = await getDb();
+  if (!db) return [];
+  let conditions: any[] = [];
+  if (opts?.bridge) conditions.push(eq(mediaCatalogue.bridge, opts.bridge));
+  if (opts?.category) conditions.push(eq(mediaCatalogue.category, opts.category));
+  if (opts?.search) {
+    const term = `%${opts.search}%`;
+    conditions.push(sql`(title LIKE ${term} OR description LIKE ${term} OR tags LIKE ${term})`);
+  }
+  const where = conditions.length > 0 ? sql.join(conditions, sql` AND `) : undefined;
+  return where
+    ? db.select().from(mediaCatalogue).where(where).orderBy(mediaCatalogue.sortOrder)
+    : db.select().from(mediaCatalogue).orderBy(mediaCatalogue.sortOrder);
+}
+
+export async function getMediaCatalogueStats() {
+  const db = await getDb();
+  if (!db) return { total: 0, bridges: {} as Record<string, number>, categories: {} as Record<string, number> };
+  const all = await db.select({
+    bridge: mediaCatalogue.bridge,
+    category: mediaCatalogue.category,
+  }).from(mediaCatalogue);
+  const bridges: Record<string, number> = {};
+  const categories: Record<string, number> = {};
+  for (const row of all) {
+    bridges[row.bridge] = (bridges[row.bridge] || 0) + 1;
+    categories[row.category] = (categories[row.category] || 0) + 1;
+  }
+  return { total: all.length, bridges, categories };
+}
+
+// ─── Bridge Status ───
+export async function getBridgeStatus() {
+  const db = await getDb();
+  if (!db) return null;
+  const [playerCount] = await db.select({ count: sql<number>`COUNT(*)` }).from(playerProfiles);
+  const [relayCount] = await db.select({ count: sql<number>`COUNT(*)` }).from(relays);
+  const [contactCount] = await db.select({ count: sql<number>`COUNT(*)` }).from(agnContacts);
+  const [mediaCount] = await db.select({ count: sql<number>`COUNT(*)` }).from(mediaCatalogue);
+  const [xpTotal] = await db.select({ total: sql<number>`COALESCE(SUM(totalXp), 0)` }).from(playerProfiles);
+  return {
+    status: "operational",
+    bridge: "TRE",
+    domain: "realityeng-epdhlkrn.manus.space",
+    dbAccess: "SHARED",
+    stats: {
+      players: Number(playerCount?.count ?? 0),
+      relays: Number(relayCount?.count ?? 0),
+      contacts: Number(contactCount?.count ?? 0),
+      mediaAssets: Number(mediaCount?.count ?? 0),
+      totalXpEarned: Number(xpTotal?.total ?? 0),
+    },
+    timestamp: new Date().toISOString(),
+  };
 }
 
 export async function getLinkedProfileStats(contactId: number) {

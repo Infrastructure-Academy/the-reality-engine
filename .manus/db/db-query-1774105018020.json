@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `media_catalogue` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`title` varchar(256) NOT NULL,\n\t`cdnUrl` text NOT NULL,\n\t`category` varchar(64) NOT NULL,\n\t`bridge` varchar(64) NOT NULL,\n\t`description` text,\n\t`blockRef` varchar(32),\n\t`tags` text,\n\t`sortOrder` int DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `media_catalogue_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute CREATE TABLE `media_catalogue` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`title` varchar(256) NOT NULL,\n\t`cdnUrl` text NOT NULL,\n\t`category` varchar(64) NOT NULL,\n\t`bridge` varchar(64) NOT NULL,\n\t`description` text,\n\t`blockRef` varchar(32),\n\t`tags` text,\n\t`sortOrder` int DEFAULT 0,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `media_catalogue_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1697
+}

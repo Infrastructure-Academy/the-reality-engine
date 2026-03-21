@@ -1,0 +1,25 @@
+{
+  "query": "SELECT bridge, COUNT(*) as count, GROUP_CONCAT(DISTINCT category) as categories FROM media_catalogue GROUP BY bridge ORDER BY bridge;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT bridge, COUNT(*) as count, GROUP_CONCAT(DISTINCT category) as categories FROM media_catalogue GROUP BY bridge ORDER BY bridge;",
+  "rows": [
+    {
+      "bridge": "ACAD",
+      "count": "11",
+      "categories": "logo,book,framework,stats"
+    },
+    {
+      "bridge": "MEMORIAL",
+      "count": "28",
+      "categories": "hero,icard,framework,book,heritage,exhibition,screenshot"
+    },
+    {
+      "bridge": "TRE",
+      "count": "6",
+      "categories": "evidence,icard,governance"
+    }
+  ],
+  "messages": [],
+  "stdout": "bridge\tcount\tcategories\nACAD\t11\tlogo,book,framework,stats\nMEMORIAL\t28\thero,icard,framework,book,heritage,exhibition,screenshot\nTRE\t6\tevidence,icard,governance\n",
+  "stderr": "",
+  "execution_time_ms": 1536
+}

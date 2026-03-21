@@ -394,5 +394,46 @@ export const appRouter = router({
         return db.getLinkedProfileStats(input.contactId);
       }),
   }),
+
+  // ─── Media Catalogue ───
+  media: router({
+    list: publicProcedure
+      .input(z.object({
+        bridge: z.string().optional(),
+        category: z.string().optional(),
+        search: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return db.getMediaCatalogue(input);
+      }),
+    stats: publicProcedure.query(async () => {
+      return db.getMediaCatalogueStats();
+    }),
+  }),
+
+  // ─── Bridge Status ───
+  bridge: router({
+    status: publicProcedure.query(async () => {
+      return db.getBridgeStatus();
+    }),
+    playerStats: publicProcedure
+      .input(z.object({ profileId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        if (!input?.profileId) {
+          const leaders = await db.getLiveLeaderboard(undefined, 10);
+          return { type: "leaderboard" as const, data: leaders };
+        }
+        const progress = await db.getRelayProgressForProfile(input.profileId);
+        return { type: "profile" as const, data: progress };
+      }),
+    registry: publicProcedure.query(async () => {
+      return [
+        { name: "ACAD SITE", subtitle: "Infrastructure Academy", domain: "infra-acad-kuqzaex2.manus.space", dbAccess: "MASTER", status: "operational" },
+        { name: "MEMORIAL SITE", subtitle: "Principia Tectonica", domain: "nigelmemorial-ucmtq9dn.manus.space", dbAccess: "CONNECTED", status: "operational" },
+        { name: "TRE GAME", subtitle: "The Reality Engine", domain: "realityeng-epdhlkrn.manus.space", dbAccess: "SHARED", status: "operational" },
+        { name: "CHART ROOM", subtitle: "The Chartered Chart", domain: "xgrowthtrk-2a93yo5z.manus.space", dbAccess: "API BRIDGE", status: "operational" },
+      ];
+    }),
+  }),
 });
 export type AppRouter = typeof appRouter;
