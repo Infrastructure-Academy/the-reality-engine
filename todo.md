@@ -216,3 +216,10 @@
 - [x] Verify voice toggle persists across page navigations (localStorage-based)
 - [x] Confirm relay intro narration triggers on relay load
 - [x] Confirm discovery narration triggers on invention tap
+
+## Evidence iCards — Police Verification (Block 398)
+- [x] Generate SHA-256 hashes of original WhatsApp export files
+- [x] iCard: EVIDENCE-001 — Chain of Custody (source → export → extraction → database)
+- [x] iCard: EVIDENCE-002 — Data Integrity (SHA-256 hashes, file sizes, timestamps)
+- [x] iCard: EVIDENCE-003 — AGN Member Summary (777 contacts, named vs phone-only, date range)
+- [x] Save all evidence iCards to CDN and HARD_PROTOCOLS
