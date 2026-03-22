@@ -6,7 +6,7 @@ import { useCallback, useState, useEffect } from "react";
 
 const TABS = [
   { path: "/", label: "Home", icon: Home },
-  { path: "/explore/1", label: "Explore", icon: Flame },
+  { path: "/explore", label: "Explore", icon: Flame },
   { path: "/flight-deck", label: "Flight", icon: Rocket },
   { path: "/create", label: "Scholar", icon: GraduationCap },
   { path: "/leaderboard", label: "Board", icon: Trophy },

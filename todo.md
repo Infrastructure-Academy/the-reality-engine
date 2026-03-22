@@ -328,17 +328,21 @@
 - [x] iCard: Mode C — POWER OF GRAYSKULL (Ages 12-14, The Transformation)
 
 ## Explainer Deck — Investor/User Pitch
-- [ ] Write slide content (Explorer Pipeline, 3 modes, ISI connection, 1bn target, progression path)
-- [ ] Generate slide deck with iCards embedded
-- [ ] Deliver deck for review
+- [x] Write slide content (Explorer Pipeline, 3 modes, ISI connection, 1bn target, progression path)
+- [x] Generate slide deck (12 slides, image mode, deep space observatory aesthetic)
+- [x] Deliver deck for review (12 slides, manus-slides://VuFOQvKRtJU55eQkNekIvu)
 
 ## Implementation — Explorer Sub-Modes
-- [ ] Build Relay Spinner (Mode A) in TRE — slot machine UI, 12 spins/day, collection grid
-- [ ] Build Dungeon Crawl (Mode B) in TRE — room-by-room, character sheet, DAVID DM
-- [ ] Build Power of Grayskull (Mode C) in TRE — transformation, 12 powers, clock pushback
-- [ ] Mode selector on Explorer landing page (Classic + 3 new sub-modes)
+- [x] Build Relay Spinner (Mode A) in TRE — slot machine UI, 12 spins/day, collection grid
+- [x] Build Dungeon Crawl (Mode B) in TRE — room-by-room, character sheet, DAVID DM
+- [x] Build Power of Grey Matter (Mode C) in TRE — transformation, 12 powers, clock pushback, iMan
+- [x] Mode selector on Explorer landing page (Classic + 3 new sub-modes)
 
 ## Junior Player's Handbook
-- [ ] Write Junior Handbook — simplified language, illustrated, 64-page target
-- [ ] Cover: 12 Relays (story-first), How to Play (3 modes), Your Character, The Clock, BitPoints, Transformation path
-- [ ] Generate handbook as PDF
+- [x] Write Junior Handbook — simplified language, story-first, complete (Junior-Players-Handbook.md)
+- [x] Cover: 12 Relays (story-first), How to Play (3 modes), Your Character, The Clock, BitPoints, Transformation path
+- [x] Generate handbook as PDF (Junior-Players-Handbook.pdf)
+
+## Mode C Rename — Power of Grey Matter / iMan
+- [x] Regenerate Mode C iCard: POWER OF GREY MATTER (not Grayskull) — iMan transformation
+- [x] Update TP-017 references from Grayskull → Grey Matter / iMan (Mode C built as Grey Matter/iMan)

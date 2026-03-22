@@ -105,7 +105,7 @@ export const MODES = {
       "12 relays, 91+ inventions to find",
     ],
     cta: "QUICK PLAY",
-    entry: "/explore/1",
+    entry: "/explore",
     color: "#ef4444",
   },
   flight_deck: {

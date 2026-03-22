@@ -28,6 +28,10 @@ const NetworkDirectory = lazy(() => import("./pages/NetworkDirectory"));
 const Journey = lazy(() => import("./pages/Journey"));
 const MediaGallery = lazy(() => import("./pages/MediaGallery"));
 const BridgeHub = lazy(() => import("./pages/BridgeHub"));
+const ExplorerSelect = lazy(() => import("./pages/ExplorerSelect"));
+const RelaySpinner = lazy(() => import("./pages/RelaySpinner"));
+const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
+const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -46,6 +50,10 @@ function Router() {
     <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path={"/"} component={Home} />
+        <Route path={"/explore"} component={ExplorerSelect} />
+        <Route path={"/explore/spinner"} component={RelaySpinner} />
+        <Route path={"/explore/dungeon"} component={DungeonCrawl} />
+        <Route path={"/explore/greymatter"} component={GreyMatter} />
         <Route path={"/explore/:relayNum"} component={ExplorerRelay} />
         <Route path={"/flight-deck"} component={FlightDeck} />
         <Route path={"/create"} component={ScholarCreate} />
