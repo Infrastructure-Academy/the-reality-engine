@@ -357,7 +357,7 @@
 - [x] Integrate visual assets into Dungeon Crawl room cards
 - [x] Integrate power-up visuals into Grey Matter transformation UI
 - [x] Write vitest tests for DAVID DM integration (205 tests passing)
-- [ ] Checkpoint and deliver (pending)
+- [x] Checkpoint and deliver (version: 244096cc)
 
 ## Narrated Video Explainer — Explorer Pipeline
 - [x] Research best voice practice for 8-14 educational gaming — TP-018 (66% prefer female, high energy, K-pop guide style)
@@ -365,4 +365,18 @@
 - [x] Generate narration audio (female K-Pop Guide, 6 clips)
 - [x] Generate video shots (6 clips, 16:9 landscape, cosmic anime style)
 - [x] Assemble narrated explainer video (46s, narration + BGM mixed)
-- [ ] Deliver video (pending)
+- [x] Deliver video (explorer-pipeline-explainer.mp4)
+
+## Youth Explainer Videos ×3 (Ages 8-14) — One Per Sub-Mode, Embedded on Site
+- [x] Write kid-friendly narration script: Video 1 — Relay Spinner
+- [x] Write kid-friendly narration script: Video 2 — Dungeon Crawl
+- [x] Write kid-friendly narration script: Video 3 — Power of Grey Matter
+- [x] Generate narration audio for all 3 videos (K-Pop Guide voice, 12 clips total)
+- [x] Generate video shots for all 3 videos (12 clips total, cosmic anime style)
+- [x] Assemble Video 1 — Relay Spinner (20s, narration + BGM)
+- [x] Assemble Video 2 — Dungeon Crawl (26s, narration + BGM)
+- [x] Assemble Video 3 — Power of Grey Matter (30s, narration + BGM)
+- [x] Embed Video 1 on /explorer/spinner page
+- [x] Embed Video 2 on /explorer/dungeon page
+- [x] Embed Video 3 on /explorer/grey-matter page
+- [x] Checkpoint and deliver

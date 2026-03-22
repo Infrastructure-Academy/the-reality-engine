@@ -9,6 +9,7 @@ import { ArrowLeft, Swords, DoorOpen, Eye, Shield, Compass, ChevronRight, Chevro
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { ExplorerVideo } from "@/components/ExplorerVideo";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -391,6 +392,15 @@ export default function DungeonCrawl() {
       </header>
 
       <div className="container py-4 max-w-lg mx-auto">
+        {/* Intro Video */}
+        <ExplorerVideo
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-crawl-youth_76121cd6.mp4"
+          title="Your Adventure Through 12,000 Years"
+          subtitle="26s intro"
+          accentColor="#10b981"
+          glowColor="rgba(16,185,129,0.15)"
+        />
+
         {/* Dungeon Selector */}
         <div className="flex items-center justify-between mb-4">
           <Button variant="ghost" size="sm" onClick={handlePrevDungeon} disabled={currentRelay <= 1}>

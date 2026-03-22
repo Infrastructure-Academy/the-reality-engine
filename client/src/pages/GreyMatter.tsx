@@ -9,6 +9,7 @@ import { ArrowLeft, Brain, Zap, Clock, Shield, Eye, Lightbulb, ChevronRight, Che
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { ExplorerVideo } from "@/components/ExplorerVideo";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -250,6 +251,15 @@ export default function GreyMatter() {
       </header>
 
       <div className="container py-4 max-w-lg mx-auto">
+        {/* Intro Video */}
+        <ExplorerVideo
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/grey-matter-youth_43190a2a.mp4"
+          title="Unlock the Powers That Built Everything"
+          subtitle="30s intro"
+          accentColor="#d4a843"
+          glowColor="rgba(212,168,67,0.15)"
+        />
+
         {/* Clock & Transformation Status */}
         <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-4">
           <div className="flex items-center justify-between">

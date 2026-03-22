@@ -9,6 +9,7 @@ import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap } from "lucide-re
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { ExplorerVideo } from "@/components/ExplorerVideo";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -242,6 +243,15 @@ export default function RelaySpinner() {
       </header>
 
       <div className="container py-6 max-w-lg mx-auto">
+        {/* Intro Video */}
+        <ExplorerVideo
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/relay-spinner-youth_c8bf19b4.mp4"
+          title="Spin the Story of Everything"
+          subtitle="20s intro"
+          accentColor="#3b82f6"
+          glowColor="rgba(59,130,246,0.15)"
+        />
+
         {/* Spins remaining */}
         <div className="text-center mb-6">
           <p className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Daily Spins</p>
