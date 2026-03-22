@@ -1,0 +1,21 @@
+{
+  "query": "SELECT COUNT(*) as total_players, COUNT(DISTINCT userId) as logged_in_players, SUM(CASE WHEN userId IS NULL THEN 1 ELSE 0 END) as guest_players, MIN(createdAt) as first_player, MAX(createdAt) as latest_player FROM player_profiles; SELECT DATE(createdAt) as day, COUNT(*) as new_players FROM player_profiles GROUP BY DATE(createdAt) ORDER BY day;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT COUNT(*) as total_players, COUNT(DISTINCT userId) as logged_in_players, SUM(CASE WHEN userId IS NULL THEN 1 ELSE 0 END) as guest_players, MIN(createdAt) as first_player, MAX(createdAt) as latest_player FROM player_profiles; SELECT DATE(createdAt) as day, COUNT(*) as new_players FROM player_profiles GROUP BY DATE(createdAt) ORDER BY day;",
+  "rows": [
+    {
+      "total_players": "19",
+      "logged_in_players": "1",
+      "guest_players": "17",
+      "first_player": "2026-03-20 18:15:14",
+      "latest_player": "2026-03-21 21:37:45"
+    }
+  ],
+  "messages": [
+    "day\tnew_players",
+    "2026-03-20\t3",
+    "2026-03-21\t16"
+  ],
+  "stdout": "total_players\tlogged_in_players\tguest_players\tfirst_player\tlatest_player\n19\t1\t17\t2026-03-20 18:15:14\t2026-03-21 21:37:45\nday\tnew_players\n2026-03-20\t3\n2026-03-21\t16\n",
+  "stderr": "",
+  "execution_time_ms": 1817
+}

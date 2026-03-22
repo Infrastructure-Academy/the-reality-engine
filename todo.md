@@ -311,3 +311,34 @@
 - [x] Generate iCard: ISI TRIPLE INDEX with International vs Intelligence options (icard-isi-triple-options.png)
 - [x] Generate iCard: ISI LOCKED DEFINITION — Integrated Significance Index (icard-isi-locked.png)
 - [x] "I" in ISI — three options presented: International / Intelligence / Integrated (awaiting Nigel's decision)
+
+## Explorer Mode Options — 8-14 Year Olds Research
+- [x] Research one-armed bandit / slot machine mechanics for kids (variable ratio reinforcement, near-miss effect, ethical adaptation)
+- [x] Research early D&D (Moldvay Basic 1981) — 14-step character creation, room-by-room dungeon crawl, ages 10+
+- [x] Research He-Man / MOTU / Grayskull — transformation ritual, power-up progression, identity formation
+- [x] Map each mechanic to the 12 Relays — Spinner (8-10), Dungeon Crawl (10-12), Grayskull (12-14)
+- [x] Write TP-017 Explorer Mode Options — 7-section proposal with mechanics, rewards, architecture, ISI connection
+- [x] Generate 3 concept iCards: Relay Spinner, Dungeon Crawl, Power of Grayskull
+- [x] Deliver proposal and iCards
+
+## Explorer Mode iCards (v3 — Final Set)
+- [x] iCard: Explorer Intent — THE JUNIOR PIPELINE (3 doorways → Flight Deck)
+- [x] iCard: Mode A — RELAY SPINNER (Ages 8-10, One-Armed Bandit)
+- [x] iCard: Mode B — DUNGEON CRAWL (Ages 10-12, The Red Box)
+- [x] iCard: Mode C — POWER OF GRAYSKULL (Ages 12-14, The Transformation)
+
+## Explainer Deck — Investor/User Pitch
+- [ ] Write slide content (Explorer Pipeline, 3 modes, ISI connection, 1bn target, progression path)
+- [ ] Generate slide deck with iCards embedded
+- [ ] Deliver deck for review
+
+## Implementation — Explorer Sub-Modes
+- [ ] Build Relay Spinner (Mode A) in TRE — slot machine UI, 12 spins/day, collection grid
+- [ ] Build Dungeon Crawl (Mode B) in TRE — room-by-room, character sheet, DAVID DM
+- [ ] Build Power of Grayskull (Mode C) in TRE — transformation, 12 powers, clock pushback
+- [ ] Mode selector on Explorer landing page (Classic + 3 new sub-modes)
+
+## Junior Player's Handbook
+- [ ] Write Junior Handbook — simplified language, illustrated, 64-page target
+- [ ] Cover: 12 Relays (story-first), How to Play (3 modes), Your Character, The Clock, BitPoints, Transformation path
+- [ ] Generate handbook as PDF
