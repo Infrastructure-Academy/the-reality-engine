@@ -252,8 +252,19 @@ export default function FlightDeck() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleSelectCraft(craft)}
-                  className="cursor-pointer rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 bg-gradient-to-b from-cyan-600/10 to-transparent p-5 transition-all hover:shadow-[0_0_30px_rgba(6,182,212,0.1)]"
+                  className="cursor-pointer rounded-xl border border-cyan-500/20 hover:border-cyan-400/50 bg-gradient-to-b from-cyan-600/10 to-transparent overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(6,182,212,0.1)]"
                 >
+                  {/* Craft Image */}
+                  <div className="relative w-full aspect-video overflow-hidden">
+                    <img
+                      src={craft.image}
+                      alt={craft.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                  </div>
+
+                  <div className="p-5 pt-3">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h3 className="font-heading text-lg font-bold">{craft.name}</h3>
@@ -289,6 +300,7 @@ export default function FlightDeck() {
                   </div>
 
                   <p className="text-[10px] text-cyan-400/60 mt-2 font-mono">{craft.xpBonus}</p>
+                  </div>
                 </motion.div>
               );
             })}

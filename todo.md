@@ -380,3 +380,13 @@
 - [x] Embed Video 2 on /explorer/dungeon page
 - [x] Embed Video 3 on /explorer/grey-matter page
 - [x] Checkpoint and deliver
+
+## Craft Selection Page — Missing Craft Images
+- [x] Generate craft image: TB-1 Pathfinder (Arrow-Class reconnaissance)
+- [x] Generate craft image: TB-2 Forgemaster (Griffin-Class heavy engineering)
+- [x] Generate craft image: TB-3 Starcaster (Zeta-Class communications)
+- [x] Generate craft image: TB-4 Lifeline (Leviathan-Class medical)
+- [x] Generate craft image: TB-5 Sentinel (Citadel-Class command)
+- [x] Upload all craft images to CDN
+- [x] Embed craft images in CraftSelection page
+- [x] Verify and checkpoint
