@@ -37,10 +37,10 @@ export default function ChallengeLanding() {
       if (profile && challenge) {
         await acceptMutation.mutateAsync({ code, acceptorProfileId: profile.id });
         setAccepted(true);
-        setTimeout(() => navigate("/explore/1"), 2000);
+        setTimeout(() => navigate("/explore"), 2000);
       }
     } catch {
-      navigate("/explore/1");
+      navigate("/explore");
     }
   };
 
@@ -72,7 +72,7 @@ export default function ChallengeLanding() {
           <p className="text-muted-foreground mb-6">
             This challenge code may have expired or doesn't exist. Start your own odyssey instead.
           </p>
-          <Link href="/explore/1">
+          <Link href="/explore">
             <Button className="gap-2 bg-amber-600 hover:bg-amber-500">
               <Sparkles className="w-4 h-4" /> Start Explorer Mode
             </Button>

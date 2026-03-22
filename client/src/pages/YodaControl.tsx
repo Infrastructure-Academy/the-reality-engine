@@ -275,7 +275,7 @@ export default function YodaControl() {
             Every action completes the loop — <strong className="text-foreground">Action</strong> transforms reality.
           </p>
           <div className="flex flex-wrap justify-center gap-3 pt-2">
-            <Link href="/explore/1">
+            <Link href="/explore">
               <Button variant="outline" size="sm" className="border-ember text-ember hover:bg-ember/10">Explorer</Button>
             </Link>
             <Link href="/flight-deck">

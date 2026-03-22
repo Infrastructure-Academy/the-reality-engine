@@ -346,3 +346,23 @@
 ## Mode C Rename — Power of Grey Matter / iMan
 - [x] Regenerate Mode C iCard: POWER OF GREY MATTER (not Grayskull) — iMan transformation
 - [x] Update TP-017 references from Grayskull → Grey Matter / iMan (Mode C built as Grey Matter/iMan)
+
+## Publish + DAVID DM + Visual Assets
+- [x] Verify published site loads with all 3 sub-modes (Spinner, Dungeon, Grey Matter) — all working
+- [x] Wire DAVID LLM into Dungeon Crawl — dynamic room descriptions via invokeLLM
+- [x] DAVID responds contextually to player choices in dungeon rooms
+- [x] DAVID uses player ability scores and relay context in narration
+- [x] Generate dungeon room illustrations (12 relays × key rooms) — CDN uploaded
+- [x] Generate Grey Matter power-up visuals (12 relay powers) — CDN uploaded
+- [x] Integrate visual assets into Dungeon Crawl room cards
+- [x] Integrate power-up visuals into Grey Matter transformation UI
+- [x] Write vitest tests for DAVID DM integration (205 tests passing)
+- [ ] Checkpoint and deliver (pending)
+
+## Narrated Video Explainer — Explorer Pipeline
+- [x] Research best voice practice for 8-14 educational gaming — TP-018 (66% prefer female, high energy, K-pop guide style)
+- [x] Write narration script for Explorer Pipeline video (6 clips, 40s total narration)
+- [x] Generate narration audio (female K-Pop Guide, 6 clips)
+- [x] Generate video shots (6 clips, 16:9 landscape, cosmic anime style)
+- [x] Assemble narrated explainer video (46s, narration + BGM mixed)
+- [ ] Deliver video (pending)

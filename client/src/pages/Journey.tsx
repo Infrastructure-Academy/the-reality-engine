@@ -293,7 +293,7 @@ export default function Journey() {
               <Compass className="w-12 h-12 text-slate-600 mx-auto mb-3" />
               <p className="text-slate-400 font-medium">No discoveries yet</p>
               <p className="text-sm text-slate-500 mt-1">Start exploring relays to build your timeline.</p>
-              <Link href="/explore/1" className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg transition-colors">
+              <Link href="/explore" className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg transition-colors">
                 Begin Exploring
               </Link>
             </div>

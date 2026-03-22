@@ -39,6 +39,22 @@ const INITIAL_MISSION: MissionState = {
   powerEarned: false,
 };
 
+// ─── Power Icon Images (CDN) ───
+const POWER_IMAGES: Record<number, string> = {
+  1: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-01-flame_1a1a6e10.png",
+  2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-02-root-8gaSp4UTShaXtGupT9GMdp.png",
+  3: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-03-flow-aTAP4LWmoa8aX2wdznHc9z.png",
+  4: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-04-horse_1fe98d0a.png",
+  5: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-05-roads_35354d7f.png",
+  6: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-06-ships_8016f51a.png",
+  7: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-07-loom_3ca5bc74.png",
+  8: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-08-rail_2a2694e0.png",
+  9: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-09-engine_c6d0b3ac.png",
+  10: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-10-triad_367592e1.png",
+  11: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-11-orbit_8627aa4b.png",
+  12: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/power-12-nodes_76e7b719.png",
+};
+
 // ─── Relay Powers ───
 const RELAY_POWERS: Record<number, { name: string; description: string; icon: string }> = {
   1: { name: "Flame Mastery", description: "Control the eternal constant — the power to ignite and transform", icon: "🔥" },
@@ -190,13 +206,23 @@ export default function GreyMatter() {
               exit={{ scale: 0.5, opacity: 0 }}
               className="text-center p-8"
             >
-              <motion.p
-                className="text-6xl mb-4"
-                animate={{ scale: [1, 1.3, 1] }}
-                transition={{ repeat: Infinity, duration: 1 }}
-              >
-                {power.icon}
-              </motion.p>
+              {POWER_IMAGES[currentRelay] ? (
+                <motion.img
+                  src={POWER_IMAGES[currentRelay]}
+                  alt={power.name}
+                  className="w-24 h-24 object-contain mx-auto mb-4"
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ repeat: Infinity, duration: 1 }}
+                />
+              ) : (
+                <motion.p
+                  className="text-6xl mb-4"
+                  animate={{ scale: [1, 1.3, 1] }}
+                  transition={{ repeat: Infinity, duration: 1 }}
+                >
+                  {power.icon}
+                </motion.p>
+              )}
               <p className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">POWER EARNED!</p>
               <p className="font-heading text-xl font-bold text-amber-400 mb-2">{power.name}</p>
               <p className="text-sm text-muted-foreground mb-4">{power.description}</p>
@@ -388,15 +414,24 @@ export default function GreyMatter() {
               return (
                 <div
                   key={num}
-                  className={`aspect-square rounded-lg border flex flex-col items-center justify-center transition-all cursor-pointer ${
+                  className={`aspect-square rounded-lg border flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden ${
                     earned
                       ? "border-amber-500/40 bg-amber-500/10"
-                      : "border-border/30 bg-card/20 opacity-40"
+                      : "border-border/30 bg-card/20 opacity-40 grayscale"
                   }`}
                   onClick={() => setCurrentRelay(Number(num))}
                   title={earned ? `${p.name} — Earned!` : `${p.name} — Locked`}
                 >
-                  <span className="text-lg">{p.icon}</span>
+                  {POWER_IMAGES[Number(num)] ? (
+                    <img
+                      src={POWER_IMAGES[Number(num)]}
+                      alt={p.name}
+                      className="w-10 h-10 object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="text-lg">{p.icon}</span>
+                  )}
                   <span className="text-[7px] font-mono text-muted-foreground mt-0.5">{p.name.split(" ")[0]}</span>
                 </div>
               );

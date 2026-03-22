@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Swords, DoorOpen, Eye, Shield, Compass, ChevronRight, ChevronLeft, Scroll, Zap, Map } from "lucide-react";
+import { ArrowLeft, Swords, DoorOpen, Eye, Shield, Compass, ChevronRight, ChevronLeft, Scroll, Zap, Map, MessageSquare, Loader2 } from "lucide-react";
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
@@ -31,6 +31,22 @@ function rollAbilities(): JuniorAbilities {
   const roll = () => Math.floor(Math.random() * 6) + Math.floor(Math.random() * 6) + Math.floor(Math.random() * 6) + 3;
   return { observation: roll(), intuition: roll(), resilience: roll() };
 }
+
+// ─── Dungeon Room Images (CDN) ───
+const DUNGEON_IMAGES: Record<number, string> = {
+  1: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r01-fire_0818c4df.png",
+  2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r02-tree_a39d83c5.png",
+  3: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r03-river_e3f1f3cb.png",
+  4: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r04-horse_50d1d935.png",
+  5: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r05-roads_823b0b42.png",
+  6: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r06-ships_e43161ea.png",
+  7: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r07-loom_4c4ec6bb.png",
+  8: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r08-rail_813fa6de.png",
+  9: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r09-engine_fca54395.png",
+  10: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r10-triad_7c9057f5.png",
+  11: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r11-orbit_0306764d.png",
+  12: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-r12-nodes_5dff4509.png",
+};
 
 // ─── Room types ───
 type RoomType = "entrance" | "discovery" | "challenge" | "lore" | "guardian" | "treasure" | "exit";
@@ -121,6 +137,12 @@ export default function DungeonCrawl() {
   const [lastCheckResult, setLastCheckResult] = useState<{ success: boolean; roll: number } | null>(null);
   const [showResult, setShowResult] = useState(false);
 
+  // DAVID DM narration
+  const narrateMutation = trpc.dungeonDM.narrate.useMutation();
+  const [narration, setNarration] = useState<string | null>(null);
+  const [narrationLoading, setNarrationLoading] = useState(false);
+  const narrationCache = useRef<Record<string, string>>({});
+
   // Persistence
   useEffect(() => {
     localStorage.setItem("tre_dungeon_abilities", JSON.stringify(abilities));
@@ -154,6 +176,42 @@ export default function DungeonCrawl() {
     localStorage.setItem("tre_dungeon_created", "true");
   };
 
+  const dungeonProgress = dungeon.filter((_, i) => roomsCleared.has(`${currentRelay}-${i}`)).length;
+  const totalDungeonRooms = dungeon.length;
+
+  // Fetch DAVID narration for current room
+  const fetchNarration = useCallback((checkResultParam?: { success: boolean; roll: number } | null) => {
+    const cacheKey = `${currentRelay}-${currentRoom}-${checkResultParam ? checkResultParam.success : 'enter'}`;
+    if (narrationCache.current[cacheKey]) {
+      setNarration(narrationCache.current[cacheKey]);
+      return;
+    }
+    setNarrationLoading(true);
+    const inv = room.inventionIdx !== null ? inventions[room.inventionIdx] : null;
+    narrateMutation.mutate({
+      relayNumber: currentRelay,
+      roomType: room.type,
+      roomName: room.name,
+      abilityCheck: room.abilityCheck,
+      checkResult: checkResultParam ?? null,
+      inventionName: inv?.name ?? null,
+      inventionDescription: inv?.description ?? null,
+      playerAbilities: abilities,
+      roomsCleared: dungeonProgress,
+      totalRooms: totalDungeonRooms,
+    }, {
+      onSuccess: (data) => {
+        narrationCache.current[cacheKey] = data.narration;
+        setNarration(data.narration);
+        setNarrationLoading(false);
+      },
+      onError: () => {
+        setNarration("DAVID's instruments flicker... 'Press on, explorer. The path reveals itself to the brave.'");
+        setNarrationLoading(false);
+      },
+    });
+  }, [currentRelay, currentRoom, room, inventions, abilities, dungeonProgress, totalDungeonRooms]);
+
   const handleEnterRoom = useCallback(() => {
     if (isCleared) return;
 
@@ -176,6 +234,9 @@ export default function DungeonCrawl() {
         });
       }
 
+      // Fetch DAVID narration with check result
+      fetchNarration(result);
+
       playDiscoverySound();
       setTimeout(() => playXpSound(), 300);
     } else {
@@ -189,13 +250,16 @@ export default function DungeonCrawl() {
           description: `Explored ${room.name} in Relay ${currentRelay}`,
         });
       }
+      // Fetch DAVID narration for exploration
+      fetchNarration(null);
       playDiscoverySound();
     }
-  }, [room, isCleared, abilities, profileId, currentRelay, currentRoom, roomKey]);
+  }, [room, isCleared, abilities, profileId, currentRelay, currentRoom, roomKey, fetchNarration]);
 
   const handleNextRoom = () => {
     setShowResult(false);
     setLastCheckResult(null);
+    setNarration(null);
     if (currentRoom < dungeon.length - 1) {
       setCurrentRoom(prev => prev + 1);
       hapticDiscovery();
@@ -205,6 +269,7 @@ export default function DungeonCrawl() {
   const handlePrevRoom = () => {
     setShowResult(false);
     setLastCheckResult(null);
+    setNarration(null);
     if (currentRoom > 0) {
       setCurrentRoom(prev => prev - 1);
     }
@@ -216,6 +281,7 @@ export default function DungeonCrawl() {
       setCurrentRoom(0);
       setShowResult(false);
       setLastCheckResult(null);
+      setNarration(null);
     }
   };
 
@@ -225,11 +291,9 @@ export default function DungeonCrawl() {
       setCurrentRoom(0);
       setShowResult(false);
       setLastCheckResult(null);
+      setNarration(null);
     }
   };
-
-  const dungeonProgress = dungeon.filter((_, i) => roomsCleared.has(`${currentRelay}-${i}`)).length;
-  const totalDungeonRooms = dungeon.length;
 
   const ROOM_ICONS: Record<RoomType, typeof DoorOpen> = {
     entrance: DoorOpen,
@@ -377,6 +441,18 @@ export default function DungeonCrawl() {
             </div>
           </div>
 
+          {/* Dungeon Room Illustration */}
+          {DUNGEON_IMAGES[currentRelay] && (
+            <div className="rounded-lg overflow-hidden mb-4 border border-border/30">
+              <img
+                src={DUNGEON_IMAGES[currentRelay]}
+                alt={`${relay.name} Dungeon`}
+                className="w-full h-40 object-cover object-center"
+                loading="lazy"
+              />
+            </div>
+          )}
+
           <p className="text-sm text-muted-foreground leading-relaxed mb-4">{room.description}</p>
 
           {/* Ability check info */}
@@ -415,6 +491,31 @@ export default function DungeonCrawl() {
                 <p className={`text-sm font-bold ${lastCheckResult.success ? "text-emerald-400" : "text-amber-400"}`}>
                   {lastCheckResult.success ? "SUCCESS! Full XP earned!" : "PARTIAL — Half XP earned. You still advance!"}
                 </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* DAVID DM Narration */}
+          <AnimatePresence>
+            {(narration || narrationLoading) && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="rounded-lg border border-cyan-500/30 bg-cyan-500/5 p-3 mb-4"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
+                  <p className="text-[10px] uppercase tracking-wider text-cyan-400 font-bold">DAVID — Dungeon Master</p>
+                </div>
+                {narrationLoading ? (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span className="italic">DAVID is narrating...</span>
+                  </div>
+                ) : (
+                  <p className="text-sm text-foreground/90 leading-relaxed italic">{narration}</p>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

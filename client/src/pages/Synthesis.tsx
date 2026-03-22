@@ -569,7 +569,7 @@ export default function Synthesis() {
               : `${12 - synthesis.completionCount} relays remain. Continue your odyssey.`}
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/explore/1">
+            <Link href="/explore">
               <Button variant="outline" className="gap-2 border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
                 <MapIcon className="w-4 h-4" /> Explorer Mode
               </Button>

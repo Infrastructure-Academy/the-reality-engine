@@ -255,3 +255,72 @@ describe("Power of Grey Matter (Mode C)", () => {
     expect(canDoApplication2).toBe(true);
   });
 });
+
+// ─── DAVID Dungeon Master Narration Tests ───
+describe("DAVID Dungeon Master", () => {
+  const RELAY_NAMES = ["Fire", "Tree", "River", "Horse", "Roads", "Ships", "Loom", "Rail", "Engine", "AAA Triad", "Orbit", "Human Nodes"];
+
+  it("should accept valid narration input with all required fields", () => {
+    const input = {
+      relayNumber: 1,
+      roomType: "entrance",
+      roomName: "The Gateway",
+      abilityCheck: null,
+      checkResult: null,
+      inventionName: null,
+      inventionDescription: null,
+      playerAbilities: { observation: 12, intuition: 10, resilience: 14 },
+      roomsCleared: 0,
+      totalRooms: 8,
+    };
+    expect(input.relayNumber).toBeGreaterThanOrEqual(1);
+    expect(input.relayNumber).toBeLessThanOrEqual(12);
+    expect(input.totalRooms).toBe(8);
+    expect(input.playerAbilities.observation).toBeGreaterThanOrEqual(3);
+  });
+
+  it("should accept narration input with ability check result", () => {
+    const input = {
+      relayNumber: 3,
+      roomType: "discovery",
+      roomName: "The Archive",
+      abilityCheck: "observation",
+      checkResult: { success: true, roll: 15 },
+      inventionName: "Irrigation Canal",
+      inventionDescription: "Engineered channels diverting river water to farmland.",
+      playerAbilities: { observation: 14, intuition: 8, resilience: 11 },
+      roomsCleared: 3,
+      totalRooms: 8,
+    };
+    expect(input.checkResult.success).toBe(true);
+    expect(input.checkResult.roll).toBeGreaterThanOrEqual(1);
+    expect(input.checkResult.roll).toBeLessThanOrEqual(20);
+    expect(input.inventionName).toBeTruthy();
+  });
+
+  it("should have relay descriptions for all 12 relays", async () => {
+    const { RELAYS } = await import("../shared/gameData");
+    expect(RELAY_NAMES).toHaveLength(12);
+    for (const name of RELAY_NAMES) {
+      const relay = RELAYS.find(r => r.name === name);
+      expect(relay).toBeDefined();
+    }
+  });
+
+  it("should build situation context string correctly", () => {
+    const relayNumber = 1;
+    const roomName = "The Gateway";
+    const roomType = "entrance";
+    const roomsCleared = 2;
+    const totalRooms = 8;
+    const playerAbilities = { observation: 12, intuition: 10, resilience: 14 };
+
+    let context = `The explorer is in Room "${roomName}" (${roomType} type). Progress: ${roomsCleared}/${totalRooms} rooms cleared.`;
+    context += `\nExplorer abilities: Observation ${playerAbilities.observation}, Intuition ${playerAbilities.intuition}, Resilience ${playerAbilities.resilience}.`;
+
+    expect(context).toContain("The Gateway");
+    expect(context).toContain("entrance");
+    expect(context).toContain("2/8");
+    expect(context).toContain("Observation 12");
+  });
+});

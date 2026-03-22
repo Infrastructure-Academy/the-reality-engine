@@ -132,7 +132,7 @@ export default function Leaderboard() {
           <div className="text-center py-12">
             <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
             <p className="text-muted-foreground text-sm">No players yet. Be the first to explore!</p>
-            <Link href="/explore/1">
+            <Link href="/explore">
               <Button variant="outline" className="mt-4 gap-2 border-amber-500/30 text-amber-400">
                 <Flame className="w-4 h-4" /> Start Exploring
               </Button>
