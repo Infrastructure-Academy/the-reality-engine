@@ -14,6 +14,7 @@ import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoun
 import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
+import { ExplorerVideo } from "@/components/ExplorerVideo";
 import { VoiceToggle } from "@/components/VoiceToggle";
 import { narrateBadgeEarned, davidSpeak, davidStop } from "@/hooks/useDavidVoice";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
@@ -237,6 +238,15 @@ export default function FlightDeck() {
         </header>
 
         <div className="container py-8 max-w-5xl mx-auto">
+          {/* Intro Video */}
+          <ExplorerVideo
+            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_e378e38f.mp4"
+            title="Your Cockpit Awaits, Commander"
+            subtitle="32s intro"
+            accentColor="#06b6d4"
+            glowColor="rgba(6,182,212,0.3)"
+          />
+
           <div className="text-center mb-8">
             <p className="text-xs tracking-[0.3em] uppercase text-cyan-400 mb-2">FITS Temperament Alignment</p>
             <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide">Select Your Craft</h2>

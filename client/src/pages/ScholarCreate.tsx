@@ -10,6 +10,7 @@ import {
   ChevronRight, MessageCircle, GraduationCap, Star, Sparkles
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
+import { ExplorerVideo } from "@/components/ExplorerVideo";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
 
@@ -194,6 +195,15 @@ export default function ScholarCreate() {
       </header>
 
       <div className="container py-6 max-w-3xl mx-auto">
+
+        {/* Intro Video */}
+        <ExplorerVideo
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v5-scholar_e98f71cb.mp4"
+          title="The Deepest Journey of All"
+          subtitle="32s intro"
+          accentColor="#f59e0b"
+          glowColor="rgba(245,158,11,0.3)"
+        />
 
         {/* Phase Navigation */}
         <div className="flex items-center justify-center gap-2 mb-8">
