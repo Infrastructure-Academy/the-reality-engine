@@ -240,7 +240,7 @@ export default function FlightDeck() {
         <div className="container py-8 max-w-5xl mx-auto">
           {/* Intro Video */}
           <ExplorerVideo
-            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_e378e38f.mp4"
+            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_a9ef7d84.mp4"
             title="Your Cockpit Awaits, Commander"
             subtitle="32s intro"
             accentColor="#06b6d4"
