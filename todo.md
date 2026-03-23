@@ -390,3 +390,13 @@
 - [x] Upload all craft images to CDN
 - [x] Embed craft images in CraftSelection page
 - [x] Verify and checkpoint
+
+## Resources Page — Add New Documents
+- [x] Add Junior Players Handbook v1.1 to /resources page
+- [x] Add Game Design Parameters to /resources page
+
+## Advanced Players Handbook (Flight Deck + Scholar)
+- [x] Write Advanced Players Handbook v1.0 (Flight Deck, Scholar, 6 ability scores, FITS, Dearden Field, thesis, grading)
+
+## Governance Deck — GOV-GDP-001
+- [x] Add Game Design Parameters as GOV-GDP-001 card to the Governance Deck (Tier 4 + iCard Gallery + iCard image generated)

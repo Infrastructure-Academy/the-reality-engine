@@ -28,6 +28,7 @@ const NetworkDirectory = lazy(() => import("./pages/NetworkDirectory"));
 const Journey = lazy(() => import("./pages/Journey"));
 const MediaGallery = lazy(() => import("./pages/MediaGallery"));
 const BridgeHub = lazy(() => import("./pages/BridgeHub"));
+const Resources = lazy(() => import("./pages/Resources"));
 const ExplorerSelect = lazy(() => import("./pages/ExplorerSelect"));
 const RelaySpinner = lazy(() => import("./pages/RelaySpinner"));
 const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
@@ -70,6 +71,7 @@ function Router() {
         <Route path={"/journey"} component={Journey} />
         <Route path={"/media"} component={MediaGallery} />
         <Route path={"/bridges"} component={BridgeHub} />
+        <Route path={"/resources"} component={Resources} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

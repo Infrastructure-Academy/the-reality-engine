@@ -20,6 +20,7 @@ const CDN = {
   tetrahedral: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-tetrahedral-observer_ef84bfcb.png",
   posterEquipment: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/poster-personal-equipment_08ae97d4.png",
   posterVehicles: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/poster-terrestrial-vehicles_d4212cbb.png",
+  govGdp001: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-gdp-001-DiYcoQeohvzvyxznyqwJk9.png",
 };
 
 // SAP-001 Phases
@@ -82,6 +83,7 @@ const POWER_TIERS = [
     color: "#22c55e", bgClass: "bg-green-500/15 border-green-500/40",
     cards: [
       { id: "sap-001", label: "SAP-001", desc: "The System" },
+      { id: "gov-gdp-001", label: "GOV-GDP-001", desc: "Game Design Parameters" },
       { id: "ca-006", label: "CA-006", desc: "Real World Application" },
       { id: "st-cc-001", label: "ST/CC-001", desc: "Saving Throws" },
     ],
@@ -371,6 +373,7 @@ export default function GovernanceDeck() {
                   { title: "Memorial Audit", subtitle: "B398-AUDIT-001 — 157 Game iCards Identified", src: CDN.memorialAudit, block: "B398" },
                   { title: "Personal Equipment Poster", subtitle: "Visual Index — Equipment Suite", src: CDN.posterEquipment, block: "B398" },
                   { title: "Terrestrial Vehicles Poster", subtitle: "Visual Index — Vehicle Fleet", src: CDN.posterVehicles, block: "B398" },
+                  { title: "GOV-GDP-001", subtitle: "Game Design Parameters — The Design Bible", src: CDN.govGdp001, block: "B401" },
                 ]).map(card => (
                   <div key={card.title} className="bg-card border border-border/50 rounded-xl overflow-hidden">
                     <img
