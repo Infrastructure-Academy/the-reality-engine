@@ -400,3 +400,27 @@
 
 ## Governance Deck — GOV-GDP-001
 - [x] Add Game Design Parameters as GOV-GDP-001 card to the Governance Deck (Tier 4 + iCard Gallery + iCard image generated)
+
+## Navigation — Add Resources Link
+- [x] Add Resources link to main top nav bar
+- [x] Add Resources link to bottom tab bar (mobile)
+
+## Downloadable PDFs — Three Handbooks
+- [x] Generate PDF: Junior Players Handbook v1.1
+- [x] Generate PDF: Advanced Players Handbook v1.0
+- [x] Generate PDF: Game Design Parameters v1.0
+- [x] Upload PDFs to CDN
+- [x] Add download buttons to Resources page
+
+## Flight Deck + Scholar Intro Videos
+- [x] Write narration script: Flight Deck intro video
+- [x] Write narration script: Scholar intro video
+- [x] Generate narration audio: Flight Deck (4 clips, ~30s total)
+- [x] Generate narration audio: Scholar (4 clips, ~34s total)
+- [x] Generate video shots: Flight Deck (4 clips)
+- [x] Generate video shots: Scholar (4 clips)
+- [x] Assemble Flight Deck intro video (30s)
+- [x] Assemble Scholar intro video (30s)
+- [x] Embed Flight Deck video on /flight-deck page
+- [x] Embed Scholar video on /scholar page
+- [x] Checkpoint and deliver

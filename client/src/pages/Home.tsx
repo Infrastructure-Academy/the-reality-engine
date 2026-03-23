@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy } from "lucide-react";
+import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library } from "lucide-react";
 
 const modeIcons = {
   explorer: Flame,
@@ -60,6 +60,12 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4">
             <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
+            <Link href="/resources">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
+                <Library className="w-4 h-4" />
+                <span className="hidden sm:inline">Resources</span>
+              </Button>
+            </Link>
             <Link href="/leaderboard">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Trophy className="w-4 h-4" />

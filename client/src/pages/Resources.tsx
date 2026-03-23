@@ -15,6 +15,7 @@ interface ResourceDoc {
   description: string;
   sections: string[];
   status: "ACTIVE" | "LOCKED" | "DRAFT";
+  pdfUrl?: string;
 }
 
 const DOCUMENTS: ResourceDoc[] = [
@@ -30,6 +31,7 @@ const DOCUMENTS: ResourceDoc[] = [
     description: "Your guide to the 12 Civilisational Relays, five Great Webs, four game modes, and the mission to push the clock back from midnight.",
     sections: ["12 Relays", "5 Great Webs", "4 Explorer Modes", "XP & BitPoints", "DAVID AI Guide", "FITS Preview", "MPNC Fleet", "iCards"],
     status: "ACTIVE",
+    pdfUrl: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/Junior-Players-Handbook-v1.1_4426768e.pdf",
   },
   {
     id: "advanced-handbook",
@@ -43,6 +45,7 @@ const DOCUMENTS: ResourceDoc[] = [
     description: "The complete guide to the Flight Deck cockpit, Scholar mode, full 6 ability scores, FITS temperament, Dearden Field, thesis writing, and academic assessment.",
     sections: ["Flight Deck HUD", "Dearden Field", "MPNC Fleet", "6 Ability Scores", "FITS Temperament", "Scholar Mode", "Thesis Writing", "Academic Grading"],
     status: "ACTIVE",
+    pdfUrl: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/Advanced-Players-Handbook-v1.0_39238d09.pdf",
   },
   {
     id: "game-design-params",
@@ -56,6 +59,7 @@ const DOCUMENTS: ResourceDoc[] = [
     description: "Architecture, philosophy, reward mechanics, content structure, and implementation decisions for the world's first AI-guided infrastructure education platform.",
     sections: ["Design Philosophy", "Content Architecture", "Player Progression", "FITS System", "MPNC Fleet", "Ability Scores", "Dearden Field", "DAVID AI", "Visual Design", "Platform Architecture", "Design Decisions Log"],
     status: "ACTIVE",
+    pdfUrl: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/Game-Design-Parameters-v1.0_7a6f0bbf.pdf",
   },
   {
     id: "tp-016",
@@ -202,8 +206,17 @@ export default function Resources() {
                         ))}
                       </div>
 
-                      {/* Block Reference */}
-                      <p className="text-[10px] font-mono text-muted-foreground/50 mt-3">{doc.block} — DIAMOND Classification</p>
+                      {/* Download + Block Reference */}
+                      <div className="flex items-center justify-between mt-3">
+                        <p className="text-[10px] font-mono text-muted-foreground/50">{doc.block} — DIAMOND Classification</p>
+                        {doc.pdfUrl && (
+                          <a href={doc.pdfUrl} target="_blank" rel="noopener noreferrer" download>
+                            <Button variant="outline" size="sm" className="gap-1.5 text-[10px] h-7 border-gold/30 text-gold hover:bg-gold/10">
+                              <Download className="w-3 h-3" /> Download PDF
+                            </Button>
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
