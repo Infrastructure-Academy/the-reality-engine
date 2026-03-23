@@ -245,7 +245,7 @@ export default function RelaySpinner() {
       <div className="container py-6 max-w-lg mx-auto">
         {/* Intro Video */}
         <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/relay-spinner-youth_c8bf19b4.mp4"
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v1-relay-spinner_641673d9.mp4"
           title="Spin the Story of Everything"
           subtitle="20s intro"
           accentColor="#3b82f6"

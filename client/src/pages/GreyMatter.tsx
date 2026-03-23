@@ -253,7 +253,7 @@ export default function GreyMatter() {
       <div className="container py-4 max-w-lg mx-auto">
         {/* Intro Video */}
         <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/grey-matter-youth_43190a2a.mp4"
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4"
           title="Unlock the Powers That Built Everything"
           subtitle="30s intro"
           accentColor="#d4a843"

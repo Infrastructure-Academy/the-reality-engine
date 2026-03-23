@@ -424,3 +424,32 @@
 - [x] Embed Flight Deck video on /flight-deck page
 - [x] Embed Scholar video on /scholar page
 - [x] Checkpoint and deliver
+
+## Auto-Hide Watch Intro After First View
+- [ ] Update ExplorerVideo component with localStorage watched state
+- [ ] Auto-collapse after first complete view, show "Watched" indicator
+
+## Pilot Portraits for MPNC Fleet
+- [ ] Generate pilot portrait: Scott (TB-1 Pathfinder)
+- [ ] Generate pilot portrait: Virgil (TB-2 Forgemaster)
+- [ ] Generate pilot portrait: Alan (TB-3 Starcaster)
+- [ ] Generate pilot portrait: Gordon (TB-4 Lifeline)
+- [ ] Generate pilot portrait: John (TB-5 Sentinel)
+- [ ] Upload pilot portraits to CDN
+- [ ] Embed pilot portraits on craft selection cards
+
+## Sizzle Reel for Explorer Select Page
+- [ ] Create 15-second sizzle reel from existing video clips
+- [ ] Upload sizzle reel to CDN
+- [ ] Embed sizzle reel on Explorer Select page
+- [ ] Checkpoint and deliver
+
+## URGENT FIX — Scholar Video Wrong Visual Style
+- [x] Remove Scholar video from live site (wrong anime style for 18+ audience)
+- [x] Remove Flight Deck video from live site pending review
+- [ ] Regenerate Scholar video clips with serious documentary/professional visuals (NO anime/cartoon)
+- [ ] Regenerate Flight Deck video clips with teen-appropriate visuals (NOT identical to kids)
+- [ ] Assemble corrected Scholar video
+- [ ] Assemble corrected Flight Deck video
+- [ ] Deliver all 5 videos clearly labelled by audience for Nigel's approval
+- [ ] DO NOT embed on site until Nigel approves

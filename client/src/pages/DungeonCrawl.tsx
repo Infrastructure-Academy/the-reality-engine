@@ -394,7 +394,7 @@ export default function DungeonCrawl() {
       <div className="container py-4 max-w-lg mx-auto">
         {/* Intro Video */}
         <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dungeon-crawl-youth_76121cd6.mp4"
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4"
           title="Your Adventure Through 12,000 Years"
           subtitle="26s intro"
           accentColor="#10b981"

@@ -19,7 +19,6 @@ import { narrateBadgeEarned, davidSpeak, davidStop } from "@/hooks/useDavidVoice
 import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { Confetti } from "@/components/Confetti";
 import { NodeTooltip } from "@/components/NodeTooltip";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
 
 type Phase = "craft_select" | "hud";
 
@@ -238,14 +237,6 @@ export default function FlightDeck() {
         </header>
 
         <div className="container py-8 max-w-5xl mx-auto">
-          <ExplorerVideo
-            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-intro_e0a1acee.mp4"
-            title="Your Cockpit. Your Mission."
-            subtitle="30s intro"
-            accentColor="#06b6d4"
-            glowColor="rgba(6,182,212,0.3)"
-          />
-
           <div className="text-center mb-8">
             <p className="text-xs tracking-[0.3em] uppercase text-cyan-400 mb-2">FITS Temperament Alignment</p>
             <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide">Select Your Craft</h2>
