@@ -519,3 +519,6 @@
 - [x] Add Tetrahedral Observer iCard as companion infographic below The Living Experiment on Home page
 - [x] Wire X follower count to auto-refresh on Chart Room sync events (invalidate on syncChartRoom)
 - [x] Add Facebook page recommendation note (personal profile vs page for proper Follow button)
+
+## iAAi Logo
+- [x] Replace header logo with iAAi logo from Infrastructure Academy main page

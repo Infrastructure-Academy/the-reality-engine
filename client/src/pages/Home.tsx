@@ -212,9 +212,11 @@ export default function Home() {
       <header className="relative z-10 border-b border-border/50 backdrop-blur-sm">
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-black" />
-            </div>
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iaai-logo_4636799f.jpeg"
+              alt="iAAi — Infrastructure Academy"
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <h1 className="text-sm font-heading font-bold tracking-wider text-gold-gradient">THE REALITY ENGINE</h1>
               <p className="text-[10px] text-muted-foreground tracking-widest uppercase">Infrastructure Academy</p>
