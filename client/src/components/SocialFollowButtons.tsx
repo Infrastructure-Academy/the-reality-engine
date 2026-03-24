@@ -60,10 +60,12 @@ interface SocialFollowButtonsProps {
 
 export function SocialFollowButtons({ followerCount, compact = false }: SocialFollowButtonsProps) {
   // Fetch live X follower count from Chart Room bridge
+  // Auto-refreshes every 10 minutes and on window focus to stay in sync with Chart Room
   const { data: liveData } = trpc.bridge.xFollowerCount.useQuery(undefined, {
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000, // Consider stale after 5 minutes
+    refetchInterval: 10 * 60 * 1000, // Auto-refresh every 10 minutes
+    refetchOnWindowFocus: true, // Refresh when user returns to tab
     retry: 1,
-    refetchOnWindowFocus: false,
   });
 
   const xCount = followerCount ?? liveData?.count ?? 42;

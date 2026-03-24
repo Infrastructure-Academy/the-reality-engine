@@ -514,3 +514,8 @@
 - [x] Add social follow buttons to Flight Deck and Scholar mode headers
 - [x] Verify Facebook link resolves correctly, fix if needed
 - [x] Add "The Living Experiment" infographic to bottom of Home page as a full-width footer section
+
+## Tetrahedral Observer iCard + X Auto-Refresh + Facebook Page Note
+- [x] Add Tetrahedral Observer iCard as companion infographic below The Living Experiment on Home page
+- [x] Wire X follower count to auto-refresh on Chart Room sync events (invalidate on syncChartRoom)
+- [x] Add Facebook page recommendation note (personal profile vs page for proper Follow button)

@@ -495,6 +495,24 @@ export default function Home() {
         </div>
       </section>
 
+      {/* The Tetrahedral Observer — Bridge Architecture iCard */}
+      <section className="relative z-10 py-12">
+        <div className="container max-w-4xl mx-auto">
+          <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">Five Operational Bridges</p>
+          <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/tetrahedral-observer-icard_08b0a0f4.png"
+              alt="The Tetrahedral Observer — Five Operational Bridges. ACAD SITE (Infrastructure Academy, MASTER, Direct DB Access), MEMORIAL SITE (Principia Tectonica, CONNECTED, API Bridge), TRE GAME (The Reality Engine, SHARED DB, Direct DB Access), CHART ROOM (The Chartered Chart, API BRIDGE, Multi-Platform Tracker). Social Profiles: X @dearden_ni37258, Facebook, LinkedIn. Block 757, 24 March 2026, Tetrahedral Observer v2, B757-BRIDGES-002."
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+          </div>
+          <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono">
+            B757-BRIDGES-002 &nbsp;|&nbsp; TETRAHEDRAL OBSERVER v2 &nbsp;|&nbsp; 24 MARCH 2026
+          </p>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-6">
         <div className="container text-center">
@@ -505,6 +523,9 @@ export default function Home() {
             </a>
           </p>
           <p className="text-[10px] text-muted-foreground/60 mt-1">play.iaai.world</p>
+          <p className="text-[9px] text-muted-foreground/40 mt-2 italic">
+            Tip: Create a dedicated Facebook Page for Infrastructure Academy to unlock a proper Follow button with follower count
+          </p>
         </div>
       </footer>
     </div>

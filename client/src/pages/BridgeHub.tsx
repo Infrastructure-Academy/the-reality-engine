@@ -50,11 +50,14 @@ export default function BridgeHub() {
 
   const [syncing, setSyncing] = useState<string | null>(null);
 
+  const utils = trpc.useUtils();
+
   const syncAll = trpc.bridge.syncAll.useMutation({
     onMutate: () => setSyncing("all"),
     onSuccess: (data) => {
       setSyncing(null);
       refetchHistory();
+      utils.bridge.xFollowerCount.invalidate(); // Auto-refresh X count after sync
       const memStatus = (data.memorial as any)?.status || "unknown";
       const chartStatus = (data.chartRoom as any)?.status || "unknown";
       toast.success(`Sync Complete: Memorial ${memStatus} | Chart Room ${chartStatus}`);
@@ -83,6 +86,7 @@ export default function BridgeHub() {
     onSuccess: (data) => {
       setSyncing(null);
       refetchHistory();
+      utils.bridge.xFollowerCount.invalidate(); // Auto-refresh X count after Chart Room sync
       toast.success(`Chart Room Sync: ${(data as any)?.status || "done"}`);
     },
     onError: (err) => {
