@@ -1,0 +1,87 @@
+{
+  "query": "SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE id > 40 ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE id > 40 ORDER BY id;",
+  "rows": [
+    {
+      "id": "41",
+      "title": "Evidence 002 Data Integrity",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-002-data-integrity.png",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "42",
+      "title": "Evidence 003 Member Summary",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-003-member-summary.png",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "43",
+      "title": "Tetrahedral Observer Bridges",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/icard-all-bridges-2026.png",
+      "category": "icard",
+      "blockRef": "B398"
+    },
+    {
+      "id": "44",
+      "title": "SAP-001 System Assurance Protocol",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/sap-001-system-assurance.jpeg",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "45",
+      "title": "Governance Deck Power Card",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/gov-power-card.png",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "30001",
+      "title": "V4-B Starborne — Flight Deck Intro (Ages 14-18)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30002",
+      "title": "V4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30003",
+      "title": "V5-A Scholars Secret — Scholar Intro (Ages 18+)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30004",
+      "title": "V5-B Middle-Earth — Scholar Intro (Ages 18+)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30005",
+      "title": "iCard — Audio Verification Record (V4-B & V5)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png",
+      "category": "evidence",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30006",
+      "title": "iCard — Complete 8-Video Delivery Manifest",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png",
+      "category": "evidence",
+      "blockRef": "B401"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcdnUrl\tcategory\tblockRef\n41\tEvidence 002 Data Integrity\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-002-data-integrity.png\tevidence\tB398\n42\tEvidence 003 Member Summary\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-003-member-summary.png\tevidence\tB398\n43\tTetrahedral Observer Bridges\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/icard-all-bridges-2026.png\ticard\tB398\n44\tSAP-001 System Assurance Protocol\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/sap-001-system-assurance.jpeg\tgovernance\tB398\n45\tGovernance Deck Power Card\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/gov-power-card.png\tgovernance\tB398\n30001\tV4-B Starborne — Flight Deck Intro (Ages 14-18)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4\tvideo\tB401\n30002\tV4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4\tvideo\tB401\n30003\tV5-A Scholars Secret — Scholar Intro (Ages 18+)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4\tvideo\tB401\n30004\tV5-B Middle-Earth — Scholar Intro (Ages 18+)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4\tvideo\tB401\n30005\tiCard — Audio Verification Record (V4-B & V5)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png\tevidence\tB401\n30006\tiCard — Complete 8-Video Delivery Manifest\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png\tevidence\tB401\n",
+  "stderr": "",
+  "execution_time_ms": 1564
+}

@@ -1,0 +1,9 @@
+{
+  "query": "SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE title LIKE '%Database%' OR title LIKE '%Register%' OR title LIKE '%Vehicle%' OR title LIKE '%Legal%' OR title LIKE '%Block392%' OR title LIKE '%Block401%' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE title LIKE '%Database%' OR title LIKE '%Register%' OR title LIKE '%Vehicle%' OR title LIKE '%Legal%' OR title LIKE '%Block392%' OR title LIKE '%Block401%' LIMIT 20;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1575
+}

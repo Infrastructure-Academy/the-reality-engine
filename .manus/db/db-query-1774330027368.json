@@ -1,0 +1,227 @@
+{
+  "query": "SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE id > 20 ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, cdnUrl, category, blockRef FROM media_catalogue WHERE id > 20 ORDER BY id;",
+  "rows": [
+    {
+      "id": "21",
+      "title": "Tomita Planets Suite",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/iCARD_TOMITA_PLANETS_SUITE_HERITAGE_v2-BBY26zWCDDDLUTa6myT3o4.png",
+      "category": "heritage",
+      "blockRef": "B400"
+    },
+    {
+      "id": "22",
+      "title": "Biosphere Suit Portrait",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biosphere-suit-portrait_9092e6f3.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "23",
+      "title": "BiAura Skin Mk1",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biaura-skin-mk1-parts-v2_03679277.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "24",
+      "title": "SCADA Diagram",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biosphere-suit-scada-diagram_9cb2af6d.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "25",
+      "title": "HIS HUD Dashboard",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/HAPTIC_HUD_DASHBOARD_FULL(2)_f623c343.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "26",
+      "title": "Exhibition Entrance Portal",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-01-entrance-portal_8d15989d.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "27",
+      "title": "Holodeck Chamber",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-03-holodeck-chamber_adf17b66.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "28",
+      "title": "Big Data Wall",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-04-big-data-wall_1849f915.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "29",
+      "title": "Consciousness Theatre",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/consciousness-theatre_2d98970a.webp",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "30",
+      "title": "TRE Screenshot",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/IMG_0484_6575fe85.jpeg",
+      "category": "screenshot",
+      "blockRef": "B400"
+    },
+    {
+      "id": "31",
+      "title": "BitPoint Card",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/BITPOINT_HQ_LOOP_BREAKER_DAY129_d8fbad1f.png",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "32",
+      "title": "Consciousness Compass",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/consciousness-compass_f702a4c8.webp",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "33",
+      "title": "YODA Control",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/icard-yoda-scada-control_6e020190.png",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "34",
+      "title": "Flight Deck Cockpit",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/dearden-cockpit-flight-deck_93eba934.jpg",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "35",
+      "title": "Immersion Hall",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/capstone-kf04-holodeck_7bb9b271.png",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "36",
+      "title": "Play Arc 1 Curricular",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_1_curricular_502014f0.png",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "37",
+      "title": "Play Arc 2 Progression",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_2_progression_a9292852.png",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "38",
+      "title": "Play Arc 4 Weaving",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_4_weaving_0a7307b5.png",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "39",
+      "title": "HICE Cube",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/iCARD_HICE_CUBE_4afc441d.png",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "40",
+      "title": "Evidence 001 Chain of Custody",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-001-chain-of-custody.png",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "41",
+      "title": "Evidence 002 Data Integrity",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-002-data-integrity.png",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "42",
+      "title": "Evidence 003 Member Summary",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-003-member-summary.png",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "43",
+      "title": "Tetrahedral Observer Bridges",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/icard-all-bridges-2026.png",
+      "category": "icard",
+      "blockRef": "B398"
+    },
+    {
+      "id": "44",
+      "title": "SAP-001 System Assurance Protocol",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/sap-001-system-assurance.jpeg",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "45",
+      "title": "Governance Deck Power Card",
+      "cdnUrl": "https://files.manuscdn.com/webdev/realityeng-epdhlkrn/gov-power-card.png",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "30001",
+      "title": "V4-B Starborne — Flight Deck Intro (Ages 14-18)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30002",
+      "title": "V4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30003",
+      "title": "V5-A Scholars Secret — Scholar Intro (Ages 18+)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30004",
+      "title": "V5-B Middle-Earth — Scholar Intro (Ages 18+)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30005",
+      "title": "iCard — Audio Verification Record (V4-B & V5)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png",
+      "category": "evidence",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30006",
+      "title": "iCard — Complete 8-Video Delivery Manifest",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png",
+      "category": "evidence",
+      "blockRef": "B401"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcdnUrl\tcategory\tblockRef\n21\tTomita Planets Suite\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/iCARD_TOMITA_PLANETS_SUITE_HERITAGE_v2-BBY26zWCDDDLUTa6myT3o4.png\theritage\tB400\n22\tBiosphere Suit Portrait\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biosphere-suit-portrait_9092e6f3.png\texhibition\tB400\n23\tBiAura Skin Mk1\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biaura-skin-mk1-parts-v2_03679277.png\texhibition\tB400\n24\tSCADA Diagram\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/biosphere-suit-scada-diagram_9cb2af6d.png\texhibition\tB400\n25\tHIS HUD Dashboard\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/HAPTIC_HUD_DASHBOARD_FULL(2)_f623c343.png\texhibition\tB400\n26\tExhibition Entrance Portal\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-01-entrance-portal_8d15989d.png\texhibition\tB400\n27\tHolodeck Chamber\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-03-holodeck-chamber_adf17b66.png\texhibition\tB400\n28\tBig Data Wall\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/exhibition-04-big-data-wall_1849f915.png\texhibition\tB400\n29\tConsciousness Theatre\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/consciousness-theatre_2d98970a.webp\texhibition\tB400\n30\tTRE Screenshot\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/IMG_0484_6575fe85.jpeg\tscreenshot\tB400\n31\tBitPoint Card\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/BITPOINT_HQ_LOOP_BREAKER_DAY129_d8fbad1f.png\ticard\tB400\n32\tConsciousness Compass\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/consciousness-compass_f702a4c8.webp\tframework\tB400\n33\tYODA Control\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/icard-yoda-scada-control_6e020190.png\ticard\tB400\n34\tFlight Deck Cockpit\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/dearden-cockpit-flight-deck_93eba934.jpg\texhibition\tB400\n35\tImmersion Hall\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/capstone-kf04-holodeck_7bb9b271.png\texhibition\tB400\n36\tPlay Arc 1 Curricular\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_1_curricular_502014f0.png\tframework\tB400\n37\tPlay Arc 2 Progression\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_2_progression_a9292852.png\tframework\tB400\n38\tPlay Arc 4 Weaving\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/play_arc_4_weaving_0a7307b5.png\tframework\tB400\n39\tHICE Cube\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/UcMtq9dnoiXYmXbtNd8s9Y/iCARD_HICE_CUBE_4afc441d.png\ticard\tB400\n40\tEvidence 001 Chain of Custody\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-001-chain-of-custody.png\tevidence\tB398\n41\tEvidence 002 Data Integrity\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-002-data-integrity.png\tevidence\tB398\n42\tEvidence 003 Member Summary\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/evidence-003-member-summary.png\tevidence\tB398\n43\tTetrahedral Observer Bridges\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/icard-all-bridges-2026.png\ticard\tB398\n44\tSAP-001 System Assurance Protocol\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/sap-001-system-assurance.jpeg\tgovernance\tB398\n45\tGovernance Deck Power Card\thttps://files.manuscdn.com/webdev/realityeng-epdhlkrn/gov-power-card.png\tgovernance\tB398\n30001\tV4-B Starborne — Flight Deck Intro (Ages 14-18)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4\tvideo\tB401\n30002\tV4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4\tvideo\tB401\n30003\tV5-A Scholars Secret — Scholar Intro (Ages 18+)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4\tvideo\tB401\n30004\tV5-B Middle-Earth — Scholar Intro (Ages 18+)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4\tvideo\tB401\n30005\tiCard — Audio Verification Record (V4-B & V5)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png\tevidence\tB401\n30006\tiCard — Complete 8-Video Delivery Manifest\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png\tevidence\tB401\n",
+  "stderr": "",
+  "execution_time_ms": 1585
+}

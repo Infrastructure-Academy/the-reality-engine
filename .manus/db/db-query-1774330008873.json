@@ -1,0 +1,316 @@
+{
+  "query": "SELECT id, title, category, blockRef FROM media_catalogue ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, category, blockRef FROM media_catalogue ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "IAAI Gold Logo",
+      "category": "logo",
+      "blockRef": "B398"
+    },
+    {
+      "id": "2",
+      "title": "Book Cover Landscape",
+      "category": "book",
+      "blockRef": "B398"
+    },
+    {
+      "id": "3",
+      "title": "Front & Back Cover",
+      "category": "book",
+      "blockRef": "B398"
+    },
+    {
+      "id": "4",
+      "title": "Chapter 1 Interior Spread",
+      "category": "book",
+      "blockRef": "B398"
+    },
+    {
+      "id": "5",
+      "title": "Portrait Cover 12 Chapters",
+      "category": "book",
+      "blockRef": "B398"
+    },
+    {
+      "id": "6",
+      "title": "Complete Framework Summary",
+      "category": "framework",
+      "blockRef": "B398"
+    },
+    {
+      "id": "7",
+      "title": "Three Modes Diagram",
+      "category": "framework",
+      "blockRef": "B398"
+    },
+    {
+      "id": "8",
+      "title": "12 Civilisational Relays",
+      "category": "framework",
+      "blockRef": "B398"
+    },
+    {
+      "id": "9",
+      "title": "Silk Road Paradox",
+      "category": "framework",
+      "blockRef": "B398"
+    },
+    {
+      "id": "10",
+      "title": "Challenge Stats Infographic",
+      "category": "stats",
+      "blockRef": "B398"
+    },
+    {
+      "id": "11",
+      "title": "Trilogy Vision",
+      "category": "framework",
+      "blockRef": "B398"
+    },
+    {
+      "id": "12",
+      "title": "Guardian of the Stars",
+      "category": "hero",
+      "blockRef": "B400"
+    },
+    {
+      "id": "13",
+      "title": "Block 382 Synthesis",
+      "category": "icard",
+      "blockRef": "B382"
+    },
+    {
+      "id": "14",
+      "title": "HICE Classification",
+      "category": "icard",
+      "blockRef": "B363"
+    },
+    {
+      "id": "15",
+      "title": "ISI Discovery Triple Index",
+      "category": "icard",
+      "blockRef": "B366"
+    },
+    {
+      "id": "16",
+      "title": "Homo Chain 10 Species",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "17",
+      "title": "P&L / L&P Ledger",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "18",
+      "title": "Book Cover Clean",
+      "category": "book",
+      "blockRef": "B400"
+    },
+    {
+      "id": "19",
+      "title": "Dearden Coat of Arms",
+      "category": "heritage",
+      "blockRef": "B400"
+    },
+    {
+      "id": "20",
+      "title": "University of Bradford",
+      "category": "heritage",
+      "blockRef": "B400"
+    },
+    {
+      "id": "21",
+      "title": "Tomita Planets Suite",
+      "category": "heritage",
+      "blockRef": "B400"
+    },
+    {
+      "id": "22",
+      "title": "Biosphere Suit Portrait",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "23",
+      "title": "BiAura Skin Mk1",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "24",
+      "title": "SCADA Diagram",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "25",
+      "title": "HIS HUD Dashboard",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "26",
+      "title": "Exhibition Entrance Portal",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "27",
+      "title": "Holodeck Chamber",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "28",
+      "title": "Big Data Wall",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "29",
+      "title": "Consciousness Theatre",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "30",
+      "title": "TRE Screenshot",
+      "category": "screenshot",
+      "blockRef": "B400"
+    },
+    {
+      "id": "31",
+      "title": "BitPoint Card",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "32",
+      "title": "Consciousness Compass",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "33",
+      "title": "YODA Control",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "34",
+      "title": "Flight Deck Cockpit",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "35",
+      "title": "Immersion Hall",
+      "category": "exhibition",
+      "blockRef": "B400"
+    },
+    {
+      "id": "36",
+      "title": "Play Arc 1 Curricular",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "37",
+      "title": "Play Arc 2 Progression",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "38",
+      "title": "Play Arc 4 Weaving",
+      "category": "framework",
+      "blockRef": "B400"
+    },
+    {
+      "id": "39",
+      "title": "HICE Cube",
+      "category": "icard",
+      "blockRef": "B400"
+    },
+    {
+      "id": "40",
+      "title": "Evidence 001 Chain of Custody",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "41",
+      "title": "Evidence 002 Data Integrity",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "42",
+      "title": "Evidence 003 Member Summary",
+      "category": "evidence",
+      "blockRef": "B398"
+    },
+    {
+      "id": "43",
+      "title": "Tetrahedral Observer Bridges",
+      "category": "icard",
+      "blockRef": "B398"
+    },
+    {
+      "id": "44",
+      "title": "SAP-001 System Assurance Protocol",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "45",
+      "title": "Governance Deck Power Card",
+      "category": "governance",
+      "blockRef": "B398"
+    },
+    {
+      "id": "30001",
+      "title": "V4-B Starborne — Flight Deck Intro (Ages 14-18)",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30002",
+      "title": "V4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30003",
+      "title": "V5-A Scholars Secret — Scholar Intro (Ages 18+)",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30004",
+      "title": "V5-B Middle-Earth — Scholar Intro (Ages 18+)",
+      "category": "video",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30005",
+      "title": "iCard — Audio Verification Record (V4-B & V5)",
+      "category": "evidence",
+      "blockRef": "B401"
+    },
+    {
+      "id": "30006",
+      "title": "iCard — Complete 8-Video Delivery Manifest",
+      "category": "evidence",
+      "blockRef": "B401"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcategory\tblockRef\n1\tIAAI Gold Logo\tlogo\tB398\n2\tBook Cover Landscape\tbook\tB398\n3\tFront & Back Cover\tbook\tB398\n4\tChapter 1 Interior Spread\tbook\tB398\n5\tPortrait Cover 12 Chapters\tbook\tB398\n6\tComplete Framework Summary\tframework\tB398\n7\tThree Modes Diagram\tframework\tB398\n8\t12 Civilisational Relays\tframework\tB398\n9\tSilk Road Paradox\tframework\tB398\n10\tChallenge Stats Infographic\tstats\tB398\n11\tTrilogy Vision\tframework\tB398\n12\tGuardian of the Stars\thero\tB400\n13\tBlock 382 Synthesis\ticard\tB382\n14\tHICE Classification\ticard\tB363\n15\tISI Discovery Triple Index\ticard\tB366\n16\tHomo Chain 10 Species\tframework\tB400\n17\tP&L / L&P Ledger\ticard\tB400\n18\tBook Cover Clean\tbook\tB400\n19\tDearden Coat of Arms\theritage\tB400\n20\tUniversity of Bradford\theritage\tB400\n21\tTomita Planets Suite\theritage\tB400\n22\tBiosphere Suit Portrait\texhibition\tB400\n23\tBiAura Skin Mk1\texhibition\tB400\n24\tSCADA Diagram\texhibition\tB400\n25\tHIS HUD Dashboard\texhibition\tB400\n26\tExhibition Entrance Portal\texhibition\tB400\n27\tHolodeck Chamber\texhibition\tB400\n28\tBig Data Wall\texhibition\tB400\n29\tConsciousness Theatre\texhibition\tB400\n30\tTRE Screenshot\tscreenshot\tB400\n31\tBitPoint Card\ticard\tB400\n32\tConsciousness Compass\tframework\tB400\n33\tYODA Control\ticard\tB400\n34\tFlight Deck Cockpit\texhibition\tB400\n35\tImmersion Hall\texhibition\tB400\n36\tPlay Arc 1 Curricular\tframework\tB400\n37\tPlay Arc 2 Progression\tframework\tB400\n38\tPlay Arc 4 Weaving\tframework\tB400\n39\tHICE Cube\ticard\tB400\n40\tEvidence 001 Chain of Custody\tevidence\tB398\n41\tEvidence 002 Data Integrity\tevidence\tB398\n42\tEvidence 003 Member Summary\tevidence\tB398\n43\tTetrahedral Observer Bridges\ticard\tB398\n44\tSAP-001 System Assurance Protocol\tgovernance\tB398\n45\tGovernance Deck Power Card\tgovernance\tB398\n30001\tV4-B Starborne — Flight Deck Intro (Ages 14-18)\tvideo\tB401\n30002\tV4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)\tvideo\tB401\n30003\tV5-A Scholars Secret — Scholar Intro (Ages 18+)\tvideo\tB401\n30004\tV5-B Middle-Earth — Scholar Intro (Ages 18+)\tvideo\tB401\n30005\tiCard — Audio Verification Record (V4-B & V5)\tevidence\tB401\n30006\tiCard — Complete 8-Video Delivery Manifest\tevidence\tB401\n",
+  "stderr": "",
+  "execution_time_ms": 1607
+}

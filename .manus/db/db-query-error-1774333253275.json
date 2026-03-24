@@ -1,0 +1,8 @@
+{
+  "query": "SELECT pp.id, pp.guest_id, rp.relayNumber, rp.completionPct FROM player_profiles pp LEFT JOIN relay_progress rp ON pp.id = rp.profileId WHERE pp.guest_id = 'g_mdjfevj9f3';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT pp.id, pp.guest_id, rp.relayNumber, rp.completionPct FROM player_profiles pp LEFT JOIN relay_progress rp ON pp.id = rp.profileId WHERE pp.guest_id = 'g_mdjfevj9f3';",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'pp.guest_id' in 'where clause'"
+  ]
+}

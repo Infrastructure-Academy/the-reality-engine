@@ -8,7 +8,7 @@
  * Inspired by: Murder on the Yangtze River, Underdog Detective
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RELAY_DILEMMAS, ARCHETYPES, type DilemmaChoice, type RelayDilemma as DilemmaType } from "@shared/relayDilemmas";
 import { RELAYS } from "@shared/gameData";
@@ -24,16 +24,20 @@ interface RelayDilemmaProps {
 }
 
 export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDilemmaProps) {
-  const [phase, setPhase] = useState<"dilemma" | "response" | "profile">("dilemma");
+  console.log("[DILEMMA] RelayDilemmaCard MOUNTED for relay", relayNumber, "profileId:", profileId);
+  const [phase, setPhase] = useState<"loading" | "dilemma" | "response">("loading");
   const [selectedChoice, setSelectedChoice] = useState<DilemmaChoice | null>(null);
   const [isNarrating, setIsNarrating] = useState(false);
+  const skipFired = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   const dilemma = RELAY_DILEMMAS.find(d => d.relayNumber === relayNumber);
   const relay = RELAYS.find(r => r.number === relayNumber);
   const saveMutation = trpc.decisions.save.useMutation();
 
   // Fetch existing decisions to show profile
-  const { data: existingDecisions } = trpc.decisions.getForProfile.useQuery(
+  const { data: existingDecisions, isLoading: decisionsLoading } = trpc.decisions.getForProfile.useQuery(
     { profileId: profileId! },
     { enabled: !!profileId }
   );
@@ -41,20 +45,38 @@ export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDi
   // Check if already answered this relay's dilemma
   const alreadyAnswered = existingDecisions?.some(d => d.relayNumber === relayNumber);
 
+  // Handle skip cases in useEffect (never during render)
+  // Use ref for onComplete to avoid re-triggering when parent re-renders
   useEffect(() => {
-    if (alreadyAnswered) {
-      // Skip straight to continue if already answered
-      onComplete();
-    }
-  }, [alreadyAnswered, onComplete]);
+    console.log("[DILEMMA] useEffect fired", { skipFired: skipFired.current, dilemma: !!dilemma, profileId, decisionsLoading, alreadyAnswered });
+    if (skipFired.current) { console.log("[DILEMMA] SKIP: already fired"); return; }
 
-  if (!dilemma) {
-    // No dilemma for this relay — skip
-    onComplete();
-    return null;
-  }
+    // No dilemma content for this relay — skip
+    if (!dilemma) {
+      console.log("[DILEMMA] SKIP: no dilemma for relay", relayNumber);
+      skipFired.current = true;
+      setTimeout(() => onCompleteRef.current(), 0);
+      return;
+    }
+
+    // Still loading decisions — wait
+    if (profileId && decisionsLoading) { console.log("[DILEMMA] WAITING: decisions loading"); return; }
+
+    // Already answered — skip
+    if (alreadyAnswered) {
+      console.log("[DILEMMA] SKIP: already answered");
+      skipFired.current = true;
+      setTimeout(() => onCompleteRef.current(), 0);
+      return;
+    }
+
+    // Ready to show dilemma
+    console.log("[DILEMMA] SHOWING dilemma!");
+    setPhase("dilemma");
+  }, [dilemma, alreadyAnswered, decisionsLoading, profileId]);
 
   const handleChoice = (choice: DilemmaChoice) => {
+    if (!dilemma) return;
     setSelectedChoice(choice);
     setPhase("response");
 
@@ -85,10 +107,26 @@ export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDi
 
   const handleContinue = () => {
     davidStop();
-    onComplete();
+    onCompleteRef.current();
   };
 
   const archetype = selectedChoice ? ARCHETYPES[selectedChoice.archetype] : null;
+
+  // Loading state while checking decisions
+  if (phase === "loading") {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="max-w-lg mx-auto p-6 rounded-2xl border border-amber-500/20 bg-card/50 backdrop-blur-sm text-center"
+      >
+        <Scale className="w-6 h-6 text-amber-400 mx-auto mb-3 animate-pulse" />
+        <p className="text-xs font-mono text-amber-400/60 tracking-wider">PREPARING DILEMMA...</p>
+      </motion.div>
+    );
+  }
+
+  if (!dilemma) return null;
 
   return (
     <motion.div

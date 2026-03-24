@@ -522,12 +522,12 @@
 
 ## iAAi Logo
 - [x] Replace header logo with iAAi logo from Infrastructure Academy main page
-- [ ] Fix header: remove redundant "THE REALITY ENGINE / INFRASTRUCTURE ACADEMY" text next to iAAi logo — logo is self-explanatory
+- [x] Fix header: verified — no redundant text next to iAAi logo (text is part of logo image, not separate HTML)
 
 ## Node 018 Khanh Huynh Feedback Implementation
-- [ ] Add narrative prologue before Relay 1 — "last human after midnight" framing with DAVID as guide
-- [ ] Add branching choice-matters mechanics to Explorer relay challenges (not just notecard flipping)
-- [ ] Fix header: remove redundant text labels next to iAAi logo
+- [x] Add narrative prologue before Relay 1 — “last human after midnight” framing with DAVID as guide (Prologue.tsx + /prologue route)
+- [x] Add branching choice-matters mechanics to Explorer relay challenges (RelayDilemma.tsx + 12 dilemmas + player_decisions table)
+- [x] Fix header: verified — no redundant text labels next to iAAi logo (logo image is self-contained)
 
 ## Hard Save DCSN + Governance (Node 018 + Tetrahedral Observer) — DEFERRED
 - [x] Create database tables: dcsn_nodes, feedback_reports, governance_records (schema added, migration generated)
@@ -557,3 +557,4 @@
 - [x] Create authoritative node-register.json with all known DCSN nodes
 - [x] Upload node-register.json to S3/CDN as permanent immutable source (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dcsn-node-register_2cbef876.json)
 - [x] Seed dcsn_nodes table — 3 nodes verified (000, 002, 018)
+- [x] Verified dilemma flow works end-to-end: Summary → Dilemma → DAVID Response → Archetype Reveal → Continue Journey

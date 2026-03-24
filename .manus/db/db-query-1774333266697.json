@@ -1,0 +1,40 @@
+{
+  "query": "SELECT pp.id, pp.guestId, rp.relayNumber, rp.completionPct FROM player_profiles pp LEFT JOIN relay_progress rp ON pp.id = rp.profileId ORDER BY pp.id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT pp.id, pp.guestId, rp.relayNumber, rp.completionPct FROM player_profiles pp LEFT JOIN relay_progress rp ON pp.id = rp.profileId ORDER BY pp.id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "420001",
+      "guestId": "g_wsdves6eqy",
+      "relayNumber": "2",
+      "completionPct": "100"
+    },
+    {
+      "id": "420001",
+      "guestId": "g_wsdves6eqy",
+      "relayNumber": "12",
+      "completionPct": "50"
+    },
+    {
+      "id": "420001",
+      "guestId": "g_wsdves6eqy",
+      "relayNumber": "1",
+      "completionPct": "33"
+    },
+    {
+      "id": "390003",
+      "guestId": "g_5tam2pj5hu",
+      "relayNumber": "NULL",
+      "completionPct": "NULL"
+    },
+    {
+      "id": "390002",
+      "guestId": "NULL",
+      "relayNumber": "NULL",
+      "completionPct": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tguestId\trelayNumber\tcompletionPct\n420001\tg_wsdves6eqy\t2\t100\n420001\tg_wsdves6eqy\t12\t50\n420001\tg_wsdves6eqy\t1\t33\n390003\tg_5tam2pj5hu\tNULL\tNULL\n390002\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1585
+}
