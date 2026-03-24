@@ -501,3 +501,10 @@
 - [x] Build Appraisal Questionnaire as post-session feedback form at /appraisal (age group, mode, 9 questions, notifyOwner on submit)
 - [x] Anchor JG Inspector iCard to website (GovernanceDeck gallery + CDN)
 - [x] Update Game Design Parameters to v2.0 (Sections 10, 13, 14 added; Sections 1, 9, 11, 12 updated)
+
+## Give Feedback Button + DAVID Relay Narration + Mobile Testing
+- [x] Add "Give Feedback" button/tab to bottom tab bar navigation linking to /appraisal
+- [x] Add "Give Feedback" CTA to end-of-session screens (Explorer relay completion, Flight Deck field complete, Scholar character sheet)
+- [x] Wire DAVID LLM narration into relay summary cards — unique spoken line per relay completion
+- [x] Test all improvements on laptop and mobile views
+- [x] Add X (Twitter) follower count button, Facebook Follow button, and LinkedIn Follow button to header (matching Chart Room style)

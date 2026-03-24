@@ -186,6 +186,77 @@ export function narrateRelayComplete(relayName: string) {
   );
 }
 
+/**
+ * Unique DAVID narration for each relay summary card.
+ * Each relay gets a bespoke spoken line reflecting its civilisational significance.
+ * Called when the RelaySummaryCard appears between relay transitions.
+ */
+const RELAY_SUMMARY_NARRATIONS: Record<number, string[]> = {
+  1: [
+    "Fire. The eternal constant. Without this relay, none of the others exist. You've touched the foundation of all infrastructure.",
+    "From the first controlled flame came warmth, cooking, and community. Fire is where the human story begins.",
+  ],
+  2: [
+    "The Tree relay. Living foundations that gave us shelter, tools, and the first permanent structures. Roots run deep.",
+    "Trees taught humanity to build upward. From timber frames to paper, the living foundation shaped civilisation.",
+  ],
+  3: [
+    "Rivers. The cradles of continuity. Every great civilisation began beside water. Mesopotamia, the Indus, the Nile.",
+    "Where rivers flow, cities grow. You've traced the waterways that connected the ancient world.",
+  ],
+  4: [
+    "The Horse. Velocity of intent. Suddenly, distance collapsed. Empires could communicate, trade, and conquer.",
+    "Before the horse, the world was walking pace. After it, the steppe nomads rewrote the map of power.",
+  ],
+  5: [
+    "Roads. The arteries of intent. Rome didn't just build roads — it built the concept of connection as infrastructure.",
+    "Every road is a promise that two places matter enough to link. The Romans understood this better than anyone.",
+  ],
+  6: [
+    "Ships. The master weaver's reach. When sails caught wind, continents stopped being separate worlds.",
+    "The age of sail connected every coastline on Earth. Trade, culture, and ideas flowed across oceans.",
+  ],
+  7: [
+    "The Loom. The binary birth. Jacquard's punch cards didn't just weave fabric — they wove the logic of computing.",
+    "From silk threads to silicon threads. The loom is where the digital age was born, centuries before anyone knew it.",
+  ],
+  8: [
+    "Rail. Standardising the continental rhythm. For the first time, clocks had to agree. Time zones exist because of trains.",
+    "Steel rails stitched nations together. The railway didn't just move goods — it synchronised civilisation.",
+  ],
+  9: [
+    "The Engine. The internal revolution. Combustion gave every individual the power of a hundred horses.",
+    "When the engine roared to life, it wasn't just mechanics — it was personal freedom, mechanised.",
+  ],
+  10: [
+    "The Triple Convergence. Aviation, automobile, and assembly. Three technologies that compressed the twentieth century.",
+    "Flight, the production line, and the motor car. Together they made the modern world inevitable.",
+  ],
+  11: [
+    "Orbit. The programmable frontier. Satellites, the internet, GPS. The invisible infrastructure you use every second.",
+    "From Sputnik to starlink. The orbital relay is the infrastructure you can't see but can't live without.",
+  ],
+  12: [
+    "Human Nodes. The torus metaphor. You are the infrastructure now. Consciousness is the final relay.",
+    "The twelfth relay is you. Every human node in the network carries the weight of twelve thousand years.",
+  ],
+};
+
+export function narrateRelaySummary(relayNumber: number, inventionsFound: number, totalInventions: number) {
+  const lines = RELAY_SUMMARY_NARRATIONS[relayNumber];
+  if (!lines || lines.length === 0) return;
+  const line = lines[Math.floor(Math.random() * lines.length)];
+  
+  // Add a performance comment if they found everything
+  const suffix = inventionsFound >= totalInventions
+    ? " Perfect discovery. Every invention accounted for."
+    : inventionsFound > totalInventions * 0.7
+    ? " Strong work. Most of the relay's secrets are yours."
+    : "";
+  
+  davidSpeak(line + suffix, { rate: 0.85, pitch: 0.85 });
+}
+
 export function narrateBadgeEarned(badgeName: string) {
   davidSpeak(
     `Achievement unlocked. ${badgeName}. Your journey through the infrastructure odyssey is recognised.`,

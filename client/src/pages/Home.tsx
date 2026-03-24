@@ -4,6 +4,7 @@ import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2 } from "lucide-react";
+import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { useState } from "react";
 
 const modeIcons = {
@@ -219,7 +220,14 @@ export default function Home() {
               <p className="text-[10px] text-muted-foreground tracking-widest uppercase">Infrastructure Academy</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
+            {/* Social Follow Buttons — matching Chart Room style */}
+            <div className="hidden sm:block">
+              <SocialFollowButtons followerCount={42} />
+            </div>
+            <div className="block sm:hidden">
+              <SocialFollowButtons followerCount={42} compact />
+            </div>
             <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
             <Link href="/resources">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">

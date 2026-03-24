@@ -5,9 +5,13 @@
  */
 
 import { motion } from "framer-motion";
-import { CheckCircle2, ChevronRight, Sparkles, Trophy } from "lucide-react";
+import { CheckCircle2, ChevronRight, Sparkles, Trophy, MessageSquarePlus, Volume2 } from "lucide-react";
 import { RELAYS } from "@shared/gameData";
 import { Button } from "@/components/ui/button";
+import { narrateRelaySummary } from "@/hooks/useDavidVoice";
+import { getVoiceEnabled } from "@/hooks/useDavidVoice";
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
 interface RelaySummaryCardProps {
   relayNumber: number;
@@ -32,6 +36,19 @@ export function RelaySummaryCard({
   const nextRelay = nextRelayNumber ? RELAYS.find((r) => r.number === nextRelayNumber) : null;
   const completionPct = totalInventions > 0 ? Math.round((inventionsFound / totalInventions) * 100) : 0;
   const isPerfect = completionPct === 100;
+  const [narrated, setNarrated] = useState(false);
+
+  // DAVID narrates a unique line when the summary card appears
+  useEffect(() => {
+    if (!narrated) {
+      // Small delay so the card animation plays first
+      const timer = setTimeout(() => {
+        narrateRelaySummary(relayNumber, inventionsFound, totalInventions);
+        setNarrated(true);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [relayNumber, inventionsFound, totalInventions, narrated]);
 
   return (
     <motion.div
@@ -131,6 +148,24 @@ export function RelaySummaryCard({
         <p className="text-[10px] text-muted-foreground/50 text-center mt-2 font-mono">
           Time: {Math.floor(timeSpent / 60)}m {timeSpent % 60}s
         </p>
+      )}
+
+      {/* DAVID voice indicator */}
+      {getVoiceEnabled() && (
+        <div className="flex items-center justify-center gap-1.5 mt-3">
+          <Volume2 className="w-3 h-3 text-amber-400/60 animate-pulse" />
+          <span className="text-[9px] text-amber-400/60 font-mono">DAVID NARRATING</span>
+        </div>
+      )}
+
+      {/* Give Feedback link */}
+      {!nextRelayNumber && (
+        <Link href="/appraisal">
+          <div className="mt-3 p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all cursor-pointer flex items-center gap-2 justify-center">
+            <MessageSquarePlus className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-[11px] text-emerald-400 font-medium">Share Your Feedback</span>
+          </div>
+        </Link>
       )}
     </motion.div>
   );

@@ -6,7 +6,7 @@ import { RELAYS, WEBS, XP_CAP, GURU_THRESHOLD } from "@shared/gameData";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Trophy, Star, Zap, Globe, Compass, BookOpen,
-  Sparkles, ChevronRight, Award, Target, Map as MapIcon
+  Sparkles, ChevronRight, Award, Target, Map as MapIcon, MessageSquarePlus
 } from "lucide-react";
 import { XpCounter } from "@/components/XpCounter";
 import { ShareCard } from "@/components/ShareCard";
@@ -505,6 +505,27 @@ export default function Synthesis() {
           )}
         </motion.div>
 
+        {/* Give Feedback CTA */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.72 }}
+          className="mb-8"
+        >
+          <Link href="/appraisal">
+            <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all cursor-pointer flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                <MessageSquarePlus className="w-5 h-5 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-emerald-400">Help Us Improve</p>
+                <p className="text-[11px] text-muted-foreground">Take 2 minutes to share your experience — your feedback shapes the next version.</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-emerald-400/50 shrink-0 ml-auto" />
+            </div>
+          </Link>
+        </motion.div>
+
         {/* Thesis Materials */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -582,6 +603,11 @@ export default function Synthesis() {
             <Link href="/leaderboard">
               <Button variant="outline" className="gap-2 border-border/50">
                 <Trophy className="w-4 h-4" /> Leaderboard
+              </Button>
+            </Link>
+            <Link href="/appraisal">
+              <Button variant="outline" className="gap-2 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
+                <MessageSquarePlus className="w-4 h-4" /> Give Feedback
               </Button>
             </Link>
           </div>

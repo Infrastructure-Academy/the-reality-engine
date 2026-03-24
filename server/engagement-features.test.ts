@@ -217,6 +217,107 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
     });
   });
 
+  describe("Social Follow Buttons", () => {
+    it("SocialFollowButtons component exists", () => {
+      const compPath = path.join(clientDir, "src/components/SocialFollowButtons.tsx");
+      expect(fs.existsSync(compPath)).toBe(true);
+    });
+
+    it("SocialFollowButtons has X/Twitter link to @dearden_ni37258", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/SocialFollowButtons.tsx"), "utf-8");
+      expect(content).toContain("x.com/dearden_ni37258");
+      expect(content).toContain("@dearden_ni37258");
+    });
+
+    it("SocialFollowButtons has Facebook link", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/SocialFollowButtons.tsx"), "utf-8");
+      expect(content).toContain("facebook.com");
+      expect(content).toContain("Follow");
+    });
+
+    it("SocialFollowButtons has LinkedIn link to /in/nigeldearden", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/SocialFollowButtons.tsx"), "utf-8");
+      expect(content).toContain("linkedin.com/in/nigeldearden");
+    });
+
+    it("Home page imports and renders SocialFollowButtons", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/pages/Home.tsx"), "utf-8");
+      expect(content).toContain("SocialFollowButtons");
+      expect(content).toContain("followerCount");
+    });
+
+    it("SocialFollowButtons supports compact mode for mobile", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/SocialFollowButtons.tsx"), "utf-8");
+      expect(content).toContain("compact");
+    });
+  });
+
+  describe("Give Feedback Button", () => {
+    it("BottomTabBar includes Feedback tab linking to /appraisal", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/BottomTabBar.tsx"), "utf-8");
+      expect(content).toContain("/appraisal");
+      expect(content).toContain("Feedback");
+      expect(content).toContain("MessageSquarePlus");
+    });
+
+    it("Synthesis page has Give Feedback CTA", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/pages/Synthesis.tsx"), "utf-8");
+      expect(content).toContain("Give Feedback");
+      expect(content).toContain("/appraisal");
+      expect(content).toContain("Help Us Improve");
+    });
+
+    it("RelaySummaryCard has Share Your Feedback link on last relay", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/RelaySummaryCard.tsx"), "utf-8");
+      expect(content).toContain("Share Your Feedback");
+      expect(content).toContain("/appraisal");
+    });
+  });
+
+  describe("DAVID Relay Narration", () => {
+    it("useDavidVoice exports narrateRelaySummary function", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/hooks/useDavidVoice.ts"), "utf-8");
+      expect(content).toContain("export function narrateRelaySummary");
+    });
+
+    it("useDavidVoice has unique narration lines for all 12 relays", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/hooks/useDavidVoice.ts"), "utf-8");
+      expect(content).toContain("RELAY_SUMMARY_NARRATIONS");
+      // Check all 12 relay keys exist
+      for (let i = 1; i <= 12; i++) {
+        expect(content).toContain(`${i}: [`);
+      }
+    });
+
+    it("useDavidVoice narration mentions key relay themes", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/hooks/useDavidVoice.ts"), "utf-8");
+      expect(content).toContain("Fire");
+      expect(content).toContain("Tree");
+      expect(content).toContain("River");
+      expect(content).toContain("Horse");
+      expect(content).toContain("Roads");
+      expect(content).toContain("Ships");
+      expect(content).toContain("Loom");
+      expect(content).toContain("Rail");
+      expect(content).toContain("Engine");
+      expect(content).toContain("Triple Convergence");
+      expect(content).toContain("Orbit");
+      expect(content).toContain("Human Nodes");
+    });
+
+    it("RelaySummaryCard calls narrateRelaySummary on mount", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/RelaySummaryCard.tsx"), "utf-8");
+      expect(content).toContain("narrateRelaySummary");
+      expect(content).toContain("useEffect");
+    });
+
+    it("RelaySummaryCard shows DAVID NARRATING indicator when voice enabled", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/RelaySummaryCard.tsx"), "utf-8");
+      expect(content).toContain("DAVID NARRATING");
+      expect(content).toContain("getVoiceEnabled");
+    });
+  });
+
   describe("GovernanceDeck iCards", () => {
     it("GovernanceDeck has GOV-GDP-002 card", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/pages/GovernanceDeck.tsx"), "utf-8");

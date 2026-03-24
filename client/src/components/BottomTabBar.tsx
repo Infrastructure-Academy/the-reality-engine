@@ -1,5 +1,5 @@
 import { useLocation, Link } from "wouter";
-import { Home, Flame, Rocket, GraduationCap, Trophy, Gamepad2, Library } from "lucide-react";
+import { Home, Flame, Rocket, GraduationCap, Trophy, Gamepad2, Library, MessageSquarePlus } from "lucide-react";
 import { useIsMobile } from "@/hooks/useMobile";  // .tsx file
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { useCallback, useState, useEffect } from "react";
@@ -10,7 +10,7 @@ const TABS = [
   { path: "/flight-deck", label: "Flight", icon: Rocket },
   { path: "/create", label: "Scholar", icon: GraduationCap },
   { path: "/leaderboard", label: "Board", icon: Trophy },
-  { path: "/resources", label: "Docs", icon: Library },
+  { path: "/appraisal", label: "Feedback", icon: MessageSquarePlus },
 ] as const;
 
 export function BottomTabBar() {
