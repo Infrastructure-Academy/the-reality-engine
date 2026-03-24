@@ -1,4 +1,4 @@
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, asc, and, or, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
@@ -776,37 +776,70 @@ export async function getPlayerDecisions(profileId: number) {
 }
 
 // ─── Governance Records ───
-export async function getGovernanceRecords() {
+export async function getGovernanceRecords(filters?: {
+  search?: string;
+  recordType?: string;
+  status?: string;
+  blockRef?: string;
+}) {
   const db = await getDb();
   if (!db) return [];
   try {
-    const rows = await db.select().from(governanceRecords).orderBy(governanceRecords.createdAt);
-    return rows;
+    const conditions: any[] = [];
+    if (filters?.recordType) {
+      conditions.push(eq(governanceRecords.recordType, filters.recordType));
+    }
+    if (filters?.status) {
+      conditions.push(eq(governanceRecords.status, filters.status as any));
+    }
+    if (filters?.blockRef) {
+      conditions.push(like(governanceRecords.blockRef, `%${filters.blockRef}%`));
+    }
+    if (filters?.search) {
+      conditions.push(
+        or(
+          like(governanceRecords.title, `%${filters.search}%`),
+          like(governanceRecords.recordId, `%${filters.search}%`),
+          like(governanceRecords.description, `%${filters.search}%`)
+        )
+      );
+    }
+    const query = db.select().from(governanceRecords);
+    if (conditions.length > 0) {
+      return query.where(and(...conditions)).orderBy(desc(governanceRecords.createdAt));
+    }
+    return query.orderBy(desc(governanceRecords.createdAt));
   } catch (error) {
     console.error("[Database] Failed to get governance records:", error);
     return [];
   }
 }
 
-export async function getGovernanceRecordById(recordId: string) {
-  const db = await getDb();
-  if (!db) return null;
-  try {
-    const rows = await db.select().from(governanceRecords).where(eq(governanceRecords.recordId, recordId)).limit(1);
-    return rows[0] ?? null;
-  } catch (error) {
-    console.error("[Database] Failed to get governance record:", error);
-    return null;
-  }
-}
-
 // ─── Feedback Reports ───
-export async function getFeedbackReports() {
+export async function getFeedbackReports(filters?: {
+  search?: string;
+  status?: string;
+}) {
   const db = await getDb();
   if (!db) return [];
   try {
-    const rows = await db.select().from(feedbackReports).orderBy(feedbackReports.createdAt);
-    return rows;
+    const conditions: any[] = [];
+    if (filters?.status) {
+      conditions.push(eq(feedbackReports.status, filters.status as any));
+    }
+    if (filters?.search) {
+      conditions.push(
+        or(
+          like(feedbackReports.reporterName, `%${filters.search}%`),
+          like(feedbackReports.verdictTitle, `%${filters.search}%`)
+        )
+      );
+    }
+    const query = db.select().from(feedbackReports);
+    if (conditions.length > 0) {
+      return query.where(and(...conditions)).orderBy(desc(feedbackReports.createdAt));
+    }
+    return query.orderBy(desc(feedbackReports.createdAt));
   } catch (error) {
     console.error("[Database] Failed to get feedback reports:", error);
     return [];
@@ -814,12 +847,27 @@ export async function getFeedbackReports() {
 }
 
 // ─── DCSN Nodes ───
-export async function getDcsnNodes() {
+export async function getDcsnNodes(filters?: { search?: string; status?: string }) {
   const db = await getDb();
   if (!db) return [];
   try {
-    const rows = await db.select().from(dcsnNodes).orderBy(dcsnNodes.nodeNumber);
-    return rows;
+    const conditions: any[] = [];
+    if (filters?.status) {
+      conditions.push(eq(dcsnNodes.status, filters.status as any));
+    }
+    if (filters?.search) {
+      conditions.push(
+        or(
+          like(dcsnNodes.name, `%${filters.search}%`),
+          like(dcsnNodes.title, `%${filters.search}%`)
+        )
+      );
+    }
+    const query = db.select().from(dcsnNodes);
+    if (conditions.length > 0) {
+      return query.where(and(...conditions)).orderBy(asc(dcsnNodes.nodeNumber));
+    }
+    return query.orderBy(asc(dcsnNodes.nodeNumber));
   } catch (error) {
     console.error("[Database] Failed to get DCSN nodes:", error);
     return [];

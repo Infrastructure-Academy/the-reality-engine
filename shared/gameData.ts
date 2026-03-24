@@ -36,7 +36,6 @@ export const FITS_TYPES = [
 export const CRAFTS = [
   {
     id: "tb1", name: "TB-1 Pathfinder", className: "Arrow-Class", pilot: "Scott / IQ",
-    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/pilot-scott-tb1-j6MK5iTRfCyV3JfUyyDFXX.webp",
     role: "RAPID-RESPONSE RECONNAISSANCE",
     description: "Long-range reconnaissance craft built for terrain mapping and environmental survey. First to arrive, first to report.",
     fits: "senser", web: "Natural",
@@ -46,7 +45,6 @@ export const CRAFTS = [
   },
   {
     id: "tb2", name: "TB-2 Forgemaster", className: "Griffin-Class", pilot: "Virgil / EQ",
-    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/pilot-virgil-tb2-emaMyuFgcMcQruPZ4vkiV3.webp",
     role: "HEAVY ENGINEERING & CONSTRUCTION",
     description: "Heavy-lift engineering platform carrying modular pods for construction, demolition, and infrastructure deployment.",
     fits: "thinker", web: "Machine",
@@ -56,7 +54,6 @@ export const CRAFTS = [
   },
   {
     id: "tb3", name: "TB-3 Starcaster", className: "Zeta-Class", pilot: "Alan / CQ",
-    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/pilot-alan-tb3-AnsMm3u5qX2znPng3Lw7Vw.webp",
     role: "COMMUNICATIONS & SIGNAL INTELLIGENCE",
     description: "Orbital communications relay and deep-space signal intelligence vessel. The Starcaster weaves the digital web.",
     fits: "intuitive", web: "Digital",
@@ -66,7 +63,6 @@ export const CRAFTS = [
   },
   {
     id: "tb4", name: "TB-4 Lifeline", className: "Leviathan-Class", pilot: "Gordon / Deep CQ",
-    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/pilot-gordon-tb4-ff6ibubFse639ZzJyXUs48.webp",
     role: "MEDICAL & HUMANITARIAN RESPONSE",
     description: "Medical and humanitarian response vessel equipped with BioAura diagnostic suites. Where others build, she heals.",
     fits: "feeler", web: "Biological",
@@ -76,7 +72,6 @@ export const CRAFTS = [
   },
   {
     id: "tb5", name: "TB-5 Sentinel", className: "Citadel-Class", pilot: "John / HQ",
-    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/pilot-john-tb5-5wB4CjMG3xz6nWm9KCBH3k.webp",
     role: "COMMAND & CONTROL / OVERWATCH",
     description: "Command and control station maintaining persistent orbital overwatch. The Sentinel sees all, coordinates all.",
     fits: "balanced", web: "Consciousness",

@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO dcsn_nodes (nodeNumber, name, title, role, cell, recruitedByNode, recruitedByName, activationDate, relation, intel, access, level, dcsnStatus, profile) VALUES (1, 'Jonathan Green', 'The Inspector', 'Quality Assurance / External Auditor', 'Dinosaurs To AI Future', 0, 'Nigel Dearden', '2026-03-20', 'professional contact', 'HUMINT', 'CONFIDENTIAL', 'Lv.1 — OBSERVER', 'provisional', 'External inspector who provided critical UX/UI feedback on the TRE platform. Identified engagement layer improvements and interaction quality issues. Feedback led to the JG Inspector Enhancement Sprint.');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute INSERT INTO dcsn_nodes (nodeNumber, name, title, role, cell, recruitedByNode, recruitedByName, activationDate, relation, intel, access, level, dcsnStatus, profile) VALUES (1, 'Jonathan Green', 'The Inspector', 'Quality Assurance / External Auditor', 'Dinosaurs To AI Future', 0, 'Nigel Dearden', '2026-03-20', 'professional contact', 'HUMINT', 'CONFIDENTIAL', 'Lv.1 — OBSERVER', 'provisional', 'External inspector who provided critical UX/UI feedback on the TRE platform. Identified engagement layer improvements and interaction quality issues. Feedback led to the JG Inspector Enhancement Sprint.');",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'profile' in 'field list'"
+  ]
+}

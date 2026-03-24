@@ -523,22 +523,34 @@ export const appRouter = router({
     }),
   }),
 
-  // ─── Governance (Public Audit Trail) ───
+  // ─── Governance Audit Trail ───
   governance: router({
-    records: publicProcedure.query(async () => {
-      return db.getGovernanceRecords();
-    }),
-    recordById: publicProcedure
-      .input(z.object({ recordId: z.string() }))
+    records: publicProcedure
+      .input(z.object({
+        search: z.string().optional(),
+        recordType: z.string().optional(),
+        status: z.string().optional(),
+        blockRef: z.string().optional(),
+      }).optional())
       .query(async ({ input }) => {
-        return db.getGovernanceRecordById(input.recordId);
+        return db.getGovernanceRecords(input);
       }),
-    feedbackReports: publicProcedure.query(async () => {
-      return db.getFeedbackReports();
-    }),
-    dcsnNodes: publicProcedure.query(async () => {
-      return db.getDcsnNodes();
-    }),
+    feedbackReports: publicProcedure
+      .input(z.object({
+        search: z.string().optional(),
+        status: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return db.getFeedbackReports(input);
+      }),
+    dcsnNodes: publicProcedure
+      .input(z.object({
+        search: z.string().optional(),
+        status: z.string().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return db.getDcsnNodes(input);
+      }),
   }),
 
   // ─── Decision Procedures (Branching Choice Mechanics) ───

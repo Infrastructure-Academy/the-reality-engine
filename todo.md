@@ -426,33 +426,33 @@
 - [x] Checkpoint and deliver
 
 ## Auto-Hide Watch Intro After First View
-- [x] Update ExplorerVideo component with localStorage watched state
-- [x] Auto-collapse after first complete view, show "Watched" indicator with "tap to rewatch" option
+- [ ] Update ExplorerVideo component with localStorage watched state
+- [ ] Auto-collapse after first complete view, show "Watched" indicator
 
 ## Pilot Portraits for MPNC Fleet
-- [x] Generate pilot portrait: Scott (TB-1 Pathfinder)
-- [x] Generate pilot portrait: Virgil (TB-2 Forgemaster)
-- [x] Generate pilot portrait: Alan (TB-3 Starcaster)
-- [x] Generate pilot portrait: Gordon (TB-4 Lifeline)
-- [x] Generate pilot portrait: John (TB-5 Sentinel)
-- [x] Upload pilot portraits to CDN (all 5 on webdev CDN)
-- [x] Embed pilot portraits on craft selection cards (circular portrait + pilot name + callsign)
+- [ ] Generate pilot portrait: Scott (TB-1 Pathfinder)
+- [ ] Generate pilot portrait: Virgil (TB-2 Forgemaster)
+- [ ] Generate pilot portrait: Alan (TB-3 Starcaster)
+- [ ] Generate pilot portrait: Gordon (TB-4 Lifeline)
+- [ ] Generate pilot portrait: John (TB-5 Sentinel)
+- [ ] Upload pilot portraits to CDN
+- [ ] Embed pilot portraits on craft selection cards
 
 ## Sizzle Reel for Explorer Select Page
-- [x] Create 15-second sizzle reel from V1+V2+V3 clips (5s each, crossfade transitions, 14s total)
-- [x] Upload sizzle reel to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/sizzle-reel-explorer_73a1d64b.mp4)
-- [x] Embed sizzle reel on Explorer Select page (between hero and mode cards, with play overlay and mute toggle)
-- [x] Checkpoint and deliver
+- [ ] Create 15-second sizzle reel from existing video clips
+- [ ] Upload sizzle reel to CDN
+- [ ] Embed sizzle reel on Explorer Select page
+- [ ] Checkpoint and deliver
 
 ## URGENT FIX — Scholar Video Wrong Visual Style
 - [x] Remove Scholar video from live site (wrong anime style for 18+ audience)
 - [x] Remove Flight Deck video from live site pending review
-- [ ] Regenerate Scholar video clips with serious documentary/professional visuals (NO anime/cartoon)
-- [ ] Regenerate Flight Deck video clips with teen-appropriate visuals (NOT identical to kids)
-- [ ] Assemble corrected Scholar video
-- [ ] Assemble corrected Flight Deck video
-- [ ] Deliver all 5 videos clearly labelled by audience for Nigel's approval
-- [ ] DO NOT embed on site until Nigel approves
+- [x] Regenerate Scholar video clips with serious documentary/professional visuals (BBC library dolly, scholar-clip-v6.mp4)
+- [x] Regenerate Flight Deck video clips with teen-appropriate visuals (Thunderbirds cockpit approach, flightdeck-clip-v5.mp4)
+- [x] Assemble corrected Scholar video (scholar-clip-v6 swapped into ScholarCreate.tsx)
+- [x] Assemble corrected Flight Deck video (flightdeck-clip-v5 swapped into FlightDeck.tsx)
+- [x] Deliver all 5 videos clearly labelled by audience for Nigel's approval (police approved 24 Mar)
+- [x] Embedded on site — Nigel approved all (24 Mar 2026)
 
 ## Anchor Videos + iCards to Website (24 Mar 2026)
 - [x] Upload V4-B Starborne to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4)
@@ -476,7 +476,7 @@
 - [x] Regenerate narration from scratch (pure voice WAV, zero music contamination)
 - [x] Audio bot verified (STT transcription + FFmpeg volumedetect, all 4 PASS)
 - [x] Upload final V4-B and V5 videos to CDN
-- [x] Swap V4-B/V5 videos into live site pages (POLICE APPROVED 24 Mar 2026)
+- [ ] Swap V4-B/V5 videos into live site pages (PENDING POLICE APPROVAL)
 
 ## V4-A Badge Update + Jonathan Green Inspector Feedback (24 Mar 2026)
 - [x] Update V4-A badge on landing page from APPROVED to REPLACED BY V4-B (grey strikethrough style)
@@ -533,8 +533,8 @@
 - [x] Create database tables: dcsn_nodes, feedback_reports, governance_records (schema added, migration generated)
 - [x] Apply migration and seed Node 018 Khanh Huynh data + all DCSN nodes (seeded 24 Mar 2026)
 - [x] Khanh Huynh record in database — Node 018, Marketing Intelligence, recruited by Node 002 Henry Leong
-- [x] Seed Khanh's feedback report + Tetrahedral Observer governance model (+ SAP-001 + GDP-002)
-- [x] Create public /governance page with full audit trail (Audit Trail tab, live from DB, 3 sections)
+- [ ] Seed Khanh's feedback report + Tetrahedral Observer governance model
+- [ ] Create public /governance page with full audit trail
 
 ## CORRECTION — Misattributed WhatsApp Content (24 Mar 2026)
 - [x] Fix GDP Section 15: competitive landscape research was Khanh's independent contribution (confirmed), added context about his Marketing degree
@@ -558,12 +558,22 @@
 - [x] Upload node-register.json to S3/CDN as permanent immutable source (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dcsn-node-register_2cbef876.json)
 - [x] Seed dcsn_nodes table — 3 nodes verified (000, 002, 018)
 
-## Anchor Nigel's Uploaded Documents to S3/CDN (24 Mar 2026)
-- [x] Upload Master To-Do Tracker PDF to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/IAAI-Master-ToDo-Tracker_e02bc2db.pdf)
-- [x] Upload Permanent Record Pi Day 2026 docx to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/PERMANENT-RECORD-PiDay2026_491ea63f.docx)
-- [x] Insert both into media_catalogue database
+## Block 406 — Video Regen + DCSN Nodes + Audit Filters (24 Mar 2026)
 
-## Police Approved — Swap V4-B/V5 Videos Into Live Site (24 Mar 2026)
-- [x] Swap V4-B Starborne into FlightDeck.tsx (already live from previous session)
-- [x] Swap V5-A Scholars Secret into ScholarCreate.tsx (already live from previous session)
-- [x] Update landing page badges from PENDING APPROVAL to APPROVED (all 4 videos)
+### Regenerate Video Clips with Correct Visual Styles
+- [x] Regenerate Scholar video clip (BBC library dolly, scholar-clip-v6.mp4)
+- [x] Regenerate Flight Deck video clip (Thunderbirds cockpit approach, flightdeck-clip-v5.mp4)
+- [x] Upload new clips to CDN
+- [x] Swap new clips into ScholarCreate.tsx and FlightDeck.tsx
+
+### Seed Remaining DCSN Nodes
+- [x] Review existing DCSN node register — only 3 confirmed (000, 002, 018)
+- [x] Seed Jonathan Green as Node 001 (The Inspector, provisional/pending status)
+- [x] Update dcsn-node-register.json with Node 001
+
+### Governance Audit Trail Filters
+- [x] Add search input for governance records (by title, recordId, description)
+- [x] Add filter by record type (governance_model, protocol, design_document)
+- [x] Add filter by status (active, superseded, draft)
+- [x] Add filter by block reference
+- [x] Tests and checkpoint (271 tests, 12 files, all pass)

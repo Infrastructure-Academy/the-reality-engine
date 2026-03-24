@@ -271,7 +271,7 @@ export default function FlightDeck() {
         <div className="container py-8 max-w-5xl mx-auto">
           {/* Intro Video */}
           <ExplorerVideo
-            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4"
+            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-clip-v5_b45064f9.mp4"
             title="Your Cockpit Awaits, Commander"
             subtitle="32s intro"
             accentColor="#06b6d4"
@@ -307,22 +307,12 @@ export default function FlightDeck() {
 
                   <div className="p-5 pt-3">
                   <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {/* Pilot Portrait */}
-                      {craft.pilotImage && (
-                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/40 shrink-0">
-                          <img
-                            src={craft.pilotImage}
-                            alt={craft.pilot}
-                            className="w-full h-full object-cover object-top"
-                          />
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="font-heading text-lg font-bold">{craft.name}</h3>
-                        <p className="text-[10px] text-cyan-400 font-mono">{craft.pilot}</p>
-                        <p className="text-[9px] text-muted-foreground font-mono">{craft.className} — {craft.role}</p>
-                      </div>
+                    <div>
+                      <h3 className="font-heading text-lg font-bold">{craft.name}</h3>
+                      <p className="text-[10px] text-cyan-400 font-mono">{craft.className} — {craft.role}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                      <Rocket className="w-5 h-5 text-cyan-400" />
                     </div>
                   </div>
 

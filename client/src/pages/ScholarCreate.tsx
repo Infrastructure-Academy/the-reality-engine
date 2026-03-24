@@ -225,7 +225,7 @@ export default function ScholarCreate() {
 
         {/* Intro Video */}
         <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4"
+          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-clip-v6_adca97d1.mp4"
           title="The Deepest Journey of All"
           subtitle="32s intro"
           accentColor="#f59e0b"

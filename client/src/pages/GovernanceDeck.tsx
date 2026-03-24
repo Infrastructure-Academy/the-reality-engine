@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
+import { trpc } from "@/lib/trpc";
 import {
   ArrowLeft, Shield, AlertTriangle, BookOpen, Award, Lock,
   ChevronRight, Key, Eye, CheckCircle, FileText, Wrench,
-  ArrowDown, Users, Database, Globe, Activity, ExternalLink
+  ArrowDown, Users, Search, Filter, Database, X
 } from "lucide-react";
-import { trpc } from "@/lib/trpc";
 
 // CDN URLs for iCard images
 const CDN = {
@@ -99,165 +100,93 @@ const CA_LABELS = ["Undisclosed", "Failures", "Root Cause", "Cost", "Prevention"
 
 type Tab = "sap" | "power" | "gallery" | "audit";
 
-// ─── Audit Trail Tab (Live from Database) ───
-function AuditTrailTab() {
-  const { data: govRecords, isLoading: govLoading } = trpc.governance.records.useQuery();
-  const { data: feedbackData, isLoading: fbLoading } = trpc.governance.feedbackReports.useQuery();
-  const { data: dcsnData, isLoading: dcsnLoading } = trpc.governance.dcsnNodes.useQuery();
+const RECORD_TYPE_OPTIONS = [
+  { value: "", label: "All Types" },
+  { value: "governance_model", label: "Governance Model" },
+  { value: "protocol", label: "Protocol" },
+  { value: "design_document", label: "Design Document" },
+];
 
-  const isLoading = govLoading || fbLoading || dcsnLoading;
+const GOV_STATUS_OPTIONS = [
+  { value: "", label: "All Status" },
+  { value: "active", label: "Active" },
+  { value: "superseded", label: "Superseded" },
+  { value: "draft", label: "Draft" },
+];
 
-  const statusColor = (s: string) => {
-    if (s === "active" || s === "resolved") return "text-green-400 bg-green-500/10 border-green-500/30";
-    if (s === "draft" || s === "open") return "text-amber-400 bg-amber-500/10 border-amber-500/30";
-    if (s === "superseded" || s === "archived") return "text-slate-400 bg-slate-500/10 border-slate-500/30";
-    return "text-muted-foreground bg-muted/50 border-border/30";
-  };
+const NODE_STATUS_OPTIONS = [
+  { value: "", label: "All Status" },
+  { value: "activated", label: "Activated" },
+  { value: "pending", label: "Pending" },
+  { value: "deactivated", label: "Deactivated" },
+];
 
-  return (
-    <motion.div key="audit" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
-      <div className="text-center space-y-3">
-        <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Live from Database — Full Transparency</p>
-        <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Audit Trail</h2>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          Every governance record, feedback report, and DCSN node — pulled live from the database. Nothing hidden.
-        </p>
-      </div>
-
-      {isLoading ? (
-        <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : (
-        <>
-          {/* Governance Records */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-gold" />
-              <h3 className="font-heading text-lg text-gold">Governance Records</h3>
-              <span className="text-xs text-muted-foreground">({govRecords?.length ?? 0} records)</span>
-            </div>
-            <div className="space-y-3">
-              {govRecords?.map((rec: any) => (
-                <div key={rec.id} className="bg-card border border-border/50 rounded-xl p-5 space-y-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-gold bg-gold/10 px-2 py-0.5 rounded">{rec.recordId}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColor(rec.govStatus)}`}>
-                          {rec.govStatus}
-                        </span>
-                      </div>
-                      <h4 className="font-heading text-foreground mt-2">{rec.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">{rec.description}</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground font-mono">
-                    <span>Type: {rec.recordType}</span>
-                    {rec.version && <span>v{rec.version}</span>}
-                    {rec.blockRef && <span>{rec.blockRef}</span>}
-                    {rec.compliance && <span className="text-green-400">{rec.compliance}</span>}
-                  </div>
-                  {rec.content && (
-                    <details className="text-xs">
-                      <summary className="cursor-pointer text-muted-foreground hover:text-foreground">View JSON content</summary>
-                      <pre className="mt-2 p-3 bg-background/50 rounded-lg overflow-x-auto text-[10px] font-mono text-foreground/70 max-h-48">
-                        {JSON.stringify(rec.content, null, 2)}
-                      </pre>
-                    </details>
-                  )}
-                  {rec.iCardUrl && (
-                    <img src={rec.iCardUrl} alt={rec.title} className="w-full max-h-64 object-contain rounded-lg border border-border/30" loading="lazy" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Feedback Reports */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-400" />
-              <h3 className="font-heading text-lg text-blue-400">Feedback Reports</h3>
-              <span className="text-xs text-muted-foreground">({feedbackData?.length ?? 0} reports)</span>
-            </div>
-            <div className="space-y-3">
-              {feedbackData?.map((rep: any) => (
-                <div key={rep.id} className="bg-card border border-border/50 rounded-xl p-5 space-y-3">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
-                          Node {rep.nodeNumber ?? "—"}
-                        </span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColor(rep.reportStatus)}`}>
-                          {rep.reportStatus}
-                        </span>
-                        {rep.blockRef && <span className="text-[10px] font-mono text-muted-foreground">{rep.blockRef}</span>}
-                      </div>
-                      <h4 className="font-heading text-foreground mt-2">{rep.verdictTitle}</h4>
-                      <p className="text-[10px] text-muted-foreground">by {rep.reporterName} — {rep.reportDate} via {rep.source}</p>
-                    </div>
-                  </div>
-                  {rep.verdictDetails && <p className="text-xs text-foreground/80">{rep.verdictDetails}</p>}
-                  {rep.actionTitle && (
-                    <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-3">
-                      <p className="text-xs font-heading text-green-400">{rep.actionTitle}</p>
-                      {rep.actionDetails && <p className="text-xs text-foreground/70 mt-1">{rep.actionDetails}</p>}
-                    </div>
-                  )}
-                  {rep.prescription && (
-                    <p className="text-[10px] text-muted-foreground italic border-l-2 border-gold/30 pl-3">{rep.prescription}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* DCSN Nodes */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-purple-400" />
-              <h3 className="font-heading text-lg text-purple-400">DCSN Nodes</h3>
-              <span className="text-xs text-muted-foreground">({dcsnData?.length ?? 0} nodes)</span>
-            </div>
-            {dcsnData && dcsnData.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {dcsnData.map((node: any) => (
-                  <div key={node.id} className="bg-card border border-border/50 rounded-xl p-4 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">
-                        Node {String(node.nodeNumber).padStart(3, "0")}
-                      </span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase ${statusColor(node.dcsnStatus ?? "activated")}`}>
-                        {node.dcsnStatus ?? "activated"}
-                      </span>
-                    </div>
-                    <h4 className="font-heading text-sm text-foreground">{node.name}</h4>
-                    {node.title && <p className="text-[10px] text-muted-foreground">{node.title}</p>}
-                    {node.role && <p className="text-[10px] text-foreground/60">{node.role}</p>}
-                    <div className="flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground">
-                      {node.cell && <span>{node.cell}</span>}
-                      {node.intel && <span>Intel: {node.intel}</span>}
-                      {node.access && <span>Access: {node.access}</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-8">No DCSN nodes in database yet.</p>
-            )}
-          </div>
-        </>
-      )}
-    </motion.div>
-  );
-}
+const STATUS_COLORS: Record<string, string> = {
+  active: "text-green-400 bg-green-500/15 border-green-500/30",
+  superseded: "text-amber-400 bg-amber-500/15 border-amber-500/30",
+  draft: "text-blue-400 bg-blue-500/15 border-blue-500/30",
+  activated: "text-green-400 bg-green-500/15 border-green-500/30",
+  pending: "text-amber-400 bg-amber-500/15 border-amber-500/30",
+  deactivated: "text-red-400 bg-red-500/15 border-red-500/30",
+  open: "text-blue-400 bg-blue-500/15 border-blue-500/30",
+  in_progress: "text-amber-400 bg-amber-500/15 border-amber-500/30",
+  resolved: "text-green-400 bg-green-500/15 border-green-500/30",
+  archived: "text-muted-foreground bg-muted/15 border-border/30",
+};
 
 export default function GovernanceDeck() {
   const [activeTab, setActiveTab] = useState<Tab>("power");
   const [expandedPhase, setExpandedPhase] = useState<number | null>(null);
   const [expandedTier, setExpandedTier] = useState<number | null>(null);
+
+  // Audit Trail filters
+  const [auditSearch, setAuditSearch] = useState("");
+  const [govRecordType, setGovRecordType] = useState("");
+  const [govStatus, setGovStatus] = useState("");
+  const [govBlockRef, setGovBlockRef] = useState("");
+  const [nodeStatus, setNodeStatus] = useState("");
+  const [auditSection, setAuditSection] = useState<"records" | "feedback" | "nodes">("records");
+
+  // Stable query inputs
+  const govQueryInput = useMemo(() => ({
+    search: auditSearch || undefined,
+    recordType: govRecordType || undefined,
+    status: govStatus || undefined,
+    blockRef: govBlockRef || undefined,
+  }), [auditSearch, govRecordType, govStatus, govBlockRef]);
+
+  const feedbackQueryInput = useMemo(() => ({
+    search: auditSearch || undefined,
+  }), [auditSearch]);
+
+  const nodeQueryInput = useMemo(() => ({
+    search: auditSearch || undefined,
+    status: nodeStatus || undefined,
+  }), [auditSearch, nodeStatus]);
+
+  // tRPC queries
+  const govRecords = trpc.governance.records.useQuery(govQueryInput, {
+    enabled: activeTab === "audit" && auditSection === "records",
+    placeholderData: (prev: any) => prev,
+  });
+  const feedbackReports = trpc.governance.feedbackReports.useQuery(feedbackQueryInput, {
+    enabled: activeTab === "audit" && auditSection === "feedback",
+    placeholderData: (prev: any) => prev,
+  });
+  const dcsnNodes = trpc.governance.dcsnNodes.useQuery(nodeQueryInput, {
+    enabled: activeTab === "audit" && auditSection === "nodes",
+    placeholderData: (prev: any) => prev,
+  });
+
+  const clearFilters = () => {
+    setAuditSearch("");
+    setGovRecordType("");
+    setGovStatus("");
+    setGovBlockRef("");
+    setNodeStatus("");
+  };
+
+  const hasActiveFilters = auditSearch || govRecordType || govStatus || govBlockRef || nodeStatus;
 
   return (
     <div className="min-h-screen bg-background text-foreground mobile-content-pad">
@@ -509,8 +438,305 @@ export default function GovernanceDeck() {
             </motion.div>
           )}
 
-          {/* ─── AUDIT TRAIL (Live DB) ─── */}
-          {activeTab === "audit" && <AuditTrailTab />}
+          {/* ─── AUDIT TRAIL ─── */}
+          {activeTab === "audit" && (
+            <motion.div key="audit" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-6">
+              <div className="text-center space-y-3">
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Live Database — Full Transparency</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Audit Trail</h2>
+                <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+                  Governance records, feedback reports, and DCSN network nodes — all pulled live from the database.
+                </p>
+              </div>
+
+              {/* Section Tabs */}
+              <div className="flex gap-2 justify-center flex-wrap">
+                {([
+                  { id: "records" as const, label: "Governance Records", count: govRecords.data?.length },
+                  { id: "feedback" as const, label: "Feedback Reports", count: feedbackReports.data?.length },
+                  { id: "nodes" as const, label: "DCSN Nodes", count: dcsnNodes.data?.length },
+                ]).map(s => (
+                  <button
+                    key={s.id}
+                    onClick={() => { setAuditSection(s.id); clearFilters(); }}
+                    className={`px-4 py-2 rounded-lg text-sm transition-all ${
+                      auditSection === s.id
+                        ? "bg-gold/15 text-gold border border-gold/30"
+                        : "text-muted-foreground hover:text-foreground bg-card border border-border/30"
+                    }`}
+                  >
+                    {s.label}
+                    {s.count !== undefined && (
+                      <span className="ml-2 text-xs opacity-60">({s.count})</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search & Filters */}
+              <div className="bg-card border border-border/50 rounded-xl p-4 space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder={
+                        auditSection === "records" ? "Search by title, ID, or description..." :
+                        auditSection === "feedback" ? "Search by reporter name or verdict..." :
+                        "Search by name or title..."
+                      }
+                      value={auditSearch}
+                      onChange={(e) => setAuditSearch(e.target.value)}
+                      className="pl-10 bg-background/50"
+                    />
+                  </div>
+                  {hasActiveFilters && (
+                    <Button variant="ghost" size="sm" onClick={clearFilters} className="text-muted-foreground hover:text-foreground gap-1">
+                      <X className="w-3 h-3" /> Clear
+                    </Button>
+                  )}
+                </div>
+
+                {/* Section-specific filters */}
+                <div className="flex flex-wrap gap-2">
+                  {auditSection === "records" && (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <Filter className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">Type:</span>
+                      </div>
+                      {RECORD_TYPE_OPTIONS.map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setGovRecordType(opt.value)}
+                          className={`px-3 py-1 rounded-full text-xs transition-all ${
+                            govRecordType === opt.value
+                              ? "bg-gold/15 text-gold border border-gold/30"
+                              : "text-muted-foreground hover:text-foreground bg-background/50 border border-border/30"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                      <div className="w-px h-5 bg-border/50 mx-1" />
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-muted-foreground">Status:</span>
+                      </div>
+                      {GOV_STATUS_OPTIONS.map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setGovStatus(opt.value)}
+                          className={`px-3 py-1 rounded-full text-xs transition-all ${
+                            govStatus === opt.value
+                              ? "bg-gold/15 text-gold border border-gold/30"
+                              : "text-muted-foreground hover:text-foreground bg-background/50 border border-border/30"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </>
+                  )}
+                  {auditSection === "nodes" && (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <Filter className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">Status:</span>
+                      </div>
+                      {NODE_STATUS_OPTIONS.map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setNodeStatus(opt.value)}
+                          className={`px-3 py-1 rounded-full text-xs transition-all ${
+                            nodeStatus === opt.value
+                              ? "bg-gold/15 text-gold border border-gold/30"
+                              : "text-muted-foreground hover:text-foreground bg-background/50 border border-border/30"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </>
+                  )}
+                </div>
+
+                {/* Block Ref filter for records */}
+                {auditSection === "records" && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Block Ref:</span>
+                    <Input
+                      placeholder="e.g. B353, B402..."
+                      value={govBlockRef}
+                      onChange={(e) => setGovBlockRef(e.target.value)}
+                      className="bg-background/50 max-w-[200px] h-8 text-xs"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Results */}
+              <div className="space-y-3">
+                {/* Governance Records */}
+                {auditSection === "records" && (
+                  <>
+                    {govRecords.isLoading && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">Loading governance records...</div>
+                    )}
+                    {govRecords.data && govRecords.data.length === 0 && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">No governance records match your filters.</div>
+                    )}
+                    {govRecords.data?.map((record: any) => (
+                      <motion.div
+                        key={record.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-card border border-border/50 rounded-xl p-5 space-y-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-xs text-gold bg-gold/10 border border-gold/30 px-2 py-0.5 rounded">{record.recordId}</span>
+                              {record.version && <span className="text-xs text-muted-foreground">v{record.version}</span>}
+                              {record.blockRef && <span className="text-xs font-mono text-muted-foreground/60">{record.blockRef}</span>}
+                            </div>
+                            <h4 className="font-heading text-foreground mt-2">{record.title}</h4>
+                          </div>
+                          <span className={`text-[10px] px-2 py-0.5 rounded border whitespace-nowrap ${STATUS_COLORS[record.status] || "text-muted-foreground"}`}>
+                            {record.status?.toUpperCase()}
+                          </span>
+                        </div>
+                        {record.description && (
+                          <p className="text-sm text-muted-foreground line-clamp-3">{record.description}</p>
+                        )}
+                        <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                          <span>Type: {record.recordType?.replace(/_/g, " ")}</span>
+                          {record.compliance && <span>Compliance: {record.compliance}</span>}
+                          <span>Created: {new Date(record.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </>
+                )}
+
+                {/* Feedback Reports */}
+                {auditSection === "feedback" && (
+                  <>
+                    {feedbackReports.isLoading && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">Loading feedback reports...</div>
+                    )}
+                    {feedbackReports.data && feedbackReports.data.length === 0 && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">No feedback reports match your filters.</div>
+                    )}
+                    {feedbackReports.data?.map((report: any) => (
+                      <motion.div
+                        key={report.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-card border border-border/50 rounded-xl p-5 space-y-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs text-gold font-heading">Node {String(report.nodeNumber).padStart(3, "0")}</span>
+                              <span className="text-xs text-muted-foreground">{report.reporterName}</span>
+                              {report.blockRef && <span className="text-xs font-mono text-muted-foreground/60">{report.blockRef}</span>}
+                            </div>
+                            <h4 className="font-heading text-foreground mt-2">{report.verdictTitle || report.reportType}</h4>
+                          </div>
+                          <span className={`text-[10px] px-2 py-0.5 rounded border whitespace-nowrap ${STATUS_COLORS[report.status] || "text-muted-foreground"}`}>
+                            {report.status?.toUpperCase()}
+                          </span>
+                        </div>
+                        {report.verdictDetails && (
+                          <p className="text-sm text-muted-foreground line-clamp-3">{report.verdictDetails}</p>
+                        )}
+                        {report.prescription && (
+                          <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
+                            <p className="text-xs text-amber-400 font-heading mb-1">PRESCRIPTION</p>
+                            <p className="text-xs text-foreground/80">{report.prescription}</p>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
+                          <span>Type: {report.reportType}</span>
+                          <span>Source: {report.source}</span>
+                          <span>Date: {report.reportDate}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </>
+                )}
+
+                {/* DCSN Nodes */}
+                {auditSection === "nodes" && (
+                  <>
+                    {dcsnNodes.isLoading && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">Loading DCSN nodes...</div>
+                    )}
+                    {dcsnNodes.data && dcsnNodes.data.length === 0 && (
+                      <div className="text-center py-12 text-muted-foreground text-sm">No DCSN nodes match your filters.</div>
+                    )}
+                    {dcsnNodes.data?.map((node: any) => (
+                      <motion.div
+                        key={node.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-card border border-border/50 rounded-xl p-5 space-y-3"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-sm text-gold bg-gold/10 border border-gold/30 px-2 py-0.5 rounded">
+                                NODE {String(node.nodeNumber).padStart(3, "0")}
+                              </span>
+                              <span className="text-xs text-muted-foreground">{node.level}</span>
+                            </div>
+                            <h4 className="font-heading text-foreground mt-2">{node.name}</h4>
+                            {node.title && <p className="text-sm text-muted-foreground">{node.title}</p>}
+                          </div>
+                          <span className={`text-[10px] px-2 py-0.5 rounded border whitespace-nowrap ${STATUS_COLORS[node.status] || "text-muted-foreground"}`}>
+                            {node.status?.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                          {node.role && (
+                            <div>
+                              <span className="text-muted-foreground/60">Role</span>
+                              <p className="text-foreground/80">{node.role}</p>
+                            </div>
+                          )}
+                          {node.cell && (
+                            <div>
+                              <span className="text-muted-foreground/60">Cell</span>
+                              <p className="text-foreground/80">{node.cell}</p>
+                            </div>
+                          )}
+                          {node.intel && (
+                            <div>
+                              <span className="text-muted-foreground/60">Intel</span>
+                              <p className="text-foreground/80">{node.intel}</p>
+                            </div>
+                          )}
+                          {node.access && (
+                            <div>
+                              <span className="text-muted-foreground/60">Access</span>
+                              <p className="text-foreground/80">{node.access}</p>
+                            </div>
+                          )}
+                        </div>
+                        {node.recruitedByName && (
+                          <p className="text-[10px] text-muted-foreground/60">
+                            Recruited by Node {String(node.recruitedByNode).padStart(3, "0")} ({node.recruitedByName}) — {node.activationDate}
+                          </p>
+                        )}
+                        {node.notes && (
+                          <p className="text-xs text-muted-foreground/80 italic">{node.notes}</p>
+                        )}
+                      </motion.div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </motion.div>
+          )}
 
           {/* ─── iCARD GALLERY ─── */}
           {activeTab === "gallery" && (
