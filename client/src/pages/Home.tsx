@@ -83,7 +83,7 @@ const INTRO_VIDEOS = [
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_a9ef7d84.mp4",
     music: "Dark Ambient",
-    status: "APPROVED",
+    status: "REPLACED",
   },
   {
     id: "v4b-starborne",
@@ -183,9 +183,11 @@ function VideoGallery() {
             <span className={`inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-bold tracking-wider ${
               video.status === "APPROVED"
                 ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                : video.status === "REPLACED"
+                ? "bg-slate-500/20 text-slate-400 border border-slate-500/30 line-through"
                 : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
             }`}>
-              {video.status}
+              {video.status === "REPLACED" ? "REPLACED BY V4-B" : video.status}
             </span>
           </div>
         </motion.div>

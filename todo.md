@@ -477,3 +477,8 @@
 - [x] Audio bot verified (STT transcription + FFmpeg volumedetect, all 4 PASS)
 - [x] Upload final V4-B and V5 videos to CDN
 - [ ] Swap V4-B/V5 videos into live site pages (PENDING POLICE APPROVAL)
+
+## V4-A Badge Update + Jonathan Green Inspector Feedback (24 Mar 2026)
+- [x] Update V4-A badge on landing page from APPROVED to REPLACED BY V4-B (grey strikethrough style)
+- [x] Transcribe and save Jonathan Green inspector feedback
+- [x] Write strategic analysis interpreting the feedback for the project record
