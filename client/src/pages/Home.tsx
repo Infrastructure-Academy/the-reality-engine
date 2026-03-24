@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library } from "lucide-react";
+import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2 } from "lucide-react";
+import { useState } from "react";
 
 const modeIcons = {
   explorer: Flame,
@@ -34,6 +35,164 @@ const modeCTAColors = {
   flight_deck: "bg-cyan-600 hover:bg-cyan-500 text-white",
   scholar: "bg-amber-600 hover:bg-amber-500 text-black",
 };
+
+const INTRO_VIDEOS = [
+  {
+    id: "v1",
+    title: "V1 — Relay Spinner",
+    subtitle: "Ages 8–10",
+    tier: "Explorer",
+    color: "#ef4444",
+    borderColor: "border-red-500/30",
+    bgColor: "from-red-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v1-relay-spinner_641673d9.mp4",
+    music: "Upbeat Anime EDM",
+    status: "APPROVED",
+  },
+  {
+    id: "v2",
+    title: "V2 — Dungeon Crawl",
+    subtitle: "Ages 10–12",
+    tier: "Explorer",
+    color: "#ef4444",
+    borderColor: "border-red-500/30",
+    bgColor: "from-red-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4",
+    music: "Upbeat Anime EDM",
+    status: "APPROVED",
+  },
+  {
+    id: "v3",
+    title: "V3 — Grey Matter",
+    subtitle: "Ages 12–14",
+    tier: "Explorer",
+    color: "#ef4444",
+    borderColor: "border-red-500/30",
+    bgColor: "from-red-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4",
+    music: "Heroic Brass",
+    status: "APPROVED",
+  },
+  {
+    id: "v4a",
+    title: "V4-A — Flight Deck Spec",
+    subtitle: "Ages 14–18",
+    tier: "Flight Deck",
+    color: "#06b6d4",
+    borderColor: "border-cyan-500/30",
+    bgColor: "from-cyan-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_a9ef7d84.mp4",
+    music: "Dark Ambient",
+    status: "APPROVED",
+  },
+  {
+    id: "v4b-starborne",
+    title: "V4-B — Starborne",
+    subtitle: "Ages 14–18",
+    tier: "Flight Deck",
+    color: "#06b6d4",
+    borderColor: "border-cyan-500/30",
+    bgColor: "from-cyan-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4",
+    music: "Star Wars Brass 3%",
+    status: "PENDING APPROVAL",
+  },
+  {
+    id: "v4b-starwars",
+    title: "V4-B — Star Wars Alt",
+    subtitle: "Ages 14–18",
+    tier: "Flight Deck",
+    color: "#06b6d4",
+    borderColor: "border-cyan-500/30",
+    bgColor: "from-cyan-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4",
+    music: "Star Wars Style 1%",
+    status: "PENDING APPROVAL",
+  },
+  {
+    id: "v5a",
+    title: "V5-A — Scholar's Secret",
+    subtitle: "Ages 18+",
+    tier: "Scholar",
+    color: "#f59e0b",
+    borderColor: "border-amber-500/30",
+    bgColor: "from-amber-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4",
+    music: "Classical Piano 3%",
+    status: "PENDING APPROVAL",
+  },
+  {
+    id: "v5b",
+    title: "V5-B — Middle-Earth",
+    subtitle: "Ages 18+",
+    tier: "Scholar",
+    color: "#f59e0b",
+    borderColor: "border-amber-500/30",
+    bgColor: "from-amber-600/10",
+    url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4",
+    music: "LOTR Orchestral 0.5%",
+    status: "PENDING APPROVAL",
+  },
+];
+
+function VideoGallery() {
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {INTRO_VIDEOS.map((video, i) => (
+        <motion.div
+          key={video.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: i * 0.06 }}
+          className={`rounded-xl border ${video.borderColor} bg-gradient-to-b ${video.bgColor} to-transparent overflow-hidden backdrop-blur-sm`}
+        >
+          {/* Video Player */}
+          <div className="relative aspect-video bg-black/50">
+            <video
+              src={video.url}
+              controls
+              preload="metadata"
+              playsInline
+              className="w-full h-full object-cover"
+              onPlay={() => setActiveVideo(video.id)}
+              onPause={() => setActiveVideo(null)}
+            />
+            {activeVideo !== video.id && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
+                  <Play className="w-4 h-4 text-white ml-0.5" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Info */}
+          <div className="p-3">
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-xs font-heading font-bold tracking-wide" style={{ color: video.color }}>
+                {video.title}
+              </h4>
+            </div>
+            <p className="text-[10px] text-muted-foreground">{video.subtitle} • {video.tier}</p>
+            <div className="flex items-center gap-1 mt-1.5">
+              <Volume2 className="w-3 h-3 text-muted-foreground/60" />
+              <span className="text-[10px] text-muted-foreground/60">{video.music}</span>
+            </div>
+            <span className={`inline-block mt-1.5 text-[9px] px-1.5 py-0.5 rounded-full font-bold tracking-wider ${
+              video.status === "APPROVED"
+                ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+            }`}>
+              {video.status}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -194,6 +353,24 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Youth Intro Videos — All 8 */}
+      <section className="relative z-10 pb-16">
+        <div className="container max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Watch Before You Play</p>
+            <h3 className="font-heading text-2xl md:text-3xl text-gold-gradient mb-2">Youth Intro Videos</h3>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">8 narrated introductions across all age tiers — from Relay Spinner to Scholar mode</p>
+          </motion.div>
+
+          <VideoGallery />
         </div>
       </section>
 

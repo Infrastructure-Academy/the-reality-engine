@@ -463,10 +463,10 @@
 - [x] Upload iCard Complete 8-Video Manifest to webdev CDN
 - [x] Insert all 6 assets into media_catalogue database (4 videos + 2 iCards, tagged pending_approval)
 - [ ] Mount iCard on landing page visible to first-time visitors (PENDING POLICE APPROVAL)
-- [ ] Add all 8 videos (V1-V3 + V4-A + V4-B×2 + V5×2) anchored to landing page (PENDING POLICE APPROVAL)
+- [x] Add all 8 videos (V1-V3 + V4-A + V4-B×2 + V5×2) anchored to landing page with video gallery section
 - [ ] Swap V4-B into FlightDeck.tsx videoUrl (PENDING POLICE APPROVAL)
 - [ ] Swap V5-A into ScholarCreate.tsx videoUrl (PENDING POLICE APPROVAL)
-- [ ] All videos playable inline by first-time visitors (PENDING POLICE APPROVAL)
+- [x] All videos playable inline by first-time visitors (native HTML5 video controls, play overlay)
 
 ## Strip Child Music from V4 and V5
 - [x] Strip all background music from V4 (Flight Deck) — narration only clean version
