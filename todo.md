@@ -453,3 +453,27 @@
 - [ ] Assemble corrected Flight Deck video
 - [ ] Deliver all 5 videos clearly labelled by audience for Nigel's approval
 - [ ] DO NOT embed on site until Nigel approves
+
+## Anchor Videos + iCards to Website (24 Mar 2026)
+- [x] Upload V4-B Starborne to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4)
+- [x] Upload V4-B Star Wars to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4)
+- [x] Upload V5-A Scholars to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4)
+- [x] Upload V5-B Earth to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4)
+- [x] Upload iCard Audio Verification to webdev CDN
+- [x] Upload iCard Complete 8-Video Manifest to webdev CDN
+- [x] Insert all 6 assets into media_catalogue database (4 videos + 2 iCards, tagged pending_approval)
+- [ ] Mount iCard on landing page visible to first-time visitors (PENDING POLICE APPROVAL)
+- [ ] Add all 8 videos (V1-V3 + V4-A + V4-B×2 + V5×2) anchored to landing page (PENDING POLICE APPROVAL)
+- [ ] Swap V4-B into FlightDeck.tsx videoUrl (PENDING POLICE APPROVAL)
+- [ ] Swap V5-A into ScholarCreate.tsx videoUrl (PENDING POLICE APPROVAL)
+- [ ] All videos playable inline by first-time visitors (PENDING POLICE APPROVAL)
+
+## Strip Child Music from V4 and V5
+- [x] Strip all background music from V4 (Flight Deck) — narration only clean version
+- [x] Strip all background music from V5 (Scholar) — narration only clean version
+- [x] Wait for Nigel's music tracks for V4-A, V4-B, V5-A, V5-B
+- [x] Overlay user-approved music onto clean narration videos (V4-B Starborne 3%, V4-B Star Wars 1%, V5-A Scholars 3%, V5-B Earth 0.5%)
+- [x] Regenerate narration from scratch (pure voice WAV, zero music contamination)
+- [x] Audio bot verified (STT transcription + FFmpeg volumedetect, all 4 PASS)
+- [x] Upload final V4-B and V5 videos to CDN
+- [ ] Swap V4-B/V5 videos into live site pages (PENDING POLICE APPROVAL)

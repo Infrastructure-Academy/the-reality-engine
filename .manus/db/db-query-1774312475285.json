@@ -1,0 +1,45 @@
+{
+  "query": "SELECT id, title, category, bridge, sortOrder FROM media_catalogue WHERE tags LIKE '%pending_approval%' OR tags LIKE '%manifest%' ORDER BY sortOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, category, bridge, sortOrder FROM media_catalogue WHERE tags LIKE '%pending_approval%' OR tags LIKE '%manifest%' ORDER BY sortOrder;",
+  "rows": [
+    {
+      "id": "30001",
+      "title": "V4-B Starborne — Flight Deck Intro (Ages 14-18)",
+      "category": "video",
+      "bridge": "TRE",
+      "sortOrder": "100"
+    },
+    {
+      "id": "30002",
+      "title": "V4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)",
+      "category": "video",
+      "bridge": "TRE",
+      "sortOrder": "101"
+    },
+    {
+      "id": "30003",
+      "title": "V5-A Scholars Secret — Scholar Intro (Ages 18+)",
+      "category": "video",
+      "bridge": "TRE",
+      "sortOrder": "102"
+    },
+    {
+      "id": "30004",
+      "title": "V5-B Middle-Earth — Scholar Intro (Ages 18+)",
+      "category": "video",
+      "bridge": "TRE",
+      "sortOrder": "103"
+    },
+    {
+      "id": "30006",
+      "title": "iCard — Complete 8-Video Delivery Manifest",
+      "category": "evidence",
+      "bridge": "TRE",
+      "sortOrder": "105"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcategory\tbridge\tsortOrder\n30001\tV4-B Starborne — Flight Deck Intro (Ages 14-18)\tvideo\tTRE\t100\n30002\tV4-B Star Wars Alt — Flight Deck Intro (Ages 14-18)\tvideo\tTRE\t101\n30003\tV5-A Scholars Secret — Scholar Intro (Ages 18+)\tvideo\tTRE\t102\n30004\tV5-B Middle-Earth — Scholar Intro (Ages 18+)\tvideo\tTRE\t103\n30006\tiCard — Complete 8-Video Delivery Manifest\tevidence\tTRE\t105\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}
