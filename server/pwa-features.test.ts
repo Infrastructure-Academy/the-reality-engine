@@ -44,12 +44,12 @@ describe("PWA & Mobile Features", () => {
       expect(fs.existsSync(tabBarPath)).toBe(true);
     });
 
-    it("BottomTabBar has 5 tabs", () => {
+    it("BottomTabBar has 6 tabs", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/BottomTabBar.tsx"), "utf-8");
-      // Count tab entries in TABS array
+      // Count tab entries in TABS array (Home, Explore, Flight, Scholar, Board, Docs)
       const tabMatches = content.match(/\{ path:/g);
       expect(tabMatches).toBeDefined();
-      expect(tabMatches!.length).toBe(5);
+      expect(tabMatches!.length).toBe(6);
     });
   });
 

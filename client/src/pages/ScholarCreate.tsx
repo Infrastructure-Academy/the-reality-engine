@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { playPhaseTransition, playMilestoneFanfare, hapticMilestone } from "@/hooks/useEngagementFx";
+import { MilestoneOverlay } from "@/components/MilestoneOverlay";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
 
@@ -68,6 +70,27 @@ function rollD20(): number {
 export default function ScholarCreate() {
   const { user, isAuthenticated } = useAuth();
   const [phase, setPhase] = useState<Phase>("fits_assessment");
+  const [milestoneLevel, setMilestoneLevel] = useState<25 | 50 | 75 | 100 | null>(null);
+
+  // Enhanced phase transition with sound + celebration
+  const advancePhase = useCallback((nextPhase: Phase) => {
+    playPhaseTransition();
+    const phaseMap: Record<Phase, 25 | 50 | 75 | 100> = {
+      fits_assessment: 25,
+      dice_roll: 50,
+      character_sheet: 75,
+      thesis_tracker: 100,
+    };
+    const milestone = phaseMap[nextPhase];
+    if (milestone) {
+      setTimeout(() => {
+        playMilestoneFanfare(milestone);
+        hapticMilestone();
+        setMilestoneLevel(milestone);
+      }, 300);
+    }
+    setPhase(nextPhase);
+  }, []);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [fitsScores, setFitsScores] = useState<Record<string, number>>({ senser: 0, intuitive: 0, thinker: 0, feeler: 0 });
   const [fitsResult, setFitsResult] = useState<string | null>(null);
@@ -96,7 +119,7 @@ export default function ScholarCreate() {
       const maxTypes = Object.entries(scores).filter(([, v]) => v === maxScore);
       const result = maxTypes.length > 1 ? "balanced" : maxTypes[0][0];
       setFitsResult(result);
-      setPhase("dice_roll");
+      advancePhase("dice_roll");
     }
   }, [currentQuestion, fitsScores]);
 
@@ -373,7 +396,7 @@ export default function ScholarCreate() {
                     <p className="text-xl font-bold font-mono">{totalAbilityScore}</p>
                   </div>
                   <Button
-                    onClick={() => setPhase("character_sheet")}
+                    onClick={() => advancePhase("character_sheet")}
                     disabled={!characterName.trim()}
                     className="bg-amber-600 hover:bg-amber-500 text-black font-heading tracking-wider"
                   >
@@ -465,7 +488,7 @@ export default function ScholarCreate() {
                 </div>
 
                 <Button
-                  onClick={() => setPhase("thesis_tracker")}
+                  onClick={() => advancePhase("thesis_tracker")}
                   className="w-full bg-amber-600 hover:bg-amber-500 text-black font-heading tracking-wider"
                   size="lg"
                 >
@@ -636,6 +659,13 @@ export default function ScholarCreate() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Milestone Celebration Overlay (JG feedback) */}
+      <MilestoneOverlay
+        level={milestoneLevel}
+        onDismiss={() => setMilestoneLevel(null)}
+        context={`Scholar — ${phase === 'fits_assessment' ? 'FITS Assessment' : phase === 'dice_roll' ? 'Ability Scores' : phase === 'character_sheet' ? 'Character Sheet' : 'Thesis Tracker'}`}
+      />
     </div>
   );
 }

@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoundEffects";
+import { playWebTypedNodeActivation, playMilestoneFanfare, hapticMilestone, checkMilestone } from "@/hooks/useEngagementFx";
+import { MilestoneOverlay } from "@/components/MilestoneOverlay";
+import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
@@ -46,6 +49,11 @@ export default function FlightDeck() {
     web: string;
     position: { x: number; y: number };
   }>({ visible: false, relay: 1, web: "Natural", position: { x: 0, y: 0 } });
+
+  // ─── Engagement FX State (JG feedback improvements) ───
+  const [milestoneLevel, setMilestoneLevel] = useState<25 | 50 | 75 | 100 | null>(null);
+  const [burstTrigger, setBurstTrigger] = useState(0);
+  const [lastWebColor, setLastWebColor] = useState<string | undefined>(undefined);
 
   // Confetti state — triggers once when 60/60 is first reached
   const [showConfetti, setShowConfetti] = useState(false);
@@ -137,8 +145,25 @@ export default function FlightDeck() {
       const next = new Set(prev);
       next.add(key);
       if (isNew) {
-        playNodeActivationSound();
+        // ─── Enhanced: Web-typed node activation sound (JG feedback) ───
+        playWebTypedNodeActivation(web);
+        playNodeActivationSound(); // fallback layer
         hapticTap(25);
+
+        // Particle burst
+        const webMeta = WEBS.find(w => w.name === web);
+        setLastWebColor(webMeta?.color);
+        setBurstTrigger(t => t + 1);
+
+        // Milestone check (15/30/45/60 nodes = 25/50/75/100%)
+        const milestone = checkMilestone(next.size, 60);
+        if (milestone) {
+          setTimeout(() => {
+            playMilestoneFanfare(milestone);
+            hapticMilestone();
+            setMilestoneLevel(milestone);
+          }, 400);
+        }
 
         // Persist to DB
         if (profileId && deardenNodesData) {
@@ -519,6 +544,16 @@ export default function FlightDeck() {
           isMatchingWeb={selectedCraft?.web === tooltip.web}
           position={tooltip.position}
           onClose={closeTooltip}
+        />
+
+        {/* Discovery Particle Burst (JG feedback) */}
+        <DiscoveryBurst trigger={burstTrigger} webColor={lastWebColor} />
+
+        {/* Milestone Celebration Overlay (JG feedback) */}
+        <MilestoneOverlay
+          level={milestoneLevel}
+          onDismiss={() => setMilestoneLevel(null)}
+          context={`Flight Deck — ${selectedCraft?.name || 'Craft'}`}
         />
 
         {/* Confetti at 60/60 — auto-redirect to synthesis after */}

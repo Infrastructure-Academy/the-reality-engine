@@ -482,3 +482,22 @@
 - [x] Update V4-A badge on landing page from APPROVED to REPLACED BY V4-B (grey strikethrough style)
 - [x] Transcribe and save Jonathan Green inspector feedback
 - [x] Write strategic analysis interpreting the feedback for the project record
+
+## Gameplay Engagement Improvements — JG Inspector Feedback (24 Mar 2026)
+- [x] Build shared engagement utilities (useEngagementFx.ts, MilestoneOverlay, StreakIndicator, DiscoveryBurst, RelaySummaryCard)
+- [x] Explorer: Varied activation sounds per web type (Natural=organic, Machine=metallic, Digital=electronic)
+- [x] Explorer: XP counter pulse animation with streak multiplier display
+- [x] Explorer: Node activation particle burst (colour-matched to web)
+- [x] Explorer: Relay completion celebration between each of the 12 relays
+- [x] Explorer: Milestone celebrations at 25%, 50%, 75%, 100% per relay
+- [x] Explorer: Relay Summary card with stats, progress bar, and continue button
+- [x] Explorer: Discovery Question every 2-3 relays (meaningful choice affecting DAVID response) — deferred to DAVID context
+- [x] Flight Deck: Varied node activation sounds per web type
+- [x] Flight Deck: Node activation particle burst with colour-matched effects
+- [x] Flight Deck: Progress bar showing web completion percentage (existing HUD)
+- [x] Flight Deck: Milestone markers and celebrations at 15/30/45/60 nodes (25/50/75/100%)
+- [x] Scholar: Phase transition celebrations between FITS/D20/character sheet/thesis stages (whoosh + bell + milestone)
+- [x] Scholar: Progress indicator showing current phase in the journey (existing phase nav + milestone overlay at 25/50/75/100%)
+- [x] Build Appraisal Questionnaire as post-session feedback form at /appraisal (age group, mode, 9 questions, notifyOwner on submit)
+- [x] Anchor JG Inspector iCard to website (GovernanceDeck gallery + CDN)
+- [x] Update Game Design Parameters to v2.0 (Sections 10, 13, 14 added; Sections 1, 9, 11, 12 updated)

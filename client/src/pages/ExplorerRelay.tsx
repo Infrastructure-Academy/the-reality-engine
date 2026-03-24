@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -12,6 +12,11 @@ import {
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { playDiscoverySound, playRelayTransitionSound, playXpSound, hapticDiscovery, hapticTransition } from "@/hooks/useSoundEffects";
+import { playWebTypedDiscovery, playMilestoneFanfare, hapticStreak, hapticMilestone, registerDiscovery, getStreakCount, checkMilestone } from "@/hooks/useEngagementFx";
+import { MilestoneOverlay } from "@/components/MilestoneOverlay";
+import { StreakIndicator } from "@/components/StreakIndicator";
+import { DiscoveryBurst } from "@/components/DiscoveryBurst";
+import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { VoiceToggle } from "@/components/VoiceToggle";
@@ -419,6 +424,15 @@ export default function ExplorerRelay() {
   // Randomize layout per relay visit — changes each time you navigate
   const [layoutVariant] = useState<LayoutVariant>(() => pickLayout(relayNum));
 
+  // ─── Engagement FX State (JG feedback improvements) ───
+  const [streakCount, setStreakCount] = useState(0);
+  const [streakVisible, setStreakVisible] = useState(false);
+  const [milestoneLevel, setMilestoneLevel] = useState<25 | 50 | 75 | 100 | null>(null);
+  const [burstTrigger, setBurstTrigger] = useState(0);
+  const [showRelaySummary, setShowRelaySummary] = useState(false);
+  const [relayStartTime] = useState(() => Date.now());
+  const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Fetch relay data from DB
   const { data: relay, isLoading } = trpc.relays.getByNumber.useQuery({ number: relayNum });
 
@@ -480,14 +494,43 @@ export default function ExplorerRelay() {
     }
   }, [savedProgress, relayNum]);
 
-  // Discovery tap handler — now persists to DB + plays sound + haptic
+  // Discovery tap handler — enhanced with JG engagement improvements
   const handleDiscover = useCallback((idx: number) => {
     setDiscoveredItems(prev => {
       if (prev.has(idx)) return prev; // already discovered
       const next = new Set(prev);
       next.add(idx);
 
-      // Sound + haptic feedback
+      // ─── Enhanced Sound + Haptic (web-typed + streak) ───
+      const streak = registerDiscovery();
+      setStreakCount(streak);
+      setStreakVisible(true);
+      playWebTypedDiscovery(relayMeta.webType, streak);
+      hapticStreak(streak);
+
+      // Clear streak indicator after 3s of inactivity
+      if (streakTimerRef.current) clearTimeout(streakTimerRef.current);
+      streakTimerRef.current = setTimeout(() => { setStreakVisible(false); setStreakCount(0); }, 3500);
+
+      // ─── Particle Burst ───
+      setBurstTrigger(t => t + 1);
+
+      // ─── Milestone Check ───
+      const milestone = checkMilestone(next.size, inventions.length);
+      if (milestone) {
+        setTimeout(() => {
+          playMilestoneFanfare(milestone);
+          hapticMilestone();
+          setMilestoneLevel(milestone);
+        }, 400);
+      }
+
+      // ─── Relay Complete → Show Summary ───
+      if (next.size === inventions.length) {
+        setTimeout(() => setShowRelaySummary(true), 1500);
+      }
+
+      // Legacy sound + haptic (kept for fallback)
       playDiscoverySound();
       hapticDiscovery();
 
@@ -607,11 +650,46 @@ export default function ExplorerRelay() {
       </header>
 
       <div className="container py-6 max-w-4xl mx-auto">
-        {/* Render the randomly selected layout */}
-        {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
-        {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
-        {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
+        {/* Streak Indicator (JG feedback) */}
+        <StreakIndicator count={streakCount} visible={streakVisible} />
+
+        {/* Discovery Particle Burst (JG feedback) */}
+        <DiscoveryBurst trigger={burstTrigger} webColor={relayMeta.color} />
+
+        {/* Relay Summary Card — shown on relay completion */}
+        {showRelaySummary ? (
+          <RelaySummaryCard
+            relayNumber={relayNum}
+            inventionsFound={discoveredItems.size}
+            totalInventions={inventions.length}
+            xpEarned={totalXpEarned}
+            timeSpent={Math.round((Date.now() - relayStartTime) / 1000)}
+            onContinue={() => {
+              setShowRelaySummary(false);
+              if (canGoNext) {
+                playRelayTransitionSound();
+                hapticTransition();
+                navigate(`/explore/${relayNum + 1}`);
+              }
+            }}
+            nextRelayNumber={canGoNext ? relayNum + 1 : undefined}
+          />
+        ) : (
+          <>
+            {/* Render the randomly selected layout */}
+            {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
+            {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
+            {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
+          </>
+        )}
       </div>
+
+      {/* Milestone Celebration Overlay (JG feedback) */}
+      <MilestoneOverlay
+        level={milestoneLevel}
+        onDismiss={() => setMilestoneLevel(null)}
+        context={`Explorer — Relay ${relayNum}: ${relayMeta.name}`}
+      />
 
       {/* DAVID Chat Panel */}
       <AnimatePresence>

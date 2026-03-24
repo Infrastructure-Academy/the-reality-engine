@@ -33,6 +33,7 @@ const ExplorerSelect = lazy(() => import("./pages/ExplorerSelect"));
 const RelaySpinner = lazy(() => import("./pages/RelaySpinner"));
 const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
 const GreyMatter = lazy(() => import("./pages/GreyMatter"));
+const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -72,6 +73,7 @@ function Router() {
         <Route path={"/media"} component={MediaGallery} />
         <Route path={"/bridges"} component={BridgeHub} />
         <Route path={"/resources"} component={Resources} />
+        <Route path={"/appraisal"} component={AppraisalQuestionnaire} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>
