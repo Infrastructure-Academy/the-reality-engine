@@ -374,6 +374,56 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Evidence iCards — Police Audit */}
+      <section className="relative z-10 pb-16">
+        <div className="container max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-6"
+          >
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">PoC Beta — Evidence Records</p>
+            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">Audio Verification &amp; Delivery Manifest</h3>
+            <p className="text-xs text-muted-foreground max-w-lg mx-auto">Independent AI audio bot verification — all videos pass broadcast standard. 24 March 2026.</p>
+          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
+            >
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png"
+                alt="Audio Verification Record — All 4 Videos PASS"
+                className="w-full h-auto object-contain"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">AUDIO VERIFICATION RECORD</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">STT Transcription + FFmpeg volumedetect • Zero contamination • Broadcast standard</p>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
+            >
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png"
+                alt="Complete 8-Video Delivery Manifest"
+                className="w-full h-auto object-contain"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">COMPLETE DELIVERY MANIFEST</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">8 youth intro videos • All age tiers • V1–V4A approved • V4B–V5 verified</p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Relay Timeline Preview */}
       <section className="relative z-10 pb-16">
         <div className="container">
