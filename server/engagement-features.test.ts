@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 const clientDir = path.join(__dirname, "..", "client");
+const serverDir = path.join(__dirname);
 
 describe("Engagement Layer — JG Inspector Feedback Response", () => {
   describe("Shared Engagement Utilities", () => {
@@ -243,7 +244,21 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
     it("Home page imports and renders SocialFollowButtons", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/pages/Home.tsx"), "utf-8");
       expect(content).toContain("SocialFollowButtons");
-      expect(content).toContain("followerCount");
+    });
+
+    it("SocialFollowButtons fetches dynamic X count from bridge.xFollowerCount", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/components/SocialFollowButtons.tsx"), "utf-8");
+      expect(content).toContain("bridge.xFollowerCount");
+      expect(content).toContain("trpc");
+    });
+
+    it("Social buttons appear in Explorer, FlightDeck, and Scholar headers", () => {
+      const explorer = fs.readFileSync(path.join(clientDir, "src/pages/ExplorerRelay.tsx"), "utf-8");
+      const flightDeck = fs.readFileSync(path.join(clientDir, "src/pages/FlightDeck.tsx"), "utf-8");
+      const scholar = fs.readFileSync(path.join(clientDir, "src/pages/ScholarCreate.tsx"), "utf-8");
+      expect(explorer).toContain("SocialFollowButtons");
+      expect(flightDeck).toContain("SocialFollowButtons");
+      expect(scholar).toContain("SocialFollowButtons");
     });
 
     it("SocialFollowButtons supports compact mode for mobile", () => {
@@ -315,6 +330,32 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/RelaySummaryCard.tsx"), "utf-8");
       expect(content).toContain("DAVID NARRATING");
       expect(content).toContain("getVoiceEnabled");
+    });
+  });
+
+  describe("Living Experiment Infographic", () => {
+    it("Home page includes The Living Experiment infographic section", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/pages/Home.tsx"), "utf-8");
+      expect(content).toContain("Living Experiment");
+      expect(content).toContain("living-experiment-infographic");
+    });
+
+    it("Infographic has proper alt text for accessibility", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/pages/Home.tsx"), "utf-8");
+      expect(content).toContain("Tetra Handshake");
+      expect(content).toContain("Biological Intelligence");
+    });
+  });
+
+  describe("Bridge xFollowerCount", () => {
+    it("db.ts exports getXFollowerCount function", () => {
+      const content = fs.readFileSync(path.join(serverDir, "db.ts"), "utf-8");
+      expect(content).toContain("export async function getXFollowerCount");
+    });
+
+    it("routers.ts exposes bridge.xFollowerCount as a public procedure", () => {
+      const content = fs.readFileSync(path.join(serverDir, "routers.ts"), "utf-8");
+      expect(content).toContain("xFollowerCount: publicProcedure");
     });
   });
 

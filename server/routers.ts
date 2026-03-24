@@ -518,6 +518,9 @@ export const appRouter = router({
       .query(async ({ input }) => {
         return db.getSyncHistory(input?.bridge, input?.limit);
       }),
+    xFollowerCount: publicProcedure.query(async () => {
+      return db.getXFollowerCount();
+    }),
   }),
 });
 export type AppRouter = typeof appRouter;

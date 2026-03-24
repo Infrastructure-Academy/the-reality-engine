@@ -2,7 +2,10 @@
  * SocialFollowButtons — X (with follower count), Facebook Follow, LinkedIn Follow
  * Matches the Chart Room header style: compact pill buttons in a row.
  * Social handles pulled from Infrastructure Academy for consistency.
+ * X follower count is fetched live from the Chart Room bridge.
  */
+
+import { trpc } from "@/lib/trpc";
 
 // ─── Social Config (consistent with Infrastructure Academy) ───
 const SOCIAL_LINKS = {
@@ -49,14 +52,21 @@ function LinkedInIcon({ className }: { className?: string }) {
 }
 
 interface SocialFollowButtonsProps {
-  /** Optional X follower count to display — synced from Chart Room */
+  /** Override X follower count (skips API fetch if provided) */
   followerCount?: number;
   /** Compact mode for mobile */
   compact?: boolean;
 }
 
 export function SocialFollowButtons({ followerCount, compact = false }: SocialFollowButtonsProps) {
-  const xCount = followerCount ?? null;
+  // Fetch live X follower count from Chart Room bridge
+  const { data: liveData } = trpc.bridge.xFollowerCount.useQuery(undefined, {
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const xCount = followerCount ?? liveData?.count ?? 42;
 
   return (
     <div className={`flex items-center ${compact ? "gap-1.5" : "gap-2"}`}>
@@ -74,11 +84,9 @@ export function SocialFollowButtons({ followerCount, compact = false }: SocialFo
         `}
       >
         <XIcon className={compact ? "w-3 h-3" : "w-3.5 h-3.5"} />
-        {xCount !== null && (
-          <span className={`font-mono font-bold ${compact ? "text-[10px]" : "text-xs"}`}>
-            {xCount}
-          </span>
-        )}
+        <span className={`font-mono font-bold ${compact ? "text-[10px]" : "text-xs"}`}>
+          {xCount}
+        </span>
       </a>
 
       {/* Facebook Follow — blue pill */}

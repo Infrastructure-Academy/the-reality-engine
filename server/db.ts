@@ -693,3 +693,42 @@ export async function syncChartRoom() {
     return { status: "error", error: err.message };
   }
 }
+
+// ─── X Follower Count (from Chart Room bridge) ───
+export async function getXFollowerCount(): Promise<{ count: number; source: string; updatedAt: string }> {
+  try {
+    // Try the Chart Room tRPC API first
+    const res = await fetch("https://xgrowthtrk-2a93yo5z.manus.space/api/trpc/dashboard.stats", {
+      headers: { "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(5000),
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      // tRPC wraps in { result: { data: ... } }
+      const data = json?.result?.data;
+      const current = data?.current ?? data?.followers ?? data?.currentFollowers;
+      if (typeof current === "number" && current > 0) {
+        return { count: current, source: "chart_room_api", updatedAt: new Date().toISOString() };
+      }
+    }
+
+    // Fallback: try scraping the public page for the follower number
+    const pageRes = await fetch("https://xgrowthtrk-2a93yo5z.manus.space/", {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (pageRes.ok) {
+      const html = await pageRes.text();
+      // Look for the CURRENT stat box value
+      const match = html.match(/CURRENT[\s\S]*?(\d+)/i);
+      if (match) {
+        return { count: parseInt(match[1], 10), source: "chart_room_scrape", updatedAt: new Date().toISOString() };
+      }
+    }
+  } catch {
+    // Silent fallback
+  }
+
+  // Final fallback — last known count
+  return { count: 42, source: "fallback", updatedAt: new Date().toISOString() };
+}

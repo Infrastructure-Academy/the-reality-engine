@@ -508,3 +508,9 @@
 - [x] Wire DAVID LLM narration into relay summary cards — unique spoken line per relay completion
 - [x] Test all improvements on laptop and mobile views
 - [x] Add X (Twitter) follower count button, Facebook Follow button, and LinkedIn Follow button to header (matching Chart Room style)
+
+## Dynamic X Count + Social Buttons Everywhere + Facebook Verify
+- [x] Wire dynamic X follower count from Chart Room bridge sync instead of hardcoded 42
+- [x] Add social follow buttons to Flight Deck and Scholar mode headers
+- [x] Verify Facebook link resolves correctly, fix if needed
+- [x] Add "The Living Experiment" infographic to bottom of Home page as a full-width footer section

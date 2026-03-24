@@ -21,6 +21,7 @@ import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { VoiceToggle } from "@/components/VoiceToggle";
 import { narrateDiscovery, narrateRelayIntro, narrateRelayComplete, davidStop } from "@/hooks/useDavidVoice";
+import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -630,6 +631,9 @@ export default function ExplorerRelay() {
             </Button>
           </Link>
           <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <SocialFollowButtons compact />
+            </div>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
             <XpCounter value={totalXpEarned} compact color="gold" />
             <span className="text-muted-foreground font-mono text-xs">|</span>

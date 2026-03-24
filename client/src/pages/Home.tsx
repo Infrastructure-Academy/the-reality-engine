@@ -223,10 +223,10 @@ export default function Home() {
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Social Follow Buttons — matching Chart Room style */}
             <div className="hidden sm:block">
-              <SocialFollowButtons followerCount={42} />
+              <SocialFollowButtons />
             </div>
             <div className="block sm:hidden">
-              <SocialFollowButtons followerCount={42} compact />
+              <SocialFollowButtons compact />
             </div>
             <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
             <Link href="/resources">
@@ -474,6 +474,24 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* The Living Experiment — Infographic */}
+      <section className="relative z-10 py-12 border-t border-gold-dim/20">
+        <div className="container max-w-4xl mx-auto">
+          <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">The Method Behind The Engine</p>
+          <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/living-experiment-infographic_05a0824a.jpeg"
+              alt="The Living Experiment — Biological Intelligence Directing Digital Intelligence — The Same Model for Millennia. Tetra Handshake connecting Observer Player (Ir. Nigel T. Dearden, CEng) with ACAD (Contractor), MEMORIAL (Design Team), and CHECKER (Government Inspector)."
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+          </div>
+          <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono">
+            MORALLY NEUTRAL &nbsp;|&nbsp; CIVIL ENGINEER LENS &nbsp;|&nbsp; SKILL NOW LOST — iAAi RECOVERS IT DIGITALLY
+          </p>
         </div>
       </section>
 
