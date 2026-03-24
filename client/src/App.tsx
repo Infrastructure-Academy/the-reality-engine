@@ -34,6 +34,7 @@ const RelaySpinner = lazy(() => import("./pages/RelaySpinner"));
 const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
 const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));
+const Prologue = lazy(() => import("./pages/Prologue"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -53,6 +54,7 @@ function Router() {
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/explore"} component={ExplorerSelect} />
+        <Route path={"/explore/prologue"} component={Prologue} />
         <Route path={"/explore/spinner"} component={RelaySpinner} />
         <Route path={"/explore/dungeon"} component={DungeonCrawl} />
         <Route path={"/explore/greymatter"} component={GreyMatter} />

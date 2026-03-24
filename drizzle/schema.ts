@@ -270,3 +270,84 @@ export const bridgeSyncLog = mysqlTable("bridge_sync_log", {
 });
 
 export type BridgeSyncLogEntry = typeof bridgeSyncLog.$inferSelect;
+
+// ─── DCSN Nodes (Distributed Cognitive Social Network) ───
+export const dcsnNodes = mysqlTable("dcsn_nodes", {
+  id: int("id").autoincrement().primaryKey(),
+  nodeNumber: int("nodeNumber").notNull().unique(),
+  name: varchar("name", { length: 256 }).notNull(),
+  title: varchar("title", { length: 128 }),
+  cell: varchar("cell", { length: 128 }),
+  recruitedByNode: int("recruitedByNode"),
+  recruitedByName: varchar("recruitedByName", { length: 256 }),
+  activationDate: varchar("activationDate", { length: 32 }),
+  relation: varchar("relation", { length: 64 }),
+  role: varchar("role", { length: 128 }),
+  intel: varchar("intel", { length: 32 }),
+  access: varchar("access", { length: 32 }),
+  level: varchar("level", { length: 64 }),
+  day: int("day"),
+  phase: int("phase"),
+  status: mysqlEnum("dcsnStatus", ["activated", "pending", "deactivated"]).default("activated"),
+  iCardUrl: text("iCardUrl"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type DcsnNode = typeof dcsnNodes.$inferSelect;
+
+// ─── Feedback Reports (Node Reviews / Inspector Reports) ───
+export const feedbackReports = mysqlTable("feedback_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  nodeNumber: int("nodeNumber"),
+  reporterName: varchar("reporterName", { length: 256 }).notNull(),
+  reportType: varchar("reportType", { length: 64 }).notNull(),
+  source: varchar("source", { length: 64 }).notNull(),
+  reportDate: varchar("reportDate", { length: 32 }).notNull(),
+  blockRef: varchar("blockRef", { length: 64 }),
+  verdictTitle: varchar("verdictTitle", { length: 256 }),
+  verdictDetails: text("verdictDetails"),
+  actionTitle: varchar("actionTitle", { length: 256 }),
+  actionDetails: text("actionDetails"),
+  prescription: text("prescription"),
+  rawFeedback: text("rawFeedback"),
+  iCardUrl: text("iCardUrl"),
+  status: mysqlEnum("reportStatus", ["open", "in_progress", "resolved", "archived"]).default("open"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FeedbackReport = typeof feedbackReports.$inferSelect;
+
+// ─── Governance Records (Tetrahedral Observer, SAP-001, Protocols) ───
+export const governanceRecords = mysqlTable("governance_records", {
+  id: int("id").autoincrement().primaryKey(),
+  recordId: varchar("recordId", { length: 64 }).notNull().unique(),
+  title: varchar("title", { length: 256 }).notNull(),
+  recordType: varchar("recordType", { length: 64 }).notNull(),
+  version: varchar("version", { length: 16 }),
+  blockRef: varchar("blockRef", { length: 64 }),
+  description: text("description"),
+  content: json("content"),
+  iCardUrl: text("iCardUrl"),
+  compliance: varchar("compliance", { length: 128 }),
+  status: mysqlEnum("govStatus", ["active", "superseded", "draft"]).default("active"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GovernanceRecord = typeof governanceRecords.$inferSelect;
+
+// ─── Player Decisions (Branching Choice Mechanics — "What Would You Do?") ───
+export const playerDecisions = mysqlTable("player_decisions", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  relayNumber: int("relayNumber").notNull(),
+  choiceId: varchar("choiceId", { length: 64 }).notNull(), // e.g. "relay1_choice_a"
+  choiceLabel: varchar("choiceLabel", { length: 256 }).notNull(),
+  dilemmaTitle: varchar("dilemmaTitle", { length: 256 }).notNull(),
+  archetype: varchar("archetype", { length: 64 }), // builder, philosopher, pragmatist, visionary
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PlayerDecision = typeof playerDecisions.$inferSelect;

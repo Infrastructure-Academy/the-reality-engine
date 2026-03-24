@@ -50,6 +50,20 @@
       "when": 1774110586528,
       "tag": "0006_lush_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1774325927447,
+      "tag": "0007_milky_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1774326911218,
+      "tag": "0008_sleepy_zarek",
+      "breakpoints": true
     }
   ]
 }

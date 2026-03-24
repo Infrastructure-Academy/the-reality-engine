@@ -1,0 +1,9 @@
+{
+  "query": "\nSELECT 'agn_contacts' as tbl, id, name, displayName, notes FROM agn_contacts WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' OR displayName LIKE '%Khanh%' OR displayName LIKE '%Huynh%' OR notes LIKE '%Khanh%' OR notes LIKE '%018%' OR notes LIKE '%Node 018%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute \nSELECT 'agn_contacts' as tbl, id, name, displayName, notes FROM agn_contacts WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' OR displayName LIKE '%Khanh%' OR displayName LIKE '%Huynh%' OR notes LIKE '%Khanh%' OR notes LIKE '%018%' OR notes LIKE '%Node 018%';\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1635
+}

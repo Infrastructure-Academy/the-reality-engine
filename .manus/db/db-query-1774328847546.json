@@ -1,0 +1,37 @@
+{
+  "query": "SELECT nodeNumber, name, title, cell, recruitedByNode, recruitedByName, dcsnStatus FROM dcsn_nodes;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT nodeNumber, name, title, cell, recruitedByNode, recruitedByName, dcsnStatus FROM dcsn_nodes;",
+  "rows": [
+    {
+      "nodeNumber": "0",
+      "name": "Nigel Dearden",
+      "title": "The Architect",
+      "cell": "ALL",
+      "recruitedByNode": "NULL",
+      "recruitedByName": "NULL",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "2",
+      "name": "Henry Leong",
+      "title": "Network Architect — Dinosaurs to AI",
+      "cell": "Dinosaurs To AI Future",
+      "recruitedByNode": "0",
+      "recruitedByName": "Nigel Dearden",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "18",
+      "name": "Khanh Huynh",
+      "title": "Marketing Intelligence — DCSN",
+      "cell": "Dinosaurs To AI Future",
+      "recruitedByNode": "2",
+      "recruitedByName": "Henry Leong",
+      "dcsnStatus": "activated"
+    }
+  ],
+  "messages": [],
+  "stdout": "nodeNumber\tname\ttitle\tcell\trecruitedByNode\trecruitedByName\tdcsnStatus\n0\tNigel Dearden\tThe Architect\tALL\tNULL\tNULL\tactivated\n2\tHenry Leong\tNetwork Architect — Dinosaurs to AI\tDinosaurs To AI Future\t0\tNigel Dearden\tactivated\n18\tKhanh Huynh\tMarketing Intelligence — DCSN\tDinosaurs To AI Future\t2\tHenry Leong\tactivated\n",
+  "stderr": "",
+  "execution_time_ms": 1518
+}

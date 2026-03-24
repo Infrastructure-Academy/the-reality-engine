@@ -1,0 +1,16 @@
+{
+  "query": "SHOW TABLES LIKE '%dcsn%'; SHOW TABLES LIKE '%node%'; SHOW TABLES LIKE '%governance%'; SHOW TABLES LIKE '%feedback%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SHOW TABLES LIKE '%dcsn%'; SHOW TABLES LIKE '%node%'; SHOW TABLES LIKE '%governance%'; SHOW TABLES LIKE '%feedback%';",
+  "rows": [
+    {
+      "Tables_in_EPdHLKrneifLpbtrLUugQB (%node%)": "dearden_nodes"
+    },
+    {
+      "Tables_in_EPdHLKrneifLpbtrLUugQB (%node%)": "node_activations"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_EPdHLKrneifLpbtrLUugQB (%node%)\ndearden_nodes\nnode_activations\n",
+  "stderr": "",
+  "execution_time_ms": 2334
+}

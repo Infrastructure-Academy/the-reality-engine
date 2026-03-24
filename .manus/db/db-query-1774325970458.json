@@ -1,0 +1,9 @@
+{
+  "query": "\nSELECT 'media_catalogue' as tbl, id, title, category, description FROM media_catalogue WHERE title LIKE '%Khanh%' OR title LIKE '%Node 018%' OR title LIKE '%018%' OR description LIKE '%Khanh%' OR description LIKE '%018%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute \nSELECT 'media_catalogue' as tbl, id, title, category, description FROM media_catalogue WHERE title LIKE '%Khanh%' OR title LIKE '%Node 018%' OR title LIKE '%018%' OR description LIKE '%Khanh%' OR description LIKE '%018%';\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1628
+}

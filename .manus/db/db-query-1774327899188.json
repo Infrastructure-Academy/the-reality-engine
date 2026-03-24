@@ -1,0 +1,9 @@
+{
+  "query": "SELECT nodeNumber, name, title, cell, recruitedByNode, recruitedByName, role, relation FROM dcsn_nodes ORDER BY nodeNumber;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT nodeNumber, name, title, cell, recruitedByNode, recruitedByName, role, relation FROM dcsn_nodes ORDER BY nodeNumber;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1628
+}

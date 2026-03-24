@@ -22,6 +22,7 @@ const CDN = {
   posterVehicles: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/poster-terrestrial-vehicles_d4212cbb.png",
   govGdp001: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-GOV-GDP-002_85f5d9a7.png",
   jgInspector: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-JG-Inspector-Feedback_ec550750.png",
+  khNode018v2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-KH-018-v2-corrected-ZQemsEypLH5rudnmJRMB8g.png",
 };
 
 // SAP-001 Phases
@@ -374,8 +375,9 @@ export default function GovernanceDeck() {
                   { title: "Memorial Audit", subtitle: "B398-AUDIT-001 — 157 Game iCards Identified", src: CDN.memorialAudit, block: "B398" },
                   { title: "Personal Equipment Poster", subtitle: "Visual Index — Equipment Suite", src: CDN.posterEquipment, block: "B398" },
                   { title: "Terrestrial Vehicles Poster", subtitle: "Visual Index — Vehicle Fleet", src: CDN.posterVehicles, block: "B398" },
-                  { title: "GOV-GDP-002", subtitle: "Game Design Parameters v2.0 — The Design Bible", src: CDN.govGdp001, block: "B401" },
+                  { title: "GOV-GDP-002", subtitle: "Game Design Parameters v2.1 — The Design Bible", src: CDN.govGdp001, block: "B402" },
                   { title: "Inspector Node Report", subtitle: "Jonathan Green — LinkedIn Review, 24 March 2026", src: CDN.jgInspector, block: "B401" },
+                  { title: "Node 018 Report v2", subtitle: "Khanh Huynh — Marketing Intelligence, Market Analyst / Beta Tester, 24 March 2026", src: CDN.khNode018v2, block: "B402" },
                 ]).map(card => (
                   <div key={card.title} className="bg-card border border-border/50 rounded-xl overflow-hidden">
                     <img

@@ -1,0 +1,9 @@
+{
+  "query": "SELECT * FROM player_profiles WHERE displayName LIKE '%Khanh%' OR displayName LIKE '%Huynh%' LIMIT 5; SELECT * FROM users WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT * FROM player_profiles WHERE displayName LIKE '%Khanh%' OR displayName LIKE '%Huynh%' LIMIT 5; SELECT * FROM users WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' LIMIT 5;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1831
+}

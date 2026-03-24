@@ -1,0 +1,63 @@
+CREATE TABLE `dcsn_nodes` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`nodeNumber` int NOT NULL,
+	`name` varchar(256) NOT NULL,
+	`title` varchar(128),
+	`cell` varchar(128),
+	`recruitedByNode` int,
+	`recruitedByName` varchar(256),
+	`activationDate` varchar(32),
+	`relation` varchar(64),
+	`role` varchar(128),
+	`intel` varchar(32),
+	`access` varchar(32),
+	`level` varchar(64),
+	`day` int,
+	`phase` int,
+	`dcsnStatus` enum('activated','pending','deactivated') DEFAULT 'activated',
+	`iCardUrl` text,
+	`notes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `dcsn_nodes_id` PRIMARY KEY(`id`),
+	CONSTRAINT `dcsn_nodes_nodeNumber_unique` UNIQUE(`nodeNumber`)
+);
+--> statement-breakpoint
+CREATE TABLE `feedback_reports` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`nodeNumber` int,
+	`reporterName` varchar(256) NOT NULL,
+	`reportType` varchar(64) NOT NULL,
+	`source` varchar(64) NOT NULL,
+	`reportDate` varchar(32) NOT NULL,
+	`blockRef` varchar(64),
+	`verdictTitle` varchar(256),
+	`verdictDetails` text,
+	`actionTitle` varchar(256),
+	`actionDetails` text,
+	`prescription` text,
+	`rawFeedback` text,
+	`iCardUrl` text,
+	`reportStatus` enum('open','in_progress','resolved','archived') DEFAULT 'open',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `feedback_reports_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `governance_records` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`recordId` varchar(64) NOT NULL,
+	`title` varchar(256) NOT NULL,
+	`recordType` varchar(64) NOT NULL,
+	`version` varchar(16),
+	`blockRef` varchar(64),
+	`description` text,
+	`content` json,
+	`iCardUrl` text,
+	`compliance` varchar(128),
+	`govStatus` enum('active','superseded','draft') DEFAULT 'active',
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `governance_records_id` PRIMARY KEY(`id`),
+	CONSTRAINT `governance_records_recordId_unique` UNIQUE(`recordId`)
+);

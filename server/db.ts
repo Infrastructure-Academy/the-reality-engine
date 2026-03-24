@@ -4,7 +4,8 @@ import {
   InsertUser, users, relays, webs, discoveries, playerProfiles,
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
-  agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog
+  agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog,
+  playerDecisions
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -731,4 +732,45 @@ export async function getXFollowerCount(): Promise<{ count: number; source: stri
 
   // Final fallback — last known count
   return { count: 42, source: "fallback", updatedAt: new Date().toISOString() };
+}
+
+
+// ─── Player Decision Helpers (Branching Choice Mechanics) ───
+
+export async function savePlayerDecision(data: {
+  profileId: number;
+  relayNumber: number;
+  choiceId: string;
+  choiceLabel: string;
+  dilemmaTitle: string;
+  archetype: string;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const result = await db.insert(playerDecisions).values({
+      profileId: data.profileId,
+      relayNumber: data.relayNumber,
+      choiceId: data.choiceId,
+      choiceLabel: data.choiceLabel,
+      dilemmaTitle: data.dilemmaTitle,
+      archetype: data.archetype,
+    });
+    return { id: result[0].insertId };
+  } catch (error) {
+    console.error("[Database] Failed to save player decision:", error);
+    return null;
+  }
+}
+
+export async function getPlayerDecisions(profileId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const rows = await db.select().from(playerDecisions).where(eq(playerDecisions.profileId, profileId));
+    return rows;
+  } catch (error) {
+    console.error("[Database] Failed to get player decisions:", error);
+    return [];
+  }
 }

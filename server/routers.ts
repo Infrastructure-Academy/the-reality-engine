@@ -522,5 +522,26 @@ export const appRouter = router({
       return db.getXFollowerCount();
     }),
   }),
+
+  // ─── Decision Procedures (Branching Choice Mechanics) ───
+  decisions: router({
+    save: publicProcedure
+      .input(z.object({
+        profileId: z.number(),
+        relayNumber: z.number(),
+        choiceId: z.string(),
+        choiceLabel: z.string(),
+        dilemmaTitle: z.string(),
+        archetype: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        return db.savePlayerDecision(input);
+      }),
+    getForProfile: publicProcedure
+      .input(z.object({ profileId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getPlayerDecisions(input.profileId);
+      }),
+  }),
 });
 export type AppRouter = typeof appRouter;

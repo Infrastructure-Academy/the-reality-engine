@@ -16,7 +16,7 @@ const EXPLORER_MODES = [
     glow: "hover:shadow-[0_0_40px_rgba(239,68,68,0.15)]",
     cta: "QUICK PLAY",
     ctaColor: "bg-red-600 hover:bg-red-500 text-white",
-    entry: "/explore/1",
+    entry: "/explore/prologue",
     badge: null,
   },
   {

@@ -1,0 +1,8 @@
+{
+  "query": "SELECT * FROM dcsn_nodes ORDER BY node_number;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT * FROM dcsn_nodes ORDER BY node_number;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'node_number' in 'order clause'"
+  ]
+}

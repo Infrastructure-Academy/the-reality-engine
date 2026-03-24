@@ -1,0 +1,52 @@
+{
+  "query": "SELECT * FROM contact_tags ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT * FROM contact_tags ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Active Member",
+      "color": "#22c55e",
+      "description": "Regularly participates in group discussions",
+      "createdAt": "2026-03-21 11:55:56"
+    },
+    {
+      "id": "2",
+      "name": "Committee",
+      "color": "#3b82f6",
+      "description": "AGN committee member",
+      "createdAt": "2026-03-21 11:55:56"
+    },
+    {
+      "id": "3",
+      "name": "Regional Lead",
+      "color": "#a855f7",
+      "description": "Regional chapter leader",
+      "createdAt": "2026-03-21 11:55:56"
+    },
+    {
+      "id": "4",
+      "name": "Beta Tester",
+      "color": "#f59e0b",
+      "description": "Signed up for TRE beta testing",
+      "createdAt": "2026-03-21 11:55:56"
+    },
+    {
+      "id": "5",
+      "name": "VIP",
+      "color": "#ef4444",
+      "description": "Key stakeholder or influential member",
+      "createdAt": "2026-03-21 11:55:56"
+    },
+    {
+      "id": "6",
+      "name": "Inactive",
+      "color": "#6b7280",
+      "description": "Has not been active recently",
+      "createdAt": "2026-03-21 11:55:56"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcolor\tdescription\tcreatedAt\n1\tActive Member\t#22c55e\tRegularly participates in group discussions\t2026-03-21 11:55:56\n2\tCommittee\t#3b82f6\tAGN committee member\t2026-03-21 11:55:56\n3\tRegional Lead\t#a855f7\tRegional chapter leader\t2026-03-21 11:55:56\n4\tBeta Tester\t#f59e0b\tSigned up for TRE beta testing\t2026-03-21 11:55:56\n5\tVIP\t#ef4444\tKey stakeholder or influential member\t2026-03-21 11:55:56\n6\tInactive\t#6b7280\tHas not been active recently\t2026-03-21 11:55:56\n",
+  "stderr": "",
+  "execution_time_ms": 1610
+}

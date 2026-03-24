@@ -22,6 +22,7 @@ import { SoundToggle } from "@/components/SoundToggle";
 import { VoiceToggle } from "@/components/VoiceToggle";
 import { narrateDiscovery, narrateRelayIntro, narrateRelayComplete, davidStop } from "@/hooks/useDavidVoice";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
+import { RelayDilemmaCard } from "@/components/RelayDilemma";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -431,6 +432,7 @@ export default function ExplorerRelay() {
   const [milestoneLevel, setMilestoneLevel] = useState<25 | 50 | 75 | 100 | null>(null);
   const [burstTrigger, setBurstTrigger] = useState(0);
   const [showRelaySummary, setShowRelaySummary] = useState(false);
+  const [showDilemma, setShowDilemma] = useState(false);
   const [relayStartTime] = useState(() => Date.now());
   const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -660,8 +662,21 @@ export default function ExplorerRelay() {
         {/* Discovery Particle Burst (JG feedback) */}
         <DiscoveryBurst trigger={burstTrigger} webColor={relayMeta.color} />
 
-        {/* Relay Summary Card — shown on relay completion */}
-        {showRelaySummary ? (
+        {/* Relay Summary Card → Dilemma → Next Relay flow */}
+        {showDilemma ? (
+          <RelayDilemmaCard
+            relayNumber={relayNum}
+            profileId={profileId}
+            onComplete={() => {
+              setShowDilemma(false);
+              if (canGoNext) {
+                playRelayTransitionSound();
+                hapticTransition();
+                navigate(`/explore/${relayNum + 1}`);
+              }
+            }}
+          />
+        ) : showRelaySummary ? (
           <RelaySummaryCard
             relayNumber={relayNum}
             inventionsFound={discoveredItems.size}
@@ -670,11 +685,7 @@ export default function ExplorerRelay() {
             timeSpent={Math.round((Date.now() - relayStartTime) / 1000)}
             onContinue={() => {
               setShowRelaySummary(false);
-              if (canGoNext) {
-                playRelayTransitionSound();
-                hapticTransition();
-                navigate(`/explore/${relayNum + 1}`);
-              }
+              setShowDilemma(true); // Transition to dilemma phase
             }}
             nextRelayNumber={canGoNext ? relayNum + 1 : undefined}
           />

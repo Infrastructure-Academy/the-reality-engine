@@ -1,0 +1,70 @@
+{
+  "query": "SELECT * FROM agn_contacts WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' OR name LIKE '%khan%' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT * FROM agn_contacts WHERE name LIKE '%Khanh%' OR name LIKE '%Huynh%' OR name LIKE '%khan%' LIMIT 10;",
+  "rows": [
+    {
+      "id": "52",
+      "name": "M. Shiraaz Khan",
+      "phone": "",
+      "displayName": "~ M. Shiraaz Khan",
+      "messageCount": "25",
+      "firstMessage": "22/3/2025",
+      "lastMessage": "8/2/2026",
+      "source": "whatsapp_agn",
+      "hasPlayed": "0",
+      "linkedProfileId": "NULL",
+      "notes": "NULL",
+      "createdAt": "2026-03-21 11:14:35",
+      "updatedAt": "2026-03-21 11:14:35"
+    },
+    {
+      "id": "65",
+      "name": "Muammar Khan",
+      "phone": "",
+      "displayName": "~ Muammar Khan",
+      "messageCount": "19",
+      "firstMessage": "15/5/2025",
+      "lastMessage": "26/2/2026",
+      "source": "whatsapp_agn",
+      "hasPlayed": "0",
+      "linkedProfileId": "NULL",
+      "notes": "NULL",
+      "createdAt": "2026-03-21 11:14:35",
+      "updatedAt": "2026-03-21 11:14:35"
+    },
+    {
+      "id": "168",
+      "name": "Omer Khan",
+      "phone": "",
+      "displayName": "~ Omer Khan",
+      "messageCount": "7",
+      "firstMessage": "7/2/2025",
+      "lastMessage": "5/12/2025",
+      "source": "whatsapp_agn",
+      "hasPlayed": "0",
+      "linkedProfileId": "NULL",
+      "notes": "NULL",
+      "createdAt": "2026-03-21 11:17:14",
+      "updatedAt": "2026-03-21 11:17:14"
+    },
+    {
+      "id": "374",
+      "name": "Ashfaq Khan",
+      "phone": "",
+      "displayName": "~ Ashfaq Khan",
+      "messageCount": "2",
+      "firstMessage": "12/2/2025",
+      "lastMessage": "14/2/2025",
+      "source": "whatsapp_agn",
+      "hasPlayed": "0",
+      "linkedProfileId": "NULL",
+      "notes": "NULL",
+      "createdAt": "2026-03-21 11:18:59",
+      "updatedAt": "2026-03-21 11:18:59"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tphone\tdisplayName\tmessageCount\tfirstMessage\tlastMessage\tsource\thasPlayed\tlinkedProfileId\tnotes\tcreatedAt\tupdatedAt\n52\tM. Shiraaz Khan\t\t~ M. Shiraaz Khan\t25\t22/3/2025\t8/2/2026\twhatsapp_agn\t0\tNULL\tNULL\t2026-03-21 11:14:35\t2026-03-21 11:14:35\n65\tMuammar Khan\t\t~ Muammar Khan\t19\t15/5/2025\t26/2/2026\twhatsapp_agn\t0\tNULL\tNULL\t2026-03-21 11:14:35\t2026-03-21 11:14:35\n168\tOmer Khan\t\t~ Omer Khan\t7\t7/2/2025\t5/12/2025\twhatsapp_agn\t0\tNULL\tNULL\t2026-03-21 11:17:14\t2026-03-21 11:17:14\n374\tAshfaq Khan\t\t~ Ashfaq Khan\t2\t12/2/2025\t14/2/2025\twhatsapp_agn\t0\tNULL\tNULL\t2026-03-21 11:18:59\t2026-03-21 11:18:59\n",
+  "stderr": "",
+  "execution_time_ms": 1632
+}

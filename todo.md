@@ -522,3 +522,38 @@
 
 ## iAAi Logo
 - [x] Replace header logo with iAAi logo from Infrastructure Academy main page
+- [ ] Fix header: remove redundant "THE REALITY ENGINE / INFRASTRUCTURE ACADEMY" text next to iAAi logo — logo is self-explanatory
+
+## Node 018 Khanh Huynh Feedback Implementation
+- [ ] Add narrative prologue before Relay 1 — "last human after midnight" framing with DAVID as guide
+- [ ] Add branching choice-matters mechanics to Explorer relay challenges (not just notecard flipping)
+- [ ] Fix header: remove redundant text labels next to iAAi logo
+
+## Hard Save DCSN + Governance (Node 018 + Tetrahedral Observer) — DEFERRED
+- [x] Create database tables: dcsn_nodes, feedback_reports, governance_records (schema added, migration generated)
+- [x] Apply migration and seed Node 018 Khanh Huynh data + all DCSN nodes (seeded 24 Mar 2026)
+- [x] Khanh Huynh record in database — Node 018, Marketing Intelligence, recruited by Node 002 Henry Leong
+- [ ] Seed Khanh's feedback report + Tetrahedral Observer governance model
+- [ ] Create public /governance page with full audit trail
+
+## CORRECTION — Misattributed WhatsApp Content (24 Mar 2026)
+- [x] Fix GDP Section 15: competitive landscape research was Khanh's independent contribution (confirmed), added context about his Marketing degree
+- [x] Fix GDP Section 16: architecture sharing was Nigel briefing Khanh, not Khanh demonstrating understanding
+- [x] Fix GDP Section 16: "proactive engagement" directive was Nigel instructing Khanh
+- [x] Regenerate Khanh iCard v2 with correct attribution (Khanh = Marketing Intelligence / Market Analyst)
+- [x] Update Governance Deck iCard subtitle/description
+- [x] Verify all references corrected across codebase
+
+## CRITICAL CORRECTION — Khanh Huynh Profile Was Entirely Wrong (24 Mar 2026)
+- [x] Khanh is NOT a civil engineering student — he is a Marketing graduate (summa cum laude), entrepreneur, Henry Leong's nephew
+- [x] Regenerate iCard v2 with correct profile
+- [x] Correct all GDP references
+- [x] Correct GovernanceDeck subtitle
+- [x] Correct analysis file
+
+## Node Register — Permanent Source of Truth (24 Mar 2026)
+- [x] CONFIRMED: Henry Leong is Node 002 in DCSN (NOT 009 — that is AIM personal network position)
+- [x] CONFIRMED: Khanh Huynh is Node 018 in DCSN, recruited by Node 002 Henry Leong (uncle)
+- [x] Create authoritative node-register.json with all known DCSN nodes
+- [x] Upload node-register.json to S3/CDN as permanent immutable source (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dcsn-node-register_2cbef876.json)
+- [x] Seed dcsn_nodes table — 3 nodes verified (000, 002, 018)
