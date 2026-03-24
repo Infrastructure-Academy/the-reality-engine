@@ -1,7 +1,10 @@
+import { useState, useRef } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Flame, Swords, Brain, Dices } from "lucide-react";
+import { ArrowLeft, Flame, Swords, Brain, Dices, Play, Volume2, VolumeX } from "lucide-react";
+
+const SIZZLE_REEL_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/sizzle-reel-explorer_73a1d64b.mp4";
 
 const EXPLORER_MODES = [
   {
@@ -66,6 +69,72 @@ const EXPLORER_MODES = [
   },
 ] as const;
 
+function SizzleReel() {
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handlePlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setPlaying(true);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="relative rounded-xl overflow-hidden border border-amber-500/20 max-w-2xl mx-auto"
+      style={{ boxShadow: "0 0 40px rgba(212,168,67,0.1)" }}
+    >
+      <video
+        ref={videoRef}
+        src={SIZZLE_REEL_URL}
+        muted={muted}
+        loop
+        playsInline
+        className="w-full aspect-video object-cover"
+        onEnded={() => setPlaying(false)}
+      />
+
+      {/* Play overlay */}
+      {!playing && (
+        <div
+          className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer"
+          onClick={handlePlay}
+        >
+          <div className="w-16 h-16 rounded-full bg-amber-500/20 backdrop-blur-sm flex items-center justify-center border border-amber-400/40">
+            <Play className="w-7 h-7 text-amber-300 ml-1" />
+          </div>
+        </div>
+      )}
+
+      {/* Mute toggle */}
+      {playing && (
+        <button
+          onClick={() => setMuted(!muted)}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/80 transition-colors"
+        >
+          {muted ? (
+            <VolumeX className="w-4 h-4 text-white/80" />
+          ) : (
+            <Volume2 className="w-4 h-4 text-white/80" />
+          )}
+        </button>
+      )}
+
+      {/* Title bar */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+        <p className="text-[10px] font-heading tracking-[0.2em] uppercase text-amber-300/80">
+          EXPLORER SIZZLE REEL — 3 MODES, 12 RELAYS, 91+ INVENTIONS
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ExplorerSelect() {
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
@@ -104,6 +173,13 @@ export default function ExplorerSelect() {
               Switch anytime without losing progress.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Sizzle Reel */}
+      <section className="relative z-10 pb-6">
+        <div className="container">
+          <SizzleReel />
         </div>
       </section>
 

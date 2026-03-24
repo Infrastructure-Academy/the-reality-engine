@@ -426,23 +426,23 @@
 - [x] Checkpoint and deliver
 
 ## Auto-Hide Watch Intro After First View
-- [ ] Update ExplorerVideo component with localStorage watched state
-- [ ] Auto-collapse after first complete view, show "Watched" indicator
+- [x] Update ExplorerVideo component with localStorage watched state
+- [x] Auto-collapse after first complete view, show "Watched" indicator with "tap to rewatch" option
 
 ## Pilot Portraits for MPNC Fleet
-- [ ] Generate pilot portrait: Scott (TB-1 Pathfinder)
-- [ ] Generate pilot portrait: Virgil (TB-2 Forgemaster)
-- [ ] Generate pilot portrait: Alan (TB-3 Starcaster)
-- [ ] Generate pilot portrait: Gordon (TB-4 Lifeline)
-- [ ] Generate pilot portrait: John (TB-5 Sentinel)
-- [ ] Upload pilot portraits to CDN
-- [ ] Embed pilot portraits on craft selection cards
+- [x] Generate pilot portrait: Scott (TB-1 Pathfinder)
+- [x] Generate pilot portrait: Virgil (TB-2 Forgemaster)
+- [x] Generate pilot portrait: Alan (TB-3 Starcaster)
+- [x] Generate pilot portrait: Gordon (TB-4 Lifeline)
+- [x] Generate pilot portrait: John (TB-5 Sentinel)
+- [x] Upload pilot portraits to CDN (all 5 on webdev CDN)
+- [x] Embed pilot portraits on craft selection cards (circular portrait + pilot name + callsign)
 
 ## Sizzle Reel for Explorer Select Page
-- [ ] Create 15-second sizzle reel from existing video clips
-- [ ] Upload sizzle reel to CDN
-- [ ] Embed sizzle reel on Explorer Select page
-- [ ] Checkpoint and deliver
+- [x] Create 15-second sizzle reel from V1+V2+V3 clips (5s each, crossfade transitions, 14s total)
+- [x] Upload sizzle reel to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/sizzle-reel-explorer_73a1d64b.mp4)
+- [x] Embed sizzle reel on Explorer Select page (between hero and mode cards, with play overlay and mute toggle)
+- [x] Checkpoint and deliver
 
 ## URGENT FIX — Scholar Video Wrong Visual Style
 - [x] Remove Scholar video from live site (wrong anime style for 18+ audience)
@@ -476,7 +476,7 @@
 - [x] Regenerate narration from scratch (pure voice WAV, zero music contamination)
 - [x] Audio bot verified (STT transcription + FFmpeg volumedetect, all 4 PASS)
 - [x] Upload final V4-B and V5 videos to CDN
-- [ ] Swap V4-B/V5 videos into live site pages (PENDING POLICE APPROVAL)
+- [x] Swap V4-B/V5 videos into live site pages (POLICE APPROVED 24 Mar 2026)
 
 ## V4-A Badge Update + Jonathan Green Inspector Feedback (24 Mar 2026)
 - [x] Update V4-A badge on landing page from APPROVED to REPLACED BY V4-B (grey strikethrough style)
@@ -533,8 +533,8 @@
 - [x] Create database tables: dcsn_nodes, feedback_reports, governance_records (schema added, migration generated)
 - [x] Apply migration and seed Node 018 Khanh Huynh data + all DCSN nodes (seeded 24 Mar 2026)
 - [x] Khanh Huynh record in database — Node 018, Marketing Intelligence, recruited by Node 002 Henry Leong
-- [ ] Seed Khanh's feedback report + Tetrahedral Observer governance model
-- [ ] Create public /governance page with full audit trail
+- [x] Seed Khanh's feedback report + Tetrahedral Observer governance model (+ SAP-001 + GDP-002)
+- [x] Create public /governance page with full audit trail (Audit Trail tab, live from DB, 3 sections)
 
 ## CORRECTION — Misattributed WhatsApp Content (24 Mar 2026)
 - [x] Fix GDP Section 15: competitive landscape research was Khanh's independent contribution (confirmed), added context about his Marketing degree
@@ -557,4 +557,13 @@
 - [x] Create authoritative node-register.json with all known DCSN nodes
 - [x] Upload node-register.json to S3/CDN as permanent immutable source (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/dcsn-node-register_2cbef876.json)
 - [x] Seed dcsn_nodes table — 3 nodes verified (000, 002, 018)
-- [x] Verified dilemma flow works end-to-end: Summary → Dilemma → DAVID Response → Archetype Reveal → Continue Journey
+
+## Anchor Nigel's Uploaded Documents to S3/CDN (24 Mar 2026)
+- [x] Upload Master To-Do Tracker PDF to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/IAAI-Master-ToDo-Tracker_e02bc2db.pdf)
+- [x] Upload Permanent Record Pi Day 2026 docx to webdev CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/PERMANENT-RECORD-PiDay2026_491ea63f.docx)
+- [x] Insert both into media_catalogue database
+
+## Police Approved — Swap V4-B/V5 Videos Into Live Site (24 Mar 2026)
+- [x] Swap V4-B Starborne into FlightDeck.tsx (already live from previous session)
+- [x] Swap V5-A Scholars Secret into ScholarCreate.tsx (already live from previous session)
+- [x] Update landing page badges from PENDING APPROVAL to APPROVED (all 4 videos)

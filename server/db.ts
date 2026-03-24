@@ -5,7 +5,7 @@ import {
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
   agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog,
-  playerDecisions
+  playerDecisions, governanceRecords, feedbackReports, dcsnNodes
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -771,6 +771,57 @@ export async function getPlayerDecisions(profileId: number) {
     return rows;
   } catch (error) {
     console.error("[Database] Failed to get player decisions:", error);
+    return [];
+  }
+}
+
+// ─── Governance Records ───
+export async function getGovernanceRecords() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const rows = await db.select().from(governanceRecords).orderBy(governanceRecords.createdAt);
+    return rows;
+  } catch (error) {
+    console.error("[Database] Failed to get governance records:", error);
+    return [];
+  }
+}
+
+export async function getGovernanceRecordById(recordId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const rows = await db.select().from(governanceRecords).where(eq(governanceRecords.recordId, recordId)).limit(1);
+    return rows[0] ?? null;
+  } catch (error) {
+    console.error("[Database] Failed to get governance record:", error);
+    return null;
+  }
+}
+
+// ─── Feedback Reports ───
+export async function getFeedbackReports() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const rows = await db.select().from(feedbackReports).orderBy(feedbackReports.createdAt);
+    return rows;
+  } catch (error) {
+    console.error("[Database] Failed to get feedback reports:", error);
+    return [];
+  }
+}
+
+// ─── DCSN Nodes ───
+export async function getDcsnNodes() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const rows = await db.select().from(dcsnNodes).orderBy(dcsnNodes.nodeNumber);
+    return rows;
+  } catch (error) {
+    console.error("[Database] Failed to get DCSN nodes:", error);
     return [];
   }
 }

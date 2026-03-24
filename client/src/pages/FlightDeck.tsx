@@ -307,12 +307,22 @@ export default function FlightDeck() {
 
                   <div className="p-5 pt-3">
                   <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="font-heading text-lg font-bold">{craft.name}</h3>
-                      <p className="text-[10px] text-cyan-400 font-mono">{craft.className} — {craft.role}</p>
-                    </div>
-                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                      <Rocket className="w-5 h-5 text-cyan-400" />
+                    <div className="flex items-center gap-3">
+                      {/* Pilot Portrait */}
+                      {craft.pilotImage && (
+                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-cyan-500/40 shrink-0">
+                          <img
+                            src={craft.pilotImage}
+                            alt={craft.pilot}
+                            className="w-full h-full object-cover object-top"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="font-heading text-lg font-bold">{craft.name}</h3>
+                        <p className="text-[10px] text-cyan-400 font-mono">{craft.pilot}</p>
+                        <p className="text-[9px] text-muted-foreground font-mono">{craft.className} — {craft.role}</p>
+                      </div>
                     </div>
                   </div>
 

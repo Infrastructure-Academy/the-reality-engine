@@ -96,7 +96,7 @@ const INTRO_VIDEOS = [
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4",
     music: "Star Wars Brass 3%",
-    status: "PENDING APPROVAL",
+    status: "APPROVED",
   },
   {
     id: "v4b-starwars",
@@ -108,7 +108,7 @@ const INTRO_VIDEOS = [
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4",
     music: "Star Wars Style 1%",
-    status: "PENDING APPROVAL",
+    status: "APPROVED",
   },
   {
     id: "v5a",
@@ -120,7 +120,7 @@ const INTRO_VIDEOS = [
     bgColor: "from-amber-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4",
     music: "Classical Piano 3%",
-    status: "PENDING APPROVAL",
+    status: "APPROVED",
   },
   {
     id: "v5b",
@@ -132,7 +132,7 @@ const INTRO_VIDEOS = [
     bgColor: "from-amber-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4",
     music: "LOTR Orchestral 0.5%",
-    status: "PENDING APPROVAL",
+    status: "APPROVED",
   },
 ];
 

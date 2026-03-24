@@ -523,6 +523,24 @@ export const appRouter = router({
     }),
   }),
 
+  // ─── Governance (Public Audit Trail) ───
+  governance: router({
+    records: publicProcedure.query(async () => {
+      return db.getGovernanceRecords();
+    }),
+    recordById: publicProcedure
+      .input(z.object({ recordId: z.string() }))
+      .query(async ({ input }) => {
+        return db.getGovernanceRecordById(input.recordId);
+      }),
+    feedbackReports: publicProcedure.query(async () => {
+      return db.getFeedbackReports();
+    }),
+    dcsnNodes: publicProcedure.query(async () => {
+      return db.getDcsnNodes();
+    }),
+  }),
+
   // ─── Decision Procedures (Branching Choice Mechanics) ───
   decisions: router({
     save: publicProcedure

@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Shield, AlertTriangle, BookOpen, Award, Lock,
   ChevronRight, Key, Eye, CheckCircle, FileText, Wrench,
-  ArrowDown, Users
+  ArrowDown, Users, Database, Globe, Activity, ExternalLink
 } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 // CDN URLs for iCard images
 const CDN = {
@@ -96,7 +97,162 @@ const POWER_TIERS = [
 const CA_CHAIN = ["ROE", "CA-001", "CA-002", "CA-003", "CA-004", "CA-005", "COST", "SAP-001", "CA-006"];
 const CA_LABELS = ["Undisclosed", "Failures", "Root Cause", "Cost", "Prevention", "Learning", "Cost", "Prevention", "Learning"];
 
-type Tab = "sap" | "power" | "gallery";
+type Tab = "sap" | "power" | "gallery" | "audit";
+
+// ─── Audit Trail Tab (Live from Database) ───
+function AuditTrailTab() {
+  const { data: govRecords, isLoading: govLoading } = trpc.governance.records.useQuery();
+  const { data: feedbackData, isLoading: fbLoading } = trpc.governance.feedbackReports.useQuery();
+  const { data: dcsnData, isLoading: dcsnLoading } = trpc.governance.dcsnNodes.useQuery();
+
+  const isLoading = govLoading || fbLoading || dcsnLoading;
+
+  const statusColor = (s: string) => {
+    if (s === "active" || s === "resolved") return "text-green-400 bg-green-500/10 border-green-500/30";
+    if (s === "draft" || s === "open") return "text-amber-400 bg-amber-500/10 border-amber-500/30";
+    if (s === "superseded" || s === "archived") return "text-slate-400 bg-slate-500/10 border-slate-500/30";
+    return "text-muted-foreground bg-muted/50 border-border/30";
+  };
+
+  return (
+    <motion.div key="audit" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
+      <div className="text-center space-y-3">
+        <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Live from Database — Full Transparency</p>
+        <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Audit Trail</h2>
+        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+          Every governance record, feedback report, and DCSN node — pulled live from the database. Nothing hidden.
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16">
+          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <>
+          {/* Governance Records */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-gold" />
+              <h3 className="font-heading text-lg text-gold">Governance Records</h3>
+              <span className="text-xs text-muted-foreground">({govRecords?.length ?? 0} records)</span>
+            </div>
+            <div className="space-y-3">
+              {govRecords?.map((rec: any) => (
+                <div key={rec.id} className="bg-card border border-border/50 rounded-xl p-5 space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs text-gold bg-gold/10 px-2 py-0.5 rounded">{rec.recordId}</span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColor(rec.govStatus)}`}>
+                          {rec.govStatus}
+                        </span>
+                      </div>
+                      <h4 className="font-heading text-foreground mt-2">{rec.title}</h4>
+                      <p className="text-xs text-muted-foreground mt-1">{rec.description}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-3 text-[10px] text-muted-foreground font-mono">
+                    <span>Type: {rec.recordType}</span>
+                    {rec.version && <span>v{rec.version}</span>}
+                    {rec.blockRef && <span>{rec.blockRef}</span>}
+                    {rec.compliance && <span className="text-green-400">{rec.compliance}</span>}
+                  </div>
+                  {rec.content && (
+                    <details className="text-xs">
+                      <summary className="cursor-pointer text-muted-foreground hover:text-foreground">View JSON content</summary>
+                      <pre className="mt-2 p-3 bg-background/50 rounded-lg overflow-x-auto text-[10px] font-mono text-foreground/70 max-h-48">
+                        {JSON.stringify(rec.content, null, 2)}
+                      </pre>
+                    </details>
+                  )}
+                  {rec.iCardUrl && (
+                    <img src={rec.iCardUrl} alt={rec.title} className="w-full max-h-64 object-contain rounded-lg border border-border/30" loading="lazy" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Feedback Reports */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-blue-400" />
+              <h3 className="font-heading text-lg text-blue-400">Feedback Reports</h3>
+              <span className="text-xs text-muted-foreground">({feedbackData?.length ?? 0} reports)</span>
+            </div>
+            <div className="space-y-3">
+              {feedbackData?.map((rep: any) => (
+                <div key={rep.id} className="bg-card border border-border/50 rounded-xl p-5 space-y-3">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded">
+                          Node {rep.nodeNumber ?? "—"}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColor(rep.reportStatus)}`}>
+                          {rep.reportStatus}
+                        </span>
+                        {rep.blockRef && <span className="text-[10px] font-mono text-muted-foreground">{rep.blockRef}</span>}
+                      </div>
+                      <h4 className="font-heading text-foreground mt-2">{rep.verdictTitle}</h4>
+                      <p className="text-[10px] text-muted-foreground">by {rep.reporterName} — {rep.reportDate} via {rep.source}</p>
+                    </div>
+                  </div>
+                  {rep.verdictDetails && <p className="text-xs text-foreground/80">{rep.verdictDetails}</p>}
+                  {rep.actionTitle && (
+                    <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-3">
+                      <p className="text-xs font-heading text-green-400">{rep.actionTitle}</p>
+                      {rep.actionDetails && <p className="text-xs text-foreground/70 mt-1">{rep.actionDetails}</p>}
+                    </div>
+                  )}
+                  {rep.prescription && (
+                    <p className="text-[10px] text-muted-foreground italic border-l-2 border-gold/30 pl-3">{rep.prescription}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* DCSN Nodes */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Globe className="w-5 h-5 text-purple-400" />
+              <h3 className="font-heading text-lg text-purple-400">DCSN Nodes</h3>
+              <span className="text-xs text-muted-foreground">({dcsnData?.length ?? 0} nodes)</span>
+            </div>
+            {dcsnData && dcsnData.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {dcsnData.map((node: any) => (
+                  <div key={node.id} className="bg-card border border-border/50 rounded-xl p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">
+                        Node {String(node.nodeNumber).padStart(3, "0")}
+                      </span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase ${statusColor(node.dcsnStatus ?? "activated")}`}>
+                        {node.dcsnStatus ?? "activated"}
+                      </span>
+                    </div>
+                    <h4 className="font-heading text-sm text-foreground">{node.name}</h4>
+                    {node.title && <p className="text-[10px] text-muted-foreground">{node.title}</p>}
+                    {node.role && <p className="text-[10px] text-foreground/60">{node.role}</p>}
+                    <div className="flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground">
+                      {node.cell && <span>{node.cell}</span>}
+                      {node.intel && <span>Intel: {node.intel}</span>}
+                      {node.access && <span>Access: {node.access}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground text-center py-8">No DCSN nodes in database yet.</p>
+            )}
+          </div>
+        </>
+      )}
+    </motion.div>
+  );
+}
 
 export default function GovernanceDeck() {
   const [activeTab, setActiveTab] = useState<Tab>("power");
@@ -123,10 +279,11 @@ export default function GovernanceDeck() {
 
       {/* Tab Navigation */}
       <div className="border-b border-border/50 bg-card/50">
-        <div className="container flex gap-1 py-2">
+        <div className="container flex gap-1 py-2 overflow-x-auto">
           {([
             { id: "power" as Tab, label: "Power Card", icon: Award },
             { id: "sap" as Tab, label: "SAP-001", icon: Shield },
+            { id: "audit" as Tab, label: "Audit Trail", icon: Database },
             { id: "gallery" as Tab, label: "iCard Gallery", icon: BookOpen },
           ]).map(tab => {
             const Icon = tab.icon;
@@ -134,7 +291,7 @@ export default function GovernanceDeck() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-gold/15 text-gold border border-gold/30"
                     : "text-muted-foreground hover:text-foreground hover:bg-card"
@@ -210,7 +367,7 @@ export default function GovernanceDeck() {
               </div>
 
               {/* Progression */}
-              <div className="text-center space-y-3">
+              <div className="bg-card border border-border/50 rounded-xl p-6">
                 <div className="flex items-center justify-center gap-3 text-sm flex-wrap">
                   <span className="text-blue-400 font-heading">Context</span>
                   <ArrowDown className="w-4 h-4 text-muted-foreground rotate-[-90deg]" />
@@ -351,6 +508,9 @@ export default function GovernanceDeck() {
               </p>
             </motion.div>
           )}
+
+          {/* ─── AUDIT TRAIL (Live DB) ─── */}
+          {activeTab === "audit" && <AuditTrailTab />}
 
           {/* ─── iCARD GALLERY ─── */}
           {activeTab === "gallery" && (

@@ -24,7 +24,6 @@ interface RelayDilemmaProps {
 }
 
 export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDilemmaProps) {
-  console.log("[DILEMMA] RelayDilemmaCard MOUNTED for relay", relayNumber, "profileId:", profileId);
   const [phase, setPhase] = useState<"loading" | "dilemma" | "response">("loading");
   const [selectedChoice, setSelectedChoice] = useState<DilemmaChoice | null>(null);
   const [isNarrating, setIsNarrating] = useState(false);
@@ -48,30 +47,26 @@ export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDi
   // Handle skip cases in useEffect (never during render)
   // Use ref for onComplete to avoid re-triggering when parent re-renders
   useEffect(() => {
-    console.log("[DILEMMA] useEffect fired", { skipFired: skipFired.current, dilemma: !!dilemma, profileId, decisionsLoading, alreadyAnswered });
-    if (skipFired.current) { console.log("[DILEMMA] SKIP: already fired"); return; }
+    if (skipFired.current) return;
 
     // No dilemma content for this relay — skip
     if (!dilemma) {
-      console.log("[DILEMMA] SKIP: no dilemma for relay", relayNumber);
       skipFired.current = true;
       setTimeout(() => onCompleteRef.current(), 0);
       return;
     }
 
     // Still loading decisions — wait
-    if (profileId && decisionsLoading) { console.log("[DILEMMA] WAITING: decisions loading"); return; }
+    if (profileId && decisionsLoading) return;
 
     // Already answered — skip
     if (alreadyAnswered) {
-      console.log("[DILEMMA] SKIP: already answered");
       skipFired.current = true;
       setTimeout(() => onCompleteRef.current(), 0);
       return;
     }
 
     // Ready to show dilemma
-    console.log("[DILEMMA] SHOWING dilemma!");
     setPhase("dilemma");
   }, [dilemma, alreadyAnswered, decisionsLoading, profileId]);
 

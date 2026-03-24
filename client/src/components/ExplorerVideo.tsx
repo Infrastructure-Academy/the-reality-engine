@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X, Volume2, VolumeX } from "lucide-react";
+import { Play, X, Volume2, VolumeX, Check } from "lucide-react";
 
 interface ExplorerVideoProps {
   videoUrl: string;
@@ -8,12 +8,42 @@ interface ExplorerVideoProps {
   subtitle: string;
   accentColor: string;
   glowColor: string;
+  /** Unique key for localStorage tracking (defaults to videoUrl hash) */
+  storageKey?: string;
 }
 
-export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor }: ExplorerVideoProps) {
+function getWatchedKey(videoUrl: string, storageKey?: string): string {
+  return `tre-video-watched:${storageKey ?? videoUrl}`;
+}
+
+export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, storageKey }: ExplorerVideoProps) {
   const [showVideo, setShowVideo] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [hasWatched, setHasWatched] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Check localStorage on mount
+  useEffect(() => {
+    try {
+      const key = getWatchedKey(videoUrl, storageKey);
+      const watched = localStorage.getItem(key);
+      if (watched === "true") {
+        setHasWatched(true);
+      }
+    } catch {
+      // localStorage unavailable
+    }
+  }, [videoUrl, storageKey]);
+
+  const markWatched = useCallback(() => {
+    try {
+      const key = getWatchedKey(videoUrl, storageKey);
+      localStorage.setItem(key, "true");
+      setHasWatched(true);
+    } catch {
+      // localStorage unavailable
+    }
+  }, [videoUrl, storageKey]);
 
   const handleClose = () => {
     setShowVideo(false);
@@ -23,27 +53,45 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
     }
   };
 
+  const handleEnded = () => {
+    markWatched();
+    handleClose();
+  };
+
   return (
     <>
-      {/* Compact "Watch Intro" button */}
+      {/* Compact "Watch Intro" / "Watched" button */}
       {!showVideo && (
         <motion.button
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={() => setShowVideo(true)}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border/40 bg-card/20 backdrop-blur-sm hover:bg-card/40 transition-all group mb-4"
-          style={{ borderColor: `${accentColor}30` }}
+          className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border/40 backdrop-blur-sm transition-all group mb-4 ${
+            hasWatched ? "bg-card/10 opacity-70 hover:opacity-100" : "bg-card/20 hover:bg-card/40"
+          }`}
+          style={{ borderColor: `${accentColor}${hasWatched ? "15" : "30"}` }}
         >
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
-            style={{ backgroundColor: `${accentColor}20`, boxShadow: `0 0 12px ${glowColor}` }}
+            style={{
+              backgroundColor: `${accentColor}${hasWatched ? "10" : "20"}`,
+              boxShadow: hasWatched ? "none" : `0 0 12px ${glowColor}`,
+            }}
           >
-            <Play className="w-3.5 h-3.5 ml-0.5" style={{ color: accentColor }} />
+            {hasWatched ? (
+              <Check className="w-3.5 h-3.5" style={{ color: accentColor }} />
+            ) : (
+              <Play className="w-3.5 h-3.5 ml-0.5" style={{ color: accentColor }} />
+            )}
           </div>
           <span className="text-xs font-heading tracking-wider uppercase" style={{ color: accentColor }}>
-            Watch Intro
+            {hasWatched ? "Watched" : "Watch Intro"}
           </span>
-          <span className="text-[10px] text-muted-foreground">({subtitle})</span>
+          {hasWatched ? (
+            <span className="text-[10px] text-muted-foreground">(tap to rewatch)</span>
+          ) : (
+            <span className="text-[10px] text-muted-foreground">({subtitle})</span>
+          )}
         </motion.button>
       )}
 
@@ -67,7 +115,7 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
                 muted={muted}
                 playsInline
                 className="w-full aspect-video object-cover"
-                onEnded={handleClose}
+                onEnded={handleEnded}
               />
 
               {/* Controls overlay */}
