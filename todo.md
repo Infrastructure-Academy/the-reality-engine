@@ -592,3 +592,9 @@
 - [x] Write AI Truth Failure finding to thesis permanent record
 - [x] Seed governance record: AI-TRUTH-001 — Persistent Storage Confirmation Failure (full JSON with 6-step pattern, root cause, evidence URLs, corrective actions)
 - [x] Checkpoint (271 tests, 12 files, all pass)
+
+## Block 408 — Anchor 20 Original iCard Images to CDN
+- [x] Upload all 20 iCard images (IMG_0718-IMG_0737) to CDN — 20/20 SUCCESS
+- [x] Record all 20 CDN URLs in iCard-originals-CDN-manifest.txt
+- [x] Catalogue all 20 in media_catalogue database (category: icard, bridge: DCSN, tags: icard,dcsn,d20,original)
+- [ ] Checkpoint
