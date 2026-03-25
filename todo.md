@@ -690,3 +690,4 @@
 ## Block 412f — Bug Fix: Video Thumbnails Not Loading
 - [x] Investigate why video thumbnail images are blank in Youth Intro Videos section — iOS Safari blocks video metadata preload
 - [x] Fix thumbnail display — added poster attribute using existing mode cards (V1-V3) and keyframe images (V4-V5)
+- [x] Fix all 8 video poster images — extracted first frames with red title banners from all videos (V1-V5), all on CDN
