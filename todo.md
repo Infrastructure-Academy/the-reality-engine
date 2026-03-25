@@ -598,3 +598,24 @@
 - [x] Record all 20 CDN URLs in iCard-originals-CDN-manifest.txt
 - [x] Catalogue all 20 in media_catalogue database (category: icard, bridge: DCSN, tags: icard,dcsn,d20,original)
 - [ ] Checkpoint
+
+## Block 409 — Site Downtime Investigation + 5-Bot Audit Fixes
+### CRITICAL (from 5-Bot Audit)
+- [ ] Investigate: TRE GAME site completely DOWN (HTTP error)
+- [ ] Investigate: CHART ROOM site completely DOWN (HTTP error)
+- [ ] Fix: ACAD meta keywords/SEO text rendering as visible text at top of page
+- [ ] Fix: ACAD ODYSSEY progress bar broken rendering
+### MAJOR (from 5-Bot Audit)
+- [ ] Fix: Wrong date "2025" should be "2026"
+- [ ] Fix: Missing alt text on multiple images
+- [ ] Fix: Some images pixelated in MEDIA section
+### GOVERNANCE
+- [ ] Record governance finding: SITE-AVAIL-001 — Site availability failure during external audit
+- [ ] Checkpoint
+
+## Block 409 — Downtime iCards for Police
+- [x] Generate iCard: Site Status Proof (correct URL live, wrong URL 404)
+- [x] Generate iCard: Downtime Failure Record (SITE-AVAIL-001, root cause, corrective action)
+- [x] Anchor both iCards to CDN (auto-anchored via --webdev upload)
+- [x] Seed governance record SITE-AVAIL-001 (incident_report, CRITICAL, B409)
+- [ ] Checkpoint
