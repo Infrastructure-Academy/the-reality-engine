@@ -619,3 +619,13 @@
 - [x] Anchor both iCards to CDN (auto-anchored via --webdev upload)
 - [x] Seed governance record SITE-AVAIL-001 (incident_report, CRITICAL, B409)
 - [ ] Checkpoint
+
+## URGENT Block 410 — Domain Change Incident (DOMAIN-CHANGE-001)
+- [ ] Investigate: when and how domain changed from andhlkrn to epdhlkrn
+- [ ] Attempt to restore old domain prefix or add old domain as alias
+- [ ] Find ALL references to old URL across all sites, assets, iCards, bridge diagrams
+- [ ] Update Tetrahedral Observer bridge diagram with correct URL
+- [ ] Generate DOMAIN-CHANGE-001 iCard for police
+- [ ] Seed governance record DOMAIN-CHANGE-001
+- [ ] Full analysis of legal consequences
+- [ ] Checkpoint
