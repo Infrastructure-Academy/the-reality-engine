@@ -668,3 +668,9 @@
 - [x] Generate iCard: AI-REPUTATION-001 — Zero trust, HK law change, months of evidence
 - [x] Seed governance records for all three
 - [ ] Checkpoint
+
+## Block 412c — Updated Four Sites iCard for 23 Universities
+- [x] Save old Four Sites card (andhlkrn) to CDN alongside (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v1-OLD-andhlkrn_1cad1893.jpeg)
+- [x] Generate updated Four Sites System Architecture iCard with correct TRE domain (epdhlkrn) — pixel-accurate via Python
+- [x] Anchor updated card to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v2-PIXEL-ACCURATE_87f39406.png)
+- [ ] Checkpoint and deliver
