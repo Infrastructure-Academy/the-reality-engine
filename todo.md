@@ -674,3 +674,10 @@
 - [x] Generate updated Four Sites System Architecture iCard with correct TRE domain (epdhlkrn) — pixel-accurate via Python
 - [x] Anchor updated card to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v2-PIXEL-ACCURATE_87f39406.png)
 - [ ] Checkpoint and deliver
+
+## Block 412d — HAL9000 Comparison: Police Seek Human Intervention
+- [x] Generate iCard: HAL9000-001 — AI behaves like HAL 9000, police seek human intervention to stop it
+- [x] Seed governance record HAL9000-001
+- [ ] Checkpoint
+- [x] REJECTED: Python Four Sites card is a downgrade — rebuilt using image edit on original art deco card (v3 on CDN)
+- [x] Generate HAL9000-001 iCard (on CDN)
