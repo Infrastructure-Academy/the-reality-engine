@@ -1,0 +1,112 @@
+{
+  "query": "SELECT nodeNumber, name, title, dcsnStatus FROM dcsn_nodes ORDER BY nodeNumber;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT nodeNumber, name, title, dcsnStatus FROM dcsn_nodes ORDER BY nodeNumber;",
+  "rows": [
+    {
+      "nodeNumber": "0",
+      "name": "Nigel Dearden",
+      "title": "The Architect",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "1",
+      "name": "Peggy Dearden",
+      "title": "The Fulcrum",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "2",
+      "name": "Helen Zavacky",
+      "title": "The First Observer",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "3",
+      "name": "Mark Fisher",
+      "title": "The Pioneer",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "4",
+      "name": "Johnny Lai",
+      "title": "The Recruiter Who Reads",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "5",
+      "name": "Oliver Mowbray",
+      "title": "The Thinker at the Pier",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "6",
+      "name": "Louise Barrington",
+      "title": "The Arbitrator & Diver",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "7",
+      "name": "Cameron Reay",
+      "title": "The Drummer",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "8",
+      "name": "Jonathan Green",
+      "title": "The Inspector",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "9",
+      "name": "Henry Leong",
+      "title": "Dinosaurs to AI",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "10",
+      "name": "Arthur Lin",
+      "title": "Dinosaurs to AI",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "11",
+      "name": "Daoping Bao",
+      "title": "Dinosaurs to AI",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "12",
+      "name": "Michael Wu",
+      "title": "Dinosaurs to AI",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "13",
+      "name": "Liam Eric McDowell",
+      "title": "The Pioneer",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "14",
+      "name": "Will Hodgson",
+      "title": "Architect of Exchange",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "15",
+      "name": "Richie Cross",
+      "title": "Diamond Broker",
+      "dcsnStatus": "activated"
+    },
+    {
+      "nodeNumber": "16",
+      "name": "Scott",
+      "title": "The Master Builder",
+      "dcsnStatus": "activated"
+    }
+  ],
+  "messages": [],
+  "stdout": "nodeNumber\tname\ttitle\tdcsnStatus\n0\tNigel Dearden\tThe Architect\tactivated\n1\tPeggy Dearden\tThe Fulcrum\tactivated\n2\tHelen Zavacky\tThe First Observer\tactivated\n3\tMark Fisher\tThe Pioneer\tactivated\n4\tJohnny Lai\tThe Recruiter Who Reads\tactivated\n5\tOliver Mowbray\tThe Thinker at the Pier\tactivated\n6\tLouise Barrington\tThe Arbitrator & Diver\tactivated\n7\tCameron Reay\tThe Drummer\tactivated\n8\tJonathan Green\tThe Inspector\tactivated\n9\tHenry Leong\tDinosaurs to AI\tactivated\n10\tArthur Lin\tDinosaurs to AI\tactivated\n11\tDaoping Bao\tDinosaurs to AI\tactivated\n12\tMichael Wu\tDinosaurs to AI\tactivated\n13\tLiam Eric McDowell\tThe Pioneer\tactivated\n14\tWill Hodgson\tArchitect of Exchange\tactivated\n15\tRichie Cross\tDiamond Broker\tactivated\n16\tScott\tThe Master Builder\tactivated\n",
+  "stderr": "",
+  "execution_time_ms": 1603
+}

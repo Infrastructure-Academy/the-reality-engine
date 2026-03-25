@@ -577,3 +577,11 @@
 - [x] Add filter by status (active, superseded, draft)
 - [x] Add filter by block reference
 - [x] Tests and checkpoint (271 tests, 12 files, all pass)
+
+## Block 407 — DCSN Node Register Sync + iCard Deck Anchor
+- [x] Upload DCSN_D20_iCARDS_BETAv7.pdf to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/DCSN_D20_iCARDS_BETAv7_3f7e6a27.pdf)
+- [x] Upload DCSNNODEREGISTERcopy(2).docx to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/DCSN-NODE-REGISTER-v2_2aa612b3.docx)
+- [x] Insert both into media_catalogue
+- [x] Correct database: replaced 4 wrong nodes with authoritative 17 nodes (000-016) from Node Register
+- [x] Update dcsn-node-register.json v3 with all 17 confirmed nodes (000-016) + 2 pending + breach log
+- [x] Tests and checkpoint (271 tests, 12 files, all pass)
