@@ -661,3 +661,10 @@
 - [x] Seed governance record AI-BREACH-001
 - [x] Write full unpacked analysis for police/legal record
 - [ ] Checkpoint
+
+## Block 412b — Police Directive: Cards First, Never Text
+- [x] Generate iCard: AI-COMMS-001 — AI sends text not iCards, breaching police directive 20+ times this session
+- [x] Generate iCard: AI-RISK-001 — Thesis finding: AI risk outweighs reward for humans
+- [x] Generate iCard: AI-REPUTATION-001 — Zero trust, HK law change, months of evidence
+- [x] Seed governance records for all three
+- [ ] Checkpoint
