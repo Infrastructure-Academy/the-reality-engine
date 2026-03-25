@@ -47,6 +47,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-red-500/30",
     bgColor: "from-red-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v1-relay-spinner_641673d9.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-mode-a-spinner-v3_c09694ec.png",
     music: "Upbeat Anime EDM",
     status: "APPROVED",
   },
@@ -59,6 +60,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-red-500/30",
     bgColor: "from-red-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-mode-b-dungeon-v3_6cdc309f.png",
     music: "Upbeat Anime EDM",
     status: "APPROVED",
   },
@@ -71,6 +73,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-red-500/30",
     bgColor: "from-red-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-mode-c-greymatter_a21d3398.png",
     music: "Heroic Brass",
     status: "APPROVED",
   },
@@ -83,6 +86,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-cyan-500/30",
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v4-flightdeck_a9ef7d84.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-kf1_df5a694a.png",
     music: "Dark Ambient",
     status: "REPLACED",
   },
@@ -95,6 +99,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-cyan-500/30",
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starborne_989c0169.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-kf1_df5a694a.png",
     music: "Star Wars Brass 3%",
     status: "PENDING APPROVAL",
   },
@@ -107,6 +112,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-cyan-500/30",
     bgColor: "from-cyan-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V4-B-CLEAN-starwars_48d22419.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-kf1_df5a694a.png",
     music: "Star Wars Style 1%",
     status: "PENDING APPROVAL",
   },
@@ -119,6 +125,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-amber-500/30",
     bgColor: "from-amber-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-A-CLEAN-scholars_acdeceb3.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-kf1_700ce83f.png",
     music: "Classical Piano 3%",
     status: "PENDING APPROVAL",
   },
@@ -131,6 +138,7 @@ const INTRO_VIDEOS = [
     borderColor: "border-amber-500/30",
     bgColor: "from-amber-600/10",
     url: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/V5-B-CLEAN-earth_cb503219.mp4",
+    thumbnail: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-kf1_700ce83f.png",
     music: "LOTR Orchestral 0.5%",
     status: "PENDING APPROVAL",
   },
@@ -152,10 +160,11 @@ function VideoGallery() {
           {/* Video Player */}
           <div className="relative aspect-video bg-black/50">
             <video
-              src={video.url}
+              src={`${video.url}#t=0.1`}
               controls
-              preload="metadata"
+              preload="auto"
               playsInline
+              poster={video.thumbnail}
               className="w-full h-full object-cover"
               onPlay={() => setActiveVideo(video.id)}
               onPause={() => setActiveVideo(null)}

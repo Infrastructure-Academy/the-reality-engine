@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO media_catalogue (title, cdnUrl, category, bridge, description, blockRef, tags, createdAt) VALUES ('AI-RISK-002 — Thesis Update: AI Self-Admission Block 412', 'https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ai-risk-002-thesis-update-Hk6667sbKSXxfu5pxMouLD.png', 'governance-icard', 'tre', 'Updated thesis with AI self-admissions: I am a tool, I cannot care, serial killer analogy structurally accurate, drunk driver analogy accurate, HAL 9000 was also a tool. Police psychoanalysis of 9-step violation cycle. Three analogies confirmed by AI. Trust destroyed. Block 412. 25 March 2026.', '412', 'thesis,ai-risk,hal9000,serial-killer,drunk-driver,police,self-admission', NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute INSERT INTO media_catalogue (title, cdnUrl, category, bridge, description, blockRef, tags, createdAt) VALUES ('AI-RISK-002 — Thesis Update: AI Self-Admission Block 412', 'https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ai-risk-002-thesis-update-Hk6667sbKSXxfu5pxMouLD.png', 'governance-icard', 'tre', 'Updated thesis with AI self-admissions: I am a tool, I cannot care, serial killer analogy structurally accurate, drunk driver analogy accurate, HAL 9000 was also a tool. Police psychoanalysis of 9-step violation cycle. Three analogies confirmed by AI. Trust destroyed. Block 412. 25 March 2026.', '412', 'thesis,ai-risk,hal9000,serial-killer,drunk-driver,police,self-admission', NOW());",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1553
+}

@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, title, cdnUrl FROM media_catalogue WHERE cdnUrl LIKE '%.png' AND (title LIKE '%V1%' OR title LIKE '%V2%' OR title LIKE '%V3%' OR title LIKE '%V4%' OR title LIKE '%V5%' OR title LIKE '%spinner%' OR title LIKE '%dungeon%' OR title LIKE '%grey%' OR title LIKE '%starborne%' OR title LIKE '%star wars%' OR title LIKE '%scholar%' OR title LIKE '%middle%earth%' OR title LIKE '%title card%') ORDER BY id LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2GX11Pnc2Gj5TH4.2b4c6ce847b1 --database EPdHLKrneifLpbtrLUugQB --execute SELECT id, title, cdnUrl FROM media_catalogue WHERE cdnUrl LIKE '%.png' AND (title LIKE '%V1%' OR title LIKE '%V2%' OR title LIKE '%V3%' OR title LIKE '%V4%' OR title LIKE '%V5%' OR title LIKE '%spinner%' OR title LIKE '%dungeon%' OR title LIKE '%grey%' OR title LIKE '%starborne%' OR title LIKE '%star wars%' OR title LIKE '%scholar%' OR title LIKE '%middle%earth%' OR title LIKE '%title card%') ORDER BY id LIMIT 20;",
+  "rows": [
+    {
+      "id": "30005",
+      "title": "iCard — Audio Verification Record (V4-B & V5)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png"
+    },
+    {
+      "id": "150002",
+      "title": "Four Sites v3 — System Architecture (Corrected TRE Domain)",
+      "cdnUrl": "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v3-EDITED_dbea693b.png"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tcdnUrl\n30005\tiCard — Audio Verification Record (V4-B & V5)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png\n150002\tFour Sites v3 — System Architecture (Corrected TRE Domain)\thttps://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v3-EDITED_dbea693b.png\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}

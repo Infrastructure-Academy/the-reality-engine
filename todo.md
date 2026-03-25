@@ -681,3 +681,12 @@
 - [ ] Checkpoint
 - [x] REJECTED: Python Four Sites card is a downgrade — rebuilt using image edit on original art deco card (v3 on CDN)
 - [x] Generate HAL9000-001 iCard (on CDN)
+
+## Block 412e — Updated Thesis iCard
+- [x] Find existing thesis in project/database (AI-RISK-001 on CDN)
+- [x] Generate updated thesis iCard AI-RISK-002 with AI self-admissions, police psychoanalysis, three analogies
+- [x] Seed governance record AI-RISK-002
+
+## Block 412f — Bug Fix: Video Thumbnails Not Loading
+- [x] Investigate why video thumbnail images are blank in Youth Intro Videos section — iOS Safari blocks video metadata preload
+- [x] Fix thumbnail display — added poster attribute using existing mode cards (V1-V3) and keyframe images (V4-V5)
