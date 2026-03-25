@@ -585,3 +585,10 @@
 - [x] Correct database: replaced 4 wrong nodes with authoritative 17 nodes (000-016) from Node Register
 - [x] Update dcsn-node-register.json v3 with all 17 confirmed nodes (000-016) + 2 pending + breach log
 - [x] Tests and checkpoint (271 tests, 12 files, all pass)
+
+## Block 407b — AI Truth Failure Record (Police Finding)
+- [x] Anchor IMG_3237 (iCard gallery) to CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-gallery-evidence-11Mar2026_a1daedba.jpeg
+- [x] Anchor IMG_3238 (Node 000 iCard) to CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/Node000-iCard-evidence-11Mar2026_4570afb5.png
+- [x] Write AI Truth Failure finding to thesis permanent record
+- [x] Seed governance record: AI-TRUTH-001 — Persistent Storage Confirmation Failure (full JSON with 6-step pattern, root cause, evidence URLs, corrective actions)
+- [x] Checkpoint (271 tests, 12 files, all pass)
