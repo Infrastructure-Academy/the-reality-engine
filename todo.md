@@ -694,3 +694,8 @@
 - [x] Generate 5 new animated title card images for V4A, V4B-Starborne, V4B-StarWars, V5A, V5B matching V1-V3 style
 - [x] Replace opening title card frame only in each video using ffmpeg (all audio and remaining video preserved)
 - [x] Upload new videos and poster frames to CDN, update site code with new URLs
+
+## Block 412h — Fix V4/V5 Title Cards: Age-Appropriate Characters
+- [x] V4A, V4B-Starborne, V4B-StarWars: same art, different banner text only (VIDEO 4 -- FLIGHT DECK / STARBORNE / STAR WARS)
+- [x] V5A, V5B: same art, different banner text only (VIDEO 5 -- SCHOLAR'S SECRET / MIDDLE-EARTH)
+- [x] Composited red banners, replaced opening frames in videos, uploaded to CDN, updated site code
