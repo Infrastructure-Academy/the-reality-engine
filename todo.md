@@ -691,3 +691,6 @@
 - [x] Investigate why video thumbnail images are blank in Youth Intro Videos section — iOS Safari blocks video metadata preload
 - [x] Fix thumbnail display — added poster attribute using existing mode cards (V1-V3) and keyframe images (V4-V5)
 - [x] Fix all 8 video poster images — extracted first frames with red title banners from all videos (V1-V5), all on CDN
+- [x] Generate 5 new animated title card images for V4A, V4B-Starborne, V4B-StarWars, V5A, V5B matching V1-V3 style
+- [x] Replace opening title card frame only in each video using ffmpeg (all audio and remaining video preserved)
+- [x] Upload new videos and poster frames to CDN, update site code with new URLs
