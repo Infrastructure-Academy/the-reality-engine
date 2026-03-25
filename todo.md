@@ -636,4 +636,28 @@
 - [x] Fixed 6 pages: ChallengeLanding (+SiteHeader), GreyMatter (+SiteHeader), NotFound (+SiteHeader), RelaySpinner (+home link), DungeonCrawl (+home link x2), Prologue (+home link on D icon)
 - [x] All 25 pages now have header + home navigation confirmed
 - [x] 271 tests passing, 12 files
+- [x] Checkpoint (ba7c7a7b)
+
+## URGENT Block 412 — Old Domain Redirect
+- [ ] Implement redirect from old URL to current live URL
+- [ ] Deploy and verify
+- [ ] Checkpoint
+
+## Block 412 — SAP-001 Protocol Compliance + Governance Cards Anchored
+- [x] SAP-001 Phase 1: Read HARD_PROTOCOLS
+- [x] SAP-001 Phase 1: Read last Block number (B411)
+- [x] SAP-001 Phase 1: Read todo.md
+- [x] SAP-001 Phase 1: Save uploaded GOV_POWER_CARD(15).png to CDN immediately (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/GOV_POWER_CARD_15_e48ac916.png)
+- [x] SAP-001 Phase 1: Save uploaded IMG_9139(3).jpeg (SAP-001 card) to CDN immediately (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/SAP-001_IMG_9139_3_6c5202d3.jpeg)
+- [x] Catalogue both cards in media_catalogue database
+- [x] Seed DOMAIN-BREAK-002 governance record with full impact chain
+- [x] Update HARD_PROTOCOLS.md with new CDN URLs for governance cards
+- [ ] Fix all pending Block 409/410 items per 5-Bot audit
+- [ ] Checkpoint
+- [x] Generate iCard: DOMAIN-BREAK-002 — Full Impact Chain (social media, government links, USA compliance, iCard references, physical harm)
+- [x] Anchor DOMAIN-BREAK-002 iCard to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-domain-break-002-eiysPh7RaEg5Z4J3Bzsb4M.png)
+- [x] Save Walkby 4-Level Control Hierarchy v3 to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/WALKBY_4LEVEL_v3_ccdafeac.png)
+- [x] Generate iCard: AI-BREACH-001 — AI changed website name (Level 1 Nigel-Only violation under The Walkby) (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ai-breach-001-h5xfFcfhfV8W7np4yJTUme.png)
+- [x] Seed governance record AI-BREACH-001
+- [x] Write full unpacked analysis for police/legal record
 - [ ] Checkpoint

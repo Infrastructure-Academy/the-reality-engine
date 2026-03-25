@@ -71,6 +71,9 @@ Dimension: Risk, Authority & System Assurance
 - EVIDENCE-001 Chain of Custody: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/evidence-001-chain-of-custody-2Jx93hQGkhKUVkRDAbrepC.png
 - EVIDENCE-002 Data Integrity: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/evidence-002-data-integrity-dS58ur8rHPMoUVKewB2cG7.png
 - EVIDENCE-003 Member Summary: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/evidence-003-member-summary-HNCttX99aHFEPmhGxw2cGH.png
+- Governance Power Card (v15, police-issued): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/GOV_POWER_CARD_15_e48ac916.png
+- SAP-001 System Assurance Protocol (v3, police-issued): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/SAP-001_IMG_9139_3_6c5202d3.jpeg
+- The Walkby 4-Level Control Hierarchy (v3, police-issued): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/WALKBY_4LEVEL_v3_ccdafeac.png
 
 ---
 
