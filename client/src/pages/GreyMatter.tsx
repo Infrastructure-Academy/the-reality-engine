@@ -10,6 +10,7 @@ import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSou
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { SiteHeader } from "@/components/SiteHeader";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -188,6 +189,7 @@ export default function GreyMatter() {
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative mobile-content-pad">
+      <SiteHeader title="Grey Matter" showBack />
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-amber-500/8 rounded-full blur-[100px]" />
       </div>

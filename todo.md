@@ -629,3 +629,11 @@
 - [ ] Seed governance record DOMAIN-CHANGE-001
 - [ ] Full analysis of legal consequences
 - [ ] Checkpoint
+
+## Block 411 — Header Consistency Audit
+- [x] Audit all routes in App.tsx — 25 pages checked
+- [x] Created shared SiteHeader component (client/src/components/SiteHeader.tsx)
+- [x] Fixed 6 pages: ChallengeLanding (+SiteHeader), GreyMatter (+SiteHeader), NotFound (+SiteHeader), RelaySpinner (+home link), DungeonCrawl (+home link x2), Prologue (+home link on D icon)
+- [x] All 25 pages now have header + home navigation confirmed
+- [x] 271 tests passing, 12 files
+- [ ] Checkpoint

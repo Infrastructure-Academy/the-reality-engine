@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Volume2, VolumeX } from "lucide-react";
@@ -144,9 +144,11 @@ export default function Prologue() {
       {/* Top controls */}
       <header className="relative z-10 flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-            <span className="text-[10px] font-bold text-black">D</span>
-          </div>
+          <Link href="/">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center cursor-pointer">
+              <span className="text-[10px] font-bold text-black">D</span>
+            </div>
+          </Link>
           <span className="text-xs font-mono text-amber-400/80 tracking-wider">DAVID PROLOGUE</span>
         </div>
         <div className="flex items-center gap-2">

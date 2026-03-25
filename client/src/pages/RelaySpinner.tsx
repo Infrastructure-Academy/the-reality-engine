@@ -229,11 +229,19 @@ export default function RelaySpinner() {
       {/* Header */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
         <div className="container flex items-center justify-between h-12">
-          <Link href="/explore">
-            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Modes
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+                <ArrowLeft className="w-4 h-4" /> Home
+              </Button>
+            </Link>
+            <span className="text-muted-foreground/40">|</span>
+            <Link href="/explore">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
+                Modes
+              </Button>
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-blue-600 text-white">SPINNER</span>
             <XpCounter value={totalXp} compact color="gold" />

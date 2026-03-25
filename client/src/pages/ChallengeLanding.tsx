@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { SiteHeader } from "@/components/SiteHeader";
 import { trpc } from "@/lib/trpc";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -105,6 +106,7 @@ export default function ChallengeLanding() {
 
   return (
     <div className="min-h-screen bg-background text-foreground mobile-content-pad">
+      <SiteHeader title="Challenge" showBack />
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-amber-500/5 blur-[120px]" />
