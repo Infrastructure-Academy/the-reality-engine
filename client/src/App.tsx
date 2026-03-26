@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { BottomTabBar } from "./components/BottomTabBar";
 import { InstallBanner } from "./components/InstallBanner";
 import { GamepadIndicator } from "./components/GamepadIndicator";
+import { DiscoveryHints } from "./components/DiscoveryHints";
 import { lazy, Suspense, useEffect } from "react";
 
 // ─── Eagerly loaded (critical path) ───
@@ -112,6 +113,7 @@ function App() {
           <BottomTabBar />
           <InstallBanner />
           <GamepadIndicator />
+          <DiscoveryHints />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

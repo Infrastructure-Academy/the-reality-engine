@@ -101,6 +101,29 @@ iAAi — Block 398 — The Dearden Experiment
 
 ---
 
+## UX-001 — Discovery Principle (Block 415)
+
+Four patterns for mobile-first hidden navigation discovery:
+
+| Pattern | Name | Target | Trigger |
+|---------|------|--------|---------|
+| PULSE | Gold ring animation | Bottom tab bar | First mobile visit |
+| SWIPE | Arrow overlay | Horizontal scroll containers | First mobile visit |
+| LABEL | Temporary text | Bottom tab bar ("TAP TO NAVIGATE") | First mobile visit |
+| GLOW | Border pulse | Recommended CTA (Flight Deck) | First mobile visit |
+
+**Rules:**
+- One-time only (localStorage gated: `ux_discovery_seen`)
+- Auto-dismiss after 5-6 seconds
+- Mobile-only (≤768px)
+- No recurring CTAs
+- Dismiss on user interaction
+
+Source: https://uxdemo-6hdarodt.manus.space/
+Implementation: `client/src/components/DiscoveryHints.tsx`
+
+---
+
 ## Corrective Actions Log
 - ROE → CA-001 → CA-002 → CA-003 → CA-004 → CA-005 → COST → SAP-001 → CA-006
 - Undisclosed → Failures → Root Cause → Cost → Prevention → Learning

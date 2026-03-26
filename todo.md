@@ -699,3 +699,15 @@
 - [x] V4A, V4B-Starborne, V4B-StarWars: same art, different banner text only (VIDEO 4 -- FLIGHT DECK / STARBORNE / STAR WARS)
 - [x] V5A, V5B: same art, different banner text only (VIDEO 5 -- SCHOLAR'S SECRET / MIDDLE-EARTH)
 - [x] Composited red banners, replaced opening frames in videos, uploaded to CDN, updated site code
+
+## Block 415 — UX Discovery Principle (iCard UX-001)
+- [x] Audit site for hidden elements needing discovery hints
+- [x] Implement PULSE pattern — gold ring animation on bottom tab bar
+- [x] Implement SWIPE pattern — arrow overlay on horizontal scroll containers
+- [x] Implement LABEL pattern — "TAP TO NAVIGATE" on bottom tab bar
+- [x] Implement GLOW pattern — border pulse on Flight Deck CTA
+- [x] localStorage gating (ux_discovery_seen, one-time only)
+- [x] Auto-dismiss 5-6s + dismiss on interaction
+- [x] Mobile-only gate (useIsMobile ≤768px)
+- [x] Anchor UX-001 to HARD_PROTOCOLS.md
+- [ ] Checkpoint
