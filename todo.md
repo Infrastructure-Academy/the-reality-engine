@@ -735,4 +735,11 @@
 - [x] Upload iA4i Evolution iCard to CDN
 - [x] Upload ACAD Modes screenshot to CDN
 - [x] Add iCards gallery section to Home.tsx (4 iCards: Four Sites, GOV-010, iA4i Evolution, ACAD Modes)
+- [x] Checkpoint (b72e9fbf)
+
+## Block 418: Lightbox + Governance Nav Link
+- [x] Create ImageLightbox component (click-to-expand overlay for iCards)
+- [x] Apply lightbox to all iCard images on homepage (governance + evidence + infographic + bridges = 8 images)
+- [x] Add Governance anchor link in header nav (Shield icon + #governance)
+- [x] Add id="governance" to the governance section with scroll-mt-20
 - [ ] Checkpoint

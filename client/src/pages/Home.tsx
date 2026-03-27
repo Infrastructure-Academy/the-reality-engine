@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2 } from "lucide-react";
+import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
+import { ImageLightbox } from "@/components/ImageLightbox";
 import { useState } from "react";
 
 const modeIcons = {
@@ -236,6 +237,12 @@ export default function Home() {
               <SocialFollowButtons compact />
             </div>
             <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
+            <a href="#governance">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
+                <Shield className="w-4 h-4" />
+                <span className="hidden sm:inline">Governance</span>
+              </Button>
+            </a>
             <Link href="/resources">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Library className="w-4 h-4" />
@@ -411,7 +418,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
             >
-              <img
+              <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png"
                 alt="Audio Verification Record — All 4 Videos PASS"
                 className="w-full h-auto object-contain"
@@ -427,7 +434,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: 0.2 }}
               className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
             >
-              <img
+              <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png"
                 alt="Complete 8-Video Delivery Manifest"
                 className="w-full h-auto object-contain"
@@ -442,7 +449,7 @@ export default function Home() {
       </section>
 
       {/* Governance & Architecture iCards */}
-      <section className="relative z-10 pb-16">
+      <section id="governance" className="relative z-10 pb-16 scroll-mt-20">
         <div className="container max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -462,7 +469,7 @@ export default function Home() {
             transition={{ duration: 0.4, delay: 0.1 }}
             className="rounded-xl border border-gold-dim/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent mb-4"
           >
-            <img
+            <ImageLightbox
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v3-EDITED(1)_66921acf.png"
               alt="The Four Sites — System Architecture. iAAi 3+1 Construction Governance Model. Chart Room (Observer +1, KANTEI), ACAD (Contractor, MAX), Memorial (Design Team, DAVID), TRE Game (Government Inspector, CHECKER). Block 412, 25 March 2026."
               className="w-full h-auto object-contain"
@@ -482,7 +489,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: 0.15 }}
               className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
             >
-              <img
+              <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-010-v2(4)_46056c50.png"
                 alt="iAAi GOV-010 — Beta PoC Disclaimer Pattern. Chart Room (KANTEI), ACAD (MAX), Memorial (DAVID), TRE Game (CHECKER). Block 410, 26 March 2026."
                 className="w-full h-auto object-contain"
@@ -500,7 +507,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: 0.25 }}
               className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
             >
-              <img
+              <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ia4i-powers(1)_20c32329.png"
                 alt="iA4i — The Evolution. Stage 0: 4ECL (Four Elements Consulting). Stage 1: iA2i. Stage 2: iA3i. Stage 3: iA4i. Stage 4: Compressed Symbol. The Four A's: Assess, Apply, Answers, Awareness. SYM-001."
                 className="w-full h-auto object-contain"
@@ -518,7 +525,7 @@ export default function Home() {
               transition={{ duration: 0.4, delay: 0.35 }}
               className="rounded-xl border border-cyan-500/30 overflow-hidden bg-gradient-to-b from-cyan-600/5 to-transparent"
             >
-              <img
+              <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/IMG_3385_19053da2.png"
                 alt="Infrastructure Academy — An Infrastructure Odyssey. Three modes: Explorer (Ages 8-14), Flight Deck (Ages 14-18), Scholar (Ages 18+). B393K-MODES-001, SAP Verified, 19 Mar 2026."
                 className="w-full h-auto object-contain"
@@ -581,7 +588,7 @@ export default function Home() {
         <div className="container max-w-4xl mx-auto">
           <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">The Method Behind The Engine</p>
           <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
-            <img
+            <ImageLightbox
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/living-experiment-infographic_05a0824a.jpeg"
               alt="The Living Experiment — Biological Intelligence Directing Digital Intelligence — The Same Model for Millennia. Tetra Handshake connecting Observer Player (Ir. Nigel T. Dearden, CEng) with ACAD (Contractor), MEMORIAL (Design Team), and CHECKER (Government Inspector)."
               className="w-full h-auto object-contain"
@@ -599,7 +606,7 @@ export default function Home() {
         <div className="container max-w-4xl mx-auto">
           <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">Five Operational Bridges</p>
           <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
-            <img
+            <ImageLightbox
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/tetrahedral-observer-icard_08b0a0f4.png"
               alt="The Tetrahedral Observer — Five Operational Bridges. ACAD SITE (Infrastructure Academy, MASTER, Direct DB Access), MEMORIAL SITE (Principia Tectonica, CONNECTED, API Bridge), TRE GAME (The Reality Engine, SHARED DB, Direct DB Access), CHART ROOM (The Chartered Chart, API BRIDGE, Multi-Platform Tracker). Social Profiles: X @dearden_ni37258, Facebook, LinkedIn. Block 757, 24 March 2026, Tetrahedral Observer v2, B757-BRIDGES-002."
               className="w-full h-auto object-contain"
