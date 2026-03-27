@@ -441,6 +441,98 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Governance & Architecture iCards */}
+      <section className="relative z-10 pb-16">
+        <div className="container max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">iAAi Governance Framework</p>
+            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">System Architecture &amp; Compliance</h3>
+            <p className="text-xs text-muted-foreground max-w-lg mx-auto">SAP-001 compliant construction governance — 3+1 model, no false completion</p>
+          </motion.div>
+
+          {/* Row 1: Four Sites Architecture — full width landscape */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="rounded-xl border border-gold-dim/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent mb-4"
+          >
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v3-EDITED(1)_66921acf.png"
+              alt="The Four Sites — System Architecture. iAAi 3+1 Construction Governance Model. Chart Room (Observer +1, KANTEI), ACAD (Contractor, MAX), Memorial (Design Team, DAVID), TRE Game (Government Inspector, CHECKER). Block 412, 25 March 2026."
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+            <div className="p-3">
+              <h4 className="text-xs font-heading font-bold text-gold-dim tracking-wide">THE FOUR SITES — SYSTEM ARCHITECTURE</h4>
+              <p className="text-[10px] text-muted-foreground mt-1">3+1 Construction Governance Model • Block 412 • Wynn Palace Standard • SAP-001 Compliant</p>
+            </div>
+          </motion.div>
+
+          {/* Row 2: Three portrait iCards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
+            >
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-010-v2(4)_46056c50.png"
+                alt="iAAi GOV-010 — Beta PoC Disclaimer Pattern. Chart Room (KANTEI), ACAD (MAX), Memorial (DAVID), TRE Game (CHECKER). Block 410, 26 March 2026."
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">GOV-010 — BETA PoC DISCLAIMER</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">Agentic Handoff Document • Block 410 • 26 Mar 2026</p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.25 }}
+              className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
+            >
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ia4i-powers(1)_20c32329.png"
+                alt="iA4i — The Evolution. Stage 0: 4ECL (Four Elements Consulting). Stage 1: iA2i. Stage 2: iA3i. Stage 3: iA4i. Stage 4: Compressed Symbol. The Four A's: Assess, Apply, Answers, Awareness. SYM-001."
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">iA⁴i — THE EVOLUTION</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">From 4ECL to iA⁴i • The Four A's • Biological ↔ Digital • SYM-001</p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.35 }}
+              className="rounded-xl border border-cyan-500/30 overflow-hidden bg-gradient-to-b from-cyan-600/5 to-transparent"
+            >
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/IMG_3385_19053da2.png"
+                alt="Infrastructure Academy — An Infrastructure Odyssey. Three modes: Explorer (Ages 8-14), Flight Deck (Ages 14-18), Scholar (Ages 18+). B393K-MODES-001, SAP Verified, 19 Mar 2026."
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-cyan-400 tracking-wide">ACAD — THREE MODES iCARD</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">B393K-MODES-001 • SAP Verified • Explorer / Flight Deck / Scholar</p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Relay Timeline Preview */}
       <section className="relative z-10 pb-16">
         <div className="container">

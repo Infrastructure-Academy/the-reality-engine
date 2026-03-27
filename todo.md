@@ -727,4 +727,12 @@
 - [x] Upload all new assets to CDN (8/8 success)
 - [x] Update site code with new video + poster URLs (all 5 videos: V4A, V4B-Starborne, V4B-StarWars, V5A, V5B)
 - [x] Generate governance iCard documenting V4/V5 fix (AGE-FIX-001 on CDN)
+- [x] Checkpoint (cb4f6610)
+
+## Block 417: Add Governance/Architecture iCards to Homepage
+- [x] Upload Four Sites Architecture iCard to CDN
+- [x] Upload GOV-010 Beta PoC Disclaimer iCard to CDN
+- [x] Upload iA4i Evolution iCard to CDN
+- [x] Upload ACAD Modes screenshot to CDN
+- [x] Add iCards gallery section to Home.tsx (4 iCards: Four Sites, GOV-010, iA4i Evolution, ACAD Modes)
 - [ ] Checkpoint
