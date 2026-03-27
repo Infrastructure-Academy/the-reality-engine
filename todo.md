@@ -710,4 +710,21 @@
 - [x] Auto-dismiss 5-6s + dismiss on interaction
 - [x] Mobile-only gate (useIsMobile ≤768px)
 - [x] Anchor UX-001 to HARD_PROTOCOLS.md
+- [x] Checkpoint (712c0000)
+
+## Block 416: V4/V5 Age-Appropriate Title Card Regeneration
+- [x] Generate V4 base artwork — teenagers (14-18) in cockpit/flight deck setting
+- [x] Generate V5 base artwork — young adults (18+) in library/scholar setting
+- [x] Composite red banner text for V4A (Flight Deck Spec, Ages 14-18)
+- [x] Composite red banner text for V4B-Starborne (Starborne, Ages 14-18)
+- [x] Composite red banner text for V5A (Scholar's Secret, Ages 18+)
+- [x] Composite red banner text for V5B (Middle-Earth, Ages 18+)
+- [x] Replace opening frames in V4A video (ffmpeg, audio untouched)
+- [x] Replace opening frames in V4B-Starborne video (ffmpeg, audio untouched)
+- [x] Replace opening frames in V5A video (ffmpeg, audio untouched)
+- [x] Replace opening frames in V5B video (ffmpeg, audio untouched)
+- [x] Extract poster images from all corrected videos
+- [x] Upload all new assets to CDN (8/8 success)
+- [x] Update site code with new video + poster URLs (all 5 videos: V4A, V4B-Starborne, V4B-StarWars, V5A, V5B)
+- [x] Generate governance iCard documenting V4/V5 fix (AGE-FIX-001 on CDN)
 - [ ] Checkpoint
