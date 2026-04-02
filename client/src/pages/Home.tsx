@@ -363,15 +363,43 @@ export default function Home() {
                       ))}
                     </ul>
 
-                    {/* CTA Button */}
-                    <Link href={mode.entry}>
-                      <Button
-                        className={`w-full font-heading tracking-wider text-sm ${modeCTAColors[key]}`}
-                        size="lg"
-                      >
-                        {mode.cta}
-                      </Button>
-                    </Link>
+                    {/* CTA Button(s) */}
+                    {key === "explorer" ? (
+                      <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link href="/explore/spinner">
+                            <Button
+                              className="w-full font-heading tracking-wider text-xs bg-blue-600 hover:bg-blue-500 text-white"
+                              size="lg"
+                            >
+                              🎰 SPIN NOW
+                            </Button>
+                          </Link>
+                          <Link href="/explore/1">
+                            <Button
+                              className="w-full font-heading tracking-wider text-xs bg-red-600 hover:bg-red-500 text-white"
+                              size="lg"
+                            >
+                              🔥 RELAY 1
+                            </Button>
+                          </Link>
+                        </div>
+                        <Link href="/explore">
+                          <button className="w-full text-center text-[11px] text-muted-foreground hover:text-foreground transition-colors py-1">
+                            More modes (Dungeon Crawl, Grey Matter) ›
+                          </button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <Link href={mode.entry}>
+                        <Button
+                          className={`w-full font-heading tracking-wider text-sm ${modeCTAColors[key]}`}
+                          size="lg"
+                        >
+                          {mode.cta}
+                        </Button>
+                      </Link>
+                    )}
                   </div>
                 </motion.div>
               );

@@ -742,4 +742,10 @@
 - [x] Apply lightbox to all iCard images on homepage (governance + evidence + infographic + bridges = 8 images)
 - [x] Add Governance anchor link in header nav (Shield icon + #governance)
 - [x] Add id="governance" to the governance section with scroll-mt-20
+- [x] Checkpoint (40cb7457)
+
+## Block 419: Explorer 2-Tap Quick Entry (Block 393j Spec)
+- [x] Replace Explorer card single QUICK PLAY button with dual buttons (SPIN NOW + RELAY 1: FIRE)
+- [x] Add small "More modes" link under buttons pointing to /explore
+- [x] Update shared/gameData.ts Explorer mode entry/cta — not needed, handled in Home.tsx directly
 - [ ] Checkpoint
