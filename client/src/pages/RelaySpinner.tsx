@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap } from "lucide-react";
+import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap, BookOpen } from "lucide-react";
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
@@ -239,6 +239,12 @@ export default function RelaySpinner() {
             <Link href="/explore">
               <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
                 Modes
+              </Button>
+            </Link>
+            <span className="text-muted-foreground/40">|</span>
+            <Link href="/explore/prologue">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
+                <BookOpen className="w-3 h-3" /> Story
               </Button>
             </Link>
           </div>

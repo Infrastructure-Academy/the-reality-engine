@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield } from "lucide-react";
+import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { useState } from "react";
@@ -302,6 +302,23 @@ export default function Home() {
               </div>
             ))}
           </motion.div>
+
+          {/* Pulsing PLAY NOW arrow — visible on mobile */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            onClick={() => document.getElementById('explorer-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+            className="mt-6 mx-auto flex flex-col items-center gap-1 text-red-400 hover:text-red-300 transition-colors md:hidden"
+          >
+            <span className="text-xs font-heading tracking-[0.2em] uppercase">Play Now</span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ArrowDown className="w-5 h-5" />
+            </motion.div>
+          </motion.button>
         </div>
       </section>
 
@@ -318,9 +335,11 @@ export default function Home() {
               return (
                 <motion.div
                   key={key}
+                  id={key === "explorer" ? "explorer-card" : undefined}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 + i * 0.15 }}
+                  className={key === "explorer" ? "scroll-mt-20" : ""}  
                 >
                   <div
                     className={`

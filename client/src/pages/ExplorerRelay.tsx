@@ -627,11 +627,19 @@ export default function ExplorerRelay() {
       {/* Top Bar */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
         <div className="container flex items-center justify-between h-12">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Modes
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+                <ArrowLeft className="w-4 h-4" /> Home
+              </Button>
+            </Link>
+            <span className="text-muted-foreground/40">|</span>
+            <Link href="/explore/prologue">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
+                <BookOpen className="w-3 h-3" /> Story
+              </Button>
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             <div className="hidden md:block">
               <SocialFollowButtons compact />

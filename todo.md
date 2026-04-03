@@ -748,4 +748,11 @@
 - [x] Replace Explorer card single QUICK PLAY button with dual buttons (SPIN NOW + RELAY 1: FIRE)
 - [x] Add small "More modes" link under buttons pointing to /explore
 - [x] Update shared/gameData.ts Explorer mode entry/cta — not needed, handled in Home.tsx directly
+- [x] Checkpoint (e51047cb)
+
+## Block 420: PLAY NOW Arrow + Watch the Story Links
+- [x] Add pulsing PLAY NOW ↓ arrow in hero section that scrolls to Explorer card on mobile
+- [x] Add id="explorer-card" to the Explorer mode card for scroll target (with scroll-mt-20)
+- [x] Add "Watch the Story" link in RelaySpinner header (BookOpen icon + Story)
+- [x] Add "Watch the Story" link in ExplorerRelay header (BookOpen icon + Story)
 - [ ] Checkpoint
