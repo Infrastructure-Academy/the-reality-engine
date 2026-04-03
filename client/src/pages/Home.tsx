@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
+import { ContinueBanner } from "@/components/ContinueBanner";
 import { useState } from "react";
 
 const modeIcons = {
@@ -302,6 +303,11 @@ export default function Home() {
               </div>
             ))}
           </motion.div>
+
+          {/* Returning player banner */}
+          <div className="max-w-lg mx-auto mt-6">
+            <ContinueBanner />
+          </div>
 
           {/* Pulsing PLAY NOW arrow — visible on mobile */}
           <motion.button

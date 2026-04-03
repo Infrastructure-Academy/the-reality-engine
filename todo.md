@@ -755,4 +755,11 @@
 - [x] Add id="explorer-card" to the Explorer mode card for scroll target (with scroll-mt-20)
 - [x] Add "Watch the Story" link in RelaySpinner header (BookOpen icon + Story)
 - [x] Add "Watch the Story" link in ExplorerRelay header (BookOpen icon + Story)
+- [x] Checkpoint (faffad1f)
+
+## Block 421: Returning Player "Continue" Banner
+- [x] Detect returning player from localStorage (tre_guest_id, spinner collection, dungeon, grey matter, prologue)
+- [x] Build ContinueBanner component showing last mode, progress detail, continue link
+- [x] Integrate banner into Home.tsx hero section (below stats, above PLAY NOW arrow)
+- [x] Banner dismissable with X button (sessionStorage gated, reappears next visit)
 - [ ] Checkpoint
