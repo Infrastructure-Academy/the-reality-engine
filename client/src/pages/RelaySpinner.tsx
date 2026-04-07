@@ -5,7 +5,7 @@ import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap, BookOpen } from "lucide-react";
+import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
@@ -84,7 +84,7 @@ function SpinningReel({ targetIndex, spinning, delay }: { targetIndex: number; s
   const relay = RELAYS[displayIndex];
   return (
     <motion.div
-      className="w-20 h-24 sm:w-24 sm:h-28 rounded-xl border-2 flex flex-col items-center justify-center gap-1 transition-all"
+      className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 transition-all"
       style={{
         borderColor: spinning ? "#ffffff30" : `${relay.color}60`,
         backgroundColor: spinning ? "#ffffff08" : `${relay.color}10`,
@@ -92,8 +92,8 @@ function SpinningReel({ targetIndex, spinning, delay }: { targetIndex: number; s
       animate={spinning ? { y: [0, -4, 0] } : {}}
       transition={spinning ? { repeat: Infinity, duration: 0.15 } : {}}
     >
-      <span className="text-3xl sm:text-4xl">{relay.emoji}</span>
-      <span className="text-[10px] font-mono text-muted-foreground">{relay.name}</span>
+      <span className="text-2xl sm:text-3xl">{relay.emoji}</span>
+      <span className="text-[9px] font-mono text-muted-foreground leading-none">{relay.name}</span>
     </motion.div>
   );
 }
@@ -121,6 +121,10 @@ export default function RelaySpinner() {
   const [lastReward, setLastReward] = useState<RewardTier | null>(null);
   const [totalXp, setTotalXp] = useState(0);
   const [showReward, setShowReward] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  // Ref for auto-scroll to reward
+  const rewardRef = useRef<HTMLDivElement>(null);
 
   // Collection grid — which relays have been hit by jackpot
   const [collection, setCollection] = useState<Set<number>>(() => {
@@ -189,6 +193,11 @@ export default function RelaySpinner() {
       playDiscoverySound();
       setTimeout(() => playXpSound(), 300);
 
+      // Auto-scroll to reward result so player always sees it
+      setTimeout(() => {
+        rewardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+
       // Log XP
       if (profileId) {
         addXpMutation.mutate({
@@ -226,29 +235,29 @@ export default function RelaySpinner() {
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-blue-500/8 rounded-full blur-[100px]" />
       </div>
 
-      {/* Header */}
+      {/* Header — compact */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
-        <div className="container flex items-center justify-between h-12">
-          <div className="flex items-center gap-2">
+        <div className="container flex items-center justify-between h-11">
+          <div className="flex items-center gap-1.5">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-                <ArrowLeft className="w-4 h-4" /> Home
+              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground h-8 px-2">
+                <ArrowLeft className="w-3.5 h-3.5" /> Home
               </Button>
             </Link>
             <span className="text-muted-foreground/40">|</span>
             <Link href="/explore">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-8 px-2">
                 Modes
               </Button>
             </Link>
             <span className="text-muted-foreground/40">|</span>
             <Link href="/explore/prologue">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1 h-8 px-2">
                 <BookOpen className="w-3 h-3" /> Story
               </Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-blue-600 text-white">SPINNER</span>
             <XpCounter value={totalXp} compact color="gold" />
           </div>
@@ -256,8 +265,8 @@ export default function RelaySpinner() {
         </div>
       </header>
 
-      <div className="container py-6 max-w-lg mx-auto">
-        {/* Intro Video */}
+      <div className="container py-3 max-w-lg mx-auto">
+        {/* Intro Video — compact button */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v1-relay-spinner_641673d9.mp4"
           title="Spin the Story of Everything"
@@ -266,35 +275,35 @@ export default function RelaySpinner() {
           glowColor="rgba(59,130,246,0.15)"
         />
 
-        {/* Spins remaining */}
-        <div className="text-center mb-6">
-          <p className="text-xs tracking-[0.25em] uppercase text-muted-foreground mb-1">Daily Spins</p>
-          <div className="flex items-center justify-center gap-1.5">
+        {/* Spins remaining — inline compact */}
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Spins</p>
+          <div className="flex items-center gap-1">
             {Array.from({ length: MAX_SPINS }).map((_, i) => (
               <div
                 key={i}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  i < spinsUsed ? "bg-blue-600/30" : "bg-blue-500 shadow-[0_0_6px_rgba(59,130,246,0.4)]"
+                className={`w-2 h-2 rounded-full transition-all ${
+                  i < spinsUsed ? "bg-blue-600/30" : "bg-blue-500 shadow-[0_0_4px_rgba(59,130,246,0.4)]"
                 }`}
               />
             ))}
           </div>
-          <p className="text-sm font-mono mt-2">
+          <p className="text-[10px] font-mono">
             <span className="text-blue-400 font-bold">{spinsRemaining}</span>
-            <span className="text-muted-foreground"> spins remaining today</span>
+            <span className="text-muted-foreground"> left</span>
           </p>
         </div>
 
-        {/* Slot Machine */}
-        <div className="relative rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 mb-6">
-          {/* Machine frame */}
-          <div className="text-center mb-4">
-            <h2 className="font-heading text-xl font-bold tracking-wider text-gold-gradient">RELAY SPINNER</h2>
+        {/* Slot Machine — compact */}
+        <div className="relative rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-3">
+          {/* Machine title */}
+          <div className="text-center mb-3">
+            <h2 className="font-heading text-lg font-bold tracking-wider text-gold-gradient">RELAY SPINNER</h2>
             <p className="text-[10px] text-muted-foreground">Match symbols to unlock discoveries</p>
           </div>
 
           {/* Reels */}
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex items-center justify-center gap-3 mb-4">
             <SpinningReel targetIndex={reels[0]} spinning={spinning} delay={0} />
             <SpinningReel targetIndex={reels[1]} spinning={spinning} delay={200} />
             <SpinningReel targetIndex={reels[2]} spinning={spinning} delay={400} />
@@ -304,11 +313,11 @@ export default function RelaySpinner() {
           <Button
             onClick={handleSpin}
             disabled={spinning || spinsRemaining <= 0}
-            className="w-full h-14 text-lg font-heading tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-40"
+            className="w-full h-12 text-base font-heading tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-40"
             size="lg"
           >
             {spinning ? (
-              <RotateCw className="w-6 h-6 animate-spin" />
+              <RotateCw className="w-5 h-5 animate-spin" />
             ) : spinsRemaining <= 0 ? (
               "COME BACK TOMORROW"
             ) : (
@@ -320,41 +329,43 @@ export default function RelaySpinner() {
           </Button>
         </div>
 
-        {/* Reward Display */}
-        <AnimatePresence>
-          {showReward && lastReward && (
-            <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="rounded-xl border p-4 mb-6 text-center"
-              style={{
-                borderColor: `${REWARD_CONFIG[lastReward].color}40`,
-                backgroundColor: `${REWARD_CONFIG[lastReward].color}10`,
-              }}
-            >
-              <p className="text-2xl mb-1">{REWARD_CONFIG[lastReward].emoji}</p>
-              <p className="font-heading text-lg font-bold tracking-wider" style={{ color: REWARD_CONFIG[lastReward].color }}>
-                {REWARD_CONFIG[lastReward].label}
-              </p>
-              <p className="text-sm text-muted-foreground mb-2">{REWARD_CONFIG[lastReward].description}</p>
-              <p className="text-lg font-mono font-bold text-gold-gradient">
-                +{REWARD_CONFIG[lastReward].xp.toLocaleString()} XP
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Reward Display — auto-scrolls into view */}
+        <div ref={rewardRef}>
+          <AnimatePresence>
+            {showReward && lastReward && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="rounded-xl border p-3 mb-3 text-center"
+                style={{
+                  borderColor: `${REWARD_CONFIG[lastReward].color}40`,
+                  backgroundColor: `${REWARD_CONFIG[lastReward].color}10`,
+                }}
+              >
+                <p className="text-xl mb-0.5">{REWARD_CONFIG[lastReward].emoji}</p>
+                <p className="font-heading text-base font-bold tracking-wider" style={{ color: REWARD_CONFIG[lastReward].color }}>
+                  {REWARD_CONFIG[lastReward].label}
+                </p>
+                <p className="text-xs text-muted-foreground mb-1">{REWARD_CONFIG[lastReward].description}</p>
+                <p className="text-base font-mono font-bold text-gold-gradient">
+                  +{REWARD_CONFIG[lastReward].xp.toLocaleString()} XP
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
-        {/* Collection Grid */}
-        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-6">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Gift className="w-4 h-4 text-gold" />
-              <span className="text-xs uppercase tracking-wider text-gold font-bold">Relay Collection</span>
+        {/* Collection Grid — compact inline */}
+        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-3">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <Gift className="w-3.5 h-3.5 text-gold" />
+              <span className="text-[10px] uppercase tracking-wider text-gold font-bold">Relay Collection</span>
             </div>
-            <span className="text-xs font-mono text-muted-foreground">{collection.size}/12</span>
+            <span className="text-[10px] font-mono text-muted-foreground">{collection.size}/12</span>
           </div>
-          <div className="grid grid-cols-6 gap-2">
+          <div className="grid grid-cols-6 gap-1.5">
             {RELAYS.map((relay, idx) => {
               const collected = collection.has(idx);
               return (
@@ -367,54 +378,68 @@ export default function RelaySpinner() {
                   }`}
                   title={collected ? `${relay.name} — Collected!` : `${relay.name} — Need Jackpot`}
                 >
-                  <span className="text-lg">{relay.emoji}</span>
-                  <span className="text-[8px] font-mono text-muted-foreground">{relay.name}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Discovery Stats */}
-        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-xs uppercase tracking-wider text-blue-400 font-bold">Discoveries Unlocked</span>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {RELAYS.map((relay, idx) => {
-              const count = (discoveries[idx] || []).length;
-              const total = (INVENTIONS[idx + 1] || []).length;
-              return (
-                <div key={idx} className="text-center">
                   <span className="text-base">{relay.emoji}</span>
-                  <p className="text-[10px] font-mono text-muted-foreground">{count}/{total}</p>
+                  <span className="text-[7px] font-mono text-muted-foreground leading-none">{relay.name}</span>
                 </div>
               );
             })}
           </div>
-          <div className="mt-3 pt-3 border-t border-border/30 text-center">
-            <p className="text-sm font-mono">
-              <span className="text-blue-400 font-bold">{totalDiscoveries}</span>
-              <span className="text-muted-foreground"> total discoveries</span>
-            </p>
-          </div>
         </div>
 
-        {/* Stats Summary */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          {[
-            { label: "Total XP", value: totalXp.toLocaleString(), icon: Zap, color: "#d4a843" },
-            { label: "Spins Today", value: String(spinsUsed), icon: Dices, color: "#3b82f6" },
-            { label: "Collection", value: `${collection.size}/12`, icon: Star, color: "#10b981" },
-          ].map((stat) => (
-            <div key={stat.label} className="rounded-lg border border-border/30 p-3 text-center bg-card/20">
-              <stat.icon className="w-4 h-4 mx-auto mb-1" style={{ color: stat.color }} />
-              <p className="text-sm font-mono font-bold" style={{ color: stat.color }}>{stat.value}</p>
-              <p className="text-[9px] text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-            </div>
-          ))}
-        </div>
+        {/* Expandable Details Section — Discovery Stats + Summary */}
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="w-full flex items-center justify-center gap-1.5 py-2 text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors mb-2"
+        >
+          {showDetails ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          {showDetails ? "Hide" : "Show"} Details ({totalDiscoveries} discoveries · {totalXp.toLocaleString()} XP)
+        </button>
+
+        <AnimatePresence>
+          {showDetails && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              {/* Discovery Stats */}
+              <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-3">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="text-[10px] uppercase tracking-wider text-blue-400 font-bold">Discoveries Unlocked</span>
+                </div>
+                <div className="grid grid-cols-6 gap-1.5">
+                  {RELAYS.map((relay, idx) => {
+                    const count = (discoveries[idx] || []).length;
+                    const total = (INVENTIONS[idx + 1] || []).length;
+                    return (
+                      <div key={idx} className="text-center">
+                        <span className="text-sm">{relay.emoji}</span>
+                        <p className="text-[9px] font-mono text-muted-foreground">{count}/{total}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Stats Summary */}
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                {[
+                  { label: "Total XP", value: totalXp.toLocaleString(), icon: Zap, color: "#d4a843" },
+                  { label: "Spins Today", value: String(spinsUsed), icon: Dices, color: "#3b82f6" },
+                  { label: "Collection", value: `${collection.size}/12`, icon: Star, color: "#10b981" },
+                ].map((stat) => (
+                  <div key={stat.label} className="rounded-lg border border-border/30 p-2 text-center bg-card/20">
+                    <stat.icon className="w-3.5 h-3.5 mx-auto mb-0.5" style={{ color: stat.color }} />
+                    <p className="text-xs font-mono font-bold" style={{ color: stat.color }}>{stat.value}</p>
+                    <p className="text-[8px] text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -9,16 +9,52 @@ interface Props {
 interface State {
   hasError: boolean;
   error: Error | null;
+  isChunkError: boolean;
 }
+
+/**
+ * Detects stale chunk / dynamic import failures.
+ * These happen when the browser has cached old Vite chunk filenames
+ * but the server has new chunks with different hashes after a redeploy.
+ */
+function isChunkLoadError(error: Error): boolean {
+  const msg = error.message || "";
+  return (
+    msg.includes("Failed to fetch dynamically imported module") ||
+    msg.includes("Loading chunk") ||
+    msg.includes("Loading CSS chunk") ||
+    msg.includes("Importing a module script failed") ||
+    (error.name === "TypeError" && msg.includes("fetch"))
+  );
+}
+
+const CHUNK_RELOAD_KEY = "tre-chunk-reload-ts";
 
 class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, isChunkError: false };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+    const isChunk = isChunkLoadError(error);
+    return { hasError: true, error, isChunkError: isChunk };
+  }
+
+  componentDidCatch(error: Error) {
+    if (isChunkLoadError(error)) {
+      // Auto-reload once to fetch fresh chunks — but prevent infinite reload loops
+      const lastReload = sessionStorage.getItem(CHUNK_RELOAD_KEY);
+      const now = Date.now();
+      // Only auto-reload if we haven't reloaded in the last 10 seconds
+      if (!lastReload || now - parseInt(lastReload, 10) > 10000) {
+        sessionStorage.setItem(CHUNK_RELOAD_KEY, String(now));
+        console.warn("[ErrorBoundary] Stale chunk detected — auto-reloading...");
+        window.location.reload();
+        return;
+      }
+      console.warn("[ErrorBoundary] Stale chunk detected but already reloaded recently — showing manual reload button.");
+    }
   }
 
   render() {
@@ -31,16 +67,31 @@ class ErrorBoundary extends Component<Props, State> {
               className="text-destructive mb-6 flex-shrink-0"
             />
 
-            <h2 className="text-xl mb-4">An unexpected error occurred.</h2>
+            <h2 className="text-xl mb-4">
+              {this.state.isChunkError
+                ? "A new version is available."
+                : "An unexpected error occurred."}
+            </h2>
 
-            <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
-              <pre className="text-sm text-muted-foreground whitespace-break-spaces">
-                {this.state.error?.stack}
-              </pre>
-            </div>
+            {this.state.isChunkError ? (
+              <p className="text-sm text-muted-foreground mb-6 text-center">
+                The app has been updated since your last visit. Please reload to
+                get the latest version.
+              </p>
+            ) : (
+              <div className="p-4 w-full rounded bg-muted overflow-auto mb-6">
+                <pre className="text-sm text-muted-foreground whitespace-break-spaces">
+                  {this.state.error?.stack}
+                </pre>
+              </div>
+            )}
 
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => {
+                // Clear the reload guard so the fresh load can try again
+                sessionStorage.removeItem(CHUNK_RELOAD_KEY);
+                window.location.reload();
+              }}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg",
                 "bg-primary text-primary-foreground",

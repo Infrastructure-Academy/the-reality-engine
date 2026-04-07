@@ -762,4 +762,19 @@
 - [x] Build ContinueBanner component showing last mode, progress detail, continue link
 - [x] Integrate banner into Home.tsx hero section (below stats, above PLAY NOW arrow)
 - [x] Banner dismissable with X button (sessionStorage gated, reappears next visit)
-- [ ] Checkpoint
+- [x] Checkpoint (a729e230)
+
+## Block 443: Communication Protocol Fix
+- [x] STOP using result-type messages that trigger "Task completed" automation
+- [x] Use info-type messages for all updates going forward
+- [x] Only use result-type when Owner explicitly says task is done
+
+## Block 444: GitHub Pages Static Deployment — CANCELLED
+- [x] Assessed: full-stack app with tRPC/DB/AI not suitable for GitHub Pages static hosting
+- Owner decided to use professional hosting instead
+
+## Block 446: Spinner UX Fix + Chunk Error Recovery
+- [x] Fix stale chunk error: add auto-recovery in ErrorBoundary for dynamic import failures
+- [x] Compact RelaySpinner layout: fit spinner + result in one viewport without scrolling
+- [x] Auto-scroll to JACKPOT result when spin completes so player never misses it
+- [ ] Checkpoint and deliver
