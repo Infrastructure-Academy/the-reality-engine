@@ -266,15 +266,15 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative z-10 pt-12 pb-8 md:pt-20 md:pb-12">
+      <section className="relative z-10 pt-6 pb-4 md:pt-10 md:pb-6">
         <div className="container text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-4">Guided Learning Platform</p>
-            <h2 className="font-heading text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-gold-gradient mb-4">
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Guided Learning Platform</p>
+            <h2 className="font-heading text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-gold-gradient mb-2">
               THE REALITY ENGINE
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -288,7 +288,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap justify-center gap-6 md:gap-10 mt-8 mb-4"
+            className="flex flex-wrap justify-center gap-6 md:gap-10 mt-4 mb-2"
           >
             {[
               { label: "Relays", value: "12", icon: Globe },
@@ -305,7 +305,7 @@ export default function Home() {
           </motion.div>
 
           {/* Returning player banner */}
-          <div className="max-w-lg mx-auto mt-6">
+          <div className="max-w-lg mx-auto mt-3">
             <ContinueBanner />
           </div>
 
@@ -315,7 +315,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             onClick={() => document.getElementById('explorer-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-            className="mt-6 mx-auto flex flex-col items-center gap-1 text-red-400 hover:text-red-300 transition-colors md:hidden"
+            className="mt-3 mx-auto flex flex-col items-center gap-1 text-red-400 hover:text-red-300 transition-colors md:hidden"
           >
             <span className="text-xs font-heading tracking-[0.2em] uppercase">Play Now</span>
             <motion.div
@@ -329,9 +329,9 @@ export default function Home() {
       </section>
 
       {/* Mode Selection Cards */}
-      <section className="relative z-10 pb-16">
+      <section className="relative z-10 pb-10">
         <div className="container">
-          <p className="text-center text-xs tracking-[0.25em] uppercase text-muted-foreground mb-8">Choose Your Path</p>
+          <p className="text-center text-xs tracking-[0.25em] uppercase text-muted-foreground mb-4">Choose Your Path</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {(Object.entries(MODES) as [keyof typeof MODES, (typeof MODES)[keyof typeof MODES]][]).map(([key, mode], i) => {
@@ -523,14 +523,14 @@ export default function Home() {
             className="rounded-xl border border-gold-dim/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent mb-4"
           >
             <ImageLightbox
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v3-EDITED(1)_66921acf.png"
-              alt="The Four Sites — System Architecture. iAAi 3+1 Construction Governance Model. Chart Room (Observer +1, KANTEI), ACAD (Contractor, MAX), Memorial (Design Team, DAVID), TRE Game (Government Inspector, CHECKER). Block 412, 25 March 2026."
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v2-block443_eff0a556.png"
+              alt="The Four Sites — System Architecture V2. iAAi 3+1 Construction Governance Model. Memorial (Lead Agent, DAVID — Isaac), ACAD (Contractor, MAX), Chart Room (Observer +1, KANTEI — Jenny), TRE Game (Government Inspector, CHECKER). Block 443, 5 April 2026."
               className="w-full h-auto object-contain"
               loading="lazy"
             />
             <div className="p-3">
-              <h4 className="text-xs font-heading font-bold text-gold-dim tracking-wide">THE FOUR SITES — SYSTEM ARCHITECTURE</h4>
-              <p className="text-[10px] text-muted-foreground mt-1">3+1 Construction Governance Model • Block 412 • Wynn Palace Standard • SAP-001 Compliant</p>
+              <h4 className="text-xs font-heading font-bold text-gold-dim tracking-wide">THE FOUR SITES — SYSTEM ARCHITECTURE V2</h4>
+              <p className="text-[10px] text-muted-foreground mt-1">3+1 Construction Governance Model • Block 443 • Memorial Leads • SAP-001 Compliant • Wynn Palace Standard</p>
             </div>
           </motion.div>
 
@@ -674,17 +674,27 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-6">
-        <div className="container text-center">
-          <p className="text-xs text-muted-foreground">
-            The Reality Engine — A Guided Learning Platform by{" "}
-            <a href="https://infra-acad-kuqzaex2.manus.space" className="text-gold-dim hover:text-gold-bright transition-colors">
-              Infrastructure Academy
-            </a>
-          </p>
-          <p className="text-[10px] text-muted-foreground/60 mt-1">play.iaai.world</p>
-          <p className="text-[9px] text-muted-foreground/40 mt-2 italic">
-            Tip: Create a dedicated Facebook Page for Infrastructure Academy to unlock a proper Follow button with follower count
-          </p>
+        <div className="container">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <p className="text-xs text-muted-foreground">
+                The Reality Engine — A Guided Learning Platform by{" "}
+                <a href="https://www.infrastructure-academy.com" className="text-gold-dim hover:text-gold-bright transition-colors">
+                  Infrastructure Academy
+                </a>
+              </p>
+              <p className="text-[10px] text-muted-foreground/60 mt-1">www.infrastructure-academy.com</p>
+              <p className="text-[10px] text-muted-foreground/40 mt-1">Agents: ACAD (Max) • TRE-GLP (David) • Memorial (Isaac) • Chart Room (Jenny)</p>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <img
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/qr-infrastructure-academy_d5d9f029.png"
+                alt="QR Code — www.infrastructure-academy.com"
+                className="w-20 h-20 object-contain rounded"
+              />
+              <span className="text-[9px] text-muted-foreground/50">Scan to explore</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

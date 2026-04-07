@@ -252,7 +252,7 @@ export default function GreyMatter() {
         </div>
       </header>
 
-      <div className="container py-4 max-w-lg mx-auto">
+      <div className="container py-2 max-w-lg mx-auto">
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4"
@@ -263,7 +263,7 @@ export default function GreyMatter() {
         />
 
         {/* Clock & Transformation Status */}
-        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-4">
+        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Transformation Level</p>
@@ -294,7 +294,7 @@ export default function GreyMatter() {
         </div>
 
         {/* Relay Selector */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2">
           <Button variant="ghost" size="sm" onClick={() => currentRelay > 1 && setCurrentRelay(prev => prev - 1)}>
             <ChevronLeft className="w-4 h-4" />
           </Button>
@@ -309,7 +309,7 @@ export default function GreyMatter() {
         </div>
 
         {/* Mission Card */}
-        <div className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 mb-4">
+        <div className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-3">
           {currentMission.powerEarned ? (
             /* Power already earned */
             <div className="text-center py-4">
@@ -415,8 +415,8 @@ export default function GreyMatter() {
         </div>
 
         {/* Powers Grid */}
-        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-6">
-          <div className="flex items-center gap-2 mb-3">
+        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-3">
+          <div className="flex items-center gap-2 mb-2">
             <Brain className="w-4 h-4 text-amber-400" />
             <span className="text-xs uppercase tracking-wider text-amber-400 font-bold">Powers of Grey Matter</span>
           </div>
@@ -478,7 +478,7 @@ export default function GreyMatter() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-3 mb-3">
           {[
             { label: "Powers", value: `${powersEarned}/12`, icon: Star, color: "#d4a843" },
             { label: "Clock", value: clockTime.label, icon: Clock, color: "#f59e0b" },

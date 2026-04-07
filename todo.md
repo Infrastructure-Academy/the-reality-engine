@@ -777,4 +777,22 @@
 - [x] Fix stale chunk error: add auto-recovery in ErrorBoundary for dynamic import failures
 - [x] Compact RelaySpinner layout: fit spinner + result in one viewport without scrolling
 - [x] Auto-scroll to JACKPOT result when spin completes so player never misses it
+- [x] Checkpoint and deliver (fdaecd37)
+
+## Block 447: Homepage Fixes — Architecture Card + Hero Compact + Agent Names
+- [x] Upload V2 Four Sites Architecture card (IMG_4473, Block 443) to CDN
+- [x] Replace old Four Sites card on homepage with V2
+- [x] Compact homepage hero section so CHOOSE YOUR PATH cards visible above fold on desktop
+- [x] Update agent names to Max/David/Isaac/Jenny on homepage governance section
+- [ ] Checkpoint and deliver
+
+## Block 447: Homepage Fixes + Compact Pages + QR Code
+- [x] Upload V2 Four Sites Architecture card (IMG_4473, Block 443) to CDN
+- [x] Upload iAAi QR code to CDN
+- [x] Replace old Four Sites card on homepage with V2
+- [x] Compact homepage hero section so CHOOSE YOUR PATH cards visible above fold on desktop
+- [x] Update agent names to Max/David/Isaac/Jenny on homepage governance section
+- [x] Add QR code to site footer or governance section
+- [x] Compact Dungeon Crawl page layout to fit one viewport
+- [x] Compact Grey Matter page layout to fit one viewport
 - [ ] Checkpoint and deliver

@@ -407,7 +407,7 @@ export default function DungeonCrawl() {
         </div>
       </header>
 
-      <div className="container py-4 max-w-lg mx-auto">
+      <div className="container py-2 max-w-lg mx-auto">
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4"
@@ -418,12 +418,12 @@ export default function DungeonCrawl() {
         />
 
         {/* Dungeon Selector */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2">
           <Button variant="ghost" size="sm" onClick={handlePrevDungeon} disabled={currentRelay <= 1}>
             <ChevronLeft className="w-4 h-4" />
           </Button>
           <div className="text-center">
-            <p className="text-lg">{relay.emoji}</p>
+            <span className="text-base">{relay.emoji}</span>
             <p className="font-heading text-sm font-bold tracking-wider">{relay.name} Dungeon</p>
             <p className="text-[10px] text-muted-foreground">{relay.era}</p>
           </div>
@@ -433,7 +433,7 @@ export default function DungeonCrawl() {
         </div>
 
         {/* Room Progress Bar */}
-        <div className="flex items-center gap-1 mb-4 px-2">
+        <div className="flex items-center gap-1 mb-2 px-2">
           {dungeon.map((r, i) => {
             const cleared = roomsCleared.has(`${currentRelay}-${i}`);
             const current = i === currentRoom;
@@ -455,11 +455,11 @@ export default function DungeonCrawl() {
           key={roomKey}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 mb-4"
+          className="rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-3"
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-600/20 flex items-center justify-center">
-              <RoomIcon className="w-6 h-6 text-emerald-400" />
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600/20 flex items-center justify-center">
+              <RoomIcon className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Room {currentRoom + 1} of {totalDungeonRooms}</p>
@@ -473,13 +473,13 @@ export default function DungeonCrawl() {
               <img
                 src={DUNGEON_IMAGES[currentRelay]}
                 alt={`${relay.name} Dungeon`}
-                className="w-full h-40 object-cover object-center"
+                className="w-full h-32 object-cover object-center"
                 loading="lazy"
               />
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{room.description}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-2">{room.description}</p>
 
           {/* Ability check info */}
           {room.abilityCheck && !isCleared && (
@@ -568,7 +568,7 @@ export default function DungeonCrawl() {
         </motion.div>
 
         {/* Navigation */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-3 mb-3">
           <Button variant="outline" onClick={handlePrevRoom} disabled={currentRoom <= 0} className="flex-1">
             <ChevronLeft className="w-4 h-4 mr-1" /> Previous Room
           </Button>
@@ -578,7 +578,7 @@ export default function DungeonCrawl() {
         </div>
 
         {/* Character Sheet (mini) */}
-        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-6">
+        <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-4">
           <p className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-3">Character Sheet</p>
           <div className="grid grid-cols-3 gap-3">
             {([
