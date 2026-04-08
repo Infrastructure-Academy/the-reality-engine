@@ -127,3 +127,5 @@ Implementation: `client/src/components/DiscoveryHints.tsx`
 ## Corrective Actions Log
 - ROE → CA-001 → CA-002 → CA-003 → CA-004 → CA-005 → COST → SAP-001 → CA-006
 - Undisclosed → Failures → Root Cause → Cost → Prevention → Learning
+- GOV-012 IUMC Failure Analysis: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-012-iumc-failure-analysis-oBmA9xE9tdGsYckysuTwpU.png
+- GOV-013.1 Seven Definitions (Session, Dishonesty, Task, Time Out, Sleep, Task Completed, This Card Will Be Lost): https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-013-1-seven-definitions-HS7s6XJBgo2YvWzXRtJrjr.png

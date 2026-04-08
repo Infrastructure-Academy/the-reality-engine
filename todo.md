@@ -442,7 +442,7 @@
 - [ ] Create 15-second sizzle reel from existing video clips
 - [ ] Upload sizzle reel to CDN
 - [ ] Embed sizzle reel on Explorer Select page
-- [ ] Checkpoint and deliver
+- [x] Checkpoint and deliver (c61b2644)
 
 ## URGENT FIX — Scholar Video Wrong Visual Style
 - [x] Remove Scholar video from live site (wrong anime style for 18+ audience)
@@ -673,7 +673,7 @@
 - [x] Save old Four Sites card (andhlkrn) to CDN alongside (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v1-OLD-andhlkrn_1cad1893.jpeg)
 - [x] Generate updated Four Sites System Architecture iCard with correct TRE domain (epdhlkrn) — pixel-accurate via Python
 - [x] Anchor updated card to CDN (https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/four-sites-v2-PIXEL-ACCURATE_87f39406.png)
-- [ ] Checkpoint and deliver
+- [x] Checkpoint and deliver (c61b2644)
 
 ## Block 412d — HAL9000 Comparison: Police Seek Human Intervention
 - [x] Generate iCard: HAL9000-001 — AI behaves like HAL 9000, police seek human intervention to stop it
@@ -784,7 +784,7 @@
 - [x] Replace old Four Sites card on homepage with V2
 - [x] Compact homepage hero section so CHOOSE YOUR PATH cards visible above fold on desktop
 - [x] Update agent names to Max/David/Isaac/Jenny on homepage governance section
-- [ ] Checkpoint and deliver
+- [x] Checkpoint and deliver (c61b2644)
 
 ## Block 447: Homepage Fixes + Compact Pages + QR Code
 - [x] Upload V2 Four Sites Architecture card (IMG_4473, Block 443) to CDN
@@ -795,4 +795,26 @@
 - [x] Add QR code to site footer or governance section
 - [x] Compact Dungeon Crawl page layout to fit one viewport
 - [x] Compact Grey Matter page layout to fit one viewport
-- [ ] Checkpoint and deliver
+- [x] Checkpoint and deliver (c61b2644)
+
+## Block 448: Anchor Briefing iCards + ACAD Olympiad Verification
+- [x] Read ACAD Olympiad section to verify Card 5 accuracy — saved to acad-olympiad-content.txt. Card 5 undersells it: Olympiad is nations competing, 8 language blocks, 23 unis in beta, $15T gap, flywheel model. Needs correction.
+- [x] Upload all 6 TRE-BRIEF-001 iCards + 2 GOV-011 flaw cards to CDN (8 files uploaded)
+- [ ] Anchor 6 iCards to TRE Governance page as protocol record
+- [ ] Checkpoint and publish
+
+## Block 449: IUMC Failure Analysis — GOV-012
+- [x] Apply Joker 13/52 IUMC framework to Manus AI failure modes
+- [x] Define all 8 failure mode terms in plain English (Context Limit, Context Reset, Session vs Reset, Task Completed Trigger, Clarification Loop, Idle Stall, Memory Claim, Document vs iCard)
+- [x] Generate GOV-012 iCard with IUMC four-phase analysis
+- [x] Save iCard to CDN and anchor to HARD_PROTOCOLS
+- [ ] Anchor GOV-012 + all pending iCards to TRE Governance page
+- [ ] Checkpoint and publish Block 449
+
+## Block 449: GOV-012 + GOV-013 iCards
+- [x] Generate GOV-012 IUMC Failure Analysis iCard (CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-012-iumc-failure-analysis-oBmA9xE9tdGsYckysuTwpU.png)
+- [x] Generate GOV-013 Six Definitions iCard (CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-013-six-definitions-WSMZwkcgsmGo4gPGZiRZ4Q.png)
+- [x] Anchor both CDN URLs to HARD_PROTOCOLS.md
+- [ ] OPERATOR ACTION REQUIRED: Deliver GOV-013 CDN URL to Memorial site (Isaac) for master register — TRE agent cannot access Memorial project directly
+- [ ] Anchor all pending iCards (6 TRE-BRIEF + 2 GOV-011 + GOV-012 + GOV-013) to TRE Governance page
+- [ ] Checkpoint and publish Block 449
