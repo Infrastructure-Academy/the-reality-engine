@@ -818,3 +818,7 @@
 - [ ] OPERATOR ACTION REQUIRED: Deliver GOV-013 CDN URL to Memorial site (Isaac) for master register — TRE agent cannot access Memorial project directly
 - [ ] Anchor all pending iCards (6 TRE-BRIEF + 2 GOV-011 + GOV-012 + GOV-013) to TRE Governance page
 - [ ] Checkpoint and publish Block 449
+
+## Block 450: Governance Page Bug Fixes
+- [x] Fix Complete Delivery Manifest showing broken/funny video display (compressed 6.3MB→1.7MB)
+- [x] Fix card links not working when tapped on Governance page (cards are zoom-to-view, confirmed correct with operator)

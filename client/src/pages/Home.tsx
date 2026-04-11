@@ -472,7 +472,7 @@ export default function Home() {
               className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
             >
               <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-V4B-V5-AudioVerification_24357084.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-AudioVerification-compressed_b40c5c74.png"
                 alt="Audio Verification Record — All 4 Videos PASS"
                 className="w-full h-auto object-contain"
               />
@@ -488,7 +488,7 @@ export default function Home() {
               className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
             >
               <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest_5809feb1.png"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-Complete-8Video-Manifest-compressed_d4f5f271.png"
                 alt="Complete 8-Video Delivery Manifest"
                 className="w-full h-auto object-contain"
               />
