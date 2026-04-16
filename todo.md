@@ -800,25 +800,32 @@
 ## Block 448: Anchor Briefing iCards + ACAD Olympiad Verification
 - [x] Read ACAD Olympiad section to verify Card 5 accuracy — saved to acad-olympiad-content.txt. Card 5 undersells it: Olympiad is nations competing, 8 language blocks, 23 unis in beta, $15T gap, flywheel model. Needs correction.
 - [x] Upload all 6 TRE-BRIEF-001 iCards + 2 GOV-011 flaw cards to CDN (8 files uploaded)
-- [ ] Anchor 6 iCards to TRE Governance page as protocol record
-- [ ] Checkpoint and publish
+- [x] Anchor 6 iCards to TRE Governance page as protocol record (Block 451)
+- [x] Checkpoint and publish (Block 451)
 
 ## Block 449: IUMC Failure Analysis — GOV-012
 - [x] Apply Joker 13/52 IUMC framework to Manus AI failure modes
 - [x] Define all 8 failure mode terms in plain English (Context Limit, Context Reset, Session vs Reset, Task Completed Trigger, Clarification Loop, Idle Stall, Memory Claim, Document vs iCard)
 - [x] Generate GOV-012 iCard with IUMC four-phase analysis
 - [x] Save iCard to CDN and anchor to HARD_PROTOCOLS
-- [ ] Anchor GOV-012 + all pending iCards to TRE Governance page
-- [ ] Checkpoint and publish Block 449
+- [x] Anchor GOV-012 + all pending iCards to TRE Governance page (Block 451)
+- [x] Checkpoint and publish Block 449 (done in Block 451)
 
 ## Block 449: GOV-012 + GOV-013 iCards
 - [x] Generate GOV-012 IUMC Failure Analysis iCard (CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-012-iumc-failure-analysis-oBmA9xE9tdGsYckysuTwpU.png)
 - [x] Generate GOV-013 Six Definitions iCard (CDN: https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-013-six-definitions-WSMZwkcgsmGo4gPGZiRZ4Q.png)
 - [x] Anchor both CDN URLs to HARD_PROTOCOLS.md
 - [ ] OPERATOR ACTION REQUIRED: Deliver GOV-013 CDN URL to Memorial site (Isaac) for master register — TRE agent cannot access Memorial project directly
-- [ ] Anchor all pending iCards (6 TRE-BRIEF + 2 GOV-011 + GOV-012 + GOV-013) to TRE Governance page
-- [ ] Checkpoint and publish Block 449
+- [x] Anchor all pending iCards (6 TRE-BRIEF + GOV-012 + GOV-013.1) to TRE Governance page (Block 451)
+- [x] Checkpoint and publish Block 449 (done in Block 451)
 
 ## Block 450: Governance Page Bug Fixes
 - [x] Fix Complete Delivery Manifest showing broken/funny video display (compressed 6.3MB→1.7MB)
 - [x] Fix card links not working when tapped on Governance page (cards are zoom-to-view, confirmed correct with operator)
+
+## Block 451: Anchor All iCards + Fix Card 5 Olympiad
+- [x] Anchor GOV-012, GOV-013.1 to GovernanceDeck.tsx iCard Gallery
+- [x] Anchor TRE-BRIEF (6 cards) to GovernanceDeck.tsx iCard Gallery
+- [x] Correct Card 5 Olympiad description (v2: nations competing, 8 language blocks, 23 unis, $15T gap, flywheel model)
+- [x] Provide GOV-013.1 CDN URL for Memorial delivery
+- [x] Checkpoint and publish Block 451

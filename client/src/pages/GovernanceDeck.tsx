@@ -25,6 +25,14 @@ const CDN = {
   govGdp001: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-GOV-GDP-002_85f5d9a7.png",
   jgInspector: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-JG-Inspector-Feedback_ec550750.png",
   khNode018v2: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iCard-KH-018-v2-corrected-ZQemsEypLH5rudnmJRMB8g.png",
+  brief1Explorer: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-1of6-explorer_75995ce5.png",
+  brief2FlightDeck: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-2of6-flightdeck_a132ac5c.png",
+  brief3Scholar: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-3of6-scholar_7ccff7a1.png",
+  brief4Videos: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-4of6-videos_d43b3d41.png",
+  brief5Progression: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-5of6-progression-v2-7KcGx2juyCveQWTkLgiYso.png",
+  brief6Handshake: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-brief-6of6-handshake_96569c35.png",
+  gov012IUMC: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-012-iumc-failure-analysis_bce4b970.png",
+  gov013Definitions: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-013-1-seven-definitions_ffa8aab1.png",
 };
 
 // SAP-001 Phases
@@ -764,6 +772,14 @@ export default function GovernanceDeck() {
                   { title: "GOV-GDP-002", subtitle: "Game Design Parameters v2.1 — The Design Bible", src: CDN.govGdp001, block: "B402" },
                   { title: "Inspector Node Report", subtitle: "Jonathan Green — LinkedIn Review, 24 March 2026", src: CDN.jgInspector, block: "B401" },
                   { title: "Node 018 Report v2", subtitle: "Khanh Huynh — Marketing Intelligence, Market Analyst / Beta Tester, 24 March 2026", src: CDN.khNode018v2, block: "B402" },
+                  { title: "TRE-BRIEF Card 1/6 — Explorer", subtitle: "Inter-Agent Briefing: Manus to Isaac — Explorer Tier Overview", src: CDN.brief1Explorer, block: "B448" },
+                  { title: "TRE-BRIEF Card 2/6 — Flight Deck", subtitle: "Inter-Agent Briefing: Manus to Isaac — Flight Deck Tier Overview", src: CDN.brief2FlightDeck, block: "B448" },
+                  { title: "TRE-BRIEF Card 3/6 — Scholar", subtitle: "Inter-Agent Briefing: Manus to Isaac — Scholar Tier Overview", src: CDN.brief3Scholar, block: "B448" },
+                  { title: "TRE-BRIEF Card 4/6 — Videos", subtitle: "Inter-Agent Briefing: Manus to Isaac — 8 Youth Intro Videos", src: CDN.brief4Videos, block: "B448" },
+                  { title: "TRE-BRIEF Card 5/6 — Progression & Olympiad", subtitle: "Inter-Agent Briefing: Manus to Isaac — Three Tiers + Olympiad (v2 corrected)", src: CDN.brief5Progression, block: "B451" },
+                  { title: "TRE-BRIEF Card 6/6 — Handshake", subtitle: "Inter-Agent Briefing: Manus to Isaac — Partnership & Delivery", src: CDN.brief6Handshake, block: "B448" },
+                  { title: "GOV-012 — IUMC Failure Analysis", subtitle: "Joker 13/52 Framework Applied to Manus AI Failure Modes", src: CDN.gov012IUMC, block: "B449" },
+                  { title: "GOV-013.1 — Seven Definitions", subtitle: "Session, Dishonesty, Task, Time Out, Sleep, Task Completed, This Card Will Be Lost", src: CDN.gov013Definitions, block: "B449" },
                 ]).map(card => (
                   <div key={card.title} className="bg-card border border-border/50 rounded-xl overflow-hidden">
                     <img
