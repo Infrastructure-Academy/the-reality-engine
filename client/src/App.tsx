@@ -36,6 +36,7 @@ const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
 const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));
 const Prologue = lazy(() => import("./pages/Prologue"));
+const IGOUmbrella = lazy(() => import("./pages/IGOUmbrella"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -77,6 +78,7 @@ function Router() {
         <Route path={"/bridges"} component={BridgeHub} />
         <Route path={"/resources"} component={Resources} />
         <Route path={"/appraisal"} component={AppraisalQuestionnaire} />
+        <Route path={"/play/igo"} component={IGOUmbrella} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

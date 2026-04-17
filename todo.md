@@ -829,3 +829,9 @@
 - [x] Correct Card 5 Olympiad description (v2: nations competing, 8 language blocks, 23 unis, $15T gap, flywheel model)
 - [x] Provide GOV-013.1 CDN URL for Memorial delivery
 - [x] Checkpoint and publish Block 451
+
+## Block 452: Mount iGO on TRE (Max Handover)
+- [x] Create IGOUmbrella.tsx page component adapted from Max's ACAD reference
+- [x] Add /play/igo route to App.tsx (lazy loaded)
+- [x] Test page loads and displays correctly (Master Grid v3 used — v4 terminology update deferred)
+- [x] Checkpoint and publish
