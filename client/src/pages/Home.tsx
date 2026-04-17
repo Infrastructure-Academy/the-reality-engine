@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MODES, RELAYS, WEBS, XP_CAP } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown } from "lucide-react";
+import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2 } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
@@ -238,6 +238,12 @@ export default function Home() {
               <SocialFollowButtons compact />
             </div>
             <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
+            <Link href="/play/igo">
+              <Button variant="ghost" size="sm" className="text-gold-dim hover:text-gold-bright gap-1.5 font-heading tracking-wider">
+                <Gamepad2 className="w-4 h-4" />
+                <span className="hidden sm:inline">iGO</span>
+              </Button>
+            </Link>
             <a href="#governance">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Shield className="w-4 h-4" />
@@ -278,8 +284,8 @@ export default function Home() {
               THE REALITY ENGINE
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Navigate 12,000 years of civilisational infrastructure through three distinct pathways.
-              From fire to human nodes — your odyssey begins here.
+              Navigate 12,000 years of civilisational infrastructure.
+              One game, all ages, 8–65+. From fire to human nodes — your odyssey begins here.
             </p>
           </motion.div>
 
@@ -325,6 +331,53 @@ export default function Home() {
               <ArrowDown className="w-5 h-5" />
             </motion.div>
           </motion.button>
+        </div>
+      </section>
+
+      {/* ── iGO UMBRELLA SECTION ── */}
+      <section className="relative z-10 py-6 md:py-8">
+        <div className="container max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center"
+          >
+            {/* Gold iGO banner */}
+            <Link href="/play/igo">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-amber-500/30 bg-amber-500/10 mb-3 cursor-pointer hover:bg-amber-500/20 transition-colors">
+                <Gamepad2 className="w-4 h-4 text-amber-400" />
+                <span className="font-heading text-sm md:text-base tracking-[0.2em] text-amber-400">iGO</span>
+                <span className="text-[10px] font-mono tracking-wider text-amber-400/70">ONE GAME. ALL AGES. 8–65+</span>
+              </div>
+            </Link>
+
+            <p className="text-sm md:text-base text-amber-300/80 font-heading tracking-wider mb-4">
+              Where you go, iGO follows.
+            </p>
+
+            {/* Master Grid image */}
+            <div className="max-w-2xl mx-auto mb-4">
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/iGO_Master_Grid_v3_2c433f65.png"
+                alt="iGO Master Grid v3 — 12 Modes A–L"
+                className="w-full rounded-sm object-contain"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Explanatory text */}
+            <p className="text-xs md:text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed mb-3">
+              Explorer, Flight Deck, and Scholar are Modes A–E within iGO — the first episode of a 12-mode lifelong learning system spanning ages 8 to 65+.
+            </p>
+
+            {/* Link to full iGO page */}
+            <Link href="/play/igo">
+              <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 font-heading tracking-wider text-xs gap-1.5">
+                SEE ALL 12 MODES <ChevronRight className="w-3.5 h-3.5" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 

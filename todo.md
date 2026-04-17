@@ -835,3 +835,10 @@
 - [x] Add /play/igo route to App.tsx (lazy loaded)
 - [x] Test page loads and displays correctly (Master Grid v3 used — v4 terminology update deferred)
 - [x] Checkpoint and publish
+
+## Block 453: iGO as Umbrella Architecture in Navigation
+- [x] Add iGO link to main top navigation bar
+- [x] Add iGO link to bottom tab bar (mobile) — replaced Feedback tab with iGO tab (Layers icon)
+- [x] Add iGO context to Home page — Master Grid v3 hero, umbrella section between hero and mode cards, "SEE ALL 12 MODES" CTA
+- [x] Read and save all 4 Max handover docs (B-ARCH-001, B-STRAT-001, IGOUmbrella.tsx, B-ARCH-001-XL.xlsx)
+- [ ] Checkpoint and publish

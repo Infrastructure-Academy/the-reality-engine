@@ -268,11 +268,11 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
   });
 
   describe("Give Feedback Button", () => {
-    it("BottomTabBar includes Feedback tab linking to /appraisal", () => {
+    it("BottomTabBar includes iGO tab linking to /play/igo", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/BottomTabBar.tsx"), "utf-8");
-      expect(content).toContain("/appraisal");
-      expect(content).toContain("Feedback");
-      expect(content).toContain("MessageSquarePlus");
+      expect(content).toContain("/play/igo");
+      expect(content).toContain("iGO");
+      expect(content).toContain("Layers");
     });
 
     it("Synthesis page has Give Feedback CTA", () => {
