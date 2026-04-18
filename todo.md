@@ -896,4 +896,17 @@
 - [x] Cross-tab sync via storage event listener
 - [x] useEffect-based localStorage read to avoid SSR issues
 - [x] 311 tests passing, no TS errors
+- [x] Checkpoint saved (0b2ebf29)
+
+## Block 459: Interactive Pipeline Dashboard + Home Page Rationalization
+- [x] Replace static pipeline image with InteractivePipeline component (client/src/components/InteractivePipeline.tsx)
+- [x] 3-layer layout: Layer 3 (6 ASPIRATIONAL, top), Layer 2 (2 DESIGNED, middle), Layer 1 (4 LIVE, bottom)
+- [x] Each mode box clickable — routes to actual game mode (LIVE) or /play/igo (DESIGNED/ASPIRATIONAL)
+- [x] Lit-up amber glow + ✦ VISITED badge for modes with localStorage progress
+- [x] Status badges: LIVE (green), DESIGNED (amber/gold), ASPIRATIONAL (purple)
+- [x] Fix video poster thumbnails — changed preload="none", removed #t=0.1 fragment, added crossOrigin
+- [x] Removed duplicate 12-relay pills section (already covered by RelayCollectionTracker)
+- [x] Compacted 5 Great Webs into inline pill row (removed verbose descriptions)
+- [x] Cleaned up dead code: modeIcons, modeGradients, modeBorders, modeGlows, modeCTAColors removed
+- [x] 311 tests passing, no TS errors
 - [ ] Checkpoint and publish
