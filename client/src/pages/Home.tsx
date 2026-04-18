@@ -457,11 +457,11 @@ export default function Home() {
               <PipelineHotspots />
             </div>
             {/* Player's Journey — the growth story */}
-            <div className="lg:w-1/2 flex items-center glow-pulse overflow-hidden">
+            <div className="lg:w-1/2 glow-pulse overflow-hidden" style={{ aspectRatio: '2752/1536' }}>
               <ImageLightbox
                 src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/igo-player-glory-arc_01ca1bbc.png"
                 alt="The Player's Journey — From Spark to Master: 11 game modes showing lifelong learning progression from age 8 to 65+"
-                className="w-full h-auto rounded-lg"
+                className="w-full h-full object-contain rounded-lg"
               />
             </div>
           </div>

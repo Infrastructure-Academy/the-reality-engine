@@ -43,7 +43,7 @@ export function ImageLightbox({ src, alt, className = "", loading }: ImageLightb
         <img
           src={src}
           alt={alt}
-          className={className}
+          className={`${className} bg-slate-800/50`}
           loading={loading}
         />
         {/* Zoom overlay on hover */}

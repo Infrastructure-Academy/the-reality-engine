@@ -986,3 +986,6 @@
 - [x] Create Share Your Archetype personalised card — canvas-based 1200x630 with FITS, craft, XP, relays, badge
 - [x] Write vitest tests for new features (355 tests passing)
 - [x] Checkpoint and deliver
+
+## Block 466 Bugfix: Player's Journey Image
+- [x] Fix Player's Journey image not loading on Home page — added aspect-ratio 2752/1536 to prevent container collapse + bg-slate-800/50 loading placeholder
