@@ -947,4 +947,14 @@
 - [x] Add 3 Convergence frames to both videos (Main, Payload 2, Payload 3) before end card
 - [x] 311 tests passing, no TS errors
 - [x] Videos: 105s total (was 100s), all frames verified
-- [ ] Checkpoint and deliver
+- [x] Checkpoint saved (798e368c)
+
+## Block 464: Mobile Hotspot Testing + Social Share Buttons + Player's Journey Staircase
+- [x] Test pipeline hotspot touch zones at mobile viewport sizes (375px, 390px, 414px)
+- [x] Fix touch zones for mobile — expanded Layer 3 (9%→14% height) and Layer 2 (17%→21% height)
+- [x] Build ShareCardGallery component with Web Share API + copy-link fallback
+- [x] Wire 4 share cards (Rally, Civil Truth, Authenticity, Founder) to share buttons on landing page
+- [x] Upload Player's Journey staircase image (IMG_5434) to CDN
+- [x] Add staircase image to iGO page as "stage growth" visual
+- [x] Write vitest tests for share functionality (322 tests passing)
+- [x] Checkpoint and deliver

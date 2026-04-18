@@ -8,6 +8,7 @@ import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
+import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { useState, useEffect } from "react";
 
 
@@ -512,6 +513,18 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── SHARE iGO — Social Share Cards ── */}
+      <section className="relative z-10 pb-12">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-6">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">Spread The Word</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">Share iGO</h3>
+            <p className="text-muted-foreground text-xs mt-1">Download a card, share with your network, rally more players</p>
+          </div>
+          <ShareCardGallery />
         </div>
       </section>
 

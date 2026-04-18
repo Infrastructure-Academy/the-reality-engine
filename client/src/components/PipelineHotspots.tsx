@@ -27,15 +27,17 @@ type Hotspot = {
 
 const HOTSPOTS: Hotspot[] = [
   // ── LAYER 3 — iGO (Aspirational) ──
-  { id: "G", label: "Graduate",        href: "/play/igo", left: 21,  top: 20, width: 12, height: 9 },
-  { id: "H", label: "Chartered",       href: "/play/igo", left: 36,  top: 20, width: 12, height: 9 },
-  { id: "I", label: "Senior Leader",   href: "/play/igo", left: 51,  top: 20, width: 12, height: 9 },
-  { id: "J", label: "Industry Leader", href: "/play/igo", left: 66,  top: 20, width: 13, height: 9 },
-  { id: "K", label: "Master Class",    href: "/play/igo", left: 82,  top: 20, width: 12, height: 9 },
+  // Touch zones expanded vertically for mobile tappability (was 9% → 14%)
+  { id: "G", label: "Graduate",        href: "/play/igo", left: 21,  top: 16, width: 12, height: 14 },
+  { id: "H", label: "Chartered",       href: "/play/igo", left: 36,  top: 16, width: 12, height: 14 },
+  { id: "I", label: "Senior Leader",   href: "/play/igo", left: 51,  top: 16, width: 12, height: 14 },
+  { id: "J", label: "Industry Leader", href: "/play/igo", left: 66,  top: 16, width: 13, height: 14 },
+  { id: "K", label: "Master Class",    href: "/play/igo", left: 82,  top: 16, width: 12, height: 14 },
 
   // ── LAYER 2 — Scholar + Academic (Designed) ──
-  { id: "E", label: "Scholar Mode",    href: "/scholar",  left: 27, top: 36, width: 26, height: 17 },
-  { id: "F", label: "Academic Mode",   href: "/play/igo", left: 62, top: 36, width: 26, height: 17 },
+  // Touch zones expanded vertically for mobile tappability (was 17% → 21%)
+  { id: "E", label: "Scholar Mode",    href: "/scholar",  left: 27, top: 33, width: 26, height: 21 },
+  { id: "F", label: "Academic Mode",   href: "/play/igo", left: 62, top: 33, width: 26, height: 21 },
 
   // ── LAYER 1 — The Reality Engine (Live) ──
   { id: "A", label: "Relay Spinner",   href: "/explore/spinner",     left: 17, top: 62, width: 17, height: 22 },

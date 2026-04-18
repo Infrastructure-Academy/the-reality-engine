@@ -68,6 +68,7 @@ const CDN = {
   iCardUmbrella: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard_igo_umbrella_9a19d3a0.png",
   generationsTimeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/icard_generations_timeline_a74f8d24.png",
   lifecyclePipeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Pipeline_v3_fixed_4c69f89d.png",
+  playersJourney: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/players-journey-staircase_a823052e.png",
 };
 
 // ─── IMPACT STATS ───
@@ -252,6 +253,19 @@ export default function IGOUmbrella() {
               />
             </div>
             <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider text-center">B-ARCH-001 — Pipeline v3 + iCard B471K-IGO-001</p>
+          </div>
+
+          {/* Player's Journey Staircase — Stage Growth Visual */}
+          <div className="max-w-5xl mx-auto mb-10">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/50 text-center mb-3">Stage Growth</p>
+            <div className="rounded-lg border border-amber-400/20 overflow-hidden">
+              <ImageLightbox
+                src={CDN.playersJourney}
+                alt="iGO — The Player's Journey. From Discovery to Mastery, Ages 8–65+. Ascending staircase showing Mode A (Relay Spinner) through Mode K (Master Class) with Episode 1: Relay & Remember, Transition, and Episodes 2–3. Foundation: 12 Relays × 5 Webs = 60-Node Dearden Field."
+                className="w-full h-auto object-contain"
+              />
+            </div>
+            <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider text-center">B464-JOURNEY-001 — Player's Journey Staircase — From Spark to Master</p>
           </div>
 
           {/* Primary CTAs */}
