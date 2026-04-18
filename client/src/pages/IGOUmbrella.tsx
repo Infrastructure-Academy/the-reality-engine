@@ -361,12 +361,13 @@ export default function IGOUmbrella() {
             ))}
           </div>
 
-          {/* Lifecycle Pipeline image — full width */}
-          <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12">
-            <ImageLightbox
+          {/* Lifecycle Pipeline image — full width, no lightbox */}
+          <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12 mt-4">
+            <img
               src={CDN.lifecyclePipeline}
               alt="iGO Lifecycle Timeline — The Complete Pipeline"
-              className="w-full border-y border-amber-400/20 hover:border-amber-400/40 transition-colors"
+              className="w-full block"
+              style={{ display: "block", margin: 0, padding: 0 }}
             />
           </div>
         </section>
