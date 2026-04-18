@@ -340,7 +340,7 @@ export default function Home() {
         <div className="w-full">
           <Link href="/play/igo">
             <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/igo_lifecycle_pipeline_v2_070c87b8.png"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Pipeline_v3_fixed_4c69f89d.png"
               alt="iGO Lifecycle Timeline — The Complete Pipeline: 3 Layers, 12 Modes, Ages 8–65+"
               className="w-full object-contain cursor-pointer"
               loading="lazy"
@@ -429,6 +429,31 @@ export default function Home() {
                 EXPLORE ALL 12 MODES <ChevronRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
+          </div>
+        </div>
+
+        {/* Support / Back iGO CTA */}
+        <div className="container max-w-4xl pb-8 pt-2">
+          <div className="relative border border-amber-500/30 rounded-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(217,119,6,0.08), rgba(168,85,247,0.06), transparent)' }}>
+            <div className="p-6 md:p-8 text-center">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">Be Part of the Mission</p>
+              <h3 className="font-heading text-xl md:text-2xl text-foreground mb-3">Support <span className="text-amber-400">iGO</span></h3>
+              <p className="text-sm text-muted-foreground max-w-lg mx-auto mb-5 leading-relaxed">
+                Whether you're an educator, institution, sponsor, or financial backer — help scale a lifelong infrastructure learning system from age 8 to 65+.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link href="/play/igo#register">
+                  <Button className="bg-amber-500 hover:bg-amber-600 text-black font-heading tracking-wider text-xs px-6 gap-1.5">
+                    REGISTER YOUR INTEREST <ChevronRight className="w-3.5 h-3.5" />
+                  </Button>
+                </Link>
+                <Link href="/play/igo#back-igo">
+                  <Button variant="outline" size="sm" className="border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-heading tracking-wider text-xs gap-1.5">
+                    WHY BACK iGO? <ChevronRight className="w-3.5 h-3.5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

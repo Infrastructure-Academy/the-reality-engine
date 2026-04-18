@@ -877,4 +877,11 @@
 - [x] Add 12 clickable mode cards in 2x2/3x4/4x3 grid — LIVE→game, DESIGNED→/play/igo, ASPIRATIONAL→/play/igo
 - [x] Remove old 3-pathway cards — replaced by 12-mode grid
 - [x] Add iAAi branding with link to www.infrastructure-academy.com
+- [x] Checkpoint and publish (8ec216ef)
+
+## Block 457: Pipeline Image Fix + Support CTA + Mobile Verify
+- [x] Fix pipeline image — regenerated v3 with L="MASTER CLASS" confirmed
+- [x] Upload fixed pipeline image and update all CDN references (Home.tsx + IGOUmbrella.tsx)
+- [x] Add "Support / Back iGO" CTA section on Home page — Register Interest + Why Back iGO buttons
+- [x] 311 tests passing, no TS errors
 - [ ] Checkpoint and publish
