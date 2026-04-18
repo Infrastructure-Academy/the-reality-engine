@@ -859,3 +859,12 @@
 - [x] Add dedicated /exhibition route (renders IGOUmbrella)
 - [x] Add Exhibition link via iGO page itself
 - [x] Write tests (22 new tests, 293 total passing), checkpoint and publish
+
+## Block 455: Admin Registrations Dashboard + Notification + OG Meta
+- [x] Add iGO Registrations admin view at /admin/igo — table with stats cards, role filters, email links, app pre-register indicator
+- [x] Add registration stats summary (total, by role, app pre-registers) via igo.stats + igo.list (admin-only)
+- [x] Wire notifyOwner() on new backer/sponsor/institution/educator registration — fire-and-forget instant alert
+- [x] OG meta uses iCard umbrella portrait (B471K-IGO-001) as og:image — perfect for social sharing
+- [x] Add OG meta tags to /play/igo page (og:title, og:description, og:image, og:url, og:type + twitter:card)
+- [x] Write tests (18 new, 311 total passing), checkpoint and publish
+- [x] FIX: Master Grid v5 generated with L="MASTER CLASS" — uploaded + updated Home.tsx and IGOUmbrella.tsx. Also added iCard portrait (B471K-IGO-001) to iGO page.

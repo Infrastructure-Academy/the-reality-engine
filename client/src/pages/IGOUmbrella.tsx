@@ -63,7 +63,8 @@ const SUPPORTER_ROLES = [
 
 // ─── CDN IMAGES ───
 const CDN = {
-  masterGrid: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v4_11de4091.png",
+  masterGrid: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v5_54307353.png",
+  iCardUmbrella: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard_igo_umbrella_9a19d3a0.png",
   generationsTimeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/icard_generations_timeline_a74f8d24.png",
   lifecyclePipeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IMG_5369_750f301c.PNG",
 };
@@ -112,6 +113,30 @@ export default function IGOUmbrella() {
   useEffect(() => {
     const t = setTimeout(() => setShowContent(true), 200);
     return () => clearTimeout(t);
+  }, []);
+
+  // ─── OG Meta Tags for social sharing ───
+  useEffect(() => {
+    const ogImage = CDN.iCardUmbrella;
+    const ogTitle = "iGO — One Game. All Ages. 8–65+. | Infrastructure Academy";
+    const ogDesc = "12 civilisational relays. 12 game formats. A lifelong learning system spanning ages 8 to 65+. Join as a player, educator, institution, or backer.";
+    const ogUrl = window.location.href;
+    const setMeta = (prop: string, content: string, attr = "property") => {
+      let el = document.querySelector(`meta[${attr}="${prop}"]`) as HTMLMetaElement | null;
+      if (!el) { el = document.createElement("meta"); el.setAttribute(attr, prop); document.head.appendChild(el); }
+      el.content = content;
+    };
+    document.title = ogTitle;
+    setMeta("og:title", ogTitle);
+    setMeta("og:description", ogDesc);
+    setMeta("og:image", ogImage);
+    setMeta("og:url", ogUrl);
+    setMeta("og:type", "website");
+    setMeta("twitter:card", "summary_large_image", "name");
+    setMeta("twitter:title", ogTitle, "name");
+    setMeta("twitter:description", ogDesc, "name");
+    setMeta("twitter:image", ogImage, "name");
+    return () => { document.title = "The Reality Engine"; };
   }, []);
 
   // Pre-fill name/email from auth
@@ -213,14 +238,23 @@ export default function IGOUmbrella() {
             ))}
           </div>
 
-          {/* Master Grid v4 */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <ImageLightbox
-              src={CDN.masterGrid}
-              alt="iGO Master Grid v4 — 12 Formats A–L"
-              className="w-full rounded-lg border border-amber-400/20 hover:border-amber-400/40 transition-colors"
-            />
-            <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider">B-ARCH-001 v5 — Master Grid v4</p>
+          {/* Master Grid v5 + iCard Portrait */}
+          <div className="max-w-4xl mx-auto mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <div className="md:col-span-2">
+              <ImageLightbox
+                src={CDN.masterGrid}
+                alt="iGO Master Grid v5 — 12 Formats A–L, K=Industry Champion, L=Master Class"
+                className="w-full rounded-lg border border-amber-400/20 hover:border-amber-400/40 transition-colors"
+              />
+            </div>
+            <div className="md:col-span-1">
+              <ImageLightbox
+                src={CDN.iCardUmbrella}
+                alt="iGO iCard — Architecture Overview, Block 471, SAP Verified"
+                className="w-full rounded-lg border border-amber-400/20 hover:border-amber-400/40 transition-colors"
+              />
+            </div>
+            <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider md:col-span-3">B-ARCH-001 — Master Grid v5 + iCard B471K-IGO-001</p>
           </div>
 
           {/* Primary CTAs */}

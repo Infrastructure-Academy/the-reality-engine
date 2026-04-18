@@ -359,8 +359,8 @@ export default function Home() {
             {/* Master Grid image */}
             <div className="max-w-2xl mx-auto mb-4">
               <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v4_11de4091.png"
-                alt="iGO Master Grid v4 — 12 Modes A–L"
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v5_54307353.png"
+                alt="iGO Master Grid v5 — 12 Modes A–L, corrected: K=Industry Champion, L=Master Class"
                 className="w-full rounded-sm object-contain"
                 loading="lazy"
               />

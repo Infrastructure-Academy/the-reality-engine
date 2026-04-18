@@ -5,6 +5,7 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
 import { invokeLLM } from "./_core/llm";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
   system: systemRouter,
@@ -565,13 +566,25 @@ export const appRouter = router({
         appPreRegister: z.boolean().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        return db.registerIgoInterest({
+        const result = await db.registerIgoInterest({
           ...input,
           userId: ctx.user?.id ?? null,
         });
+        // Notify owner for high-value registrations (sponsors, backers, institutions, educators)
+        if (["sponsor", "backer", "institution", "educator"].includes(input.role)) {
+          notifyOwner({
+            title: `\u{1F31F} New iGO ${input.role.toUpperCase()} Registration`,
+            content: `Name: ${input.name}\nEmail: ${input.email}\nRole: ${input.role}${input.organisation ? `\nOrg: ${input.organisation}` : ""}${input.message ? `\nMessage: ${input.message}` : ""}${input.appPreRegister ? "\n\u{1F4F1} App Pre-Register: YES" : ""}`,
+          }).catch(() => {}); // fire-and-forget, don't block registration
+        }
+        return result;
       }),
     stats: publicProcedure.query(async () => {
       return db.getIgoInterestStats();
+    }),
+    list: protectedProcedure.query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") throw new Error("Forbidden");
+      return db.getIgoInterestList();
     }),
   }),
 

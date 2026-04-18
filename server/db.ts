@@ -928,3 +928,14 @@ export async function getIgoInterestStats() {
     return { total: 0, byRole: {}, appPreRegisters: 0 };
   }
 }
+
+export async function getIgoInterestList() {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(igoInterest).orderBy(sql`${igoInterest.createdAt} DESC`);
+  } catch (error) {
+    console.error("[Database] Failed to get iGO interest list:", error);
+    return [];
+  }
+}

@@ -37,6 +37,7 @@ const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));
 const Prologue = lazy(() => import("./pages/Prologue"));
 const IGOUmbrella = lazy(() => import("./pages/IGOUmbrella"));
+const IgoAdmin = lazy(() => import("./pages/IgoAdmin"));
 
 // ─── Loading fallback ───
 function PageLoader() {
@@ -79,6 +80,7 @@ function Router() {
         <Route path={"/resources"} component={Resources} />
         <Route path={"/appraisal"} component={AppraisalQuestionnaire} />
         <Route path={"/play/igo"} component={IGOUmbrella} />
+        <Route path={"/admin/igo"} component={IgoAdmin} />
         <Route path={"/exhibition"} component={IGOUmbrella} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
