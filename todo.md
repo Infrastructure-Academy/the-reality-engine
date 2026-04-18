@@ -921,9 +921,15 @@
 
 ## Block 460b: FOCUSED — Landing Page + Videos + Player Journey
 - [x] Replace old Master Grid on iGO page with v3 pipeline image + PipelineHotspots
-- [ ] Verify pipeline hotspots align correctly (visual overlay check done)
-- [ ] Add Player's Journey glory arc image to landing page (image generated)
-- [ ] Fix video posters showing broken play icons on mobile
-- [ ] Fix video — replace old Master Grid frame with v3 pipeline image
-- [ ] Visual verify desktop + mobile
+- [x] Verify pipeline hotspots align correctly (visual overlay verified)
+- [x] Add Player's Journey glory arc image to landing page (side-by-side with pipeline on desktop)
+- [x] Fix video posters (preload=none, removed #t=0.1, added crossOrigin)
+- [x] Fix video — replaced old Master Grid frame with v3 pipeline + Player's Journey in both 16:9 and 4:5
+- [x] Visual verify desktop + mobile
+- [x] Checkpoint saved (7c8141b5 for web, videos delivered separately)
+
+## Block 461: Rallying Cry CTA — "Every player has the power"
+- [x] Add rallying cry CTA to landing page (replaced Support CTA section)
+- [x] Add rallying cry end card to video (last 4s of both 16:9 and 4:5)
+- [x] Generate 3 social media share cards: Rally, Civil Engineering Truth, Authenticity
 - [ ] Checkpoint and deliver

@@ -472,10 +472,11 @@ export default function Home() {
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="relative border border-amber-500/30 rounded-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(217,119,6,0.08), rgba(168,85,247,0.06), transparent)' }}>
             <div className="p-6 md:p-8 text-center">
-              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">Be Part of the Mission</p>
-              <h3 className="font-heading text-xl md:text-2xl text-foreground mb-3">Support <span className="text-amber-400">iGO</span></h3>
-              <p className="text-sm text-muted-foreground max-w-lg mx-auto mb-5 leading-relaxed">
-                Whether you're an educator, institution, sponsor, or financial backer — help scale a lifelong infrastructure learning system from age 8 to 65+.
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">The Rallying Cry</p>
+              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">Every player has the <span className="text-amber-400">power</span>.</h3>
+              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">More players have <span className="text-amber-400">more power</span>.</h3>
+              <p className="font-heading text-lg md:text-xl text-purple-300 mt-3 mb-5">
+                How many players can you rally to <span className="text-amber-400 font-bold">iGO</span>?
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link href="/play/igo#register">
