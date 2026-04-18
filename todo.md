@@ -958,3 +958,13 @@
 - [x] Add staircase image to iGO page as "stage growth" visual
 - [x] Write vitest tests for share functionality (322 tests passing)
 - [x] Checkpoint and deliver
+
+## Block 464b: Fix lowercase 'i' casing for iGO and iAAi
+- [x] Fix all instances of uppercase 'I' in IGO → iGO across codebase (Cinzel all-caps font → .brand-i class forces Inter)
+- [x] Fix all instances of uppercase 'I' in IAAI → iAAi across codebase
+- [x] Verify on mobile that headings render with lowercase 'i'
+- [x] Fix iCard lowercase 'i' rendering in Cinzel headings (same .brand-i treatment)
+- [x] Fix ALL brand lowercase 'i' terms in Cinzel headings: iGO, iAAi, iCard — wrap 'i' in .brand-i class
+- [x] The lowercase 'i' represents: individual, infrastructure, information, intelligence, infostructure, integration, impact
+- [x] Fix ALL brand lowercase 'i' in Cinzel headings: iGO, iAAi, iCard — wrap 'i' in .brand-i class
+- [x] The lowercase 'i' = individual, infrastructure, information, intelligence, infostructure, integration (of the interfaces), impact

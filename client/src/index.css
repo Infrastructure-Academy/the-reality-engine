@@ -190,6 +190,14 @@
     }
   }
 
+  /* Brand name lowercase 'i' — forces Inter font so Cinzel doesn't render as small-caps.
+     The lowercase i is personal: individual, infrastructure, information, intelligence, impact. */
+  .brand-i {
+    font-family: var(--font-sans);
+    font-style: normal;
+    text-transform: none;
+  }
+
   /* Gold text gradient for headings */
   .text-gold-gradient {
     background: linear-gradient(135deg, oklch(0.92 0.08 85), oklch(0.82 0.12 85), oklch(0.65 0.1 85));

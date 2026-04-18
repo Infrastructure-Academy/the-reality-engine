@@ -194,7 +194,7 @@ export default function IGOUmbrella() {
           <span className="font-sans text-xs tracking-wider hidden sm:inline">HOME</span>
         </Link>
         <div className="text-center">
-          <span className="font-bold text-amber-400 text-sm tracking-[0.25em]">iGO</span>
+          <span className="font-bold text-amber-400 text-sm tracking-[0.25em]"><span className="brand-i">i</span>GO</span>
           <span className="ml-2 px-2 py-0.5 bg-orange-500/15 border border-orange-500/40 text-orange-400 font-mono text-[8px] tracking-widest rounded-sm">PoC BETA</span>
         </div>
         <button onClick={scrollToRegister} className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold tracking-wider rounded hover:bg-amber-500/30 transition-colors">
@@ -210,13 +210,13 @@ export default function IGOUmbrella() {
         <section className={`text-center mb-20 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="mb-6">
             <h1 className="tracking-[0.4em] mb-3 font-bold" style={{ fontSize: "clamp(2.5rem, 8vw, 5rem)", color: "#ffd700", textShadow: "0 0 60px rgba(255,215,0,0.3), 0 0 120px rgba(255,215,0,0.1)" }}>
-              iGO
+              <span className="brand-i">i</span>GO
             </h1>
             <p className="text-white/90 tracking-[0.15em] text-xl sm:text-2xl mb-3 font-semibold">
               ONE GAME. ALL AGES. 8–65+
             </p>
             <p className="text-amber-400/70 italic text-lg sm:text-xl max-w-2xl mx-auto mb-6">
-              Where you go, iGO follows.
+              Where you go, <span className="brand-i">i</span>GO follows.
             </p>
           </div>
 
@@ -296,7 +296,7 @@ export default function IGOUmbrella() {
         <section className={`mb-20 transition-all duration-1000 delay-100 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">FIND YOUR MODE</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            Tap your age bracket. iGO shows you where you enter the game.
+            Tap your age bracket. <span className="brand-i">i</span>GO shows you where you enter the game.
           </p>
 
           {/* Age selector buttons */}
@@ -388,7 +388,7 @@ export default function IGOUmbrella() {
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-200 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE CONVERGENCE</h2>
-          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × iAAi = iGO — Three games. Three eras. One convergence.</p>
+          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × <span className="brand-i">i</span>AAi = <span className="brand-i">i</span>GO — Three games. Three eras. One convergence.</p>
 
           {/* Main Convergence card */}
           <div className="max-w-3xl mx-auto mb-6">
@@ -431,12 +431,12 @@ export default function IGOUmbrella() {
               />
               <div className="p-3 text-center">
                 <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 3 — CONTEXT</p>
-                <p className="text-muted-foreground text-[10px] mt-1">From 2,500 BCE to 2026. Open your eye. iAAi.</p>
+                <p className="text-muted-foreground text-[10px] mt-1">From 2,500 BCE to 2026. Open your eye. <span className="brand-i">i</span>AAi.</p>
               </div>
             </div>
           </div>
 
-          <p className="text-center text-muted-foreground text-xs mt-4 italic">iCARD DOM-004 | Block 445 | Open your eye. iAAi.</p>
+          <p className="text-center text-muted-foreground text-xs mt-4 italic"><span className="brand-i">i</span>CARD DOM-004 | Block 445 | Open your eye. <span className="brand-i">i</span>AAi.</p>
         </section>
 
         {/* ══════════════════════════════════════════════════════════════
@@ -524,7 +524,7 @@ export default function IGOUmbrella() {
         <section ref={exhibitionRef} className={`mb-20 transition-all duration-1000 delay-[400ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE EXHIBITION</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            13 immersive halls. The physical manifestation of iGO — from Fire to the Fractal Connector.
+            13 immersive halls. The physical manifestation of <span className="brand-i">i</span>GO — from Fire to the Fractal Connector.
           </p>
 
           {/* Horizontal scroll carousel */}
@@ -612,7 +612,7 @@ export default function IGOUmbrella() {
             <div className="max-w-lg mx-auto text-center rounded-xl p-8 border border-emerald-500/30" style={{ background: "linear-gradient(180deg, rgba(34,197,94,0.06) 0%, rgba(10,22,40,0.95) 100%)" }}>
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
               <h3 className="text-white text-xl font-bold tracking-wider mb-2">REGISTERED</h3>
-              <p className="text-white/50 text-sm mb-4">Thank you for your interest in iGO. We'll be in touch.</p>
+              <p className="text-white/50 text-sm mb-4">Thank you for your interest in <span className="brand-i">i</span>GO. We'll be in touch.</p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link href="/explore" className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider rounded-lg transition-all">
                   <Gamepad2 className="w-4 h-4" /> PLAY NOW
@@ -714,9 +714,9 @@ export default function IGOUmbrella() {
                   <div>
                     <div className="flex items-center gap-2">
                       <Smartphone className="w-3.5 h-3.5 text-amber-400/60" />
-                      <span className="text-white/70 text-xs font-bold tracking-wider">PRE-REGISTER FOR iGO MOBILE APP</span>
+                      <span className="text-white/70 text-xs font-bold tracking-wider">PRE-REGISTER FOR <span className="brand-i">i</span>GO MOBILE APP</span>
                     </div>
-                    <p className="text-white/30 text-[10px] mt-0.5">Get early access when the iGO app launches</p>
+                    <p className="text-white/30 text-[10px] mt-0.5">Get early access when the <span className="brand-i">i</span>GO app launches</p>
                   </div>
                 </div>
 
@@ -743,7 +743,7 @@ export default function IGOUmbrella() {
             SECTION 9: WHY BACK iGO — For Financial Supporters
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-[800ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">WHY BACK iGO?</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">WHY BACK <span className="brand-i">i</span>GO?</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-2xl mx-auto">
             A proven concept. A working prototype. A clear path to scale.
           </p>
@@ -805,7 +805,7 @@ export default function IGOUmbrella() {
             PoC BETA — All modes in test mode
           </p>
           <p className="text-amber-400/20 text-xs mt-4 tracking-[0.3em] font-bold">
-            INFRASTRUCTURE ACADEMY · iAAi
+            INFRASTRUCTURE ACADEMY · <span className="brand-i">i</span>AAi
           </p>
         </footer>
       </div>

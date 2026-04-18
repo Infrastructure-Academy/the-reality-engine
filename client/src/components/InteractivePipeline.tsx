@@ -174,7 +174,7 @@ export function InteractivePipeline() {
         <div className="border-b border-amber-500/20 px-4 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-heading text-xs md:text-sm tracking-[0.2em] uppercase text-amber-400/90">
-              iGO Lifecycle Timeline
+              <span className="brand-i">i</span>GO Lifecycle Timeline
             </span>
             <span className="text-[8px] text-muted-foreground/60 font-mono hidden sm:inline">— The Complete Pipeline</span>
           </div>
@@ -190,7 +190,7 @@ export function InteractivePipeline() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-[8px] md:text-[9px] font-mono tracking-wider text-purple-400/70 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
-                LAYER 3 — iGO (ASPIRATIONAL)
+                LAYER 3 — <span className="brand-i">i</span>GO (ASPIRATIONAL)
               </span>
               <span className="text-[8px] text-muted-foreground/50 hidden sm:inline">Professional Tools • D20 → D10/D12</span>
             </div>

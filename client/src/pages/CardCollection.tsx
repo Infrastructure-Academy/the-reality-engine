@@ -133,7 +133,7 @@ export default function CardCollection() {
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
-            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">iCARD COLLECTION</h1>
+            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider"><span className="brand-i">i</span>CARD COLLECTION</h1>
             <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
@@ -150,9 +150,9 @@ export default function CardCollection() {
           <div className="flex items-center gap-2 mb-1">
             <Eye className="w-4 h-4 text-gold" />
             <h2 className="font-heading text-gold text-sm md:text-base tracking-wider">THE CONVERGENCE</h2>
-            <span className="text-[9px] bg-gold/20 text-gold px-1.5 py-0.5 rounded">iCARD DOM-004</span>
+            <span className="text-[9px] bg-gold/20 text-gold px-1.5 py-0.5 rounded"><span className="brand-i">i</span>CARD DOM-004</span>
           </div>
-          <p className="text-[10px] text-muted-foreground mb-4">GO completely reimagined \u2014 the formation base of iGO. Block 445.</p>
+          <p className="text-[10px] text-muted-foreground mb-4">GO completely reimagined — the formation base of <span className="brand-i">i</span>GO. Block 445.</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {CONVERGENCE_CARDS.map(card => (
               <div key={card.id} className="space-y-2">

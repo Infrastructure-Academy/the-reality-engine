@@ -441,7 +441,7 @@ export default function GovernanceDeck() {
               </div>
 
               <p className="text-center text-muted-foreground text-xs italic">
-                "The line is not safe until the system is tested." — iAAi Block 353
+                "The line is not safe until the system is tested." — <span className="brand-i">i</span>AAi Block 353
               </p>
             </motion.div>
           )}
@@ -750,10 +750,10 @@ export default function GovernanceDeck() {
           {activeTab === "gallery" && (
             <motion.div key="gallery" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Governance Deck — Source iCards</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">iCard Gallery</h2>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Governance Deck — Source <span className="brand-i">i</span>Cards</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient"><span className="brand-i">i</span>Card Gallery</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  The original iCards from the iAAi archive. Tap to expand.
+                  The original <span className="brand-i">i</span>Cards from the <span className="brand-i">i</span>AAi archive. Tap to expand.
                 </p>
               </div>
 

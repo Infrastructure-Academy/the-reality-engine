@@ -338,7 +338,7 @@ export default function Home() {
             <Link href="/play/igo">
               <Button variant="ghost" size="sm" className="text-gold-dim hover:text-gold-bright gap-1.5 font-heading tracking-wider">
                 <Gamepad2 className="w-4 h-4" />
-                <span className="hidden sm:inline">iGO</span>
+                <span className="hidden sm:inline"><span className="brand-i">i</span>GO</span>
               </Button>
             </Link>
             <a href="#governance">
@@ -436,14 +436,14 @@ export default function Home() {
         {/* AIM tagline */}
         <div className="container max-w-4xl text-center pt-4 pb-2">
           <p className="text-sm md:text-base text-amber-300/80 font-heading tracking-wider mb-1">
-            Where you go, iGO follows — and sharpens your <span className="text-amber-400 font-bold">AIM</span>.
+            Where you go, <span className="brand-i">i</span>GO follows — and sharpens your <span className="text-amber-400 font-bold">AIM</span>.
           </p>
           <p className="text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-1">
             AIM = Avatar Integration Module
           </p>
           <p className="text-xs md:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-2">
             12 game formats across 3 episodes — from age 8 to 65+. One lifelong infrastructure learning system.
-            Built by <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2">iAAi — Infrastructure Academy</a>.
+            Built by <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><span className="brand-i">i</span>AAi — Infrastructure Academy</a>.
           </p>
         </div>
 
@@ -474,7 +474,7 @@ export default function Home() {
           <div className="text-center mb-4">
             <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Formation Base</p>
             <h3 className="font-heading text-lg md:text-xl text-foreground">GO Completely Reimagined</h3>
-            <p className="text-muted-foreground text-xs mt-1">Go × Pokémon × iAAi = iGO — Three games. Three eras. One convergence.</p>
+            <p className="text-muted-foreground text-xs mt-1">Go × Pokémon × <span className="brand-i">i</span>AAi = <span className="brand-i">i</span>GO — Three games. Three eras. One convergence.</p>
           </div>
           <ImageLightbox
             src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-main_807ea243.png"
@@ -491,7 +491,7 @@ export default function Home() {
               <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">Every player has the <span className="text-amber-400">power</span>.</h3>
               <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">More players have <span className="text-amber-400">more power</span>.</h3>
               <p className="font-heading text-lg md:text-xl text-purple-300 mt-3 mb-5">
-                How many players can you rally to <span className="text-amber-400 font-bold">iGO</span>?
+                How many players can you rally to <span className="text-amber-400 font-bold"><span className="brand-i">i</span>GO</span>?
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link href="/play/igo#register">
@@ -501,7 +501,7 @@ export default function Home() {
                 </Link>
                 <Link href="/play/igo#back-igo">
                   <Button variant="outline" size="sm" className="border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-heading tracking-wider text-xs gap-1.5">
-                    WHY BACK iGO? <ChevronRight className="w-3.5 h-3.5" />
+                    WHY BACK <span className="brand-i">i</span>GO? <ChevronRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>
               </div>
@@ -521,7 +521,7 @@ export default function Home() {
         <div className="container max-w-4xl">
           <div className="text-center mb-6">
             <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">Spread The Word</p>
-            <h3 className="font-heading text-lg md:text-xl text-foreground">Share iGO</h3>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">Share <span className="brand-i">i</span>GO</h3>
             <p className="text-muted-foreground text-xs mt-1">Download a card, share with your network, rally more players</p>
           </div>
           <ShareCardGallery />
@@ -605,7 +605,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-center mb-8"
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">iAAi Governance Framework</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2"><span className="brand-i">i</span>AAi Governance Framework</p>
             <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">System Architecture &amp; Compliance</h3>
             <p className="text-xs text-muted-foreground max-w-lg mx-auto">SAP-001 compliant construction governance — 3+1 model, no false completion</p>
           </motion.div>
@@ -718,7 +718,7 @@ export default function Home() {
             />
           </div>
           <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono">
-            MORALLY NEUTRAL &nbsp;|&nbsp; CIVIL ENGINEER LENS &nbsp;|&nbsp; SKILL NOW LOST — iAAi RECOVERS IT DIGITALLY
+            MORALLY NEUTRAL &nbsp;|&nbsp; CIVIL ENGINEER LENS &nbsp;|&nbsp; SKILL NOW LOST — <span className="brand-i">i</span>AAi RECOVERS IT DIGITALLY
           </p>
         </div>
       </section>
