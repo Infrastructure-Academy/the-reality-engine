@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "wouter";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
+import { BrandI } from "@/components/BrandI";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
@@ -194,7 +195,7 @@ export default function IGOUmbrella() {
           <span className="font-sans text-xs tracking-wider hidden sm:inline">HOME</span>
         </Link>
         <div className="text-center">
-          <span className="font-bold text-amber-400 text-sm tracking-[0.25em]"><span className="brand-i">i</span>GO</span>
+          <span className="font-bold text-amber-400 text-sm tracking-[0.25em]"><BrandI />GO</span>
           <span className="ml-2 px-2 py-0.5 bg-orange-500/15 border border-orange-500/40 text-orange-400 font-mono text-[8px] tracking-widest rounded-sm">PoC BETA</span>
         </div>
         <button onClick={scrollToRegister} className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold tracking-wider rounded hover:bg-amber-500/30 transition-colors">
@@ -210,13 +211,13 @@ export default function IGOUmbrella() {
         <section className={`text-center mb-20 transition-all duration-1000 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="mb-6">
             <h1 className="tracking-[0.4em] mb-3 font-bold" style={{ fontSize: "clamp(2.5rem, 8vw, 5rem)", color: "#ffd700", textShadow: "0 0 60px rgba(255,215,0,0.3), 0 0 120px rgba(255,215,0,0.1)" }}>
-              <span className="brand-i">i</span>GO
+              <BrandI />GO
             </h1>
             <p className="text-white/90 tracking-[0.15em] text-xl sm:text-2xl mb-3 font-semibold">
               ONE GAME. ALL AGES. 8–65+
             </p>
             <p className="text-amber-400/70 italic text-lg sm:text-xl max-w-2xl mx-auto mb-6">
-              Where you go, <span className="brand-i">i</span>GO follows.
+              Where you go, <BrandI />GO follows.
             </p>
           </div>
 
@@ -388,7 +389,7 @@ export default function IGOUmbrella() {
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-200 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE CONVERGENCE</h2>
-          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × <span className="brand-i">i</span>AAi = <span className="brand-i">i</span>GO — Three games. Three eras. One convergence.</p>
+          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × <BrandI />AAi = <BrandI />GO — Three games. Three eras. One convergence.</p>
 
           {/* Main Convergence card */}
           <div className="max-w-3xl mx-auto mb-6">
@@ -743,7 +744,7 @@ export default function IGOUmbrella() {
             SECTION 9: WHY BACK iGO — For Financial Supporters
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-[800ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">WHY BACK <span className="brand-i">i</span>GO?</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">WHY BACK <BrandI />GO?</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-2xl mx-auto">
             A proven concept. A working prototype. A clear path to scale.
           </p>
@@ -805,7 +806,7 @@ export default function IGOUmbrella() {
             PoC BETA — All modes in test mode
           </p>
           <p className="text-amber-400/20 text-xs mt-4 tracking-[0.3em] font-bold">
-            INFRASTRUCTURE ACADEMY · <span className="brand-i">i</span>AAi
+            INFRASTRUCTURE ACADEMY · <BrandI />AAi
           </p>
         </footer>
       </div>

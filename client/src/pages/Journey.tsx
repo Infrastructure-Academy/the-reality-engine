@@ -5,6 +5,7 @@ import { getLoginUrl } from "@/const";
 import { Link } from "wouter";
 import { RELAYS } from "@shared/gameData";
 import { getPlayerBadge, getAllEarnedBadges, getNextBadge, BADGES } from "@shared/badges";
+import { ShareArchetypeCard } from "@/components/ShareArchetypeCard";
 import {
   ArrowLeft, Flame, TreePine, Waves, Compass, Map, Ship,
   Cog, Train, Zap, Plane, Satellite, Brain, Trophy,
@@ -272,6 +273,20 @@ export default function Journey() {
             <div className="text-xl font-bold text-purple-400">{totalNodes}/60</div>
             <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Nodes</div>
           </div>
+        </div>
+
+        {/* Share Your Archetype */}
+        <div className="bg-slate-800/40 border border-amber-500/20 rounded-lg p-4 text-center">
+          <p className="text-[10px] text-amber-400/60 uppercase tracking-[0.3em] mb-2">Your Player Card</p>
+          <ShareArchetypeCard
+            displayName={user?.name || "Anonymous Player"}
+            fitsType={getProfile.data?.fitsType}
+            craftId={getProfile.data?.craftId}
+            archetype={null}
+            totalXp={totalXp}
+            relaysCompleted={completedRelays}
+            mode={getProfile.data?.mode || "explorer"}
+          />
         </div>
 
         {/* Badge Progress */}

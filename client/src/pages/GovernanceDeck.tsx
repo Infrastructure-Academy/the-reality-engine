@@ -9,6 +9,7 @@ import {
   ChevronRight, Key, Eye, CheckCircle, FileText, Wrench,
   ArrowDown, Users, Search, Filter, Database, X
 } from "lucide-react";
+import { BrandI } from "@/components/BrandI";
 
 // CDN URLs for iCard images
 const CDN = {
@@ -751,9 +752,9 @@ export default function GovernanceDeck() {
             <motion.div key="gallery" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Governance Deck — Source <span className="brand-i">i</span>Cards</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient"><span className="brand-i">i</span>Card Gallery</h2>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient"><BrandI />Card Gallery</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  The original <span className="brand-i">i</span>Cards from the <span className="brand-i">i</span>AAi archive. Tap to expand.
+                  The original <BrandI />Cards from the <BrandI />AAi archive. Tap to expand.
                 </p>
               </div>
 

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Compass, Scale, Ship, Shield, FileText, Wrench, ChevronRight, Image } from "lucide-react";
+import { BrandI } from "@/components/BrandI";
 
 // CDN URLs for iCard images
 const FRAMEWORK_CDN = {
@@ -170,7 +171,7 @@ export default function Frameworks() {
             <motion.div key="laws" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Asimov 3 becomes 4 — The Missing Law</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">4 Laws of <span className="brand-i">i</span>AAi</h2>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">4 Laws of <BrandI />AAi</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
                   4/3 to 3/4 — The Mirror Inversion. Asimov gave us three laws of robotics.
                   We add the missing second law: Collaborate.
@@ -321,7 +322,7 @@ export default function Frameworks() {
                   loading="lazy"
                 />
                 <div className="p-4 text-center">
-                  <h4 className="font-heading text-gold text-sm">The Walkby <span className="brand-i">i</span>Card</h4>
+                  <h4 className="font-heading text-gold text-sm">The Walkby <BrandI />Card</h4>
                   <p className="text-xs text-muted-foreground">TP-013 — 4-Level Control Hierarchy — <span className="brand-i">i</span>AAi Archive</p>
                 </div>
               </div>
@@ -339,7 +340,7 @@ export default function Frameworks() {
                   loading="lazy"
                 />
                 <div className="p-4 text-center">
-                  <h4 className="font-heading text-gold text-sm">4 Laws of <span className="brand-i">i</span>AAi — <span className="brand-i">i</span>Card</h4>
+                  <h4 className="font-heading text-gold text-sm">4 Laws of <BrandI />AAi — <BrandI />Card</h4>
                   <p className="text-xs text-muted-foreground">Asimov 3 becomes 4 — The Missing Law — <span className="brand-i">i</span>AAi Archive</p>
                 </div>
               </div>

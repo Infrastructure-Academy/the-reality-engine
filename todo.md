@@ -977,3 +977,12 @@
 - [x] Write vitest tests for new features (343 tests passing)
 - [x] Checkpoint and deliver
 - [x] Add glowing pulse outline to Pipeline + Player's Journey image boxes on Home page
+
+## Block 466: BrandI Expansion, Swipe Carousel, Share Your Archetype
+- [x] Extend BrandI tooltip to IGOUmbrella page (6 key instances: hero, tagline, convergence, WHY BACK, footer)
+- [x] Extend BrandI tooltip to Frameworks page (4 instances: 4 Laws heading, Walkby iCard, 4 Laws iCard)
+- [x] Extend BrandI tooltip to GovernanceDeck page (3 instances: iCard Gallery heading, iCards, iAAi)
+- [x] Add touch swipe gesture to ShareCardGallery carousel (useSwipe hook, 50px threshold, horizontal-only)
+- [x] Create Share Your Archetype personalised card — canvas-based 1200x630 with FITS, craft, XP, relays, badge
+- [x] Write vitest tests for new features (355 tests passing)
+- [x] Checkpoint and deliver

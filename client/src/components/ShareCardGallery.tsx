@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Share2, Copy, Check, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageLightbox } from "@/components/ImageLightbox";
@@ -51,6 +51,7 @@ const SHARE_CARDS: ShareCard[] = [
 ];
 
 const SITE_URL = "https://twinearth.world";
+const SWIPE_THRESHOLD = 50; // minimum px to trigger swipe
 
 /** Copy text to clipboard with fallback */
 async function copyToClipboard(text: string): Promise<boolean> {
@@ -91,6 +92,43 @@ async function downloadImage(url: string, filename: string) {
     // Fallback: open in new tab
     window.open(url, "_blank");
   }
+}
+
+/** Custom hook for touch swipe detection */
+function useSwipe(onSwipeLeft: () => void, onSwipeRight: () => void) {
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const swiping = useRef(false);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    swiping.current = false;
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    // Only treat as swipe if horizontal movement > vertical (prevent scroll hijack)
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+      swiping.current = true;
+    }
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (swiping.current && Math.abs(dx) >= SWIPE_THRESHOLD) {
+      if (dx < 0) onSwipeLeft();
+      else onSwipeRight();
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+    swiping.current = false;
+  }, [onSwipeLeft, onSwipeRight]);
+
+  return { onTouchStart, onTouchMove, onTouchEnd };
 }
 
 function ShareCardItem({ card }: { card: ShareCard }) {
@@ -202,8 +240,17 @@ function ShareCardItem({ card }: { card: ShareCard }) {
 export function ShareCardGallery() {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const handlePrev = () => setActiveIndex((i) => (i > 0 ? i - 1 : SHARE_CARDS.length - 1));
-  const handleNext = () => setActiveIndex((i) => (i < SHARE_CARDS.length - 1 ? i + 1 : 0));
+  const handlePrev = useCallback(
+    () => setActiveIndex((i) => (i > 0 ? i - 1 : SHARE_CARDS.length - 1)),
+    []
+  );
+  const handleNext = useCallback(
+    () => setActiveIndex((i) => (i < SHARE_CARDS.length - 1 ? i + 1 : 0)),
+    []
+  );
+
+  // Swipe: left = next, right = prev
+  const swipeHandlers = useSwipe(handleNext, handlePrev);
 
   return (
     <div className="w-full">
@@ -214,12 +261,17 @@ export function ShareCardGallery() {
         ))}
       </div>
 
-      {/* Mobile: carousel with prev/next */}
-      <div className="md:hidden">
+      {/* Mobile: swipeable carousel */}
+      <div className="md:hidden" {...swipeHandlers}>
         <ShareCardItem card={SHARE_CARDS[activeIndex]} />
 
+        {/* Swipe hint (first visit only) */}
+        <p className="text-center text-[9px] text-amber-400/40 mt-2 tracking-wider">
+          ← SWIPE TO BROWSE →
+        </p>
+
         {/* Navigation dots + arrows */}
-        <div className="flex items-center justify-center gap-4 mt-4">
+        <div className="flex items-center justify-center gap-4 mt-3">
           <button
             onClick={handlePrev}
             className="p-1.5 rounded-full border border-border/40 text-muted-foreground hover:text-foreground hover:border-amber-500/40 transition-colors"
