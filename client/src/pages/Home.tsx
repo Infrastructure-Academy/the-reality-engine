@@ -490,6 +490,12 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
+              <div className="mt-6 pt-5 border-t border-amber-500/15">
+                <p className="text-sm md:text-base text-muted-foreground italic max-w-2xl mx-auto leading-relaxed">
+                  "iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun."
+                </p>
+                <p className="text-xs text-amber-400/70 mt-2 font-heading tracking-wider">— Ir. Nigel T. Dearden, Founder & Architect</p>
+              </div>
             </div>
           </div>
         </div>

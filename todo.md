@@ -932,4 +932,9 @@
 - [x] Add rallying cry CTA to landing page (replaced Support CTA section)
 - [x] Add rallying cry end card to video (last 4s of both 16:9 and 4:5)
 - [x] Generate 3 social media share cards: Rally, Civil Engineering Truth, Authenticity
+- [x] Checkpoint saved (fce05f4f)
+
+## Block 462: Founder Quote
+- [x] Add founder quote to landing page (below rallying cry CTA)
+- [x] Generate share card with founder quote
 - [ ] Checkpoint and deliver
