@@ -7,7 +7,7 @@ import { Flame, Rocket, Brain, ChevronRight, Zap, Globe, BookOpen, Trophy, Libra
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const modeIcons = {
   explorer: Flame,
@@ -204,6 +204,128 @@ function VideoGallery() {
           </div>
         </motion.div>
       ))}
+    </div>
+  );
+}
+
+/* ── Relay Collection Tracker — shows personal relay progress from localStorage ── */
+function RelayCollectionTracker() {
+  const [collection, setCollection] = useState<Set<number>>(new Set());
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tre_spinner_collection");
+      if (saved) setCollection(new Set(JSON.parse(saved)));
+    } catch { /* ignore corrupt data */ }
+    setLoaded(true);
+  }, []);
+
+  // Listen for storage changes (e.g. if player collects a relay in another tab)
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const saved = localStorage.getItem("tre_spinner_collection");
+        if (saved) setCollection(new Set(JSON.parse(saved)));
+      } catch { /* ignore */ }
+    };
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
+
+  if (!loaded) return null;
+
+  const count = collection.size;
+  const hasAny = count > 0;
+
+  return (
+    <div className="container max-w-4xl pb-6 pt-2">
+      <div
+        className="relative border rounded-lg overflow-hidden p-5 md:p-6"
+        style={{
+          borderColor: hasAny ? "rgba(234,179,8,0.3)" : "rgba(148,163,184,0.2)",
+          background: hasAny
+            ? "linear-gradient(135deg, rgba(234,179,8,0.06), rgba(168,85,247,0.04), transparent)"
+            : "linear-gradient(135deg, rgba(100,116,139,0.06), transparent)",
+        }}
+      >
+        {/* Header row */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🏆</span>
+            <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
+              Your Relay Collection
+            </span>
+          </div>
+          <span
+            className={`font-mono text-sm font-bold tracking-wider ${
+              count === 12
+                ? "text-amber-400"
+                : hasAny
+                  ? "text-amber-400/80"
+                  : "text-muted-foreground"
+            }`}
+          >
+            {count}/12
+          </span>
+        </div>
+
+        {/* 6x2 Relay Grid */}
+        <div className="grid grid-cols-6 gap-2">
+          {RELAYS.map((relay, idx) => {
+            const collected = collection.has(idx);
+            return (
+              <div
+                key={idx}
+                className={`aspect-square rounded-lg border flex flex-col items-center justify-center transition-all ${
+                  collected
+                    ? "border-amber-500/40 bg-amber-500/10"
+                    : "border-border/20 bg-card/10 opacity-35"
+                }`}
+                title={
+                  collected
+                    ? `${relay.emoji} ${relay.name} — Collected!`
+                    : `${relay.emoji} ${relay.name} — Not yet collected`
+                }
+              >
+                <span className={`text-base md:text-lg ${collected ? "" : "grayscale"}`}>
+                  {relay.emoji}
+                </span>
+                <span
+                  className={`text-[7px] md:text-[8px] font-mono leading-none mt-0.5 ${
+                    collected ? "text-amber-300/90" : "text-muted-foreground/60"
+                  }`}
+                >
+                  {relay.name}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* CTA row */}
+        <div className="mt-4 text-center">
+          {hasAny ? (
+            count === 12 ? (
+              <p className="text-xs text-amber-400 font-heading tracking-wider">
+                ✨ ALL 12 RELAYS COLLECTED — FULL SET ACHIEVED ✨
+              </p>
+            ) : (
+              <Link href="/explore/spinner">
+                <span className="text-xs text-amber-400/80 hover:text-amber-300 cursor-pointer font-heading tracking-wider transition-colors">
+                  Spin for more → {12 - count} remaining
+                </span>
+              </Link>
+            )
+          ) : (
+            <Link href="/explore/spinner">
+              <span className="text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
+                Play Relay Spinner to start collecting →
+              </span>
+            </Link>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -431,6 +553,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* ── YOUR RELAY COLLECTION ── */}
+        <RelayCollectionTracker />
 
         {/* Support / Back iGO CTA */}
         <div className="container max-w-4xl pb-8 pt-2">

@@ -884,4 +884,16 @@
 - [x] Upload fixed pipeline image and update all CDN references (Home.tsx + IGOUmbrella.tsx)
 - [x] Add "Support / Back iGO" CTA section on Home page — Register Interest + Why Back iGO buttons
 - [x] 311 tests passing, no TS errors
+- [x] Checkpoint and publish (72aacb05)
+
+## Block 458: Live Relay Collection Tracker on Home Page
+- [x] Add RelayCollectionTracker component to Home page — 12 relay icons in 6x2 grid between mode cards and Support CTA
+- [x] Read collection from localStorage (tre_spinner_collection) — zero-based relay indexes, aligned with Spinner page
+- [x] Collected relays shown in gold/amber, missing ones greyed out (opacity-35, grayscale emoji)
+- [x] Show count (e.g. "3/12 collected") with gold counter — "ALL 12 RELAYS COLLECTED" when complete
+- [x] For visitors with no collection: all 12 greyed with "Play Relay Spinner to start collecting →" prompt
+- [x] Link to /explore/spinner to collect more — shows remaining count
+- [x] Cross-tab sync via storage event listener
+- [x] useEffect-based localStorage read to avoid SSR issues
+- [x] 311 tests passing, no TS errors
 - [ ] Checkpoint and publish
