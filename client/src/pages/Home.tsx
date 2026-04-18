@@ -334,154 +334,101 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── iGO UMBRELLA SECTION ── */}
-      <section className="relative z-10 py-6 md:py-8">
-        <div className="container max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-center"
-          >
-            {/* Gold iGO banner */}
-            <Link href="/play/igo">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm border border-amber-500/30 bg-amber-500/10 mb-3 cursor-pointer hover:bg-amber-500/20 transition-colors">
-                <Gamepad2 className="w-4 h-4 text-amber-400" />
-                <span className="font-heading text-sm md:text-base tracking-[0.2em] text-amber-400">iGO</span>
-                <span className="text-[10px] font-mono tracking-wider text-amber-400/70">ONE GAME. ALL AGES. 8–65+</span>
-              </div>
-            </Link>
-
-            <p className="text-sm md:text-base text-amber-300/80 font-heading tracking-wider mb-4">
-              Where you go, iGO follows.
-            </p>
-
-            {/* Master Grid image */}
-            <div className="max-w-2xl mx-auto mb-4">
-              <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v5_54307353.png"
-                alt="iGO Master Grid v5 — 12 Modes A–L, corrected: K=Industry Champion, L=Master Class"
-                className="w-full rounded-sm object-contain"
-                loading="lazy"
-              />
-            </div>
-
-            {/* Explanatory text */}
-            <p className="text-xs md:text-sm text-muted-foreground max-w-xl mx-auto leading-relaxed mb-3">
-              Explorer, Flight Deck, and Scholar are Modes A–E within iGO — the first episode of a 12-mode lifelong learning system spanning ages 8 to 65+.
-            </p>
-
-            {/* Link to full iGO page */}
-            <Link href="/play/igo">
-              <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 font-heading tracking-wider text-xs gap-1.5">
-                SEE ALL 12 MODES <ChevronRight className="w-3.5 h-3.5" />
-              </Button>
-            </Link>
-          </motion.div>
+      {/* ── iGO DASHBOARD ROADMAP ── */}
+      <section className="relative z-10">
+        {/* Lifecycle Pipeline — full width, edge to edge */}
+        <div className="w-full">
+          <Link href="/play/igo">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/igo_lifecycle_pipeline_v2_070c87b8.png"
+              alt="iGO Lifecycle Timeline — The Complete Pipeline: 3 Layers, 12 Modes, Ages 8–65+"
+              className="w-full object-contain cursor-pointer"
+              loading="lazy"
+            />
+          </Link>
         </div>
-      </section>
 
-      {/* Mode Selection Cards */}
-      <section className="relative z-10 pb-10">
-        <div className="container">
-          <p className="text-center text-xs tracking-[0.25em] uppercase text-muted-foreground mb-4">Choose Your Path</p>
+        {/* iGO + AIM tagline */}
+        <div className="container max-w-4xl text-center pt-6 pb-2">
+          <Link href="/play/igo">
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-sm border border-amber-500/30 bg-amber-500/10 mb-3 cursor-pointer hover:bg-amber-500/20 transition-colors">
+              <Gamepad2 className="w-5 h-5 text-amber-400" />
+              <span className="font-heading text-base md:text-lg tracking-[0.2em] text-amber-400">iGO</span>
+              <span className="text-[10px] font-mono tracking-wider text-amber-400/70">ONE GAME. ALL AGES. 8–65+</span>
+            </div>
+          </Link>
+          <p className="text-sm md:text-base text-amber-300/80 font-heading tracking-wider mb-1">
+            Where you go, iGO follows — and sharpens your <span className="text-amber-400 font-bold">AIM</span>.
+          </p>
+          <p className="text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-4">
+            AIM = Avatar Integration Module
+          </p>
+          <p className="text-xs md:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-2">
+            12 game formats across 3 episodes — from age 8 to 65+. One lifelong infrastructure learning system.
+            Built by <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2">iAAi — Infrastructure Academy</a>.
+          </p>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {(Object.entries(MODES) as [keyof typeof MODES, (typeof MODES)[keyof typeof MODES]][]).map(([key, mode], i) => {
-              const Icon = modeIcons[key];
-              const isRecommended = "recommended" in mode && mode.recommended;
-
-              return (
-                <motion.div
-                  key={key}
-                  id={key === "explorer" ? "explorer-card" : undefined}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.15 }}
-                  className={key === "explorer" ? "scroll-mt-20" : ""}  
-                >
-                  <div
-                    className={`
-                      relative rounded-xl border p-6 transition-all duration-300
-                      bg-gradient-to-b ${modeGradients[key]}
-                      ${modeBorders[key]} ${modeGlows[key]}
-                      backdrop-blur-sm group
-                    `}
+        {/* 12 Clickable Mode Cards */}
+        <div className="container max-w-5xl pb-8 pt-2">
+          <p className="text-center text-xs tracking-[0.25em] uppercase text-muted-foreground mb-4">Choose Your Mode</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            {([
+              { letter: "A", name: "Relay Spinner", ages: "8–10", status: "live", color: "#22c55e", href: "/explore/spinner" },
+              { letter: "B", name: "Dungeon Crawl", ages: "10–12", status: "live", color: "#22c55e", href: "/explore" },
+              { letter: "C", name: "Grey Matter", ages: "12–14", status: "live", color: "#22c55e", href: "/explore" },
+              { letter: "D", name: "Flight Deck", ages: "14–18", status: "live", color: "#22c55e", href: "/flight-deck" },
+              { letter: "E", name: "Scholar", ages: "18+", status: "designed", color: "#ffd700", href: "/scholar" },
+              { letter: "F", name: "Academic", ages: "University", status: "designed", color: "#ffd700", href: "/play/igo" },
+              { letter: "G", name: "Graduate", ages: "22–29", status: "aspirational", color: "#3b82f6", href: "/play/igo" },
+              { letter: "H", name: "Chartered", ages: "30+", status: "aspirational", color: "#3b82f6", href: "/play/igo" },
+              { letter: "I", name: "Senior Leader", ages: "40+", status: "aspirational", color: "#a855f7", href: "/play/igo" },
+              { letter: "J", name: "Industry Leader", ages: "50+", status: "aspirational", color: "#a855f7", href: "/play/igo" },
+              { letter: "K", name: "Industry Champion", ages: "60+", status: "aspirational", color: "#a855f7", href: "/play/igo" },
+              { letter: "L", name: "Master Class", ages: "65+", status: "aspirational", color: "#a855f7", href: "/play/igo" },
+            ] as const).map((m, i) => (
+              <motion.div
+                key={m.letter}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
+              >
+                <Link href={m.href}>
+                  <div className="relative border rounded-lg p-3 cursor-pointer transition-all duration-200 hover:scale-[1.03] group"
+                    style={{ borderColor: `${m.color}40`, background: `linear-gradient(135deg, ${m.color}10, transparent)` }}
                   >
-                    {isRecommended && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-cyan-600 text-[10px] font-bold uppercase tracking-wider text-white">
-                        Recommended
-                      </div>
-                    )}
-
-                    {/* Mode Icon & Title */}
-                    <div className="flex items-center gap-3 mb-4">
-                      <div
-                        className="w-12 h-12 rounded-lg flex items-center justify-center"
-                        style={{ backgroundColor: `${mode.color}20` }}
-                      >
-                        <Icon className="w-6 h-6" style={{ color: mode.color }} />
-                      </div>
-                      <div>
-                        <h3 className="font-heading text-xl font-bold tracking-wide">{mode.name}</h3>
-                        <p className="text-xs text-muted-foreground font-mono">{mode.ageRange}</p>
-                      </div>
+                    {/* Status badge */}
+                    <div className="absolute top-1.5 right-1.5">
+                      <span className={`text-[8px] font-mono font-bold tracking-wider px-1.5 py-0.5 rounded-full ${
+                        m.status === "live" ? "bg-green-500/20 text-green-400" :
+                        m.status === "designed" ? "bg-amber-500/20 text-amber-400" :
+                        "bg-blue-500/20 text-blue-400"
+                      }`}>
+                        {m.status === "live" ? "LIVE" : m.status === "designed" ? "DESIGNED" : "ASPIRATIONAL"}
+                      </span>
                     </div>
 
-                    {/* Tagline */}
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{mode.tagline}</p>
+                    {/* Letter + Name */}
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-heading text-lg font-bold" style={{ color: m.color }}>{m.letter}</span>
+                      <span className="font-heading text-xs md:text-sm font-semibold text-foreground/90 truncate">{m.name}</span>
+                    </div>
 
-                    {/* Features */}
-                    <ul className="space-y-2 mb-6">
-                      {mode.features.map((f, fi) => (
-                        <li key={fi} className="flex items-start gap-2 text-sm">
-                          <ChevronRight className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: mode.color }} />
-                          <span className="text-foreground/80">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* CTA Button(s) */}
-                    {key === "explorer" ? (
-                      <div className="space-y-2">
-                        <div className="grid grid-cols-2 gap-2">
-                          <Link href="/explore/spinner">
-                            <Button
-                              className="w-full font-heading tracking-wider text-xs bg-blue-600 hover:bg-blue-500 text-white"
-                              size="lg"
-                            >
-                              🎰 SPIN NOW
-                            </Button>
-                          </Link>
-                          <Link href="/explore/1">
-                            <Button
-                              className="w-full font-heading tracking-wider text-xs bg-red-600 hover:bg-red-500 text-white"
-                              size="lg"
-                            >
-                              🔥 RELAY 1
-                            </Button>
-                          </Link>
-                        </div>
-                        <Link href="/explore">
-                          <button className="w-full text-center text-[11px] text-muted-foreground hover:text-foreground transition-colors py-1">
-                            More modes (Dungeon Crawl, Grey Matter) ›
-                          </button>
-                        </Link>
-                      </div>
-                    ) : (
-                      <Link href={mode.entry}>
-                        <Button
-                          className={`w-full font-heading tracking-wider text-sm ${modeCTAColors[key]}`}
-                          size="lg"
-                        >
-                          {mode.cta}
-                        </Button>
-                      </Link>
-                    )}
+                    {/* Age range */}
+                    <p className="text-[10px] text-muted-foreground font-mono">Ages {m.ages}</p>
                   </div>
-                </motion.div>
-              );
-            })}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Full iGO page CTA */}
+          <div className="text-center mt-5">
+            <Link href="/play/igo">
+              <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 font-heading tracking-wider text-xs gap-1.5">
+                EXPLORE ALL 12 MODES <ChevronRight className="w-3.5 h-3.5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

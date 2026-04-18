@@ -869,3 +869,12 @@
 - [x] Write tests (18 new, 311 total passing), checkpoint and publish
 - [x] FIX: Master Grid v5 generated with L="MASTER CLASS" — uploaded + updated Home.tsx and IGOUmbrella.tsx. Also added iCard portrait (B471K-IGO-001) to iGO page.
 - [x] FIX: Replaced Lifecycle Pipeline image with new v2 (IMG_5410), updated CDN URL, tightened container margins
+
+## Block 456: Home Page Dashboard Roadmap — Pipeline + 12 Clickable Modes + AIM
+- [x] Replace Master Grid with Lifecycle Pipeline image (full-width, edge-to-edge, clickable → /play/igo)
+- [x] Update tagline to "Where you go, iGO follows — and sharpens your AIM"
+- [x] Add AIM (Avatar Integration Module) subtitle/explanation
+- [x] Add 12 clickable mode cards in 2x2/3x4/4x3 grid — LIVE→game, DESIGNED→/play/igo, ASPIRATIONAL→/play/igo
+- [x] Remove old 3-pathway cards — replaced by 12-mode grid
+- [x] Add iAAi branding with link to www.infrastructure-academy.com
+- [ ] Checkpoint and publish
