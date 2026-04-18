@@ -370,6 +370,62 @@ export default function IGOUmbrella() {
         </section>
 
         {/* ══════════════════════════════════════════════════════════════
+            SECTION 3B: THE CONVERGENCE — GO × POKÉMON × iAAi = iGO
+        ══════════════════════════════════════════════════════════════ */}
+        <section className={`mb-20 transition-all duration-1000 delay-200 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE CONVERGENCE</h2>
+          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × iAAi = iGO — Three games. Three eras. One convergence.</p>
+
+          {/* Main Convergence card */}
+          <div className="max-w-3xl mx-auto mb-6">
+            <ImageLightbox
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-main_807ea243.png"
+              alt="The Convergence — Go × Pokémon × iAAi = iGO"
+              className="w-full rounded-lg border border-amber-400/20"
+            />
+          </div>
+
+          {/* Payload cards — 3 across on desktop, stacked on mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+            <div className="rounded-lg border border-amber-400/20 overflow-hidden">
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload1-meaning-v2_8349d16d.png"
+                alt="Payload 1 — Meaning: Go, Pokémon, iAAi"
+                className="w-full"
+              />
+              <div className="p-3 text-center">
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 1 — MEANING</p>
+                <p className="text-muted-foreground text-[10px] mt-1">Three games. Three eras. One convergence.</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-amber-400/20 overflow-hidden">
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload2-content-v2_1102d63e.png"
+                alt="Payload 2 — Content: The Structural Proof"
+                className="w-full"
+              />
+              <div className="p-3 text-center">
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 2 — CONTENT</p>
+                <p className="text-muted-foreground text-[10px] mt-1">The structural proof. Territory → Knowledge.</p>
+              </div>
+            </div>
+            <div className="rounded-lg border border-amber-400/20 overflow-hidden">
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload3-context-v2_32819fa7.png"
+                alt="Payload 3 — Context: 2,500 BCE to 2026"
+                className="w-full"
+              />
+              <div className="p-3 text-center">
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 3 — CONTEXT</p>
+                <p className="text-muted-foreground text-[10px] mt-1">From 2,500 BCE to 2026. Open your eye. iAAi.</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-center text-muted-foreground text-xs mt-4 italic">iCARD DOM-004 | Block 445 | Open your eye. iAAi.</p>
+        </section>
+
+        {/* ══════════════════════════════════════════════════════════════
             SECTION 4: THE 12 GAME FORMATS
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-300 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>

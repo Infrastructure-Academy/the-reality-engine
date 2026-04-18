@@ -2,8 +2,41 @@ import { useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, CreditCard, Star, Lock, Sparkles, Trophy, Zap } from "lucide-react";
+import { ArrowLeft, CreditCard, Star, Lock, Sparkles, Trophy, Zap, Eye } from "lucide-react";
 import { RELAYS } from "@shared/gameData";
+import { ImageLightbox } from "@/components/ImageLightbox";
+
+/* ── Convergence iCARD Series (DOM-004, Block 445) ── */
+const CONVERGENCE_CARDS = [
+  {
+    id: "conv-main",
+    title: "The Convergence",
+    subtitle: "Go \u00d7 Pok\u00e9mon \u00d7 iAAi = iGO",
+    label: "Main Card",
+    src: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-main_807ea243.png",
+  },
+  {
+    id: "conv-p1",
+    title: "Payload 1 \u2014 Meaning",
+    subtitle: "Three games. Three eras. One convergence.",
+    label: "1 of 3",
+    src: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload1-meaning-v2_8349d16d.png",
+  },
+  {
+    id: "conv-p2",
+    title: "Payload 2 \u2014 Content",
+    subtitle: "The structural proof. Go mechanics map to infrastructure.",
+    label: "2 of 3",
+    src: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload2-content-v2_1102d63e.png",
+  },
+  {
+    id: "conv-p3",
+    title: "Payload 3 \u2014 Context",
+    subtitle: "2,500 BCE to 2026. The timeline that converges.",
+    label: "3 of 3",
+    src: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload3-context-v2_32819fa7.png",
+  },
+];
 
 type CardRarity = "common" | "uncommon" | "rare" | "legendary" | "mythic";
 
@@ -112,6 +145,31 @@ export default function CardCollection() {
       </header>
 
       <main className="container py-6 max-w-6xl mx-auto space-y-6">
+        {/* ── Convergence iCARD Gallery ── */}
+        <div className="border border-gold/30 rounded-xl p-4 md:p-6" style={{ background: 'linear-gradient(135deg, rgba(217,119,6,0.06), transparent)' }}>
+          <div className="flex items-center gap-2 mb-1">
+            <Eye className="w-4 h-4 text-gold" />
+            <h2 className="font-heading text-gold text-sm md:text-base tracking-wider">THE CONVERGENCE</h2>
+            <span className="text-[9px] bg-gold/20 text-gold px-1.5 py-0.5 rounded">iCARD DOM-004</span>
+          </div>
+          <p className="text-[10px] text-muted-foreground mb-4">GO completely reimagined \u2014 the formation base of iGO. Block 445.</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {CONVERGENCE_CARDS.map(card => (
+              <div key={card.id} className="space-y-2">
+                <ImageLightbox
+                  src={card.src}
+                  alt={card.title}
+                  className="w-full rounded-lg border border-gold/20 hover:border-gold/50 transition-colors"
+                />
+                <div className="text-center">
+                  <p className="font-heading text-[11px] text-foreground leading-tight">{card.title}</p>
+                  <p className="text-[9px] text-muted-foreground">{card.subtitle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Category Filter */}
         <div className="flex flex-wrap gap-2">
           {([

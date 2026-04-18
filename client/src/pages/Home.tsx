@@ -468,6 +468,20 @@ export default function Home() {
         {/* ── YOUR RELAY COLLECTION ── */}
         <RelayCollectionTracker />
 
+        {/* ── THE CONVERGENCE — Why This Exists ── */}
+        <div className="container max-w-4xl pb-8 pt-2">
+          <div className="text-center mb-4">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Formation Base</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">GO Completely Reimagined</h3>
+            <p className="text-muted-foreground text-xs mt-1">Go × Pokémon × iAAi = iGO — Three games. Three eras. One convergence.</p>
+          </div>
+          <ImageLightbox
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-main_807ea243.png"
+            alt="The Convergence — Go × Pokémon × iAAi = iGO"
+            className="w-full rounded-lg border border-amber-400/20"
+          />
+        </div>
+
         {/* Support / Back iGO CTA */}
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="relative border border-amber-500/30 rounded-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(217,119,6,0.08), rgba(168,85,247,0.06), transparent)' }}>

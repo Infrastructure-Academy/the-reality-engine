@@ -937,4 +937,14 @@
 ## Block 462: Founder Quote
 - [x] Add founder quote to landing page (below rallying cry CTA)
 - [x] Generate share card with founder quote
+- [x] Checkpoint saved (d12d0a83)
+
+## Block 463: Convergence iCARD Series — Everywhere
+- [x] Upload all 7 Convergence images to CDN (4 high-res + 3 phone screenshots)
+- [x] Add Convergence section to iGO page (between pipeline and 12 formats, with lightbox)
+- [x] Add Convergence main image to landing page (between Relay Collection and Rallying Cry)
+- [x] Add Convergence iCARD gallery to CardCollection page (top section, 4 cards with lightbox)
+- [x] Add 3 Convergence frames to both videos (Main, Payload 2, Payload 3) before end card
+- [x] 311 tests passing, no TS errors
+- [x] Videos: 105s total (was 100s), all frames verified
 - [ ] Checkpoint and deliver
