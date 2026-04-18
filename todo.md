@@ -968,3 +968,12 @@
 - [x] The lowercase 'i' represents: individual, infrastructure, information, intelligence, infostructure, integration, impact
 - [x] Fix ALL brand lowercase 'i' in Cinzel headings: iGO, iAAi, iCard — wrap 'i' in .brand-i class
 - [x] The lowercase 'i' = individual, infrastructure, information, intelligence, infostructure, integration (of the interfaces), impact
+
+## Block 465: i-Tooltip, Eye Animation, OG Meta Tags
+- [x] Build BrandI tooltip component — hover/tap reveals meaning cascade (individual, infrastructure, information, intelligence, infostructure, integration, impact)
+- [x] Apply BrandI tooltip to key brand terms on Home page (5 instances: AIM tagline, iAAi link, Rallying Cry, Share iGO)
+- [x] Create iAAi eye opening animation on first visit (localStorage flag, 5s sequence, tap to dismiss)
+- [x] Add OG meta tags with correct iGO/iAAi casing for social share previews (Home + iGO pages) — 1200x630 OG image with pipeline
+- [x] Write vitest tests for new features (343 tests passing)
+- [x] Checkpoint and deliver
+- [x] Add glowing pulse outline to Pipeline + Player's Journey image boxes on Home page

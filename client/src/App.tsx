@@ -8,6 +8,7 @@ import { BottomTabBar } from "./components/BottomTabBar";
 import { InstallBanner } from "./components/InstallBanner";
 import { GamepadIndicator } from "./components/GamepadIndicator";
 import { DiscoveryHints } from "./components/DiscoveryHints";
+import { EyeOpenAnimation } from "./components/EyeOpenAnimation";
 import { lazy, Suspense, useEffect } from "react";
 
 // ─── Eagerly loaded (critical path) ───
@@ -114,6 +115,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <ServiceWorkerRegistrar />
+          <EyeOpenAnimation />
           <Router />
           <BottomTabBar />
           <InstallBanner />
