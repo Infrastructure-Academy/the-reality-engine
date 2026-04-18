@@ -841,4 +841,21 @@
 - [x] Add iGO link to bottom tab bar (mobile) — replaced Feedback tab with iGO tab (Layers icon)
 - [x] Add iGO context to Home page — Master Grid v3 hero, umbrella section between hero and mode cards, "SEE ALL 12 MODES" CTA
 - [x] Read and save all 4 Max handover docs (B-ARCH-001, B-STRAT-001, IGOUmbrella.tsx, B-ARCH-001-XL.xlsx)
-- [ ] Checkpoint and publish
+- [x] Checkpoint and publish (f246723f)
+
+## Block 454: Conversion-Focused iGO Landing + Exhibition + Master Grid v4
+- [x] Generate Master Grid v4 image — K now "INDUSTRY CHAMPION", L stays "MASTER CLASS" (was already correct)
+- [x] Upload v4 image via manus-upload-file --webdev → https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v4_11de4091.png
+- [x] Rebuild IGOUmbrella.tsx as conversion-focused landing page:
+  - [x] Interactive "Find Your Mode" age selector — 11 age brackets, highlights entry mode + peer community + episode
+  - [x] Exhibition Hall gallery — 13 halls as horizontal scroll carousel with tap-to-zoom
+  - [x] Sign-up / Login CTA prominently placed (sticky header JOIN button + multiple CTAs)
+  - [x] "Pre-Register for iGO Mobile App" toggle in registration form
+  - [x] Smooth scroll sections with fade-in animations
+  - [x] Mobile-first responsive design, thumb-friendly tap targets
+  - [x] "Support the Mission" section — full registration form with role selector (player/educator/institution/sponsor/backer)
+  - [x] Interest registration with DB table (igo_interest) and tRPC endpoint
+  - [x] "Why Back iGO?" investor pitch section with 6 value propositions
+- [x] Add dedicated /exhibition route (renders IGOUmbrella)
+- [x] Add Exhibition link via iGO page itself
+- [x] Write tests (22 new tests, 293 total passing), checkpoint and publish

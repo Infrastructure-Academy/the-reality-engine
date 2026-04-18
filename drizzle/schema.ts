@@ -351,3 +351,18 @@ export const playerDecisions = mysqlTable("player_decisions", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 export type PlayerDecision = typeof playerDecisions.$inferSelect;
+
+// ─── iGO Interest Registration (Players, Educators, Institutions, Sponsors, Backers) ───
+export const igoInterest = mysqlTable("igo_interest", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"),
+  name: varchar("name", { length: 256 }),
+  email: varchar("email", { length: 320 }),
+  role: mysqlEnum("interestRole", ["player", "educator", "institution", "sponsor", "backer", "other"]).notNull(),
+  organisation: varchar("organisation", { length: 256 }),
+  message: text("message"),
+  appPreRegister: boolean("appPreRegister").default(false),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type IgoInterest = typeof igoInterest.$inferSelect;
+export type InsertIgoInterest = typeof igoInterest.$inferInsert;

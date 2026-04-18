@@ -79,6 +79,7 @@ function Router() {
         <Route path={"/resources"} component={Resources} />
         <Route path={"/appraisal"} component={AppraisalQuestionnaire} />
         <Route path={"/play/igo"} component={IGOUmbrella} />
+        <Route path={"/exhibition"} component={IGOUmbrella} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>

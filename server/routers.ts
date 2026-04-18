@@ -553,6 +553,28 @@ export const appRouter = router({
       }),
   }),
 
+  // ─── iGO Interest Registration ───
+  igo: router({
+    register: publicProcedure
+      .input(z.object({
+        name: z.string().min(1).max(256),
+        email: z.string().email().max(320),
+        role: z.enum(["player", "educator", "institution", "sponsor", "backer", "other"]),
+        organisation: z.string().max(256).optional(),
+        message: z.string().max(2000).optional(),
+        appPreRegister: z.boolean().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        return db.registerIgoInterest({
+          ...input,
+          userId: ctx.user?.id ?? null,
+        });
+      }),
+    stats: publicProcedure.query(async () => {
+      return db.getIgoInterestStats();
+    }),
+  }),
+
   // ─── Decision Procedures (Branching Choice Mechanics) ───
   decisions: router({
     save: publicProcedure

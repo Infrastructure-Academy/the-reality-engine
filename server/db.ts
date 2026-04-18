@@ -5,7 +5,7 @@ import {
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
   agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog,
-  playerDecisions, governanceRecords, feedbackReports, dcsnNodes
+  playerDecisions, governanceRecords, feedbackReports, dcsnNodes, igoInterest
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -871,5 +871,60 @@ export async function getDcsnNodes(filters?: { search?: string; status?: string 
   } catch (error) {
     console.error("[Database] Failed to get DCSN nodes:", error);
     return [];
+  }
+}
+
+// ─── iGO Interest Registration ───
+export async function registerIgoInterest(data: {
+  name: string;
+  email: string;
+  role: "player" | "educator" | "institution" | "sponsor" | "backer" | "other";
+  organisation?: string;
+  message?: string;
+  appPreRegister?: boolean;
+  userId?: number | null;
+}) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const result = await db.insert(igoInterest).values({
+      userId: data.userId ?? undefined,
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      organisation: data.organisation ?? null,
+      message: data.message ?? null,
+      appPreRegister: data.appPreRegister ?? false,
+    });
+    return { id: result[0].insertId, success: true };
+  } catch (error) {
+    console.error("[Database] Failed to register iGO interest:", error);
+    return null;
+  }
+}
+
+export async function getIgoInterestStats() {
+  const db = await getDb();
+  if (!db) return { total: 0, byRole: {}, appPreRegisters: 0 };
+  try {
+    const rows = await db.select({
+      role: igoInterest.role,
+      count: sql<number>`COUNT(*)`,
+    }).from(igoInterest).groupBy(igoInterest.role);
+
+    const appRows = await db.select({
+      count: sql<number>`COUNT(*)`,
+    }).from(igoInterest).where(eq(igoInterest.appPreRegister, true));
+
+    const byRole: Record<string, number> = {};
+    let total = 0;
+    for (const row of rows) {
+      byRole[row.role] = Number(row.count);
+      total += Number(row.count);
+    }
+    return { total, byRole, appPreRegisters: Number(appRows[0]?.count ?? 0) };
+  } catch (error) {
+    console.error("[Database] Failed to get iGO interest stats:", error);
+    return { total: 0, byRole: {}, appPreRegisters: 0 };
   }
 }
