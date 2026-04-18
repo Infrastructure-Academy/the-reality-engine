@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "wouter";
 import { ImageLightbox } from "@/components/ImageLightbox";
+import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
@@ -238,23 +239,19 @@ export default function IGOUmbrella() {
             ))}
           </div>
 
-          {/* Master Grid v5 + iCard Portrait */}
-          <div className="max-w-4xl mx-auto mb-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-            <div className="md:col-span-2">
-              <ImageLightbox
-                src={CDN.masterGrid}
-                alt="iGO Master Grid v5 — 12 Formats A–L, K=Industry Champion, L=Master Class"
-                className="w-full rounded-lg border border-amber-400/20 hover:border-amber-400/40 transition-colors"
-              />
+          {/* Pipeline v3 (interactive hotspots) + iCard Portrait */}
+          <div className="max-w-5xl mx-auto mb-8 space-y-6">
+            <div className="rounded-lg border border-amber-400/20 overflow-hidden">
+              <PipelineHotspots />
             </div>
-            <div className="md:col-span-1">
+            <div className="max-w-xs mx-auto">
               <ImageLightbox
                 src={CDN.iCardUmbrella}
                 alt="iGO iCard — Architecture Overview, Block 471, SAP Verified"
                 className="w-full rounded-lg border border-amber-400/20 hover:border-amber-400/40 transition-colors"
               />
             </div>
-            <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider md:col-span-3">B-ARCH-001 — Master Grid v5 + iCard B471K-IGO-001</p>
+            <p className="text-white/20 text-[9px] font-mono mt-2 tracking-wider text-center">B-ARCH-001 — Pipeline v3 + iCard B471K-IGO-001</p>
           </div>
 
           {/* Primary CTAs */}

@@ -909,4 +909,21 @@
 - [x] Compacted 5 Great Webs into inline pill row (removed verbose descriptions)
 - [x] Cleaned up dead code: modeIcons, modeGradients, modeBorders, modeGlows, modeCTAColors removed
 - [x] 311 tests passing, no TS errors
+- [x] Checkpoint saved (f7d85a7c)
+
+## Block 460: Pipeline Image Touch-Zone Hotspots
+- [ ] Restore original pipeline PNG image (replace InteractivePipeline component)
+- [ ] Overlay invisible CSS touch zones on each mode box in the image
+- [ ] Each touch zone links to the correct game route
+- [ ] Touch zones work on mobile (tap) and desktop (click)
+- [ ] Keep visited-mode glow detection from localStorage
 - [ ] Checkpoint and publish
+
+## Block 460b: FOCUSED — Landing Page + Videos + Player Journey
+- [x] Replace old Master Grid on iGO page with v3 pipeline image + PipelineHotspots
+- [ ] Verify pipeline hotspots align correctly (visual overlay check done)
+- [ ] Add Player's Journey glory arc image to landing page (image generated)
+- [ ] Fix video posters showing broken play icons on mobile
+- [ ] Fix video — replace old Master Grid frame with v3 pipeline image
+- [ ] Visual verify desktop + mobile
+- [ ] Checkpoint and deliver
