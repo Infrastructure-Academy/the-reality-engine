@@ -66,7 +66,7 @@ const CDN = {
   masterGrid: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Master_Grid_v5_54307353.png",
   iCardUmbrella: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard_igo_umbrella_9a19d3a0.png",
   generationsTimeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/icard_generations_timeline_a74f8d24.png",
-  lifecyclePipeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IMG_5369_750f301c.PNG",
+  lifecyclePipeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/igo_lifecycle_pipeline_v2_070c87b8.png",
 };
 
 // ─── IMPACT STATS ───
@@ -361,12 +361,12 @@ export default function IGOUmbrella() {
             ))}
           </div>
 
-          {/* Lifecycle Pipeline image */}
-          <div className="max-w-4xl mx-auto">
+          {/* Lifecycle Pipeline image — full width */}
+          <div className="-mx-4 sm:-mx-6 md:-mx-8 lg:-mx-12">
             <ImageLightbox
               src={CDN.lifecyclePipeline}
-              alt="iGO Lifecycle Pipeline — 3-layer progression"
-              className="w-full rounded-lg border border-white/10 hover:border-amber-400/30 transition-colors"
+              alt="iGO Lifecycle Timeline — The Complete Pipeline"
+              className="w-full border-y border-amber-400/20 hover:border-amber-400/40 transition-colors"
             />
           </div>
         </section>

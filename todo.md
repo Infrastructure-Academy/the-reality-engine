@@ -868,3 +868,4 @@
 - [x] Add OG meta tags to /play/igo page (og:title, og:description, og:image, og:url, og:type + twitter:card)
 - [x] Write tests (18 new, 311 total passing), checkpoint and publish
 - [x] FIX: Master Grid v5 generated with L="MASTER CLASS" — uploaded + updated Home.tsx and IGOUmbrella.tsx. Also added iCard portrait (B471K-IGO-001) to iGO page.
+- [x] FIX: Replaced Lifecycle Pipeline image with new v2 (IMG_5410), updated CDN URL, tightened container margins
