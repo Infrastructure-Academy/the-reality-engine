@@ -1042,3 +1042,8 @@
 - [x] 6-column grid too wide for mobile — responsive 3-col on mobile, 6-col on desktop
 - [x] Show player name clearly, badge below name, BitPoints/Relays inline on mobile
 - [x] 355 tests passing
+
+## Block 475: Insert Why Video card on iGO page
+- [x] Upload icard_video_dominance.png via manus-upload-file
+- [x] Insert "Why Video?" card image above "Support the Mission" section on iGO page
+- [x] 355 tests passing
