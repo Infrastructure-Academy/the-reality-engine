@@ -404,7 +404,7 @@ export default function IGOUmbrella() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
             <div className="rounded-lg border border-amber-400/20 overflow-hidden">
               <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-payload1-meaning-v2_8349d16d.png"
+                src="/manus-storage/convergence-payload1-meaning-v3_3c2cd710.png"
                 alt="Payload 1 — Meaning: Go, Pokémon, iAAi"
                 className="w-full"
               />

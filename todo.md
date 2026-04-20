@@ -1031,3 +1031,8 @@
 - [x] Link Dearden Field image to Explore page on tap
 - [x] Added dearden.summary to router structure test
 - [x] 355 tests passing
+
+## Block 473: Swap Payload 1 image
+- [x] Upload new Payload 1 — Meaning image (IMG_5572 / v3)
+- [x] Replace old v2 URL on iGO page with new v3 image
+- [x] 355 tests passing
