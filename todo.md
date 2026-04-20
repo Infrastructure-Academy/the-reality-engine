@@ -995,3 +995,7 @@
 - [x] Fix share card images 'iAAI' → 'iAAi' — regenerated PNGs with Pillow + set up storageProxy.ts
 - [x] Check dead page link — infrastructure-academy.com is live (200), acad site is separate project
 - [x] Check duplicate sections on Home page — no duplicates found, all sections unique
+
+## Block 467: Delete Share Cards + Dead Link
+- [x] Remove Rally share card from gallery (duplicates Rallying Cry section) — 3 cards remain
+- [x] Dead academy link (acad-kuqzaex2) not in TRE codebase — separate Manus project

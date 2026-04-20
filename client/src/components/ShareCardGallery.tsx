@@ -13,15 +13,6 @@ interface ShareCard {
 
 const SHARE_CARDS: ShareCard[] = [
   {
-    id: "rally",
-    title: "The Rallying Cry",
-    subtitle: "Every player has the power",
-    imageUrl:
-      "/manus-storage/share-card-rally-fixed_5112e324.png",
-    shareText:
-      "Every player has the power. More players have more power. How many players can you rally to iGO? 🎮\n\ntwinearth.world — Infrastructure Academy | iAAi",
-  },
-  {
     id: "civil-truth",
     title: "Civil Engineering Truth",
     subtitle: "The skill now lost",
