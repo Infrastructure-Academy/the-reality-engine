@@ -54,7 +54,7 @@ export function BrandI({ className = "" }: { className?: string }) {
   return (
     <span
       ref={containerRef}
-      className={`brand-i relative inline-block cursor-pointer ${className}`}
+      className={`brand-i relative inline cursor-pointer ${className}`}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleTap}

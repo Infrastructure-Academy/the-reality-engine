@@ -17,7 +17,7 @@ const SHARE_CARDS: ShareCard[] = [
     title: "The Rallying Cry",
     subtitle: "Every player has the power",
     imageUrl:
-      "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-rally_851c0d30.png",
+      "/manus-storage/share-card-rally-fixed_5112e324.png",
     shareText:
       "Every player has the power. More players have more power. How many players can you rally to iGO? 🎮\n\ntwinearth.world — Infrastructure Academy | iAAi",
   },
@@ -26,7 +26,7 @@ const SHARE_CARDS: ShareCard[] = [
     title: "Civil Engineering Truth",
     subtitle: "The skill now lost",
     imageUrl:
-      "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-civil-truth_eafadda9.png",
+      "/manus-storage/share-card-civil-truth-fixed_7ef0693a.png",
     shareText:
       "Infrastructure is the invisible foundation of civilisation. Civil engineering — the skill now lost — iAAi recovers it digitally.\n\ntwinearth.world — Infrastructure Academy | iAAi",
   },
@@ -35,7 +35,7 @@ const SHARE_CARDS: ShareCard[] = [
     title: "Authenticity & Reputational Certainty",
     subtitle: "Built by a real civil engineer",
     imageUrl:
-      "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-authenticity_74dd38cb.png",
+      "/manus-storage/share-card-authenticity-fixed_da4880dd.png",
     shareText:
       "iGO is built on authenticity and reputational certainty — a real civil engineer, real infrastructure, real education.\n\ntwinearth.world — Infrastructure Academy | iAAi",
   },
@@ -44,7 +44,7 @@ const SHARE_CARDS: ShareCard[] = [
     title: "Founder's Vision",
     subtitle: "Learning was always meant to be fun",
     imageUrl:
-      "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-founder_675d2a2a.png",
+      "/manus-storage/share-card-founder-fixed_10188111.png",
     shareText:
       '"iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun." — Ir. Nigel T. Dearden\n\ntwinearth.world — Infrastructure Academy | iAAi',
   },

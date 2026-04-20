@@ -989,3 +989,9 @@
 
 ## Block 466 Bugfix: Player's Journey Image
 - [x] Fix Player's Journey image not loading on Home page — added aspect-ratio 2752/1536 to prevent container collapse + bg-slate-800/50 loading placeholder
+
+## Block 466c Bugfix: Spacing, Typo, Dead Link, Duplicates
+- [x] Fix BrandI whitespace splitting 'iGO' into 'i GO' — letterSpacing:0 on nowrap wrapper
+- [x] Fix share card images 'iAAI' → 'iAAi' — regenerated PNGs with Pillow + set up storageProxy.ts
+- [x] Check dead page link — infrastructure-academy.com is live (200), acad site is separate project
+- [x] Check duplicate sections on Home page — no duplicates found, all sections unique

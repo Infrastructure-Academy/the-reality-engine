@@ -502,7 +502,7 @@ export default function Home() {
                 </Link>
                 <Link href="/play/igo#back-igo">
                   <Button variant="outline" size="sm" className="border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-heading tracking-wider text-xs gap-1.5">
-                    WHY BACK <span className="brand-i">i</span>GO? <ChevronRight className="w-3.5 h-3.5" />
+                    WHY BACK <span className="whitespace-nowrap" style={{letterSpacing:0}}><span className="brand-i">i</span>GO</span>? <ChevronRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>
               </div>

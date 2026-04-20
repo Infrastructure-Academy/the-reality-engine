@@ -196,6 +196,9 @@
     font-family: var(--font-sans);
     font-style: normal;
     text-transform: none;
+    display: inline;
+    word-spacing: 0;
+    letter-spacing: 0;
   }
 
   /* Gold text gradient for headings */
