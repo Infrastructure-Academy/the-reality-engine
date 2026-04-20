@@ -485,6 +485,47 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
+        <div className="container max-w-4xl pb-6 pt-2">
+          {/* Web Domains tracker header */}
+          <div className="border border-border/40 rounded-xl p-4 md:p-5 bg-card/30 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🌐</span>
+                <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
+                  Your Web Domains
+                </span>
+              </div>
+              <span className="font-heading text-sm md:text-base text-muted-foreground">0/5</span>
+            </div>
+            {/* 5 web domain slots */}
+            <div className="grid grid-cols-5 gap-2">
+              {WEBS.map((web) => (
+                <div
+                  key={web.name}
+                  className="flex flex-col items-center gap-1 py-2 rounded-lg bg-muted/20 opacity-40"
+                >
+                  <span className="text-xl md:text-2xl grayscale">{web.icon}</span>
+                  <span className="text-[9px] md:text-[10px] text-muted-foreground tracking-wide">{web.name}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[10px] text-muted-foreground/60 mt-3 font-heading tracking-wider">
+              5 Great Webs × 12 Relays = 60 Nodes — The Dearden Field
+            </p>
+          </div>
+
+          {/* Dearden Field image */}
+          <div className="mt-4 rounded-lg overflow-hidden border border-amber-400/20 glow-pulse">
+            <ImageLightbox
+              src="/manus-storage/dearden-field_c7b3cbc3.png"
+              alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery. Physical Web, Biological Web, Digital Web, Social Web, Consciousness Web mapped across all 12 civilisational relays from Fire to Human Nodes."
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="text-center mb-4">

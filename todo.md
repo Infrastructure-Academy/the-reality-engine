@@ -1011,3 +1011,10 @@
 - [x] Move it to directly after "Your Relay Collection" section
 - [x] Sets up Dearden Field concept (5 Webs × 12 Relays = 60 Nodes)
 - [x] 355 tests passing
+
+## Block 470: Add Web Domains tracker + Dearden Field image
+- [x] Upload Dearden Field image (IMG_4892) via manus-upload-file
+- [x] Add "Your Web Domains — 0/5" tracker between 5 Webs pills and Formation Base
+- [x] Insert Dearden Field image below the tracker
+- [x] Story chassis: 12 Relays × 5 Webs = 60 Nodes = The Dearden Field
+- [x] 355 tests passing
