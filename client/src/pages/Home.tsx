@@ -630,24 +630,44 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Row 2: GOV-010 iCard */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent max-w-2xl mx-auto"
-          >
-            <ImageLightbox
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-010-v2(4)_46056c50.png"
-              alt="iAAi GOV-010 — Beta PoC Disclaimer Pattern. Chart Room (KANTEI), ACAD (MAX), Memorial (DAVID), TRE Game (CHECKER). Block 410, 26 March 2026."
-              className="w-full h-auto object-contain"
-              loading="lazy"
-            />
-            <div className="p-3">
-              <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">GOV-010 — BETA PoC DISCLAIMER</h4>
-              <p className="text-[10px] text-muted-foreground mt-1">Agentic Handoff Document • Block 410 • 26 Mar 2026</p>
-            </div>
-          </motion.div>
+          {/* Row 2: GOV-010 + iA⁴i Evolution */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="rounded-xl border border-green-500/30 overflow-hidden bg-gradient-to-b from-green-600/5 to-transparent"
+            >
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-gov-010-v2(4)_46056c50.png"
+                alt="iAAi GOV-010 — Beta PoC Disclaimer Pattern. Chart Room (KANTEI), ACAD (MAX), Memorial (DAVID), TRE Game (CHECKER). Block 410, 26 March 2026."
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">GOV-010 — BETA PoC DISCLAIMER</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">Agentic Handoff Document • Block 410 • 26 Mar 2026</p>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.25 }}
+              className="rounded-xl border border-amber-500/30 overflow-hidden bg-gradient-to-b from-amber-600/5 to-transparent"
+            >
+              <ImageLightbox
+                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/icard-ia4i-powers(1)_20c32329.png"
+                alt="iA4i — The Evolution. Stage 0: 4ECL (Four Elements Consulting). Stage 1: iA2i. Stage 2: iA3i. Stage 3: iA4i. Stage 4: Compressed Symbol. The Four A's: Assess, Apply, Answers, Awareness. SYM-001."
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+              <div className="p-3">
+                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">iA⁴i — THE EVOLUTION</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">From 4ECL to iA⁴i • The Four A's • Biological ↔ Digital • SYM-001</p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
