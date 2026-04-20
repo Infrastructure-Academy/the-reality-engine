@@ -1005,3 +1005,9 @@
 - [x] Remove ACAD — THREE MODES iCARD (B393K-MODES-001) from Home page governance section
 - [x] GOV-010 card remains, centered with max-w-2xl
 - [x] 355 tests passing
+
+## Block 469: Move 5 Great Webs beneath Relay Collection
+- [x] Find current position of 5 Great Webs section in Home.tsx
+- [x] Move it to directly after "Your Relay Collection" section
+- [x] Sets up Dearden Field concept (5 Webs × 12 Relays = 60 Nodes)
+- [x] 355 tests passing

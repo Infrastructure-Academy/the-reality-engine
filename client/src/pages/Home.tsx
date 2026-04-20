@@ -470,6 +470,21 @@ export default function Home() {
         {/* ── YOUR RELAY COLLECTION ── */}
         <RelayCollectionTracker />
 
+        {/* 5 Great Webs — compact inline (sets up Dearden Field: 5 Webs × 12 Relays = 60 Nodes) */}
+        <div className="container pb-4 pt-2">
+          <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
+            {WEBS.map((web) => (
+              <div
+                key={web.name}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/40 backdrop-blur-sm"
+              >
+                <span className="text-sm">{web.icon}</span>
+                <span className="text-xs font-medium" style={{ color: web.color }}>{web.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="text-center mb-4">
@@ -671,22 +686,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 Great Webs — compact inline */}
-      <section className="relative z-10 pb-8">
-        <div className="container">
-          <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
-            {WEBS.map((web) => (
-              <div
-                key={web.name}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/40 backdrop-blur-sm"
-              >
-                <span className="text-sm">{web.icon}</span>
-                <span className="text-xs font-medium" style={{ color: web.color }}>{web.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* The Living Experiment — Infographic */}
       <section className="relative z-10 py-12 border-t border-gold-dim/20">
