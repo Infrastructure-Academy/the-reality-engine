@@ -1018,3 +1018,8 @@
 - [x] Insert Dearden Field image below the tracker
 - [x] Story chassis: 12 Relays × 5 Webs = 60 Nodes = The Dearden Field
 - [x] 355 tests passing
+
+## Block 471: Remove duplicate 5 Webs pills + add Dearden Field title
+- [x] Remove standalone 5 Webs pills (Natural, Machine, Digital, Biological, Consciousness) — redundant with Web Domains tracker
+- [x] Add "The Permanent Foundation / The Dearden Field" title above the Dearden Field image
+- [x] 355 tests passing

@@ -470,21 +470,6 @@ export default function Home() {
         {/* ── YOUR RELAY COLLECTION ── */}
         <RelayCollectionTracker />
 
-        {/* 5 Great Webs — compact inline (sets up Dearden Field: 5 Webs × 12 Relays = 60 Nodes) */}
-        <div className="container pb-4 pt-2">
-          <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
-            {WEBS.map((web) => (
-              <div
-                key={web.name}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/40 backdrop-blur-sm"
-              >
-                <span className="text-sm">{web.icon}</span>
-                <span className="text-xs font-medium" style={{ color: web.color }}>{web.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
         <div className="container max-w-4xl pb-6 pt-2">
           {/* Web Domains tracker header */}
@@ -516,7 +501,11 @@ export default function Home() {
           </div>
 
           {/* Dearden Field image */}
-          <div className="mt-4 rounded-lg overflow-hidden border border-amber-400/20 glow-pulse">
+          <div className="mt-5 text-center">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground mb-3">The Dearden Field</h3>
+          </div>
+          <div className="rounded-lg overflow-hidden border border-amber-400/20 glow-pulse">
             <ImageLightbox
               src="/manus-storage/dearden-field_c7b3cbc3.png"
               alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery. Physical Web, Biological Web, Digital Web, Social Web, Consciousness Web mapped across all 12 civilisational relays from Fire to Human Nodes."
