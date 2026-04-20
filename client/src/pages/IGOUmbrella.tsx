@@ -218,7 +218,7 @@ export default function IGOUmbrella() {
               ONE GAME. ALL AGES. 8–65+
             </p>
             <p className="text-amber-400/70 italic text-lg sm:text-xl max-w-2xl mx-auto mb-6">
-              Where you go, <span className="tracking-normal"><BrandI />GO</span> follows.
+              Where you go, <span className="tracking-normal italic"><BrandI />GO</span> follows.
             </p>
           </div>
 
