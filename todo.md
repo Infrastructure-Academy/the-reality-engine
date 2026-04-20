@@ -1047,3 +1047,11 @@
 - [x] Upload icard_video_dominance.png via manus-upload-file
 - [x] Insert "Why Video?" card image above "Support the Mission" section on iGO page
 - [x] 355 tests passing
+
+## Block 476: Fix iGO spacing — "iG O" → "iGO"
+- [x] Header nav: wrap BrandI+GO in tracking-normal span
+- [x] Hero h1: reduce letter-spacing from 0.4em to 0.05em
+- [x] Tagline: wrap BrandI+GO in tracking-normal span
+- [x] "WHY BACK iGO?" heading: wrap in tracking-normal span
+- [x] Bottom tab bar uses plain text "iGO" — no tracking issue there
+- [x] 355 tests passing
