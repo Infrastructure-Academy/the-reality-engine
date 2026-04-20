@@ -1055,3 +1055,12 @@
 - [x] "WHY BACK iGO?" heading: wrap in tracking-normal span
 - [x] Bottom tab bar uses plain text "iGO" — no tracking issue there
 - [x] 355 tests passing
+
+## Block 477: iGO tagline italic consistency
+- [x] Made iGO italic in tagline "Where you go, iGO follows." for consistency
+
+## Block 478: Add 500 generations to header copy
+- [x] Home page hero — "Navigate 12,000 years and 500 generations of civilisational infrastructure"
+- [x] iGO page hero — "12 civilisational relays. 500 generations. 12 game formats."
+- [x] iGO OG meta description updated with 500 generations
+- [x] 355 tests passing

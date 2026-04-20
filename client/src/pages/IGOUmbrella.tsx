@@ -123,7 +123,7 @@ export default function IGOUmbrella() {
   useEffect(() => {
     const ogImage = CDN.iCardUmbrella;
     const ogTitle = "iGO — One Game. All Ages. 8–65+. | Infrastructure Academy";
-    const ogDesc = "12 civilisational relays. 12 game formats. A lifelong learning system spanning ages 8 to 65+. Join as a player, educator, institution, or backer.";
+    const ogDesc = "12 civilisational relays. 500 generations. 12 game formats. A lifelong learning system spanning ages 8 to 65+. Join as a player, educator, institution, or backer.";
     const ogUrl = window.location.href;
     const setMeta = (prop: string, content: string, attr = "property") => {
       let el = document.querySelector(`meta[${attr}="${prop}"]`) as HTMLMetaElement | null;
@@ -226,7 +226,7 @@ export default function IGOUmbrella() {
           <div className="max-w-3xl mx-auto mb-8">
             <p className="text-white/60 text-base sm:text-lg leading-relaxed">
               The world's first <span className="text-amber-400 font-semibold">lifelong infrastructure learning game</span>. 
-              12 civilisational relays. 12 game formats. From a child's first spin to a Master Weaver's capstone. 
+              12 civilisational relays. 500 generations. 12 game formats. From a child's first spin to a Master Weaver's capstone. 
               One architecture, one scoring system, one community — <span className="text-white/80 font-semibold">scaled across every generation</span>.
             </p>
           </div>

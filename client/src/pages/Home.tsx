@@ -524,7 +524,7 @@ export default function Home() {
               THE REALITY ENGINE
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Navigate 12,000 years of civilisational infrastructure.
+              Navigate 12,000 years and 500 generations of civilisational infrastructure.
               One game, all ages, 8–65+. From fire to human nodes — your odyssey begins here.
             </p>
           </motion.div>
