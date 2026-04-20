@@ -999,3 +999,9 @@
 ## Block 467: Delete Share Cards + Dead Link
 - [x] Remove Rally share card from gallery (duplicates Rallying Cry section) — 3 cards remain
 - [x] Dead academy link (acad-kuqzaex2) not in TRE codebase — separate Manus project
+
+## Block 468: Delete iA⁴i Evolution + ACAD Three Modes Cards
+- [x] Remove iA⁴i — THE EVOLUTION card (SYM-001) from Home page governance section
+- [x] Remove ACAD — THREE MODES iCARD (B393K-MODES-001) from Home page governance section
+- [x] GOV-010 card remains, centered with max-w-2xl
+- [x] 355 tests passing
