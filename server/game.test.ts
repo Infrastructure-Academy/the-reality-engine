@@ -137,6 +137,7 @@ describe("appRouter structure", () => {
     expect(procedures).toContain("progress.upsert");
     expect(procedures).toContain("dearden.nodes");
     expect(procedures).toContain("dearden.activations");
+    expect(procedures).toContain("dearden.summary");
     expect(procedures).toContain("character.create");
     expect(procedures).toContain("character.getByProfile");
     expect(procedures).toContain("character.reroll");

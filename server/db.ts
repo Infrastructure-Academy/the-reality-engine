@@ -158,6 +158,36 @@ export async function activateNode(profileId: number, nodeId: number) {
   await db.insert(nodeActivations).values({ profileId, nodeId, activated: true, activatedAt: new Date() });
 }
 
+// ─── Dearden Field Summary ───
+export async function getDeardenFieldSummary(profileId: number) {
+  const db = await getDb();
+  if (!db) return { totalNodes: 0, activatedNodes: 0, webDomains: [] as { webName: string; count: number }[] };
+  
+  // Get all activated nodes for this profile with their web names
+  const activations = await db
+    .select({
+      nodeId: nodeActivations.nodeId,
+      webName: deardenNodes.webName,
+    })
+    .from(nodeActivations)
+    .innerJoin(deardenNodes, eq(nodeActivations.nodeId, deardenNodes.id))
+    .where(and(eq(nodeActivations.profileId, profileId), eq(nodeActivations.activated, true)));
+  
+  // Count per web
+  const webCounts: Record<string, number> = {};
+  for (const a of activations) {
+    webCounts[a.webName] = (webCounts[a.webName] || 0) + 1;
+  }
+  
+  const webDomains = Object.entries(webCounts).map(([webName, count]) => ({ webName, count }));
+  
+  return {
+    totalNodes: 60,
+    activatedNodes: activations.length,
+    webDomains,
+  };
+}
+
 // ─── Character Queries ───
 export async function createCharacter(profileId: number, name: string, fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced", abilityScores: Record<string, number>) {
   const db = await getDb();

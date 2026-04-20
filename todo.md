@@ -1023,3 +1023,11 @@
 - [x] Remove standalone 5 Webs pills (Natural, Machine, Digital, Biological, Consciousness) — redundant with Web Domains tracker
 - [x] Add "The Permanent Foundation / The Dearden Field" title above the Dearden Field image
 - [x] 355 tests passing
+
+## Block 472: Dynamic Web Domains + Dearden Field progress + Explore link
+- [x] Query backend for web domain completion status per user (dearden.summary procedure)
+- [x] Light up web icons when player has completed first node in that web
+- [x] Add Dearden Field progress bar (0/60 nodes discovered)
+- [x] Link Dearden Field image to Explore page on tap
+- [x] Added dearden.summary to router structure test
+- [x] 355 tests passing

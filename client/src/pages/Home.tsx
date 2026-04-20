@@ -10,7 +10,8 @@ import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { BrandI } from "@/components/BrandI";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { trpc } from "@/lib/trpc";
 
 
 
@@ -306,6 +307,147 @@ function RelayCollectionTracker() {
   );
 }
 
+// ─── Web Domains Tracker (dynamic: lights up per web domain) ───
+function WebDomainsTracker() {
+  const [profileId, setProfileId] = useState<number | null>(null);
+  const profileMutation = trpc.profile.getOrCreate.useMutation();
+
+  useEffect(() => {
+    let id = localStorage.getItem("tre_guest_id");
+    if (!id) {
+      id = "g_" + Math.random().toString(36).slice(2, 12);
+      localStorage.setItem("tre_guest_id", id);
+    }
+    profileMutation.mutate({ guestId: id, mode: "explorer" }, {
+      onSuccess: (data) => { if (data) setProfileId(data.id); }
+    });
+  }, []);
+
+  const { data: summary } = trpc.dearden.summary.useQuery(
+    { profileId: profileId! },
+    { enabled: !!profileId }
+  );
+
+  const activatedWebNames = useMemo(() => {
+    if (!summary?.webDomains) return new Set<string>();
+    return new Set(summary.webDomains.map(w => w.webName));
+  }, [summary]);
+
+  const webCount = activatedWebNames.size;
+  const nodeCount = summary?.activatedNodes ?? 0;
+  const hasAny = webCount > 0;
+
+  return (
+    <div className="container max-w-4xl pb-2 pt-2">
+      <div
+        className="border rounded-xl p-4 md:p-5 backdrop-blur-sm"
+        style={{
+          borderColor: hasAny ? "rgba(234,179,8,0.3)" : "rgba(148,163,184,0.2)",
+          background: hasAny
+            ? "linear-gradient(135deg, rgba(234,179,8,0.06), rgba(168,85,247,0.04), transparent)"
+            : "linear-gradient(135deg, rgba(100,116,139,0.06), transparent)",
+        }}
+      >
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🌐</span>
+            <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
+              Your Web Domains
+            </span>
+          </div>
+          <span
+            className={`font-mono text-sm font-bold tracking-wider ${
+              webCount === 5 ? "text-amber-400" : hasAny ? "text-amber-400/80" : "text-muted-foreground"
+            }`}
+          >
+            {webCount}/5
+          </span>
+        </div>
+
+        {/* 5 web domain slots */}
+        <div className="grid grid-cols-5 gap-2">
+          {WEBS.map((web) => {
+            const active = activatedWebNames.has(web.name);
+            return (
+              <div
+                key={web.name}
+                className={`flex flex-col items-center gap-1 py-2 rounded-lg transition-all ${
+                  active
+                    ? "bg-amber-500/10 border border-amber-500/30"
+                    : "bg-muted/20 opacity-40"
+                }`}
+              >
+                <span className={`text-xl md:text-2xl ${active ? "" : "grayscale"}`}>{web.icon}</span>
+                <span
+                  className={`text-[9px] md:text-[10px] tracking-wide ${
+                    active ? "font-medium" : "text-muted-foreground"
+                  }`}
+                  style={active ? { color: web.color } : undefined}
+                >
+                  {web.name}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Progress bar: 0/60 nodes */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[9px] text-muted-foreground/60 font-heading tracking-wider">
+              Dearden Field Progress
+            </span>
+            <span
+              className={`text-[9px] font-mono tracking-wider ${
+                nodeCount === 60 ? "text-amber-400" : nodeCount > 0 ? "text-amber-400/70" : "text-muted-foreground/60"
+              }`}
+            >
+              {nodeCount}/60 nodes
+            </span>
+          </div>
+          <div className="w-full h-1.5 rounded-full bg-muted/30 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-700"
+              style={{
+                width: `${(nodeCount / 60) * 100}%`,
+                background: nodeCount > 0
+                  ? "linear-gradient(90deg, #d97706, #f59e0b, #fbbf24)"
+                  : "transparent",
+              }}
+            />
+          </div>
+        </div>
+
+        <p className="text-center text-[10px] text-muted-foreground/60 mt-3 font-heading tracking-wider">
+          5 Great Webs × 12 Relays = 60 Nodes — The Dearden Field
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Dearden Field Image Section (links to Explore) ───
+function DeardenFieldSection() {
+  return (
+    <div className="container max-w-4xl pb-6 pt-2">
+      <div className="text-center mb-3">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
+        <h3 className="font-heading text-lg md:text-xl text-foreground">The Dearden Field</h3>
+      </div>
+      <Link href="/explore">
+        <div className="rounded-lg overflow-hidden border border-amber-400/20 glow-pulse cursor-pointer hover:border-amber-400/40 transition-colors">
+          <ImageLightbox
+            src="/manus-storage/dearden-field_c7b3cbc3.png"
+            alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery"
+            className="w-full h-auto object-contain"
+            loading="lazy"
+          />
+        </div>
+      </Link>
+    </div>
+  );
+}
+
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
 
@@ -471,49 +613,8 @@ export default function Home() {
         <RelayCollectionTracker />
 
         {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
-        <div className="container max-w-4xl pb-6 pt-2">
-          {/* Web Domains tracker header */}
-          <div className="border border-border/40 rounded-xl p-4 md:p-5 bg-card/30 backdrop-blur-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">🌐</span>
-                <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
-                  Your Web Domains
-                </span>
-              </div>
-              <span className="font-heading text-sm md:text-base text-muted-foreground">0/5</span>
-            </div>
-            {/* 5 web domain slots */}
-            <div className="grid grid-cols-5 gap-2">
-              {WEBS.map((web) => (
-                <div
-                  key={web.name}
-                  className="flex flex-col items-center gap-1 py-2 rounded-lg bg-muted/20 opacity-40"
-                >
-                  <span className="text-xl md:text-2xl grayscale">{web.icon}</span>
-                  <span className="text-[9px] md:text-[10px] text-muted-foreground tracking-wide">{web.name}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-center text-[10px] text-muted-foreground/60 mt-3 font-heading tracking-wider">
-              5 Great Webs × 12 Relays = 60 Nodes — The Dearden Field
-            </p>
-          </div>
-
-          {/* Dearden Field image */}
-          <div className="mt-5 text-center">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
-            <h3 className="font-heading text-lg md:text-xl text-foreground mb-3">The Dearden Field</h3>
-          </div>
-          <div className="rounded-lg overflow-hidden border border-amber-400/20 glow-pulse">
-            <ImageLightbox
-              src="/manus-storage/dearden-field_c7b3cbc3.png"
-              alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery. Physical Web, Biological Web, Digital Web, Social Web, Consciousness Web mapped across all 12 civilisational relays from Fire to Human Nodes."
-              className="w-full h-auto object-contain"
-              loading="lazy"
-            />
-          </div>
-        </div>
+        <WebDomainsTracker />
+        <DeardenFieldSection />
 
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">

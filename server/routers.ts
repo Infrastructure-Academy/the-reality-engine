@@ -94,6 +94,9 @@ export const appRouter = router({
     activations: publicProcedure.input(z.object({ profileId: z.number() })).query(async ({ input }) => {
       return db.getNodeActivationsForProfile(input.profileId);
     }),
+    summary: publicProcedure.input(z.object({ profileId: z.number() })).query(async ({ input }) => {
+      return db.getDeardenFieldSummary(input.profileId);
+    }),
     activate: publicProcedure
       .input(z.object({
         profileId: z.number(),
