@@ -1036,3 +1036,9 @@
 - [x] Upload new Payload 1 — Meaning image (IMG_5572 / v3)
 - [x] Replace old v2 URL on iGO page with new v3 image
 - [x] 355 tests passing
+
+## Block 474: Fix leaderboard visual confusion on mobile
+- [x] Player names hidden/truncated — badge overlaps XP on mobile
+- [x] 6-column grid too wide for mobile — responsive 3-col on mobile, 6-col on desktop
+- [x] Show player name clearly, badge below name, BitPoints/Relays inline on mobile
+- [x] 355 tests passing

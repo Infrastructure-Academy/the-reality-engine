@@ -144,13 +144,14 @@ export default function Leaderboard() {
         {!isLoading && entries.length > 0 && (
           <div className="rounded-xl border border-border/50 overflow-hidden">
             {/* Header Row */}
-            <div className="grid grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground border-b border-border/50">
+            <div className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground border-b border-border/50">
               <span>Rank</span>
               <span>Player</span>
-              <span className="text-right">XP</span>
-              <span className="text-right">BitPoints</span>
-              <span className="text-center">Relays</span>
-              <span className="text-center">Status</span>
+              <span className="text-right md:hidden">XP</span>
+              <span className="text-right hidden md:block">XP</span>
+              <span className="text-right hidden md:block">BitPoints</span>
+              <span className="text-center hidden md:block">Relays</span>
+              <span className="text-center hidden md:block">Status</span>
             </div>
 
             {/* Entries */}
@@ -164,43 +165,47 @@ export default function Leaderboard() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className={`grid grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 items-center border-b border-border/30 transition-colors hover:bg-muted/10 ${
+                  className={`grid grid-cols-[40px_1fr_auto] md:grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 items-center border-b border-border/30 transition-colors hover:bg-muted/10 ${
                     rank <= 3 ? "bg-amber-500/5" : ""
                   }`}
                 >
                   {/* Rank */}
                   <div className="flex items-center justify-center">{getRankIcon(rank)}</div>
 
-                  {/* Player */}
-                  <div className="flex items-center gap-2 min-w-0">
-                    <ModeIcon className="w-4 h-4 shrink-0" style={{ color: modeColors[entry.mode] }} />
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-medium truncate">{entry.displayName}</p>
-                        {getPlayerBadge(entry.totalXp) && <BadgeChip badge={getPlayerBadge(entry.totalXp)!} />}
-                      </div>
+                  {/* Player — mobile: name + badge on line 1, mode + stats on line 2 */}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <ModeIcon className="w-4 h-4 shrink-0" style={{ color: modeColors[entry.mode] }} />
+                      <p className="text-sm font-medium truncate">{entry.displayName}</p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {getPlayerBadge(entry.totalXp) && <BadgeChip badge={getPlayerBadge(entry.totalXp)!} />}
                       <p className="text-[10px] text-muted-foreground">{modeLabels[entry.mode]}</p>
+                      {/* Mobile-only inline stats */}
+                      <span className="md:hidden text-[10px] text-muted-foreground">•</span>
+                      <span className="md:hidden text-[10px] font-mono flex items-center gap-0.5"><Zap className="w-2.5 h-2.5 text-amber-400" />{formatXp(entry.bitPoints)}</span>
+                      <span className="md:hidden text-[10px] text-muted-foreground">{entry.relaysCompleted}/12</span>
                     </div>
                   </div>
 
-                  {/* XP */}
+                  {/* XP — always visible */}
                   <div className="text-right">
                     <p className="text-sm font-bold font-mono text-gold-gradient">{formatXp(entry.totalXp)}</p>
                   </div>
 
-                  {/* BitPoints */}
-                  <div className="text-right flex items-center justify-end gap-1">
+                  {/* BitPoints — desktop only */}
+                  <div className="text-right hidden md:flex items-center justify-end gap-1">
                     <Zap className="w-3 h-3 text-amber-400" />
                     <span className="text-sm font-mono">{formatXp(entry.bitPoints)}</span>
                   </div>
 
-                  {/* Relays */}
-                  <div className="text-center">
+                  {/* Relays — desktop only */}
+                  <div className="text-center hidden md:block">
                     <span className="text-sm font-mono">{entry.relaysCompleted}/12</span>
                   </div>
 
-                  {/* Status */}
-                  <div className="text-center">
+                  {/* Status — desktop only */}
+                  <div className="text-center hidden md:block">
                     {isGuru ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30">
                         <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
