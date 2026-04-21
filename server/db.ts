@@ -161,13 +161,14 @@ export async function activateNode(profileId: number, nodeId: number) {
 // ─── Dearden Field Summary ───
 export async function getDeardenFieldSummary(profileId: number) {
   const db = await getDb();
-  if (!db) return { totalNodes: 0, activatedNodes: 0, webDomains: [] as { webName: string; count: number }[] };
+  if (!db) return { totalNodes: 0, activatedNodes: 0, webDomains: [] as { webName: string; count: number }[], activatedGrid: [] as { nodeId: number; webName: string; relayNumber: number }[] };
   
-  // Get all activated nodes for this profile with their web names
+  // Get all activated nodes for this profile with their web names and relay numbers
   const activations = await db
     .select({
       nodeId: nodeActivations.nodeId,
       webName: deardenNodes.webName,
+      relayNumber: deardenNodes.relayNumber,
     })
     .from(nodeActivations)
     .innerJoin(deardenNodes, eq(nodeActivations.nodeId, deardenNodes.id))
@@ -181,10 +182,18 @@ export async function getDeardenFieldSummary(profileId: number) {
   
   const webDomains = Object.entries(webCounts).map(([webName, count]) => ({ webName, count }));
   
+  // Build activated node grid (relay × web pairs)
+  const activatedGrid = activations.map(a => ({
+    nodeId: a.nodeId,
+    webName: a.webName,
+    relayNumber: a.relayNumber,
+  }));
+
   return {
     totalNodes: 60,
     activatedNodes: activations.length,
     webDomains,
+    activatedGrid,
   };
 }
 

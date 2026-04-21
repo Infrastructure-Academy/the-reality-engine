@@ -436,24 +436,114 @@ function WebDomainsTracker() {
   );
 }
 
-// ─── Dearden Field Image Section (links to Explore) ───
+// ─── Dearden Field Animated Section (links to Explore) ───
+const WEB_ORDER = ["Natural", "Machine", "Digital", "Biological", "Consciousness"] as const;
+const WEB_COLORS: Record<string, string> = {
+  Natural: "#22c55e",
+  Machine: "#f59e0b",
+  Digital: "#3b82f6",
+  Biological: "#ec4899",
+  Consciousness: "#a855f7",
+};
+
 function DeardenFieldSection() {
+  const [profileId, setProfileId] = useState<number | null>(null);
+  const profileMutation = trpc.profile.getOrCreate.useMutation();
+
+  useEffect(() => {
+    let id = localStorage.getItem("tre_guest_id");
+    if (!id) {
+      id = "g_" + Math.random().toString(36).slice(2, 12);
+      localStorage.setItem("tre_guest_id", id);
+    }
+    profileMutation.mutate({ guestId: id, mode: "explorer" }, {
+      onSuccess: (data) => { if (data) setProfileId(data.id); }
+    });
+  }, []);
+
+  const { data: summary } = trpc.dearden.summary.useQuery(
+    { profileId: profileId! },
+    { enabled: !!profileId }
+  );
+
+  const activatedSet = useMemo(() => {
+    if (!summary?.activatedGrid) return new Set<string>();
+    return new Set(summary.activatedGrid.map(n => `${n.relayNumber}-${n.webName}`));
+  }, [summary]);
+
+  const nodeCount = summary?.activatedNodes ?? 0;
+  const isComplete = nodeCount === 60;
+
   return (
     <div className="container max-w-4xl pb-6 pt-2">
       <div className="text-center mb-3">
         <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
         <h3 className="font-heading text-lg md:text-xl text-foreground">The Dearden Field</h3>
       </div>
+
+      {/* Animated 5×12 Grid Overlay on Image */}
       <Link href="/explore">
-        <div className="rounded-lg overflow-hidden border border-amber-400/20 glow-pulse cursor-pointer hover:border-amber-400/40 transition-colors">
-          <ImageLightbox
+        <div className="relative rounded-lg overflow-hidden border border-amber-400/20 glow-pulse cursor-pointer hover:border-amber-400/40 transition-colors">
+          <img
             src="/manus-storage/dearden-field_c7b3cbc3.png"
             alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery"
             className="w-full h-auto object-contain"
             loading="lazy"
           />
+          {/* Grid overlay */}
+          <div className="absolute inset-0 grid" style={{ gridTemplateColumns: "repeat(12, 1fr)", gridTemplateRows: "repeat(5, 1fr)", padding: "4%" }}>
+            {WEB_ORDER.map((web, wi) =>
+              Array.from({ length: 12 }, (_, ri) => {
+                const relay = ri + 1;
+                const key = `${relay}-${web}`;
+                const active = activatedSet.has(key);
+                return (
+                  <div
+                    key={key}
+                    className="flex items-center justify-center"
+                    style={{ gridColumn: ri + 1, gridRow: wi + 1 }}
+                  >
+                    <div
+                      className={`rounded-full transition-all duration-700 ${
+                        active ? "animate-pulse" : ""
+                      }`}
+                      style={{
+                        width: "clamp(6px, 1.8vw, 14px)",
+                        height: "clamp(6px, 1.8vw, 14px)",
+                        background: active
+                          ? WEB_COLORS[web]
+                          : "rgba(148,163,184,0.1)",
+                        boxShadow: active
+                          ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40`
+                          : "none",
+                        border: active ? "none" : "1px solid rgba(148,163,184,0.15)",
+                      }}
+                    />
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       </Link>
+
+      {/* Synthesis Unlocked Badge */}
+      {isComplete && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mt-4 flex justify-center"
+        >
+          <div className="flex items-center gap-3 px-6 py-3 rounded-xl border-2 border-amber-400 bg-amber-400/10 backdrop-blur-sm">
+            <Trophy className="w-6 h-6 text-amber-400" />
+            <div>
+              <p className="font-heading text-sm tracking-wider text-amber-400">SYNTHESIS UNLOCKED</p>
+              <p className="text-[10px] text-amber-400/70">60/60 Nodes — The Dearden Field is complete</p>
+            </div>
+            <span className="text-2xl">🏆</span>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -625,6 +715,45 @@ export default function Home() {
         {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
         <WebDomainsTracker />
         <DeardenFieldSection />
+
+        {/* ── 500 GENERATIONS TIMELINE STRIP ── */}
+        <div className="container max-w-4xl pb-6 pt-2">
+          <div className="text-center mb-4">
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">12,000 Years</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">500 Generations</h3>
+            <p className="text-[10px] text-muted-foreground/60 mt-1">From fire to programmable humans — the relay of civilisation</p>
+          </div>
+          <div className="relative">
+            {/* Timeline bar */}
+            <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
+            {/* Relay nodes */}
+            <div className="grid grid-cols-6 md:grid-cols-12 gap-y-6 gap-x-1">
+              {RELAYS.map((relay) => (
+                <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
+                  <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                    <div
+                      className="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center border transition-all group-hover:scale-110"
+                      style={{
+                        borderColor: `${relay.color}60`,
+                        background: `${relay.color}15`,
+                        boxShadow: `0 0 8px ${relay.color}20`,
+                      }}
+                    >
+                      <span className="text-sm md:text-base">{relay.emoji}</span>
+                    </div>
+                    <span className="text-[8px] md:text-[9px] font-heading tracking-wider text-muted-foreground group-hover:text-foreground transition-colors text-center leading-tight">
+                      {relay.name}
+                    </span>
+                    <span className="text-[7px] text-muted-foreground/40 hidden md:block">{relay.era}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <p className="text-center text-[9px] text-muted-foreground/50 mt-4 font-heading tracking-wider">
+            Each relay — a generation’s greatest infrastructure leap. Tap to explore.
+          </p>
+        </div>
 
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">

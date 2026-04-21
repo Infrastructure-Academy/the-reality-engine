@@ -1075,3 +1075,10 @@
 - [x] ShareCardGallery error was stale (April 20 7:36 AM) — file parses fine now
 - [x] Add per-web node counts (e.g., "Natural 0/12") in Web Domain slots on Home page
 - [x] 355 tests passing
+
+## Block 481: Animated Dearden Field + Synthesis Badge + 500 Generations Timeline
+- [x] Animate Dearden Field — 5×12 grid overlay with web-colored glowing dots on image
+- [x] Synthesis Unlocked milestone badge at 60/60 nodes (Trophy + motion animation)
+- [x] 500 Generations visual timeline strip (12 relay emoji nodes, era labels, links to Explore)
+- [x] Extended dearden.summary to return activatedGrid with relayNumber + webName
+- [x] 355 tests passing
