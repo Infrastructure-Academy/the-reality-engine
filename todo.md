@@ -1082,3 +1082,10 @@
 - [x] 500 Generations visual timeline strip (12 relay emoji nodes, era labels, links to Explore)
 - [x] Extended dearden.summary to return activatedGrid with relayNumber + webName
 - [x] 355 tests passing
+
+## Block 482: Generations Counter + Interactive Timeline + Dearden Heatmap
+- [x] Generations Counter animation — tick from 1→500 on scroll-into-view (ease-out cubic, 2.5s)
+- [x] Interactive timeline strip — glow completed relays from localStorage, greyscale uncollected
+- [x] Dearden Field Heatmap toggle — MY PROGRESS / COMMUNITY HEATMAP with size-scaled purple dots
+- [x] Added communityHeatmap procedure + getCommunityHeatmap db function
+- [x] 355 tests passing

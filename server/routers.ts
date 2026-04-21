@@ -97,6 +97,9 @@ export const appRouter = router({
     summary: publicProcedure.input(z.object({ profileId: z.number() })).query(async ({ input }) => {
       return db.getDeardenFieldSummary(input.profileId);
     }),
+    communityHeatmap: publicProcedure.query(async () => {
+      return db.getCommunityHeatmap();
+    }),
     activate: publicProcedure
       .input(z.object({
         profileId: z.number(),

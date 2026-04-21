@@ -10,7 +10,7 @@ import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { BrandI } from "@/components/BrandI";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
 
 
@@ -436,6 +436,40 @@ function WebDomainsTracker() {
   );
 }
 
+// ─── useCountUp hook (scroll-triggered counter animation) ───
+function useCountUp(target: number, duration = 2000) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, duration]);
+
+  return { count, ref };
+}
+
 // ─── Dearden Field Animated Section (links to Explore) ───
 const WEB_ORDER = ["Natural", "Machine", "Digital", "Biological", "Consciousness"] as const;
 const WEB_COLORS: Record<string, string> = {
@@ -448,6 +482,7 @@ const WEB_COLORS: Record<string, string> = {
 
 function DeardenFieldSection() {
   const [profileId, setProfileId] = useState<number | null>(null);
+  const [showHeatmap, setShowHeatmap] = useState(false);
   const profileMutation = trpc.profile.getOrCreate.useMutation();
 
   useEffect(() => {
@@ -466,10 +501,27 @@ function DeardenFieldSection() {
     { enabled: !!profileId }
   );
 
+  const { data: heatmapData } = trpc.dearden.communityHeatmap.useQuery(
+    undefined,
+    { enabled: showHeatmap }
+  );
+
   const activatedSet = useMemo(() => {
     if (!summary?.activatedGrid) return new Set<string>();
     return new Set(summary.activatedGrid.map(n => `${n.relayNumber}-${n.webName}`));
   }, [summary]);
+
+  const heatmapMap = useMemo(() => {
+    if (!heatmapData) return new Map<string, number>();
+    const m = new Map<string, number>();
+    let max = 1;
+    for (const row of heatmapData) {
+      m.set(`${row.relayNumber}-${row.webName}`, Number(row.playerCount));
+      if (Number(row.playerCount) > max) max = Number(row.playerCount);
+    }
+    m.set("__max", max);
+    return m;
+  }, [heatmapData]);
 
   const nodeCount = summary?.activatedNodes ?? 0;
   const isComplete = nodeCount === 60;
@@ -479,6 +531,30 @@ function DeardenFieldSection() {
       <div className="text-center mb-3">
         <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
         <h3 className="font-heading text-lg md:text-xl text-foreground">The Dearden Field</h3>
+      </div>
+
+      {/* Toggle: My Progress / Community Heatmap */}
+      <div className="flex justify-center gap-2 mb-3">
+        <button
+          onClick={() => setShowHeatmap(false)}
+          className={`text-[10px] font-heading tracking-wider px-3 py-1 rounded-full border transition-all ${
+            !showHeatmap
+              ? "border-amber-400/60 text-amber-400 bg-amber-400/10"
+              : "border-border/30 text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          MY PROGRESS
+        </button>
+        <button
+          onClick={() => setShowHeatmap(true)}
+          className={`text-[10px] font-heading tracking-wider px-3 py-1 rounded-full border transition-all ${
+            showHeatmap
+              ? "border-purple-400/60 text-purple-400 bg-purple-400/10"
+              : "border-border/30 text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          COMMUNITY HEATMAP
+        </button>
       </div>
 
       {/* Animated 5×12 Grid Overlay on Image */}
@@ -497,6 +573,13 @@ function DeardenFieldSection() {
                 const relay = ri + 1;
                 const key = `${relay}-${web}`;
                 const active = activatedSet.has(key);
+                const heatVal = heatmapMap.get(key) ?? 0;
+                const heatMax = heatmapMap.get("__max") ?? 1;
+                const heatIntensity = heatVal / heatMax;
+
+                const isHeat = showHeatmap && heatVal > 0;
+                const isPersonal = !showHeatmap && active;
+
                 return (
                   <div
                     key={key}
@@ -505,18 +588,26 @@ function DeardenFieldSection() {
                   >
                     <div
                       className={`rounded-full transition-all duration-700 ${
-                        active ? "animate-pulse" : ""
+                        isPersonal ? "animate-pulse" : ""
                       }`}
                       style={{
-                        width: "clamp(6px, 1.8vw, 14px)",
-                        height: "clamp(6px, 1.8vw, 14px)",
-                        background: active
-                          ? WEB_COLORS[web]
-                          : "rgba(148,163,184,0.1)",
-                        boxShadow: active
-                          ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40`
-                          : "none",
-                        border: active ? "none" : "1px solid rgba(148,163,184,0.15)",
+                        width: isHeat
+                          ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)`
+                          : "clamp(6px, 1.8vw, 14px)",
+                        height: isHeat
+                          ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)`
+                          : "clamp(6px, 1.8vw, 14px)",
+                        background: isHeat
+                          ? `rgba(168, 85, 247, ${0.3 + heatIntensity * 0.7})`
+                          : isPersonal
+                            ? WEB_COLORS[web]
+                            : "rgba(148,163,184,0.1)",
+                        boxShadow: isHeat
+                          ? `0 0 ${6 + heatIntensity * 12}px rgba(168,85,247,${0.3 + heatIntensity * 0.5})`
+                          : isPersonal
+                            ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40`
+                            : "none",
+                        border: (isPersonal || isHeat) ? "none" : "1px solid rgba(148,163,184,0.15)",
                       }}
                     />
                   </div>
@@ -526,6 +617,23 @@ function DeardenFieldSection() {
           </div>
         </div>
       </Link>
+
+      {/* Heatmap legend */}
+      {showHeatmap && (
+        <div className="flex items-center justify-center gap-2 mt-2">
+          <span className="text-[9px] text-muted-foreground/60">Few players</span>
+          <div className="flex gap-0.5">
+            {[0.2, 0.4, 0.6, 0.8, 1.0].map((v) => (
+              <div
+                key={v}
+                className="w-3 h-3 rounded-full"
+                style={{ background: `rgba(168,85,247,${0.3 + v * 0.7})` }}
+              />
+            ))}
+          </div>
+          <span className="text-[9px] text-muted-foreground/60">Many players</span>
+        </div>
+      )}
 
       {/* Synthesis Unlocked Badge */}
       {isComplete && (
@@ -544,6 +652,73 @@ function DeardenFieldSection() {
           </div>
         </motion.div>
       )}
+    </div>
+  );
+}
+
+// ─── 500 Generations Timeline Strip (interactive with counter + relay glow) ───
+function GenerationsTimelineStrip() {
+  const { count: genCount, ref: counterRef } = useCountUp(500, 2500);
+
+  // Read relay collection from localStorage for glow effect
+  const [collection, setCollection] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tre_spinner_collection");
+      if (saved) setCollection(new Set(JSON.parse(saved)));
+    } catch { /* ignore */ }
+  }, []);
+
+  return (
+    <div className="container max-w-4xl pb-6 pt-2" ref={counterRef}>
+      <div className="text-center mb-4">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">12,000 Years</p>
+        <h3 className="font-heading text-lg md:text-xl text-foreground">
+          <span className="text-amber-400 tabular-nums font-bold text-2xl md:text-3xl">{genCount}</span>{" "}
+          <span>Generations</span>
+        </h3>
+        <p className="text-[10px] text-muted-foreground/60 mt-1">From fire to programmable humans — the relay of civilisation</p>
+      </div>
+      <div className="relative">
+        {/* Timeline bar */}
+        <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
+        {/* Relay nodes */}
+        <div className="grid grid-cols-6 md:grid-cols-12 gap-y-6 gap-x-1">
+          {RELAYS.map((relay) => {
+            const collected = collection.has(relay.number - 1);
+            return (
+              <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
+                <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                  <div
+                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center border transition-all group-hover:scale-110 ${
+                      collected ? "ring-2 ring-offset-1 ring-offset-background" : ""
+                    }`}
+                    style={{
+                      borderColor: collected ? relay.color : `${relay.color}60`,
+                      background: collected ? `${relay.color}30` : `${relay.color}15`,
+                      boxShadow: collected
+                        ? `0 0 12px ${relay.color}60, 0 0 24px ${relay.color}30`
+                        : `0 0 8px ${relay.color}20`,
+
+                    }}
+                  >
+                    <span className={`text-sm md:text-base ${collected ? "" : "grayscale opacity-60"}`}>{relay.emoji}</span>
+                  </div>
+                  <span className={`text-[8px] md:text-[9px] font-heading tracking-wider text-center leading-tight transition-colors ${
+                    collected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+                  }`}>
+                    {relay.name}
+                  </span>
+                  <span className="text-[7px] text-muted-foreground/40 hidden md:block">{relay.era}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+      <p className="text-center text-[9px] text-muted-foreground/50 mt-4 font-heading tracking-wider">
+        Each relay — a generation’s greatest infrastructure leap. Tap to explore.
+      </p>
     </div>
   );
 }
@@ -716,44 +891,8 @@ export default function Home() {
         <WebDomainsTracker />
         <DeardenFieldSection />
 
-        {/* ── 500 GENERATIONS TIMELINE STRIP ── */}
-        <div className="container max-w-4xl pb-6 pt-2">
-          <div className="text-center mb-4">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">12,000 Years</p>
-            <h3 className="font-heading text-lg md:text-xl text-foreground">500 Generations</h3>
-            <p className="text-[10px] text-muted-foreground/60 mt-1">From fire to programmable humans — the relay of civilisation</p>
-          </div>
-          <div className="relative">
-            {/* Timeline bar */}
-            <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
-            {/* Relay nodes */}
-            <div className="grid grid-cols-6 md:grid-cols-12 gap-y-6 gap-x-1">
-              {RELAYS.map((relay) => (
-                <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
-                  <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                    <div
-                      className="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center border transition-all group-hover:scale-110"
-                      style={{
-                        borderColor: `${relay.color}60`,
-                        background: `${relay.color}15`,
-                        boxShadow: `0 0 8px ${relay.color}20`,
-                      }}
-                    >
-                      <span className="text-sm md:text-base">{relay.emoji}</span>
-                    </div>
-                    <span className="text-[8px] md:text-[9px] font-heading tracking-wider text-muted-foreground group-hover:text-foreground transition-colors text-center leading-tight">
-                      {relay.name}
-                    </span>
-                    <span className="text-[7px] text-muted-foreground/40 hidden md:block">{relay.era}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <p className="text-center text-[9px] text-muted-foreground/50 mt-4 font-heading tracking-wider">
-            Each relay — a generation’s greatest infrastructure leap. Tap to explore.
-          </p>
-        </div>
+        {/* ── 500 GENERATIONS TIMELINE STRIP (interactive) ── */}
+        <GenerationsTimelineStrip />
 
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">

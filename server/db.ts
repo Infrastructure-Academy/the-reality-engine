@@ -197,6 +197,26 @@ export async function getDeardenFieldSummary(profileId: number) {
   };
 }
 
+// ─── Community Heatmap (aggregate all players) ───
+export async function getCommunityHeatmap() {
+  const db = await getDb();
+  if (!db) return [] as { relayNumber: number; webName: string; playerCount: number }[];
+  
+  // Count distinct players who activated each node
+  const rows = await db
+    .select({
+      relayNumber: deardenNodes.relayNumber,
+      webName: deardenNodes.webName,
+      playerCount: sql<number>`COUNT(DISTINCT ${nodeActivations.profileId})`,
+    })
+    .from(nodeActivations)
+    .innerJoin(deardenNodes, eq(nodeActivations.nodeId, deardenNodes.id))
+    .where(eq(nodeActivations.activated, true))
+    .groupBy(deardenNodes.relayNumber, deardenNodes.webName);
+  
+  return rows;
+}
+
 // ─── Character Queries ───
 export async function createCharacter(profileId: number, name: string, fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced", abilityScores: Record<string, number>) {
   const db = await getDb();
