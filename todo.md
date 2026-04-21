@@ -1094,3 +1094,9 @@
 - [x] Synthesis Unlocked celebration modal with confetti at 60/60 nodes
 - [x] Pulsing breathing animation on community heatmap dots
 - [x] Your Archetype preview card — West/East/Nomadic lean from relay choices
+
+## Block 484: Archetype Card Enhancements + Community Distribution
+- [x] Balanced Navigator threshold — show "The Balanced Navigator" when West/East/Nomadic within 15%
+- [x] Live storage event listener — YourArchetypeCard updates in real-time when relays collected
+- [x] Community archetype distribution backend procedure (aggregate West/East/Nomadic across all players)
+- [x] Community overlay on YourArchetypeCard — toggle to see global perspective split

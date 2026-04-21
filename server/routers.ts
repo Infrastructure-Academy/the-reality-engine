@@ -100,6 +100,9 @@ export const appRouter = router({
     communityHeatmap: publicProcedure.query(async () => {
       return db.getCommunityHeatmap();
     }),
+    communityArchetype: publicProcedure.query(async () => {
+      return db.getCommunityArchetypeDistribution();
+    }),
     activate: publicProcedure
       .input(z.object({
         profileId: z.number(),

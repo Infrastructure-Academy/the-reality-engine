@@ -733,27 +733,52 @@ const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: stri
 
 function YourArchetypeCard() {
   const [collection, setCollection] = useState<Set<number>>(new Set());
-  useEffect(() => {
+  const [showCommunity, setShowCommunity] = useState(false);
+
+  // Initial load + live storage listener for cross-tab updates
+  const readCollection = useCallback(() => {
     try {
       const saved = localStorage.getItem("tre_spinner_collection");
       if (saved) setCollection(new Set(JSON.parse(saved)));
     } catch { /* ignore */ }
   }, []);
 
+  useEffect(() => { readCollection(); }, [readCollection]);
+
+  useEffect(() => {
+    const handler = () => readCollection();
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, [readCollection]);
+
+  // Community archetype distribution
+  const { data: communityData } = trpc.dearden.communityArchetype.useQuery(undefined, {
+    staleTime: 60_000,
+  });
+
   // Compute perspective distribution from collected relays
-  const { perspectives, dominant, total, hasRelays } = useMemo(() => {
+  const { perspectives, dominant, total, hasRelays, isBalanced, patternTitle } = useMemo(() => {
     const p = { west: 0, east: 0, nomadic: 0 };
     collection.forEach((idx) => {
-      const relayNum = idx + 1; // collection stores 0-indexed
+      const relayNum = idx + 1;
       const perspective = RELAY_PERSPECTIVES[relayNum];
       if (perspective) p[perspective]++;
     });
     const t = p.west + p.east + p.nomadic;
     const sorted = Object.entries(p).sort((a, b) => b[1] - a[1]);
-    return { perspectives: p, dominant: sorted[0][0] as "west" | "east" | "nomadic", total: t, hasRelays: t > 0 };
+    const dom = sorted[0][0] as "west" | "east" | "nomadic";
+    // Balanced if top two are within 15% of each other
+    const bal = t > 0 && sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
+    const title = bal ? "The Balanced Navigator" : PERSPECTIVE_INFO[dom].title;
+    return { perspectives: p, dominant: dom, total: t, hasRelays: t > 0, isBalanced: bal, patternTitle: title };
   }, [collection]);
 
-  const meta = PERSPECTIVE_INFO[dominant];
+  const meta = isBalanced
+    ? { name: "Balanced", color: "#f59e0b", icon: "⚖️", title: "The Balanced Navigator" }
+    : PERSPECTIVE_INFO[dominant];
+
+  // Community totals
+  const communityTotal = communityData ? (communityData.west + communityData.east + communityData.nomadic) : 0;
 
   return (
     <div className="container max-w-4xl pb-4 pt-2">
@@ -763,65 +788,106 @@ function YourArchetypeCard() {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <Link href="/synthesis">
-          <div className="relative overflow-hidden rounded-xl border border-white/10 bg-card/50 backdrop-blur-sm p-5 cursor-pointer hover:border-amber-400/30 transition-all group">
-            {/* Header */}
-            <div className="flex items-center gap-2 mb-3">
+        <div className="relative overflow-hidden rounded-xl border border-white/10 bg-card/50 backdrop-blur-sm p-5">
+          {/* Header */}
+          <Link href="/synthesis">
+            <div className="flex items-center gap-2 mb-3 cursor-pointer group">
               <Compass className="w-4 h-4 text-amber-400" />
               <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Your Civilisational Lean</p>
               <ChevronRight className="w-3 h-3 text-amber-400/40 ml-auto group-hover:translate-x-1 transition-transform" />
             </div>
+          </Link>
 
-            {hasRelays ? (
+          {hasRelays ? (
+            <>
               <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                 {/* Dominant archetype */}
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-3xl">{meta.icon}</span>
-                  <div>
-                    <p className="font-heading text-base tracking-wider" style={{ color: meta.color }}>{meta.title}</p>
-                    <p className="text-[10px] text-muted-foreground/70">{meta.name} perspective dominant</p>
+                <Link href="/synthesis">
+                  <div className="flex items-center gap-3 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+                    <span className="text-3xl">{meta.icon}</span>
+                    <div>
+                      <p className="font-heading text-base tracking-wider" style={{ color: meta.color }}>{patternTitle}</p>
+                      <p className="text-[10px] text-muted-foreground/70">
+                        {isBalanced ? "Perspectives in harmony" : `${meta.name} perspective dominant`}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* Perspective bars */}
                 <div className="flex-1 w-full space-y-1.5">
                   {(["west", "east", "nomadic"] as const).map((key) => {
                     const info = PERSPECTIVE_INFO[key];
-                    const count = perspectives[key];
-                    const pct = total > 0 ? (count / total) * 100 : 0;
+                    const myCount = perspectives[key];
+                    const myPct = total > 0 ? (myCount / total) * 100 : 0;
+                    const comPct = showCommunity && communityData && communityTotal > 0
+                      ? (communityData[key] / communityTotal) * 100
+                      : 0;
                     return (
                       <div key={key} className="flex items-center gap-2">
                         <span className="text-xs w-14 text-right" style={{ color: info.color }}>
                           {info.icon} {info.name.slice(0, 1)}
                         </span>
-                        <div className="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
+                        <div className="flex-1 h-2 rounded-full bg-white/5 overflow-hidden relative">
+                          {/* Community bar (behind) */}
+                          {showCommunity && (
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${comPct}%` }}
+                              transition={{ duration: 0.8, ease: "easeOut" }}
+                              className="absolute inset-y-0 left-0 rounded-full opacity-25"
+                              style={{ background: info.color }}
+                            />
+                          )}
+                          {/* Player bar (front) */}
                           <motion.div
                             initial={{ width: 0 }}
-                            whileInView={{ width: `${pct}%` }}
+                            whileInView={{ width: `${myPct}%` }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="h-full rounded-full"
+                            className="h-full rounded-full relative z-10"
                             style={{ background: info.color }}
                           />
                         </div>
-                        <span className="text-[10px] text-muted-foreground/60 w-8 tabular-nums">{Math.round(pct)}%</span>
+                        <span className="text-[10px] text-muted-foreground/60 w-8 tabular-nums">{Math.round(myPct)}%</span>
                       </div>
                     );
                   })}
                 </div>
               </div>
-            ) : (
-              <div className="text-center py-3">
+
+              {/* Toggle row */}
+              <div className="flex items-center justify-between mt-3">
+                <button
+                  onClick={(e) => { e.preventDefault(); setShowCommunity(!showCommunity); }}
+                  className="text-[9px] font-heading tracking-wider px-2 py-1 rounded border transition-all"
+                  style={{
+                    borderColor: showCommunity ? "rgba(168,85,247,0.4)" : "rgba(255,255,255,0.1)",
+                    background: showCommunity ? "rgba(168,85,247,0.1)" : "transparent",
+                    color: showCommunity ? "#a855f7" : "rgba(148,163,184,0.6)",
+                  }}
+                >
+                  {showCommunity ? "◉ COMMUNITY" : "○ COMMUNITY"}
+                </button>
+                {showCommunity && communityData && communityTotal > 0 && (
+                  <span className="text-[9px] text-purple-400/60">
+                    {communityTotal} player{communityTotal !== 1 ? "s" : ""} — global distribution
+                  </span>
+                )}
+                <Link href="/synthesis">
+                  <span className="text-[9px] text-muted-foreground/40 hover:text-amber-400/60 transition-colors cursor-pointer">Full synthesis →</span>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <Link href="/explore">
+              <div className="text-center py-3 cursor-pointer hover:opacity-80 transition-opacity">
                 <p className="text-sm text-muted-foreground/60">Explore relays to discover your civilisational lean</p>
                 <p className="text-[10px] text-muted-foreground/40 mt-1">Each relay reveals a Western, Eastern, or Nomadic perspective</p>
               </div>
-            )}
-
-            {hasRelays && (
-              <p className="text-[9px] text-muted-foreground/40 mt-3 text-right">Tap for full synthesis →</p>
-            )}
-          </div>
-        </Link>
+            </Link>
+          )}
+        </div>
       </motion.div>
     </div>
   );

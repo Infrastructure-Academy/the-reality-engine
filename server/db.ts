@@ -217,6 +217,49 @@ export async function getCommunityHeatmap() {
   return rows;
 }
 
+// ─── Community Archetype Distribution (aggregate West/East/Nomadic across all players) ───
+const RELAY_PERSPECTIVE_MAP: Record<number, "west" | "east" | "nomadic"> = {
+  1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west", 6: "nomadic",
+  7: "east", 8: "west", 9: "west", 10: "west", 11: "nomadic", 12: "nomadic",
+};
+
+export async function getCommunityArchetypeDistribution() {
+  const db = await getDb();
+  if (!db) return { west: 0, east: 0, nomadic: 0, totalPlayers: 0 };
+
+  // Get all relay progress rows with any progress
+  const rows = await db
+    .select({
+      profileId: relayProgress.profileId,
+      relayNumber: relayProgress.relayNumber,
+      completionPct: relayProgress.completionPct,
+    })
+    .from(relayProgress)
+    .where(sql`${relayProgress.completionPct} > 0`);
+
+  // Aggregate per-player perspective weights
+  const playerPerspectives = new Map<number, { west: number; east: number; nomadic: number }>();
+  for (const row of rows) {
+    const perspective = RELAY_PERSPECTIVE_MAP[row.relayNumber];
+    if (!perspective) continue;
+    if (!playerPerspectives.has(row.profileId)) {
+      playerPerspectives.set(row.profileId, { west: 0, east: 0, nomadic: 0 });
+    }
+    const p = playerPerspectives.get(row.profileId)!;
+    p[perspective] += row.completionPct ?? 0;
+  }
+
+  // Sum across all players
+  const totals = { west: 0, east: 0, nomadic: 0 };
+  Array.from(playerPerspectives.values()).forEach((p) => {
+    totals.west += p.west;
+    totals.east += p.east;
+    totals.nomadic += p.nomadic;
+  });
+
+  return { ...totals, totalPlayers: playerPerspectives.size };
+}
+
 // ─── Character Queries ───
 export async function createCharacter(profileId: number, name: string, fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced", abilityScores: Record<string, number>) {
   const db = await getDb();
