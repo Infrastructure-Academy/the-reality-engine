@@ -70,7 +70,7 @@ const CDN = {
   generationsTimeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/icard_generations_timeline_a74f8d24.png",
   whyVideo: "/manus-storage/icard_video_dominance_d183d2d5.png",
   lifecyclePipeline: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/iGO_Pipeline_v3_fixed_4c69f89d.png",
-  playersJourney: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/players-journey-staircase_a823052e.png",
+  playersJourney: "/manus-storage/players-journey-staircase_3977929c.png",
 };
 
 // ─── IMPACT STATS ───
@@ -225,7 +225,7 @@ export default function IGOUmbrella() {
           {/* Value proposition */}
           <div className="max-w-3xl mx-auto mb-8">
             <p className="text-white/60 text-base sm:text-lg leading-relaxed">
-              The world's first <span className="text-amber-400 font-semibold">lifelong infrastructure learning game</span>. 
+              The world's first <span className="text-amber-400 font-semibold italic">lifelong infrastructure learning game</span>. 
               12 civilisational relays. 500 generations. 12 game formats. From a child's first spin to a Master Weaver's capstone. 
               One architecture, one scoring system, one community — <span className="text-white/80 font-semibold">scaled across every generation</span>.
             </p>

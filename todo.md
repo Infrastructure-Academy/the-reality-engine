@@ -1064,3 +1064,8 @@
 - [x] iGO page hero — "12 civilisational relays. 500 generations. 12 game formats."
 - [x] iGO OG meta description updated with 500 generations
 - [x] 355 tests passing
+
+## Block 479: Fix Player's Journey image + iGO italic in intro
+- [x] Re-uploaded Player's Journey image with correct content type (was application/octet-stream)
+- [x] Made "lifelong infrastructure learning game" italic in iGO intro value proposition
+- [x] 355 tests passing
