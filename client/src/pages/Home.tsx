@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import { RELAYS, WEBS } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2 } from "lucide-react";
+import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2, Compass } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { BrandI } from "@/components/BrandI";
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback, Fragment } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 
 
@@ -483,6 +484,8 @@ const WEB_COLORS: Record<string, string> = {
 function DeardenFieldSection() {
   const [profileId, setProfileId] = useState<number | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [showSynthesisModal, setShowSynthesisModal] = useState(false);
+  const [hasSeenSynthesis, setHasSeenSynthesis] = useState(() => localStorage.getItem("tre_synthesis_seen") === "1");
   const profileMutation = trpc.profile.getOrCreate.useMutation();
 
   useEffect(() => {
@@ -525,6 +528,15 @@ function DeardenFieldSection() {
 
   const nodeCount = summary?.activatedNodes ?? 0;
   const isComplete = nodeCount === 60;
+
+  // Show celebration modal once when 60/60 is first reached
+  useEffect(() => {
+    if (isComplete && !hasSeenSynthesis) {
+      setShowSynthesisModal(true);
+      setHasSeenSynthesis(true);
+      localStorage.setItem("tre_synthesis_seen", "1");
+    }
+  }, [isComplete, hasSeenSynthesis]);
 
   return (
     <div className="container max-w-4xl pb-6 pt-2">
@@ -589,7 +601,7 @@ function DeardenFieldSection() {
                     <div
                       className={`rounded-full transition-all duration-700 ${
                         isPersonal ? "animate-pulse" : ""
-                      }`}
+                      } ${isHeat ? "heat-dot-breathe" : ""}`}
                       style={{
                         width: isHeat
                           ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)`
@@ -608,6 +620,7 @@ function DeardenFieldSection() {
                             ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40`
                             : "none",
                         border: (isPersonal || isHeat) ? "none" : "1px solid rgba(148,163,184,0.15)",
+                        animationDelay: isHeat ? `${(wi * 12 + ri) * 0.05}s` : undefined,
                       }}
                     />
                   </div>
@@ -642,16 +655,174 @@ function DeardenFieldSection() {
           animate={{ opacity: 1, scale: 1 }}
           className="mt-4 flex justify-center"
         >
-          <div className="flex items-center gap-3 px-6 py-3 rounded-xl border-2 border-amber-400 bg-amber-400/10 backdrop-blur-sm">
-            <Trophy className="w-6 h-6 text-amber-400" />
-            <div>
-              <p className="font-heading text-sm tracking-wider text-amber-400">SYNTHESIS UNLOCKED</p>
-              <p className="text-[10px] text-amber-400/70">60/60 Nodes — The Dearden Field is complete</p>
+          <Link href="/synthesis">
+            <div className="flex items-center gap-3 px-6 py-3 rounded-xl border-2 border-amber-400 bg-amber-400/10 backdrop-blur-sm cursor-pointer hover:bg-amber-400/20 transition-colors">
+              <Trophy className="w-6 h-6 text-amber-400" />
+              <div>
+                <p className="font-heading text-sm tracking-wider text-amber-400">SYNTHESIS UNLOCKED</p>
+                <p className="text-[10px] text-amber-400/70">60/60 Nodes — The Dearden Field is complete</p>
+              </div>
+              <span className="text-2xl">🏆</span>
             </div>
-            <span className="text-2xl">🏆</span>
-          </div>
+          </Link>
         </motion.div>
       )}
+
+      {/* Synthesis Celebration Modal with Confetti */}
+      <Dialog open={showSynthesisModal} onOpenChange={setShowSynthesisModal}>
+        <DialogContent className="bg-background/95 backdrop-blur-xl border-amber-400/40 max-w-md text-center overflow-hidden">
+          <DialogTitle className="sr-only">Synthesis Unlocked</DialogTitle>
+          {/* Confetti overlay */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {Array.from({ length: 30 }, (_, i) => (
+              <div
+                key={i}
+                className="confetti-piece"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  background: ["#ef4444", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7", "#ec4899"][i % 6],
+                  borderRadius: i % 3 === 0 ? "50%" : "2px",
+                  width: `${6 + Math.random() * 6}px`,
+                  height: `${6 + Math.random() * 6}px`,
+                  animationDelay: `${Math.random() * 1.5}s`,
+                  animationDuration: `${2 + Math.random() * 2}s`,
+                }}
+              />
+            ))}
+          </div>
+          <div className="relative z-10 py-6">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 200, damping: 10 }}
+              className="text-6xl mb-4"
+            >
+              🏆
+            </motion.div>
+            <h2 className="font-heading text-2xl text-amber-400 tracking-wider mb-2">SYNTHESIS UNLOCKED</h2>
+            <p className="text-muted-foreground text-sm mb-1">You have activated all 60 nodes of The Dearden Field.</p>
+            <p className="text-muted-foreground/70 text-xs mb-6">5 Great Webs × 12 Civilisational Relays — Complete.</p>
+            <div className="flex gap-3 justify-center">
+              <Link href="/synthesis">
+                <Button className="bg-amber-500 hover:bg-amber-600 text-black font-heading tracking-wider">
+                  VIEW SYNTHESIS
+                </Button>
+              </Link>
+              <Button variant="outline" onClick={() => setShowSynthesisModal(false)} className="border-amber-400/40 text-amber-400 hover:bg-amber-400/10">
+                CONTINUE
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// ─── Your Archetype Preview Card (civilisational lean from relay collection) ───
+const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "nomadic"> = {
+  1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west", 6: "nomadic",
+  7: "east", 8: "west", 9: "west", 10: "west", 11: "nomadic", 12: "nomadic",
+};
+
+const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: string; title: string }> = {
+  west: { name: "Western", color: "#3b82f6", icon: "🏛️", title: "The Systems Architect" },
+  east: { name: "Eastern", color: "#ef4444", icon: "🏯", title: "The Harmony Weaver" },
+  nomadic: { name: "Nomadic", color: "#f59e0b", icon: "🏕️", title: "The Universal Connector" },
+};
+
+function YourArchetypeCard() {
+  const [collection, setCollection] = useState<Set<number>>(new Set());
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tre_spinner_collection");
+      if (saved) setCollection(new Set(JSON.parse(saved)));
+    } catch { /* ignore */ }
+  }, []);
+
+  // Compute perspective distribution from collected relays
+  const { perspectives, dominant, total, hasRelays } = useMemo(() => {
+    const p = { west: 0, east: 0, nomadic: 0 };
+    collection.forEach((idx) => {
+      const relayNum = idx + 1; // collection stores 0-indexed
+      const perspective = RELAY_PERSPECTIVES[relayNum];
+      if (perspective) p[perspective]++;
+    });
+    const t = p.west + p.east + p.nomadic;
+    const sorted = Object.entries(p).sort((a, b) => b[1] - a[1]);
+    return { perspectives: p, dominant: sorted[0][0] as "west" | "east" | "nomadic", total: t, hasRelays: t > 0 };
+  }, [collection]);
+
+  const meta = PERSPECTIVE_INFO[dominant];
+
+  return (
+    <div className="container max-w-4xl pb-4 pt-2">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <Link href="/synthesis">
+          <div className="relative overflow-hidden rounded-xl border border-white/10 bg-card/50 backdrop-blur-sm p-5 cursor-pointer hover:border-amber-400/30 transition-all group">
+            {/* Header */}
+            <div className="flex items-center gap-2 mb-3">
+              <Compass className="w-4 h-4 text-amber-400" />
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Your Civilisational Lean</p>
+              <ChevronRight className="w-3 h-3 text-amber-400/40 ml-auto group-hover:translate-x-1 transition-transform" />
+            </div>
+
+            {hasRelays ? (
+              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+                {/* Dominant archetype */}
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <span className="text-3xl">{meta.icon}</span>
+                  <div>
+                    <p className="font-heading text-base tracking-wider" style={{ color: meta.color }}>{meta.title}</p>
+                    <p className="text-[10px] text-muted-foreground/70">{meta.name} perspective dominant</p>
+                  </div>
+                </div>
+
+                {/* Perspective bars */}
+                <div className="flex-1 w-full space-y-1.5">
+                  {(["west", "east", "nomadic"] as const).map((key) => {
+                    const info = PERSPECTIVE_INFO[key];
+                    const count = perspectives[key];
+                    const pct = total > 0 ? (count / total) * 100 : 0;
+                    return (
+                      <div key={key} className="flex items-center gap-2">
+                        <span className="text-xs w-14 text-right" style={{ color: info.color }}>
+                          {info.icon} {info.name.slice(0, 1)}
+                        </span>
+                        <div className="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${pct}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="h-full rounded-full"
+                            style={{ background: info.color }}
+                          />
+                        </div>
+                        <span className="text-[10px] text-muted-foreground/60 w-8 tabular-nums">{Math.round(pct)}%</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-3">
+                <p className="text-sm text-muted-foreground/60">Explore relays to discover your civilisational lean</p>
+                <p className="text-[10px] text-muted-foreground/40 mt-1">Each relay reveals a Western, Eastern, or Nomadic perspective</p>
+              </div>
+            )}
+
+            {hasRelays && (
+              <p className="text-[9px] text-muted-foreground/40 mt-3 text-right">Tap for full synthesis →</p>
+            )}
+          </div>
+        </Link>
+      </motion.div>
     </div>
   );
 }
@@ -890,6 +1061,9 @@ export default function Home() {
         {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
         <WebDomainsTracker />
         <DeardenFieldSection />
+
+        {/* ── YOUR CIVILISATIONAL LEAN (archetype preview) ── */}
+        <YourArchetypeCard />
 
         {/* ── 500 GENERATIONS TIMELINE STRIP (interactive) ── */}
         <GenerationsTimelineStrip />

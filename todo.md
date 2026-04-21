@@ -1089,3 +1089,8 @@
 - [x] Dearden Field Heatmap toggle — MY PROGRESS / COMMUNITY HEATMAP with size-scaled purple dots
 - [x] Added communityHeatmap procedure + getCommunityHeatmap db function
 - [x] 355 tests passing
+
+## Block 483: Synthesis Modal + Pulsing Heatmap + Archetype Card
+- [x] Synthesis Unlocked celebration modal with confetti at 60/60 nodes
+- [x] Pulsing breathing animation on community heatmap dots
+- [x] Your Archetype preview card — West/East/Nomadic lean from relay choices
