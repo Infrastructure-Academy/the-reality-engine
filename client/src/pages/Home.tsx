@@ -333,6 +333,11 @@ function WebDomainsTracker() {
     return new Set(summary.webDomains.map(w => w.webName));
   }, [summary]);
 
+  const webNodeCounts = useMemo(() => {
+    if (!summary?.webDomains) return new Map<string, number>();
+    return new Map(summary.webDomains.map(w => [w.webName, w.count]));
+  }, [summary]);
+
   const webCount = activatedWebNames.size;
   const nodeCount = summary?.activatedNodes ?? 0;
   const hasAny = webCount > 0;
@@ -385,6 +390,11 @@ function WebDomainsTracker() {
                   style={active ? { color: web.color } : undefined}
                 >
                   {web.name}
+                </span>
+                <span className={`text-[8px] font-mono ${
+                  active ? "text-amber-400/70" : "text-muted-foreground/40"
+                }`}>
+                  {webNodeCounts.get(web.name) ?? 0}/12
                 </span>
               </div>
             );

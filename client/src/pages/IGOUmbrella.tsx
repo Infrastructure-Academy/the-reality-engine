@@ -11,7 +11,7 @@ import {
   Gamepad2, GraduationCap, Building2, HandCoins, Users, ChevronRight,
   Smartphone, Globe, Flame, TreePine, Waves, Sailboat, Compass, Ship,
   Factory, Train, Plane, Satellite, Atom, Network, Layers, ArrowDown,
-  CheckCircle2, Sparkles, Target, BookOpen, Shield, Zap, Trophy
+  CheckCircle2, Sparkles, Target, BookOpen, Shield, Zap, Trophy, Clock
 } from "lucide-react";
 
 // ─── 12 MODES A–L (v4 terminology) ───
@@ -78,6 +78,7 @@ const IMPACT_STATS = [
   { value: "12", label: "RELAYS", icon: Globe },
   { value: "5", label: "GREAT WEBS", icon: Zap },
   { value: "91+", label: "INVENTIONS", icon: BookOpen },
+  { value: "500", label: "GENERATIONS", icon: Clock },
   { value: "12", label: "GAME FORMATS", icon: Layers },
   { value: "8–65+", label: "AGE RANGE", icon: Users },
   { value: "24M", label: "XP CAP", icon: Trophy },
@@ -232,7 +233,7 @@ export default function IGOUmbrella() {
           </div>
 
           {/* Impact stats bar */}
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 max-w-4xl mx-auto mb-10">
+          <div className="grid grid-cols-4 sm:grid-cols-7 gap-3 max-w-4xl mx-auto mb-10">
             {IMPACT_STATS.map(s => (
               <div key={s.label} className="text-center py-3 px-2 rounded-lg border border-white/5" style={{ background: "rgba(255,215,0,0.03)" }}>
                 <s.icon className="w-4 h-4 mx-auto mb-1 text-amber-400/60" />

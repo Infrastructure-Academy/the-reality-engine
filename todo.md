@@ -1069,3 +1069,9 @@
 - [x] Re-uploaded Player's Journey image with correct content type (was application/octet-stream)
 - [x] Made "lifelong infrastructure learning game" italic in iGO intro value proposition
 - [x] 355 tests passing
+
+## Block 480: 500 Generations tile + ShareCardGallery fix + per-web node counts
+- [x] Add "500 GENERATIONS" stat tile to iGO stats grid (between Inventions and Game Formats)
+- [x] ShareCardGallery error was stale (April 20 7:36 AM) — file parses fine now
+- [x] Add per-web node counts (e.g., "Natural 0/12") in Web Domain slots on Home page
+- [x] 355 tests passing
