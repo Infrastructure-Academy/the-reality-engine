@@ -1100,3 +1100,7 @@
 - [x] Live storage event listener — YourArchetypeCard updates in real-time when relays collected
 - [x] Community archetype distribution backend procedure (aggregate West/East/Nomadic across all players)
 - [x] Community overlay on YourArchetypeCard — toggle to see global perspective split
+
+## Block 485: Remove Tetrahedral Observer image
+- [x] Remove Five Operational Bridges / Tetrahedral Observer image from home page
+- [x] Enhance 500 Generations Timeline Strip to show as visual figure on desktop/laptop

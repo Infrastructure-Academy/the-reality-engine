@@ -906,8 +906,13 @@ function GenerationsTimelineStrip() {
     } catch { /* ignore */ }
   }, []);
 
+  // Perspective mapping for the desktop figure
+  const perspectiveOf = (n: number) => RELAY_PERSPECTIVES[n] || "nomadic";
+  const perspectiveLabel: Record<string, string> = { west: "Western", east: "Eastern", nomadic: "Nomadic" };
+  const perspectiveColor: Record<string, string> = { west: "#3b82f6", east: "#ef4444", nomadic: "#f59e0b" };
+
   return (
-    <div className="container max-w-4xl pb-6 pt-2" ref={counterRef}>
+    <div className="container max-w-5xl pb-6 pt-2" ref={counterRef}>
       <div className="text-center mb-4">
         <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">12,000 Years</p>
         <h3 className="font-heading text-lg md:text-xl text-foreground">
@@ -916,43 +921,162 @@ function GenerationsTimelineStrip() {
         </h3>
         <p className="text-[10px] text-muted-foreground/60 mt-1">From fire to programmable humans — the relay of civilisation</p>
       </div>
-      <div className="relative">
-        {/* Timeline bar */}
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
-        {/* Relay nodes */}
-        <div className="grid grid-cols-6 md:grid-cols-12 gap-y-6 gap-x-1">
-          {RELAYS.map((relay) => {
-            const collected = collection.has(relay.number - 1);
-            return (
-              <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
-                <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                  <div
-                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center border transition-all group-hover:scale-110 ${
-                      collected ? "ring-2 ring-offset-1 ring-offset-background" : ""
-                    }`}
-                    style={{
-                      borderColor: collected ? relay.color : `${relay.color}60`,
-                      background: collected ? `${relay.color}30` : `${relay.color}15`,
-                      boxShadow: collected
-                        ? `0 0 12px ${relay.color}60, 0 0 24px ${relay.color}30`
-                        : `0 0 8px ${relay.color}20`,
 
-                    }}
-                  >
-                    <span className={`text-sm md:text-base ${collected ? "" : "grayscale opacity-60"}`}>{relay.emoji}</span>
+      {/* ── MOBILE: compact grid (unchanged) ── */}
+      <div className="md:hidden">
+        <div className="relative">
+          <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
+          <div className="grid grid-cols-6 gap-y-6 gap-x-1">
+            {RELAYS.map((relay) => {
+              const collected = collection.has(relay.number - 1);
+              return (
+                <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
+                  <div className="flex flex-col items-center gap-1 group cursor-pointer">
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all group-hover:scale-110 ${
+                        collected ? "ring-2 ring-offset-1 ring-offset-background" : ""
+                      }`}
+                      style={{
+                        borderColor: collected ? relay.color : `${relay.color}60`,
+                        background: collected ? `${relay.color}30` : `${relay.color}15`,
+                        boxShadow: collected
+                          ? `0 0 12px ${relay.color}60, 0 0 24px ${relay.color}30`
+                          : `0 0 8px ${relay.color}20`,
+                      }}
+                    >
+                      <span className={`text-sm ${collected ? "" : "grayscale opacity-60"}`}>{relay.emoji}</span>
+                    </div>
+                    <span className={`text-[8px] font-heading tracking-wider text-center leading-tight transition-colors ${
+                      collected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+                    }`}>
+                      {relay.name}
+                    </span>
                   </div>
-                  <span className={`text-[8px] md:text-[9px] font-heading tracking-wider text-center leading-tight transition-colors ${
-                    collected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
-                  }`}>
-                    {relay.name}
-                  </span>
-                  <span className="text-[7px] text-muted-foreground/40 hidden md:block">{relay.era}</span>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
+
+      {/* ── DESKTOP: full figure with era bands, perspective tags, and timeline ── */}
+      <div className="hidden md:block">
+        <div className="relative rounded-xl border border-white/10 bg-card/30 backdrop-blur-sm p-6 overflow-hidden">
+          {/* Background gradient band */}
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-amber-500/5 via-blue-500/5 to-purple-500/5 pointer-events-none" />
+
+          {/* Figure title */}
+          <div className="relative flex items-center justify-between mb-5">
+            <div>
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Figure 1</p>
+              <p className="text-sm font-heading tracking-wider text-foreground/90">The 12 Civilisational Relays — 500 Generations of Infrastructure</p>
+            </div>
+            <div className="flex items-center gap-3">
+              {(["west", "east", "nomadic"] as const).map((p) => (
+                <span key={p} className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full" style={{ background: perspectiveColor[p] }} />
+                  <span className="text-[9px] text-muted-foreground/70">{perspectiveLabel[p]}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline axis */}
+          <div className="relative mb-2">
+            <div className="absolute top-[22px] left-0 right-0 h-[2px] bg-gradient-to-r from-red-500/60 via-amber-500/60 via-blue-500/60 to-purple-500/60" />
+          </div>
+
+          {/* Relay cards in a 12-column grid */}
+          <div className="relative grid grid-cols-12 gap-x-1">
+            {RELAYS.map((relay) => {
+              const collected = collection.has(relay.number - 1);
+              const persp = perspectiveOf(relay.number);
+              return (
+                <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
+                  <div className="flex flex-col items-center gap-1.5 group cursor-pointer py-2">
+                    {/* Relay node */}
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all group-hover:scale-110 ${
+                        collected ? "ring-2 ring-offset-1 ring-offset-background" : ""
+                      }`}
+                      style={{
+                        borderColor: collected ? relay.color : `${relay.color}50`,
+                        background: collected ? `${relay.color}25` : `${relay.color}10`,
+                        boxShadow: collected
+                          ? `0 0 16px ${relay.color}50, 0 0 32px ${relay.color}20`
+                          : `0 0 8px ${relay.color}15`,
+                      }}
+                    >
+                      <span className={`text-base ${collected ? "" : "grayscale opacity-50"}`}>{relay.emoji}</span>
+                    </div>
+
+                    {/* Relay name */}
+                    <span className={`text-[9px] font-heading tracking-wider text-center leading-tight transition-colors ${
+                      collected ? "text-foreground" : "text-muted-foreground/80 group-hover:text-foreground"
+                    }`}>
+                      {relay.name}
+                    </span>
+
+                    {/* Subtitle */}
+                    <span className="text-[7px] text-muted-foreground/50 text-center leading-tight px-0.5 line-clamp-2">
+                      {relay.subtitle}
+                    </span>
+
+                    {/* Era */}
+                    <span className="text-[7px] text-muted-foreground/40 text-center font-mono">
+                      {relay.era}
+                    </span>
+
+                    {/* Perspective tag */}
+                    <span
+                      className="text-[7px] px-1.5 py-0.5 rounded-full font-heading tracking-wider"
+                      style={{
+                        background: `${perspectiveColor[persp]}15`,
+                        color: perspectiveColor[persp],
+                        border: `1px solid ${perspectiveColor[persp]}30`,
+                      }}
+                    >
+                      {perspectiveLabel[persp].charAt(0)}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Web type bands at bottom */}
+          <div className="relative flex items-center mt-4 pt-3 border-t border-white/5">
+            <span className="text-[8px] text-muted-foreground/50 mr-3 font-heading tracking-wider">WEBS</span>
+            <div className="flex-1 flex">
+              {[
+                { label: "Natural", cols: 3, color: "#22c55e" },
+                { label: "Machine", cols: 4, color: "#f59e0b" },
+                { label: "Digital", cols: 4, color: "#3b82f6" },
+                { label: "Consciousness", cols: 1, color: "#a855f7" },
+              ].map((web) => (
+                <div
+                  key={web.label}
+                  className="flex items-center justify-center py-1 text-[8px] font-heading tracking-wider"
+                  style={{
+                    flex: web.cols,
+                    background: `${web.color}08`,
+                    borderBottom: `2px solid ${web.color}40`,
+                    color: `${web.color}`,
+                  }}
+                >
+                  {web.label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Source line */}
+          <p className="text-[8px] text-muted-foreground/30 mt-3 text-right font-mono">
+            Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness
+          </p>
+        </div>
+      </div>
+
       <p className="text-center text-[9px] text-muted-foreground/50 mt-4 font-heading tracking-wider">
         Each relay — a generation’s greatest infrastructure leap. Tap to explore.
       </p>
@@ -1355,23 +1479,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Tetrahedral Observer — Bridge Architecture iCard */}
-      <section className="relative z-10 py-12">
-        <div className="container max-w-4xl mx-auto">
-          <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">Five Operational Bridges</p>
-          <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
-            <ImageLightbox
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/tetrahedral-observer-icard_08b0a0f4.png"
-              alt="The Tetrahedral Observer — Five Operational Bridges. ACAD SITE (Infrastructure Academy, MASTER, Direct DB Access), MEMORIAL SITE (Principia Tectonica, CONNECTED, API Bridge), TRE GAME (The Reality Engine, SHARED DB, Direct DB Access), CHART ROOM (The Chartered Chart, API BRIDGE, Multi-Platform Tracker). Social Profiles: X @dearden_ni37258, Facebook, LinkedIn. Block 757, 24 March 2026, Tetrahedral Observer v2, B757-BRIDGES-002."
-              className="w-full h-auto object-contain"
-              loading="lazy"
-            />
-          </div>
-          <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono">
-            B757-BRIDGES-002 &nbsp;|&nbsp; TETRAHEDRAL OBSERVER v2 &nbsp;|&nbsp; 24 MARCH 2026
-          </p>
-        </div>
-      </section>
+
 
       {/* Footer */}
       <footer className="relative z-10 border-t border-border/50 py-6">
