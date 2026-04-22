@@ -184,7 +184,25 @@ export const appRouter = router({
                 if (persp) perspectives[persp] += (p.completionPct ?? 0);
               }
               const total = Object.values(perspectives).reduce((a, b) => a + b, 0) || 1;
-              playerContext += `- Civilisational lean: West ${Math.round(perspectives.west / total * 100)}%, East ${Math.round(perspectives.east / total * 100)}%, Nomadic ${Math.round(perspectives.nomadic / total * 100)}%\n`;
+              const westPct = Math.round(perspectives.west / total * 100);
+              const eastPct = Math.round(perspectives.east / total * 100);
+              const nomadicPct = Math.round(perspectives.nomadic / total * 100);
+              playerContext += `- Civilisational lean: West ${westPct}%, East ${eastPct}%, Nomadic ${nomadicPct}%\n`;
+
+              // Determine dominant archetype for tone adaptation
+              const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
+              const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
+              const dominantPerspective = sorted[0][0];
+
+              if (isBalanced) {
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Balanced Navigator]\nThis player has a balanced civilisational lean. Draw equally from Western engineering precision, Eastern philosophical harmony, and Nomadic adaptive thinking. Use bridge-building metaphors — connecting systems, cultures, and ideas. Frame infrastructure as the universal thread that ties civilisations together. Alternate between analytical and poetic framing.\n`;
+              } else if (dominantPerspective === "west") {
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Systems Architect]\nThis player leans Western. Favour engineering analogies, systematic thinking, and structural metaphors. Reference Roman roads, Brunel's bridges, standardisation, and modular design. Frame infrastructure as systems to be designed, optimised, and scaled. Use precise, technical language. Think Vitruvius, Isambard Kingdom Brunel, and the engineering tradition.\n`;
+              } else if (dominantPerspective === "east") {
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Harmony Weaver]\nThis player leans Eastern. Favour philosophical framing, cyclical thinking, and harmony metaphors. Reference the Grand Canal, the Silk Road as cultural exchange, Confucian order, and the balance between nature and construction. Frame infrastructure as harmony between human intent and natural systems. Use contemplative, layered language. Think Sima Qian, Sun Tzu, and the long view of civilisation.\n`;
+              } else {
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Universal Connector]\nThis player leans Nomadic. Favour adaptive thinking, movement metaphors, and cross-cultural connections. Reference the Silk Road traders, Polynesian wayfinders, Mongol relay systems, and the spaces between empires. Frame infrastructure as networks that connect rather than walls that divide. Use dynamic, exploratory language. Think Ibn Battuta, the Steppe riders, and the art of the in-between.\n`;
+              }
             }
 
             // Fetch node activations for flight_deck

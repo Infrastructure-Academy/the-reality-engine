@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { RELAYS, WEBS } from "@shared/gameData";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2, Compass } from "lucide-react";
+import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2, Compass, Share2 } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
+import { ShareCard } from "@/components/ShareCard";
 import { BrandI } from "@/components/BrandI";
 import { useState, useEffect, useMemo, useRef, useCallback, Fragment } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -569,67 +570,128 @@ function DeardenFieldSection() {
         </button>
       </div>
 
-      {/* Animated 5×12 Grid Overlay on Image */}
-      <Link href="/explore">
-        <div className="relative rounded-lg overflow-hidden border border-amber-400/20 glow-pulse cursor-pointer hover:border-amber-400/40 transition-colors">
-          <img
-            src="/manus-storage/dearden-field_c7b3cbc3.png"
-            alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery"
-            className="w-full h-auto object-contain"
-            loading="lazy"
-          />
-          {/* Grid overlay */}
-          <div className="absolute inset-0 grid" style={{ gridTemplateColumns: "repeat(12, 1fr)", gridTemplateRows: "repeat(5, 1fr)", padding: "4%" }}>
-            {WEB_ORDER.map((web, wi) =>
-              Array.from({ length: 12 }, (_, ri) => {
-                const relay = ri + 1;
-                const key = `${relay}-${web}`;
-                const active = activatedSet.has(key);
-                const heatVal = heatmapMap.get(key) ?? 0;
-                const heatMax = heatmapMap.get("__max") ?? 1;
-                const heatIntensity = heatVal / heatMax;
-
-                const isHeat = showHeatmap && heatVal > 0;
-                const isPersonal = !showHeatmap && active;
-
-                return (
-                  <div
-                    key={key}
-                    className="flex items-center justify-center"
-                    style={{ gridColumn: ri + 1, gridRow: wi + 1 }}
-                  >
-                    <div
-                      className={`rounded-full transition-all duration-700 ${
-                        isPersonal ? "animate-pulse" : ""
-                      } ${isHeat ? "heat-dot-breathe" : ""}`}
-                      style={{
-                        width: isHeat
-                          ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)`
-                          : "clamp(6px, 1.8vw, 14px)",
-                        height: isHeat
-                          ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)`
-                          : "clamp(6px, 1.8vw, 14px)",
-                        background: isHeat
-                          ? `rgba(168, 85, 247, ${0.3 + heatIntensity * 0.7})`
-                          : isPersonal
-                            ? WEB_COLORS[web]
-                            : "rgba(148,163,184,0.1)",
-                        boxShadow: isHeat
-                          ? `0 0 ${6 + heatIntensity * 12}px rgba(168,85,247,${0.3 + heatIntensity * 0.5})`
-                          : isPersonal
-                            ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40`
-                            : "none",
-                        border: (isPersonal || isHeat) ? "none" : "1px solid rgba(148,163,184,0.15)",
-                        animationDelay: isHeat ? `${(wi * 12 + ri) * 0.05}s` : undefined,
-                      }}
-                    />
-                  </div>
-                );
-              })
-            )}
+      {/* ── MOBILE: Image overlay grid ── */}
+      <div className="md:hidden">
+        <Link href="/explore">
+          <div className="relative rounded-lg overflow-hidden border border-amber-400/20 glow-pulse cursor-pointer hover:border-amber-400/40 transition-colors">
+            <img
+              src="/manus-storage/dearden-field_c7b3cbc3.png"
+              alt="The Dearden Field — 5 Great Webs × 12 Relays = 60 Nodes of Discovery"
+              className="w-full h-auto object-contain"
+              loading="lazy"
+            />
+            {/* Grid overlay */}
+            <div className="absolute inset-0 grid" style={{ gridTemplateColumns: "repeat(12, 1fr)", gridTemplateRows: "repeat(5, 1fr)", padding: "4%" }}>
+              {WEB_ORDER.map((web, wi) =>
+                Array.from({ length: 12 }, (_, ri) => {
+                  const relay = ri + 1;
+                  const key = `${relay}-${web}`;
+                  const active = activatedSet.has(key);
+                  const heatVal = heatmapMap.get(key) ?? 0;
+                  const heatMax = heatmapMap.get("__max") ?? 1;
+                  const heatIntensity = heatVal / heatMax;
+                  const isHeat = showHeatmap && heatVal > 0;
+                  const isPersonal = !showHeatmap && active;
+                  return (
+                    <div key={key} className="flex items-center justify-center" style={{ gridColumn: ri + 1, gridRow: wi + 1 }}>
+                      <div
+                        className={`rounded-full transition-all duration-700 ${isPersonal ? "animate-pulse" : ""} ${isHeat ? "heat-dot-breathe" : ""}`}
+                        style={{
+                          width: isHeat ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)` : "clamp(6px, 1.8vw, 14px)",
+                          height: isHeat ? `clamp(6px, ${1.2 + heatIntensity * 1.2}vw, ${8 + heatIntensity * 10}px)` : "clamp(6px, 1.8vw, 14px)",
+                          background: isHeat ? `rgba(168, 85, 247, ${0.3 + heatIntensity * 0.7})` : isPersonal ? WEB_COLORS[web] : "rgba(148,163,184,0.1)",
+                          boxShadow: isHeat ? `0 0 ${6 + heatIntensity * 12}px rgba(168,85,247,${0.3 + heatIntensity * 0.5})` : isPersonal ? `0 0 8px ${WEB_COLORS[web]}80, 0 0 16px ${WEB_COLORS[web]}40` : "none",
+                          border: (isPersonal || isHeat) ? "none" : "1px solid rgba(148,163,184,0.15)",
+                          animationDelay: isHeat ? `${(wi * 12 + ri) * 0.05}s` : undefined,
+                        }}
+                      />
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      </div>
+
+      {/* ── DESKTOP: Full labelled figure with axes ── */}
+      <div className="hidden md:block">
+        <Link href="/explore">
+          <div className="relative rounded-xl border border-white/10 bg-card/30 backdrop-blur-sm p-6 cursor-pointer hover:border-amber-400/30 transition-colors overflow-hidden">
+            {/* Background glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/3 via-transparent to-purple-500/3 pointer-events-none" />
+
+            {/* Figure header */}
+            <div className="relative flex items-center justify-between mb-5">
+              <div>
+                <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Figure 2</p>
+                <p className="text-sm font-heading tracking-wider text-foreground/90">The Dearden Field — 5 Great Webs × 12 Civilisational Relays</p>
+              </div>
+              <span className={`font-mono text-sm font-bold tracking-wider ${nodeCount === 60 ? "text-amber-400" : nodeCount > 0 ? "text-amber-400/80" : "text-muted-foreground/60"}`}>
+                {nodeCount}/60
+              </span>
+            </div>
+
+            {/* Matrix with axis labels */}
+            <div className="relative grid" style={{ gridTemplateColumns: "80px repeat(12, 1fr)", gridTemplateRows: "auto repeat(5, 1fr)", gap: "2px" }}>
+              {/* Column headers (relay names) */}
+              <div /> {/* empty corner cell */}
+              {RELAYS.map((relay) => (
+                <div key={relay.number} className="flex flex-col items-center justify-end pb-2">
+                  <span className="text-base">{relay.emoji}</span>
+                  <span className="text-[8px] font-heading tracking-wider text-muted-foreground/70 text-center leading-tight">{relay.name}</span>
+                </div>
+              ))}
+
+              {/* Rows: each web domain */}
+              {WEB_ORDER.map((web, wi) => (
+                <Fragment key={web}>
+                  {/* Row label */}
+                  <div className="flex items-center gap-1.5 pr-2 justify-end">
+                    <span className="text-sm">{WEBS[wi].icon}</span>
+                    <span className="text-[9px] font-heading tracking-wider text-right" style={{ color: WEB_COLORS[web] }}>{web}</span>
+                  </div>
+                  {/* 12 cells */}
+                  {Array.from({ length: 12 }, (_, ri) => {
+                    const relay = ri + 1;
+                    const key = `${relay}-${web}`;
+                    const active = activatedSet.has(key);
+                    const heatVal = heatmapMap.get(key) ?? 0;
+                    const heatMax = heatmapMap.get("__max") ?? 1;
+                    const heatIntensity = heatVal / heatMax;
+                    const isHeat = showHeatmap && heatVal > 0;
+                    const isPersonal = !showHeatmap && active;
+                    return (
+                      <div key={key} className="flex items-center justify-center py-2">
+                        <div
+                          className={`rounded-full transition-all duration-700 ${isPersonal ? "animate-pulse" : ""} ${isHeat ? "heat-dot-breathe" : ""}`}
+                          style={{
+                            width: isHeat ? `${10 + heatIntensity * 10}px` : "14px",
+                            height: isHeat ? `${10 + heatIntensity * 10}px` : "14px",
+                            background: isHeat
+                              ? `rgba(168, 85, 247, ${0.3 + heatIntensity * 0.7})`
+                              : isPersonal ? WEB_COLORS[web] : "rgba(148,163,184,0.08)",
+                            boxShadow: isHeat
+                              ? `0 0 ${6 + heatIntensity * 12}px rgba(168,85,247,${0.3 + heatIntensity * 0.5})`
+                              : isPersonal ? `0 0 10px ${WEB_COLORS[web]}60, 0 0 20px ${WEB_COLORS[web]}30` : "none",
+                            border: (isPersonal || isHeat) ? "none" : "1px solid rgba(148,163,184,0.12)",
+                            animationDelay: isHeat ? `${(wi * 12 + ri) * 0.05}s` : undefined,
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </Fragment>
+              ))}
+            </div>
+
+            {/* Source line */}
+            <p className="relative text-[8px] text-muted-foreground/30 mt-4 text-right font-mono">
+              Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness
+            </p>
+          </div>
+        </Link>
+      </div>
 
       {/* Heatmap legend */}
       {showHeatmap && (
@@ -734,6 +796,7 @@ const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: stri
 function YourArchetypeCard() {
   const [collection, setCollection] = useState<Set<number>>(new Set());
   const [showCommunity, setShowCommunity] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
 
   // Initial load + live storage listener for cross-tab updates
   const readCollection = useCallback(() => {
@@ -856,28 +919,65 @@ function YourArchetypeCard() {
                 </div>
               </div>
 
-              {/* Toggle row */}
-              <div className="flex items-center justify-between mt-3">
-                <button
-                  onClick={(e) => { e.preventDefault(); setShowCommunity(!showCommunity); }}
-                  className="text-[9px] font-heading tracking-wider px-2 py-1 rounded border transition-all"
-                  style={{
-                    borderColor: showCommunity ? "rgba(168,85,247,0.4)" : "rgba(255,255,255,0.1)",
-                    background: showCommunity ? "rgba(168,85,247,0.1)" : "transparent",
-                    color: showCommunity ? "#a855f7" : "rgba(148,163,184,0.6)",
-                  }}
-                >
-                  {showCommunity ? "◉ COMMUNITY" : "○ COMMUNITY"}
-                </button>
-                {showCommunity && communityData && communityTotal > 0 && (
-                  <span className="text-[9px] text-purple-400/60">
-                    {communityTotal} player{communityTotal !== 1 ? "s" : ""} — global distribution
-                  </span>
-                )}
-                <Link href="/synthesis">
-                  <span className="text-[9px] text-muted-foreground/40 hover:text-amber-400/60 transition-colors cursor-pointer">Full synthesis →</span>
-                </Link>
+              {/* Toggle row + Share */}
+              <div className="flex items-center justify-between mt-3 gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => { e.preventDefault(); setShowCommunity(!showCommunity); }}
+                    className="text-[9px] font-heading tracking-wider px-2 py-1 rounded border transition-all"
+                    style={{
+                      borderColor: showCommunity ? "rgba(168,85,247,0.4)" : "rgba(255,255,255,0.1)",
+                      background: showCommunity ? "rgba(168,85,247,0.1)" : "transparent",
+                      color: showCommunity ? "#a855f7" : "rgba(148,163,184,0.6)",
+                    }}
+                  >
+                    {showCommunity ? "◉ COMMUNITY" : "○ COMMUNITY"}
+                  </button>
+                  {showCommunity && communityData && communityTotal > 0 && (
+                    <span className="text-[9px] text-purple-400/60">
+                      {communityTotal} player{communityTotal !== 1 ? "s" : ""} — global distribution
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={(e) => { e.preventDefault(); setShowShareCard(!showShareCard); }}
+                    className="text-[9px] font-heading tracking-wider px-2 py-1 rounded border transition-all flex items-center gap-1"
+                    style={{
+                      borderColor: showShareCard ? "rgba(245,158,11,0.4)" : "rgba(255,255,255,0.1)",
+                      background: showShareCard ? "rgba(245,158,11,0.1)" : "transparent",
+                      color: showShareCard ? "#f59e0b" : "rgba(148,163,184,0.6)",
+                    }}
+                  >
+                    <Share2 className="w-3 h-3" />
+                    SHARE
+                  </button>
+                  <Link href="/synthesis">
+                    <span className="text-[9px] text-muted-foreground/40 hover:text-amber-400/60 transition-colors cursor-pointer">Full synthesis →</span>
+                  </Link>
+                </div>
               </div>
+
+              {/* Share card panel */}
+              {showShareCard && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-3 pt-3 border-t border-white/5"
+                >
+                  <ShareCard
+                    patternTitle={patternTitle}
+                    dominant={dominant}
+                    isBalanced={isBalanced}
+                    perspectives={perspectives}
+                    totalXp={0}
+                    discoveries={0}
+                    completedRelays={collection.size}
+                    isComplete={collection.size === 12}
+                  />
+                </motion.div>
+              )}
             </>
           ) : (
             <Link href="/explore">

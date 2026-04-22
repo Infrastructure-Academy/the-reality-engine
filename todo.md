@@ -1104,3 +1104,8 @@
 ## Block 485: Remove Tetrahedral Observer image
 - [x] Remove Five Operational Bridges / Tetrahedral Observer image from home page
 - [x] Enhance 500 Generations Timeline Strip to show as visual figure on desktop/laptop
+
+## Block 486: Dearden Field Figure + DAVID Perspective + Archetype Share Card
+- [x] Dearden Field as desktop figure — labelled 5×12 matrix with web/relay axes on wider screens
+- [x] Perspective-based DAVID responses — adapt DAVID tone/framing based on player's dominant archetype
+- [x] Archetype share card — share/download button on YourArchetypeCard wired to existing ShareCard component
