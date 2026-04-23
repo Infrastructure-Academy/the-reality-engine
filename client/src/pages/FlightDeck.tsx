@@ -658,7 +658,27 @@ export default function FlightDeck() {
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
               {chatMessages.length === 0 && (
                 <div className="text-center py-8">
-                  <p className="text-sm text-muted-foreground">DAVID co-pilot standing by.</p>
+                  <p className="text-sm text-muted-foreground">
+                    {(() => {
+                      try {
+                        const saved = localStorage.getItem("tre_spinner_collection");
+                        if (!saved) return "DAVID co-pilot standing by.";
+                        const ids: number[] = JSON.parse(saved);
+                        const persp: Record<string, number> = { west: 0, east: 0, nomadic: 0 };
+                        const pMap: Record<number, string> = { 1:"nomadic",2:"east",3:"east",4:"nomadic",5:"west",6:"nomadic",7:"east",8:"west",9:"west",10:"west",11:"nomadic",12:"nomadic" };
+                        ids.forEach(i => { const p = pMap[i+1]; if (p) persp[p]++; });
+                        const total = persp.west + persp.east + persp.nomadic;
+                        if (total < 2) return "DAVID co-pilot standing by.";
+                        const sorted = Object.entries(persp).sort((a,b) => b[1]-a[1]);
+                        const bal = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
+                        if (bal) return "Co-pilot online, Balanced Navigator. All vectors calibrated.";
+                        const dom = sorted[0][0];
+                        if (dom === "west") return "Co-pilot online, Systems Architect. Engineering vectors locked.";
+                        if (dom === "east") return "Co-pilot online, Harmony Weaver. Harmonic frequencies aligned.";
+                        return "Co-pilot online, Universal Connector. All routes charted.";
+                      } catch { return "DAVID co-pilot standing by."; }
+                    })()}
+                  </p>
                   <p className="text-xs text-cyan-400/60 mt-1">Request mission briefings, node analysis, or navigation guidance.</p>
                 </div>
               )}

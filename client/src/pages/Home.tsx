@@ -661,10 +661,13 @@ function DeardenFieldSection() {
                     const heatIntensity = heatVal / heatMax;
                     const isHeat = showHeatmap && heatVal > 0;
                     const isPersonal = !showHeatmap && active;
+                    const relayMeta = RELAYS[ri];
+                    const webMeta = WEBS[wi];
+                    const tooltipText = `${relayMeta?.emoji || ""} ${relayMeta?.name || `Relay ${relay}`} × ${webMeta?.icon || ""} ${web}\n${active ? "✓ Activated — 50,000 XP" : "Locked — 50,000 XP"}`;
                     return (
-                      <div key={key} className="flex items-center justify-center py-2">
+                      <div key={key} className="flex items-center justify-center py-2 relative group/dot">
                         <div
-                          className={`rounded-full transition-all duration-700 ${isPersonal ? "animate-pulse" : ""} ${isHeat ? "heat-dot-breathe" : ""}`}
+                          className={`rounded-full transition-all duration-700 cursor-pointer ${isPersonal ? "animate-pulse" : ""} ${isHeat ? "heat-dot-breathe" : ""}`}
                           style={{
                             width: isHeat ? `${10 + heatIntensity * 10}px` : "14px",
                             height: isHeat ? `${10 + heatIntensity * 10}px` : "14px",
@@ -678,6 +681,11 @@ function DeardenFieldSection() {
                             animationDelay: isHeat ? `${(wi * 12 + ri) * 0.05}s` : undefined,
                           }}
                         />
+                        {/* Hover tooltip */}
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 rounded-lg bg-black/90 border border-white/10 backdrop-blur-sm opacity-0 group-hover/dot:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-pre text-center min-w-max">
+                          <span className="text-[10px] text-white/90 leading-relaxed">{tooltipText}</span>
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black/90" />
+                        </div>
                       </div>
                     );
                   })}
@@ -840,6 +848,33 @@ function YourArchetypeCard() {
     ? { name: "Balanced", color: "#f59e0b", icon: "⚖️", title: "The Balanced Navigator" }
     : PERSPECTIVE_INFO[dominant];
 
+  // ─── Sparkline history: record perspective snapshots over time ───
+  const sparklineData = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("tre_archetype_history");
+      return raw ? JSON.parse(raw) as Array<{ t: number; w: number; e: number; n: number }> : [];
+    } catch { return []; }
+  }, [collection]);
+
+  // Record a snapshot whenever collection changes (max 50 entries)
+  useEffect(() => {
+    if (!hasRelays) return;
+    try {
+      const history: Array<{ t: number; w: number; e: number; n: number }> = (() => {
+        try {
+          const raw = localStorage.getItem("tre_archetype_history");
+          return raw ? JSON.parse(raw) : [];
+        } catch { return []; }
+      })();
+      const last = history[history.length - 1];
+      if (!last || last.w !== perspectives.west || last.e !== perspectives.east || last.n !== perspectives.nomadic) {
+        history.push({ t: Date.now(), w: perspectives.west, e: perspectives.east, n: perspectives.nomadic });
+        if (history.length > 50) history.splice(0, history.length - 50);
+        localStorage.setItem("tre_archetype_history", JSON.stringify(history));
+      }
+    } catch { /* ignore */ }
+  }, [perspectives, hasRelays]);
+
   // Community totals
   const communityTotal = communityData ? (communityData.west + communityData.east + communityData.nomadic) : 0;
 
@@ -918,6 +953,47 @@ function YourArchetypeCard() {
                   })}
                 </div>
               </div>
+
+              {/* Sparkline — evolution over time */}
+              {sparklineData.length >= 2 && (
+                <div className="mt-3 pt-3 border-t border-white/5">
+                  <p className="text-[9px] font-heading tracking-wider text-muted-foreground/50 mb-2">PERSPECTIVE EVOLUTION</p>
+                  <svg viewBox="0 0 200 40" className="w-full h-8" preserveAspectRatio="none">
+                    {(["w", "e", "n"] as const).map((key) => {
+                      const color = key === "w" ? "#3b82f6" : key === "e" ? "#ef4444" : "#f59e0b";
+                      const points = sparklineData.map((d, i) => {
+                        const t = d.w + d.e + d.n || 1;
+                        const val = d[key] / t;
+                        const x = (i / (sparklineData.length - 1)) * 200;
+                        const y = 38 - val * 36; // 0% at bottom, 100% at top
+                        return `${x},${y}`;
+                      }).join(" ");
+                      return (
+                        <polyline
+                          key={key}
+                          points={points}
+                          fill="none"
+                          stroke={color}
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          opacity="0.7"
+                        />
+                      );
+                    })}
+                    {/* Baseline */}
+                    <line x1="0" y1="20" x2="200" y2="20" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" strokeDasharray="4,4" />
+                  </svg>
+                  <div className="flex justify-between text-[8px] text-muted-foreground/30 mt-0.5">
+                    <span>{sparklineData.length} snapshots</span>
+                    <div className="flex gap-3">
+                      <span style={{ color: "#3b82f6" }}>● W</span>
+                      <span style={{ color: "#ef4444" }}>● E</span>
+                      <span style={{ color: "#f59e0b" }}>● N</span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Toggle row + Share */}
               <div className="flex items-center justify-between mt-3 gap-2 flex-wrap">

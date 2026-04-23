@@ -1109,3 +1109,8 @@
 - [x] Dearden Field as desktop figure — labelled 5×12 matrix with web/relay axes on wider screens
 - [x] Perspective-based DAVID responses — adapt DAVID tone/framing based on player's dominant archetype
 - [x] Archetype share card — share/download button on YourArchetypeCard wired to existing ShareCard component
+
+## Block 487: Sparkline + Tooltips + DAVID Greeting
+- [x] Archetype evolution sparkline — track West/East/Nomadic lean over time in localStorage, show mini trend on card
+- [x] Desktop Dearden Field hover tooltips — show relay name + web name + XP on hover for each dot
+- [x] DAVID greeting adaptation — opening chat message reflects player's archetype
