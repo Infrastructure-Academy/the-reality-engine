@@ -8,6 +8,7 @@ import { BottomTabBar } from "./components/BottomTabBar";
 import { InstallBanner } from "./components/InstallBanner";
 import { GamepadIndicator } from "./components/GamepadIndicator";
 import { DiscoveryHints } from "./components/DiscoveryHints";
+import { NetworkBar } from "./components/NetworkBar";
 import { EyeOpenAnimation } from "./components/EyeOpenAnimation";
 import { lazy, Suspense, useEffect } from "react";
 
@@ -115,8 +116,11 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <ServiceWorkerRegistrar />
+          <NetworkBar />
           <EyeOpenAnimation />
-          <Router />
+          <div style={{ paddingTop: "36px" }}>
+            <Router />
+          </div>
           <BottomTabBar />
           <InstallBanner />
           <GamepadIndicator />

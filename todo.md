@@ -1114,3 +1114,12 @@
 - [x] Archetype evolution sparkline — track West/East/Nomadic lean over time in localStorage, show mini trend on card
 - [x] Desktop Dearden Field hover tooltips — show relay name + web name + XP on hover for each dot
 - [x] DAVID greeting adaptation — opening chat message reflects player's archetype
+
+## Block 488: iAAi Network Bar (NAV-001)
+- [x] NetworkBar component — fixed top, dark navy #0a1628, 36px height, 4 site links with agent colours
+- [x] Agent colours: ACAD #DC2626, TRE #2563EB, MEMORIAL #16A34A, CHART ROOM #06B6D4
+- [x] Active state: agent colour underline (3px solid) on TRE link
+- [x] Mobile: all 4 links visible — no hamburger menu
+- [x] Same-tab navigation within iAAi network
+- [x] Integrate into App layout above existing nav
+- [x] Push existing nav and content down by 36px to accommodate fixed Network Bar
