@@ -1123,3 +1123,8 @@
 - [x] Same-tab navigation within iAAi network
 - [x] Integrate into App layout above existing nav
 - [x] Push existing nav and content down by 36px to accommodate fixed Network Bar
+
+## Block 489: Network Bar Polish + Cross-Site Verification
+- [x] Verify cross-site links navigate correctly (ACAD, MEMORIAL, CHART ROOM)
+- [x] Add agent name tooltips — hover shows "MAX — The Contractor", "DAVID — The Checker", etc.
+- [x] Document replication needs for ACAD, Chart Room, Memorial sites
