@@ -114,7 +114,7 @@ export function NetworkBar() {
             href={isPending ? undefined : site.url}
             onClick={isPending ? (e: React.MouseEvent) => e.preventDefault() : undefined}
             title={`${site.agent} — ${site.role}${isPending ? " (Coming Soon)" : ""}`}
-            className="group relative flex items-center justify-center gap-1 px-2 sm:px-4 h-full text-[9px] sm:text-[11px] font-mono tracking-wider transition-opacity hover:opacity-100 whitespace-nowrap"
+            className="group relative flex items-center justify-center gap-1.5 px-2 sm:px-3 h-full text-[11px] font-mono tracking-wider transition-opacity hover:opacity-100 whitespace-nowrap"
             style={{
               color: isActive ? site.color : "#FFFFFF",
               opacity: isPending ? 0.5 : isActive ? 1 : 0.7,
@@ -123,8 +123,7 @@ export function NetworkBar() {
             }}
           >
             <SiteIcon siteId={site.id} color={isActive ? site.color : isPending ? site.color : "#FFFFFF"} />
-            <span className="hidden xs:inline sm:inline">{site.label}</span>
-            <span className="xs:hidden sm:hidden">{site.label.slice(0, 4)}</span>
+            <span>{site.label}</span>
             {/* Tooltip — visible on hover (desktop only) */}
             <span
               className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover:sm:flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-mono tracking-wide whitespace-nowrap z-[10000]"

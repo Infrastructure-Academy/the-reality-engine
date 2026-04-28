@@ -1137,3 +1137,6 @@
 - [x] Add 14×14 SVG icons for each site per install card spec
 - [x] Update agent roles: Hardening, Quenching, Forging, Tempering, Observer
 - [x] Update tooltips to match new naming
+
+## Block 490b: Network Bar Fix
+- [x] Fix labels to full names (ACADEMY, QUEST, XCHANGE, MEMORIAL, NEWS) matching ACAD reference
