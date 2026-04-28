@@ -3,7 +3,7 @@
  * 5-site cross-site navigation infrastructure.
  * Fixed top, dark navy #0a1628, 36px height, z-index 60.
  * Font: 11px, text white #FFFFFF, icons 14×14 SVG inline in agent colour.
- * Active tab: 3px bottom border in agent colour.
+ * Active tab: agent colour underline (3px solid) — text stays white.
  * XCHANGE: dimmed (opacity 0.5) until live.
  * Mobile: all 5 links visible — no hamburger menu.
  * Behaviour: same-tab navigation within iAAi network.
@@ -114,19 +114,19 @@ export function NetworkBar() {
             href={isPending ? undefined : site.url}
             onClick={isPending ? (e: React.MouseEvent) => e.preventDefault() : undefined}
             title={`${site.agent} — ${site.role}${isPending ? " (Coming Soon)" : ""}`}
-            className="group relative flex items-center justify-center gap-1.5 px-2 sm:px-3 h-full text-[11px] font-mono tracking-wider transition-opacity hover:opacity-100 whitespace-nowrap"
+            className="group relative flex items-center justify-center gap-1.5 px-2 sm:px-3 h-full text-[11px] tracking-wider transition-opacity hover:opacity-100 whitespace-nowrap"
             style={{
-              color: isActive ? site.color : "#FFFFFF",
-              opacity: isPending ? 0.5 : isActive ? 1 : 0.7,
+              color: "#FFFFFF",
+              opacity: isPending ? 0.5 : 1,
               borderBottom: isActive ? `3px solid ${site.color}` : "3px solid transparent",
               cursor: isPending ? "default" : "pointer",
             }}
           >
-            <SiteIcon siteId={site.id} color={isActive ? site.color : isPending ? site.color : "#FFFFFF"} />
+            <SiteIcon siteId={site.id} color={site.color} />
             <span>{site.label}</span>
             {/* Tooltip — visible on hover (desktop only) */}
             <span
-              className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover:sm:flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-mono tracking-wide whitespace-nowrap z-[10000]"
+              className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 hidden group-hover:sm:flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] tracking-wide whitespace-nowrap z-[10000]"
               style={{
                 backgroundColor: "#0f1d32",
                 border: `1px solid ${site.color}40`,
