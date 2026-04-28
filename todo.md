@@ -1128,3 +1128,12 @@
 - [x] Verify cross-site links navigate correctly (ACAD, MEMORIAL, CHART ROOM)
 - [x] Add agent name tooltips — hover shows "MAX — The Contractor", "DAVID — The Checker", etc.
 - [x] Document replication needs for ACAD, Chart Room, Memorial sites
+
+## Block 490: Network Bar 5-Site Update (NAV-INSTALL-001)
+- [x] Update from 4 sites to 5: ACADEMY, QUEST (active), XCHANGE, MEMORIAL, NEWS
+- [x] Rename TRE → QUEST, CHART ROOM → NEWS
+- [x] Add XCHANGE with gold #D4A843, ATLAS — The Supplier — Forging
+- [x] XCHANGE dimmed (opacity 0.5) until live (PENDING BUILD)
+- [x] Add 14×14 SVG icons for each site per install card spec
+- [x] Update agent roles: Hardening, Quenching, Forging, Tempering, Observer
+- [x] Update tooltips to match new naming
