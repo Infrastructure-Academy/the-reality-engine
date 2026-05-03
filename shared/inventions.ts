@@ -32,6 +32,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Charcoal Kiln", description: "A purpose-built structure for converting timber to charcoal at industrial scale. Charcoal kilns fuelled the iron and steel industries that built the modern world.", date: "~2000 BCE", significance: "transformative" },
     { name: "Mast", description: "A tall timber pole supporting sails on a vessel. The mast transformed boats from paddled craft into wind-powered ships capable of crossing oceans.", date: "~3000 BCE", significance: "revolutionary" },
     { name: "Barrel", description: "Curved wooden staves bound with hoops to create a watertight container. The barrel revolutionised storage and transport — wine, grain, gunpowder, and water all travelled in barrels.", date: "~350 BCE", significance: "transformative" },
+    { name: "Cork Harvest", description: "Stripping bark from Quercus suber (cork oak) without killing the tree — a renewable harvest repeated approximately 12 times over a 200-year lifespan. Cork became essential for waterproofing, insulation, and bottle sealing. The practice proves infrastructure need not destroy its source.", date: "~3000 BCE", significance: "transformative" },
   ],
 
   // ═══ RELAY 3: RIVER — Cradles of Continuity ═══

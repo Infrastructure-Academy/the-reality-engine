@@ -1140,3 +1140,6 @@
 
 ## Block 490b: Network Bar Fix
 - [x] Fix labels to full names (ACADEMY, QUEST, XCHANGE, MEMORIAL, NEWS) matching ACAD reference
+
+## Block 491: Cork Harvest Invention
+- [x] Add Cork Harvest to Relay 2 (Tree) inventions in shared/inventions.ts
