@@ -749,10 +749,10 @@ export default function ExplorerRelay() {
                         const saved = localStorage.getItem("tre_spinner_collection");
                         if (!saved) return "I'm your narrator — ask me anything!";
                         const ids: number[] = JSON.parse(saved);
-                        const persp: Record<string, number> = { west: 0, east: 0, nomadic: 0 };
-                        const pMap: Record<number, string> = { 1:"nomadic",2:"east",3:"east",4:"nomadic",5:"west",6:"nomadic",7:"east",8:"west",9:"west",10:"west",11:"nomadic",12:"nomadic" };
+                        const persp: Record<string, number> = { west: 0, east: 0, outrider: 0 };
+                        const pMap: Record<number, string> = { 1:"outrider",2:"east",3:"east",4:"outrider",5:"west",6:"outrider",7:"east",8:"west",9:"west",10:"west",11:"outrider",12:"outrider" };
                         ids.forEach(i => { const p = pMap[i+1]; if (p) persp[p]++; });
-                        const total = persp.west + persp.east + persp.nomadic;
+                        const total = persp.west + persp.east + persp.outrider;
                         if (total < 2) return "I'm your narrator — ask me anything!";
                         const sorted = Object.entries(persp).sort((a,b) => b[1]-a[1]);
                         const bal = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;

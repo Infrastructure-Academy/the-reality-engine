@@ -5,9 +5,9 @@ import { getPlayerBadge, getAllEarnedBadges } from "@shared/badges";
 
 interface ShareCardProps {
   patternTitle: string;
-  dominant: "west" | "east" | "nomadic";
+  dominant: "west" | "east" | "outrider";
   isBalanced: boolean;
-  perspectives: { west: number; east: number; nomadic: number };
+  perspectives: { west: number; east: number; outrider: number };
   totalXp: number;
   discoveries: number;
   completedRelays: number;
@@ -17,13 +17,13 @@ interface ShareCardProps {
 const PERSPECTIVE_COLORS: Record<string, string> = {
   west: "#3b82f6",
   east: "#ef4444",
-  nomadic: "#f59e0b",
+  outrider: "#f59e0b",
 };
 
 const PERSPECTIVE_ICONS: Record<string, string> = {
   west: "🏛️",
   east: "🏯",
-  nomadic: "🏕️",
+  outrider: "🏕️",
 };
 
 function formatXp(val: number): string {
@@ -127,10 +127,10 @@ export function ShareCard({
 
     // ─── Radar Triangle ───
     const cx = 300, cy = 360, r = 130;
-    const total = perspectives.west + perspectives.east + perspectives.nomadic || 1;
+    const total = perspectives.west + perspectives.east + perspectives.outrider || 1;
     const wPct = perspectives.west / total;
     const ePct = perspectives.east / total;
-    const nPct = perspectives.nomadic / total;
+    const nPct = perspectives.outrider / total;
 
     const triPoints = [
       { x: cx, y: cy - r },
@@ -189,7 +189,7 @@ export function ShareCard({
     ctx.fillStyle = "#ef4444";
     ctx.fillText(`🏯 EAST ${Math.round(ePct * 100)}%`, triPoints[1].x - 10, triPoints[1].y + 22);
     ctx.fillStyle = "#f59e0b";
-    ctx.fillText(`🏕️ NOMADIC ${Math.round(nPct * 100)}%`, triPoints[2].x + 10, triPoints[2].y + 22);
+    ctx.fillText(`🏕️ OUTRIDER ${Math.round(nPct * 100)}%`, triPoints[2].x + 10, triPoints[2].y + 22);
 
     // ─── Stats Panel (right side) ───
     const statsX = 680;

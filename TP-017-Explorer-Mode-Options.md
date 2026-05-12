@@ -77,7 +77,7 @@ Wrong choices don't kill the player — they redirect. A "wrong turn" leads to a
 |---|---|---|
 | **Observation** (OBS) | Western — analytical, systematic | Bonus XP on puzzle rooms |
 | **Intuition** (INT) | Eastern — holistic, connective | Reveals hidden rooms |
-| **Resilience** (RES) | Nomadic — adaptive, survival | Extra lives / retry on failed checks |
+| **Resilience** (RES) | Outrider — adaptive, survival | Extra lives / retry on failed checks |
 
 Each ability is set by a single d20 roll (max 3 re-rolls for the full set, per existing protocol). The scores range from 1–20 and provide simple modifiers: 1–5 = -1, 6–15 = 0, 16–20 = +1. This keeps the maths trivial while preserving the thrill of the dice roll.
 

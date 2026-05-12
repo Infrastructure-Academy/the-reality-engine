@@ -25,7 +25,7 @@ function getGuestId(): string {
 interface JuniorAbilities {
   observation: number;  // West perspective — seeing what's there
   intuition: number;    // East perspective — sensing what's hidden
-  resilience: number;   // Nomadic perspective — surviving the unknown
+  resilience: number;   // Outrider perspective — surviving the unknown
 }
 
 function rollAbilities(): JuniorAbilities {
@@ -340,7 +340,7 @@ export default function DungeonCrawl() {
             {([
               { key: "observation" as const, label: "Observation", desc: "West — Seeing what's there", color: "#ef4444" },
               { key: "intuition" as const, label: "Intuition", desc: "East — Sensing what's hidden", color: "#3b82f6" },
-              { key: "resilience" as const, label: "Resilience", desc: "Nomadic — Surviving the unknown", color: "#10b981" },
+              { key: "resilience" as const, label: "Resilience", desc: "Outrider — Surviving the unknown", color: "#10b981" },
             ]).map((attr) => (
               <div key={attr.key} className="rounded-xl border border-border/50 p-4 bg-card/30">
                 <p className="text-3xl font-mono font-bold mb-1" style={{ color: attr.color }}>{abilities[attr.key]}</p>

@@ -790,15 +790,15 @@ function DeardenFieldSection() {
 }
 
 // ─── Your Archetype Preview Card (civilisational lean from relay collection) ───
-const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "nomadic"> = {
-  1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west", 6: "nomadic",
-  7: "east", 8: "west", 9: "west", 10: "west", 11: "nomadic", 12: "nomadic",
+const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "outrider"> = {
+  1: "outrider", 2: "east", 3: "east", 4: "outrider", 5: "west", 6: "outrider",
+  7: "east", 8: "west", 9: "west", 10: "west", 11: "outrider", 12: "outrider",
 };
 
 const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: string; title: string }> = {
   west: { name: "Western", color: "#3b82f6", icon: "🏛️", title: "The Systems Architect" },
   east: { name: "Eastern", color: "#ef4444", icon: "🏯", title: "The Harmony Weaver" },
-  nomadic: { name: "Nomadic", color: "#f59e0b", icon: "🏕️", title: "The Universal Connector" },
+  outrider: { name: "Outrider", color: "#f59e0b", icon: "🏕️", title: "The Universal Connector" },
 };
 
 function YourArchetypeCard() {
@@ -829,15 +829,15 @@ function YourArchetypeCard() {
 
   // Compute perspective distribution from collected relays
   const { perspectives, dominant, total, hasRelays, isBalanced, patternTitle } = useMemo(() => {
-    const p = { west: 0, east: 0, nomadic: 0 };
+    const p = { west: 0, east: 0, outrider: 0 };
     collection.forEach((idx) => {
       const relayNum = idx + 1;
       const perspective = RELAY_PERSPECTIVES[relayNum];
       if (perspective) p[perspective]++;
     });
-    const t = p.west + p.east + p.nomadic;
+    const t = p.west + p.east + p.outrider;
     const sorted = Object.entries(p).sort((a, b) => b[1] - a[1]);
-    const dom = sorted[0][0] as "west" | "east" | "nomadic";
+    const dom = sorted[0][0] as "west" | "east" | "outrider";
     // Balanced if top two are within 15% of each other
     const bal = t > 0 && sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
     const title = bal ? "The Balanced Navigator" : PERSPECTIVE_INFO[dom].title;
@@ -867,8 +867,8 @@ function YourArchetypeCard() {
         } catch { return []; }
       })();
       const last = history[history.length - 1];
-      if (!last || last.w !== perspectives.west || last.e !== perspectives.east || last.n !== perspectives.nomadic) {
-        history.push({ t: Date.now(), w: perspectives.west, e: perspectives.east, n: perspectives.nomadic });
+      if (!last || last.w !== perspectives.west || last.e !== perspectives.east || last.n !== perspectives.outrider) {
+        history.push({ t: Date.now(), w: perspectives.west, e: perspectives.east, n: perspectives.outrider });
         if (history.length > 50) history.splice(0, history.length - 50);
         localStorage.setItem("tre_archetype_history", JSON.stringify(history));
       }
@@ -876,7 +876,7 @@ function YourArchetypeCard() {
   }, [perspectives, hasRelays]);
 
   // Community totals
-  const communityTotal = communityData ? (communityData.west + communityData.east + communityData.nomadic) : 0;
+  const communityTotal = communityData ? (communityData.west + communityData.east + communityData.outrider) : 0;
 
   return (
     <div className="container max-w-4xl pb-4 pt-2">
@@ -914,7 +914,7 @@ function YourArchetypeCard() {
 
                 {/* Perspective bars */}
                 <div className="flex-1 w-full space-y-1.5">
-                  {(["west", "east", "nomadic"] as const).map((key) => {
+                  {(["west", "east", "outrider"] as const).map((key) => {
                     const info = PERSPECTIVE_INFO[key];
                     const myCount = perspectives[key];
                     const myPct = total > 0 ? (myCount / total) * 100 : 0;
@@ -1059,7 +1059,7 @@ function YourArchetypeCard() {
             <Link href="/explore">
               <div className="text-center py-3 cursor-pointer hover:opacity-80 transition-opacity">
                 <p className="text-sm text-muted-foreground/60">Explore relays to discover your civilisational lean</p>
-                <p className="text-[10px] text-muted-foreground/40 mt-1">Each relay reveals a Western, Eastern, or Nomadic perspective</p>
+                <p className="text-[10px] text-muted-foreground/40 mt-1">Each relay reveals a Western, Eastern, or Outrider perspective</p>
               </div>
             </Link>
           )}
@@ -1083,9 +1083,9 @@ function GenerationsTimelineStrip() {
   }, []);
 
   // Perspective mapping for the desktop figure
-  const perspectiveOf = (n: number) => RELAY_PERSPECTIVES[n] || "nomadic";
-  const perspectiveLabel: Record<string, string> = { west: "Western", east: "Eastern", nomadic: "Nomadic" };
-  const perspectiveColor: Record<string, string> = { west: "#3b82f6", east: "#ef4444", nomadic: "#f59e0b" };
+  const perspectiveOf = (n: number) => RELAY_PERSPECTIVES[n] || "outrider";
+  const perspectiveLabel: Record<string, string> = { west: "Western", east: "Eastern", outrider: "Outrider" };
+  const perspectiveColor: Record<string, string> = { west: "#3b82f6", east: "#ef4444", outrider: "#f59e0b" };
 
   return (
     <div className="container max-w-5xl pb-6 pt-2" ref={counterRef}>
@@ -1148,7 +1148,7 @@ function GenerationsTimelineStrip() {
               <p className="text-sm font-heading tracking-wider text-foreground/90">The 12 Civilisational Relays — 500 Generations of Infrastructure</p>
             </div>
             <div className="flex items-center gap-3">
-              {(["west", "east", "nomadic"] as const).map((p) => (
+              {(["west", "east", "outrider"] as const).map((p) => (
                 <span key={p} className="flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full" style={{ background: perspectiveColor[p] }} />
                   <span className="text-[9px] text-muted-foreground/70">{perspectiveLabel[p]}</span>

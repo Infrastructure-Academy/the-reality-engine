@@ -179,7 +179,7 @@ The simplified system uses three scores mapped to the three civilisational persp
 |---|---|---|---|
 | Observation | OBS | Western --- analytical, systematic | Bonus XP on puzzle rooms |
 | Intuition | INT | Eastern --- holistic, connective | Reveals hidden rooms |
-| Resilience | RES | Nomadic --- adaptive, survival | Extra retries on failed checks |
+| Resilience | RES | Outrider --- adaptive, survival | Extra retries on failed checks |
 
 Each score is set by a single d20 roll (max 3 re-rolls for the full set). Scores range from 1--20 with simple modifiers: 1--5 = -1, 6--15 = 0, 16--20 = +1.
 
@@ -417,7 +417,7 @@ This section records the key design decisions made during development, with rati
 | No loss states anywhere | Every spin, every room, every mission yields a reward. The variable is magnitude, not existence. This eliminates frustration while preserving the engagement loop. Children should never feel punished for trying. | 22 Mar 2026 |
 | Big XP numbers | 50,000 XP for a single discovery feels generous and respectful. 50 XP for the same discovery feels dismissive. The psychological impact of large numbers drives engagement without any cost to the system. | 22 Mar 2026 |
 | 24M XP hard cap | Prevents inflation, gives "Odyssey Complete" genuine scarcity, and provides a clear finish line for completionists. | 22 Mar 2026 |
-| 3 simplified ability scores for Dungeon Crawl | The full 6-score system is too complex for 10--12 year olds. OBS/INT/RES maps cleanly to the three civilisational perspectives (Western/Eastern/Nomadic) and keeps the maths trivial. | 22 Mar 2026 |
+| 3 simplified ability scores for Dungeon Crawl | The full 6-score system is too complex for 10--12 year olds. OBS/INT/RES maps cleanly to the three civilisational perspectives (Western/Eastern/Outrider) and keeps the maths trivial. | 22 Mar 2026 |
 | Modes as views, not silos | Cross-modal progress persistence means players never lose work by switching modes. This encourages experimentation and reduces commitment anxiety. | 22 Mar 2026 |
 | DAVID voice toggle | Not all players want audio narration. The toggle respects player preference while keeping the feature available for those who benefit from it. | 22 Mar 2026 |
 | Youth intro videos per sub-mode | 8--14 year olds need visual hooks, not text explanations. A 20-second video communicates more than a 500-word description. | 22 Mar 2026 |

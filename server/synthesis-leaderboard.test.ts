@@ -2,16 +2,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Synthesis Page Logic Tests ───
 describe("Synthesis — Civilizational Perspective Classification", () => {
-  const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "nomadic"> = {
-    1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west",
-    6: "nomadic", 7: "east", 8: "west", 9: "west", 10: "west",
-    11: "nomadic", 12: "nomadic",
+  const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "outrider"> = {
+    1: "outrider", 2: "east", 3: "east", 4: "outrider", 5: "west",
+    6: "outrider", 7: "east", 8: "west", 9: "west", 10: "west",
+    11: "outrider", 12: "outrider",
   };
 
   it("should classify all 12 relays into perspectives", () => {
     for (let i = 1; i <= 12; i++) {
       expect(RELAY_PERSPECTIVES[i]).toBeDefined();
-      expect(["west", "east", "nomadic"]).toContain(RELAY_PERSPECTIVES[i]);
+      expect(["west", "east", "outrider"]).toContain(RELAY_PERSPECTIVES[i]);
     }
   });
 
@@ -29,11 +29,11 @@ describe("Synthesis — Civilizational Perspective Classification", () => {
     expect(eastern).toEqual([2, 3, 7]);
   });
 
-  it("should have 5 nomadic relays (1, 4, 6, 11, 12)", () => {
-    const nomadic = Object.entries(RELAY_PERSPECTIVES)
-      .filter(([_, v]) => v === "nomadic")
+  it("should have 5 outrider relays (1, 4, 6, 11, 12)", () => {
+    const outrider = Object.entries(RELAY_PERSPECTIVES)
+      .filter(([_, v]) => v === "outrider")
       .map(([k]) => Number(k));
-    expect(nomadic).toEqual([1, 4, 6, 11, 12]);
+    expect(outrider).toEqual([1, 4, 6, 11, 12]);
   });
 
   it("should compute perspective distribution from progress data", () => {
@@ -44,7 +44,7 @@ describe("Synthesis — Civilizational Perspective Classification", () => {
       { relayNumber: 2, completionPct: 30 },
     ];
 
-    const perspectives = { west: 0, east: 0, nomadic: 0 };
+    const perspectives = { west: 0, east: 0, outrider: 0 };
     for (const p of mockProgress) {
       const persp = RELAY_PERSPECTIVES[p.relayNumber];
       if (persp && p.completionPct > 0) {
@@ -52,13 +52,13 @@ describe("Synthesis — Civilizational Perspective Classification", () => {
       }
     }
 
-    expect(perspectives.nomadic).toBe(100); // Relay 1
+    expect(perspectives.outrider).toBe(100); // Relay 1
     expect(perspectives.west).toBe(125);    // Relay 5 (50) + Relay 8 (75)
     expect(perspectives.east).toBe(30);     // Relay 2
   });
 
   it("should detect balanced perspective when top two are within 15%", () => {
-    const perspectives = { west: 100, east: 90, nomadic: 80 };
+    const perspectives = { west: 100, east: 90, outrider: 80 };
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
     const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 &&
       (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
@@ -66,7 +66,7 @@ describe("Synthesis — Civilizational Perspective Classification", () => {
   });
 
   it("should detect dominant perspective when gap exceeds 15%", () => {
-    const perspectives = { west: 200, east: 50, nomadic: 30 };
+    const perspectives = { west: 200, east: 50, outrider: 30 };
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
     const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 &&
       (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
@@ -78,11 +78,11 @@ describe("Synthesis — Civilizational Perspective Classification", () => {
     const titles: Record<string, string> = {
       west: "The Systems Architect",
       east: "The Harmony Weaver",
-      nomadic: "The Universal Connector",
+      outrider: "The Universal Connector",
     };
     expect(titles.west).toBe("The Systems Architect");
     expect(titles.east).toBe("The Harmony Weaver");
-    expect(titles.nomadic).toBe("The Universal Connector");
+    expect(titles.outrider).toBe("The Universal Connector");
   });
 });
 
@@ -106,9 +106,9 @@ describe("DAVID — Personalized Player Context", () => {
 
   it("should compute perspective lean percentages", () => {
     const relayPerspectives: Record<number, string> = {
-      1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west",
-      6: "nomadic", 7: "east", 8: "west", 9: "west", 10: "west",
-      11: "nomadic", 12: "nomadic",
+      1: "outrider", 2: "east", 3: "east", 4: "outrider", 5: "west",
+      6: "outrider", 7: "east", 8: "west", 9: "west", 10: "west",
+      11: "outrider", 12: "outrider",
     };
 
     const exploredRelays = [
@@ -117,7 +117,7 @@ describe("DAVID — Personalized Player Context", () => {
       { relayNumber: 2, completionPct: 100 },
     ];
 
-    const perspectives: Record<string, number> = { west: 0, east: 0, nomadic: 0 };
+    const perspectives: Record<string, number> = { west: 0, east: 0, outrider: 0 };
     for (const p of exploredRelays) {
       const persp = relayPerspectives[p.relayNumber];
       if (persp) perspectives[persp] += p.completionPct;
@@ -126,7 +126,7 @@ describe("DAVID — Personalized Player Context", () => {
     const total = Object.values(perspectives).reduce((a, b) => a + b, 0);
     expect(Math.round(perspectives.west / total * 100)).toBe(33);
     expect(Math.round(perspectives.east / total * 100)).toBe(33);
-    expect(Math.round(perspectives.nomadic / total * 100)).toBe(33);
+    expect(Math.round(perspectives.outrider / total * 100)).toBe(33);
   });
 
   it("should include character data for scholar mode", () => {
@@ -227,9 +227,9 @@ describe("Leaderboard — Live Data Formatting", () => {
 describe("Synthesis — Route and Navigation", () => {
   it("should have correct relay perspective mapping for all 12 relays", () => {
     const RELAY_PERSPECTIVES: Record<number, string> = {
-      1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west",
-      6: "nomadic", 7: "east", 8: "west", 9: "west", 10: "west",
-      11: "nomadic", 12: "nomadic",
+      1: "outrider", 2: "east", 3: "east", 4: "outrider", 5: "west",
+      6: "outrider", 7: "east", 8: "west", 9: "west", 10: "west",
+      11: "outrider", 12: "outrider",
     };
     expect(Object.keys(RELAY_PERSPECTIVES).length).toBe(12);
   });
@@ -242,10 +242,10 @@ describe("Synthesis — Route and Navigation", () => {
   });
 
   it("should handle zero progress gracefully", () => {
-    const perspectives = { west: 0, east: 0, nomadic: 0 };
+    const perspectives = { west: 0, east: 0, outrider: 0 };
     const total = Object.values(perspectives).reduce((a, b) => a + b, 0) || 1;
     expect(Math.round(perspectives.west / total * 100)).toBe(0);
     expect(Math.round(perspectives.east / total * 100)).toBe(0);
-    expect(Math.round(perspectives.nomadic / total * 100)).toBe(0);
+    expect(Math.round(perspectives.outrider / total * 100)).toBe(0);
   });
 });

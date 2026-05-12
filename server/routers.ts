@@ -177,8 +177,8 @@ export const appRouter = router({
               playerContext += `- Total XP earned: ${totalXp.toLocaleString()}\n`;
 
               // Perspective distribution
-              const perspectives: Record<string, number> = { west: 0, east: 0, nomadic: 0 };
-              const relayPerspectives: Record<number, string> = { 1: "nomadic", 2: "east", 3: "east", 4: "nomadic", 5: "west", 6: "nomadic", 7: "east", 8: "west", 9: "west", 10: "west", 11: "nomadic", 12: "nomadic" };
+              const perspectives: Record<string, number> = { west: 0, east: 0, outrider: 0 };
+              const relayPerspectives: Record<number, string> = { 1: "outrider", 2: "east", 3: "east", 4: "outrider", 5: "west", 6: "outrider", 7: "east", 8: "west", 9: "west", 10: "west", 11: "outrider", 12: "outrider" };
               for (const p of exploredRelays) {
                 const persp = relayPerspectives[p.relayNumber];
                 if (persp) perspectives[persp] += (p.completionPct ?? 0);
@@ -186,8 +186,8 @@ export const appRouter = router({
               const total = Object.values(perspectives).reduce((a, b) => a + b, 0) || 1;
               const westPct = Math.round(perspectives.west / total * 100);
               const eastPct = Math.round(perspectives.east / total * 100);
-              const nomadicPct = Math.round(perspectives.nomadic / total * 100);
-              playerContext += `- Civilisational lean: West ${westPct}%, East ${eastPct}%, Nomadic ${nomadicPct}%\n`;
+              const outriderPct = Math.round(perspectives.outrider / total * 100);
+              playerContext += `- Civilisational lean: West ${westPct}%, East ${eastPct}%, Outrider ${outriderPct}%\n`;
 
               // Determine dominant archetype for tone adaptation
               const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
@@ -195,13 +195,13 @@ export const appRouter = router({
               const dominantPerspective = sorted[0][0];
 
               if (isBalanced) {
-                playerContext += `\n[ARCHETYPE ADAPTATION — The Balanced Navigator]\nThis player has a balanced civilisational lean. Draw equally from Western engineering precision, Eastern philosophical harmony, and Nomadic adaptive thinking. Use bridge-building metaphors — connecting systems, cultures, and ideas. Frame infrastructure as the universal thread that ties civilisations together. Alternate between analytical and poetic framing.\n`;
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Balanced Navigator]\nThis player has a balanced civilisational lean. Draw equally from Western engineering precision, Eastern philosophical harmony, and Outrider adaptive thinking. Use bridge-building metaphors — connecting systems, cultures, and ideas. Frame infrastructure as the universal thread that ties civilisations together. Alternate between analytical and poetic framing.\n`;
               } else if (dominantPerspective === "west") {
                 playerContext += `\n[ARCHETYPE ADAPTATION — The Systems Architect]\nThis player leans Western. Favour engineering analogies, systematic thinking, and structural metaphors. Reference Roman roads, Brunel's bridges, standardisation, and modular design. Frame infrastructure as systems to be designed, optimised, and scaled. Use precise, technical language. Think Vitruvius, Isambard Kingdom Brunel, and the engineering tradition.\n`;
               } else if (dominantPerspective === "east") {
                 playerContext += `\n[ARCHETYPE ADAPTATION — The Harmony Weaver]\nThis player leans Eastern. Favour philosophical framing, cyclical thinking, and harmony metaphors. Reference the Grand Canal, the Silk Road as cultural exchange, Confucian order, and the balance between nature and construction. Frame infrastructure as harmony between human intent and natural systems. Use contemplative, layered language. Think Sima Qian, Sun Tzu, and the long view of civilisation.\n`;
               } else {
-                playerContext += `\n[ARCHETYPE ADAPTATION — The Universal Connector]\nThis player leans Nomadic. Favour adaptive thinking, movement metaphors, and cross-cultural connections. Reference the Silk Road traders, Polynesian wayfinders, Mongol relay systems, and the spaces between empires. Frame infrastructure as networks that connect rather than walls that divide. Use dynamic, exploratory language. Think Ibn Battuta, the Steppe riders, and the art of the in-between.\n`;
+                playerContext += `\n[ARCHETYPE ADAPTATION — The Universal Connector]\nThis player leans Outrider. Favour adaptive thinking, movement metaphors, and cross-cultural connections. Reference the Silk Road traders, Polynesian wayfinders, Mongol relay systems, and the spaces between empires. Frame infrastructure as networks that connect rather than walls that divide. Use dynamic, exploratory language. Think Ibn Battuta, the Steppe riders, and the art of the in-between.\n`;
               }
             }
 

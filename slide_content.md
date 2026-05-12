@@ -129,7 +129,7 @@ Image: The Relay Spinner iCard.
 
 Room-by-room exploration of 12 relay-dungeons, 6-8 rooms each. Text-based descriptions with illustrated scenes. Every choice reveals different knowledge — two players exploring the same dungeon find different things.
 
-Three simplified ability scores mapped to civilisational perspectives: Observation (Western), Intuition (Eastern), Resilience (Nomadic). DAVID serves as the Dungeon Master. Wrong choices redirect, never punish.
+Three simplified ability scores mapped to civilisational perspectives: Observation (Western), Intuition (Eastern), Resilience (Outrider). DAVID serves as the Dungeon Master. Wrong choices redirect, never punish.
 
 Target: Ages 10-12. Session length: 10-20 minutes. Build time: 7-10 days.
 

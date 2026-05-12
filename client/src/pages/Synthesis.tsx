@@ -14,19 +14,19 @@ import { ChallengeButton } from "@/components/ChallengeButton";
 
 // ─── Civilizational Perspective Classification ───
 // Each relay maps to a civilizational perspective based on its historical context
-const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "nomadic"> = {
-  1: "nomadic",   // Fire — universal/nomadic
+const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "outrider"> = {
+  1: "outrider",   // Fire — universal/outrider
   2: "east",      // Tree — Eastern agricultural roots
   3: "east",      // River — Cradles (Mesopotamia, Indus, Yellow River)
-  4: "nomadic",   // Horse — Steppe nomads, velocity of intent
+  4: "outrider",   // Horse — Steppe outriders, velocity of intent
   5: "west",      // Roads — Roman Empire, arteries of intent
-  6: "nomadic",   // Ships — Master Weaver's reach, connecting all
+  6: "outrider",   // Ships — Master Weaver's reach, connecting all
   7: "east",      // Loom — Silk Road, Chinese invention, binary birth
   8: "west",      // Rail — British Industrial Revolution
   9: "west",      // Engine — Western industrialization
   10: "west",     // AAA Triad — Aviation/Automobile/Assembly (Western convergence)
-  11: "nomadic",  // Orbit — Global/digital frontier
-  12: "nomadic",  // Human Nodes — Universal consciousness
+  11: "outrider",  // Orbit — Global/digital frontier
+  12: "outrider",  // Human Nodes — Universal consciousness
 };
 
 const PERSPECTIVE_META = {
@@ -44,8 +44,8 @@ const PERSPECTIVE_META = {
     description: "Harmony, continuity, and organic growth",
     scholars: ["Sima Qian", "Sun Tzu", "Zhuge Liang"],
   },
-  nomadic: {
-    name: "Nomadic",
+  outrider: {
+    name: "Outrider",
     color: "#f59e0b",
     icon: "🏕️",
     description: "Connection, adaptation, and universal reach",
@@ -64,18 +64,18 @@ function getGuestId(): string {
 }
 
 // ─── Radar Chart SVG ───
-function PerspectiveRadar({ west, east, nomadic }: { west: number; east: number; nomadic: number }) {
+function PerspectiveRadar({ west, east, outrider }: { west: number; east: number; outrider: number }) {
   const cx = 150, cy = 150, r = 110;
-  const total = west + east + nomadic || 1;
+  const total = west + east + outrider || 1;
   const wPct = west / total;
   const ePct = east / total;
-  const nPct = nomadic / total;
+  const nPct = outrider / total;
 
   // Triangle vertices (top, bottom-left, bottom-right)
   const points = [
     { x: cx, y: cy - r },                              // West (top)
     { x: cx - r * Math.sin(Math.PI * 2 / 3), y: cy + r * Math.cos(Math.PI * 2 / 3) }, // East (bottom-left)
-    { x: cx + r * Math.sin(Math.PI * 2 / 3), y: cy + r * Math.cos(Math.PI * 2 / 3) }, // Nomadic (bottom-right)
+    { x: cx + r * Math.sin(Math.PI * 2 / 3), y: cy + r * Math.cos(Math.PI * 2 / 3) }, // Outrider (bottom-right)
   ];
 
   // Data point
@@ -126,7 +126,7 @@ function PerspectiveRadar({ west, east, nomadic }: { west: number; east: number;
         🏯 EAST ({Math.round(ePct * 100)}%)
       </text>
       <text x={points[2].x + 8} y={points[2].y + 18} textAnchor="middle" className="fill-amber-400 text-xs font-bold">
-        🏕️ NOMADIC ({Math.round(nPct * 100)}%)
+        🏕️ OUTRIDER ({Math.round(nPct * 100)}%)
       </text>
 
       {/* Gradient */}
@@ -199,7 +199,7 @@ export default function Synthesis() {
     const allRelayProgress = new Map(progressData.map(p => [p.relayNumber, p]));
 
     // Count perspective distribution based on which relays have ANY progress
-    const perspectives = { west: 0, east: 0, nomadic: 0 };
+    const perspectives = { west: 0, east: 0, outrider: 0 };
     let totalXpEarned = 0;
     let totalDiscoveries = 0;
 
@@ -220,7 +220,7 @@ export default function Synthesis() {
 
     // Determine dominant perspective
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
-    const dominant = sorted[0][0] as "west" | "east" | "nomadic";
+    const dominant = sorted[0][0] as "west" | "east" | "outrider";
     const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
 
     return {
@@ -244,7 +244,7 @@ export default function Synthesis() {
     const titles: Record<string, string> = {
       west: "The Systems Architect",
       east: "The Harmony Weaver",
-      nomadic: "The Universal Connector",
+      outrider: "The Universal Connector",
     };
     return titles[synthesis.dominant] || meta.name;
   }, [synthesis]);
@@ -365,7 +365,7 @@ export default function Synthesis() {
             <PerspectiveRadar
               west={synthesis.perspectives.west}
               east={synthesis.perspectives.east}
-              nomadic={synthesis.perspectives.nomadic}
+              outrider={synthesis.perspectives.outrider}
             />
           </div>
 

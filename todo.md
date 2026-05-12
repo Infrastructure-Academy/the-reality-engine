@@ -147,7 +147,7 @@
 
 ## End-Game Synthesis + DAVID Context + Real Leaderboard
 - [x] Build end-game synthesis page — /synthesis route with pattern visualization
-- [x] Show civilizational pattern visualization (West/East/Nomadic radar triangle)
+- [x] Show civilizational pattern visualization (West/East/Outrider radar triangle)
 - [x] Display discovered pattern summary with relay completion stats + archetype title
 - [x] Offer thesis materials links (Perspective/Guide/Game sections)
 - [x] Wire DAVID AI narrator with player discovery history in system prompt
@@ -1093,12 +1093,12 @@
 ## Block 483: Synthesis Modal + Pulsing Heatmap + Archetype Card
 - [x] Synthesis Unlocked celebration modal with confetti at 60/60 nodes
 - [x] Pulsing breathing animation on community heatmap dots
-- [x] Your Archetype preview card — West/East/Nomadic lean from relay choices
+- [x] Your Archetype preview card — West/East/Outrider lean from relay choices
 
 ## Block 484: Archetype Card Enhancements + Community Distribution
-- [x] Balanced Navigator threshold — show "The Balanced Navigator" when West/East/Nomadic within 15%
+- [x] Balanced Navigator threshold — show "The Balanced Navigator" when West/East/Outrider within 15%
 - [x] Live storage event listener — YourArchetypeCard updates in real-time when relays collected
-- [x] Community archetype distribution backend procedure (aggregate West/East/Nomadic across all players)
+- [x] Community archetype distribution backend procedure (aggregate West/East/Outrider across all players)
 - [x] Community overlay on YourArchetypeCard — toggle to see global perspective split
 
 ## Block 485: Remove Tetrahedral Observer image
@@ -1111,7 +1111,7 @@
 - [x] Archetype share card — share/download button on YourArchetypeCard wired to existing ShareCard component
 
 ## Block 487: Sparkline + Tooltips + DAVID Greeting
-- [x] Archetype evolution sparkline — track West/East/Nomadic lean over time in localStorage, show mini trend on card
+- [x] Archetype evolution sparkline — track West/East/Outrider lean over time in localStorage, show mini trend on card
 - [x] Desktop Dearden Field hover tooltips — show relay name + web name + XP on hover for each dot
 - [x] DAVID greeting adaptation — opening chat message reflects player's archetype
 
@@ -1143,3 +1143,11 @@
 
 ## Block 491: Cork Harvest Invention
 - [x] Add Cork Harvest to Relay 2 (Tree) inventions in shared/inventions.ts
+
+## Block 492: Outrider Terminology Rectification
+- [x] Replace all "Nomadic" with "Outrider" in ShareCard.tsx (type definitions, color map, emoji map, variable names)
+- [x] Replace "Nomadic" with "Outrider" in Synthesis.tsx, Home.tsx, ExplorerRelay.tsx, FlightDeck.tsx, DungeonCrawl.tsx
+- [x] Replace "Nomadic" with "Outrider" in server/db.ts and server/routers.ts
+- [x] Replace "Nomadic" with "Outrider" in test files (share-codesplit.test.ts, synthesis-leaderboard.test.ts)
+- [x] Replace "Nomadic" with "Outrider" in documentation files (handbooks, design params, slide content, explorer mode TP)
+- [x] Update todo.md historical entries from "Nomadic" to "Outrider" for consistency

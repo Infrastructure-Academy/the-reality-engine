@@ -141,7 +141,7 @@ The Flight Deck supports gamepad navigation for console-style play. Use the D-pa
 
 FITS stands for **Feeler, Intuitive, Thinker, Senser** — the four civilisational temperament types that describe how you naturally approach infrastructure and knowledge. In Explorer mode, DAVID observes your choices silently and builds a profile. In Scholar mode, you take a formal 6-question assessment that reveals your type explicitly.
 
-The FITS system is not a personality test in the pop-psychology sense. It is a framework for understanding how different civilisational perspectives — Western (analytical), Eastern (holistic), Nomadic (adaptive), and Humanitarian (empathetic) — manifest in individual learners.
+The FITS system is not a personality test in the pop-psychology sense. It is a framework for understanding how different civilisational perspectives — Western (analytical), Eastern (holistic), Outrider (adaptive), and Humanitarian (empathetic) — manifest in individual learners.
 
 ### 4.2 The Four Types
 

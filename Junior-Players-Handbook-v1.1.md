@@ -153,7 +153,7 @@ Before you enter your first dungeon, you roll your **ability scores**. You have 
 |---|---|---|
 | **Observation** (OBS) | The Western way — seeing what is there, measuring, analysing | Helps you spot details in rooms and solve puzzles |
 | **Intuition** (INT) | The Eastern way — sensing what is hidden, feeling connections | Helps you find hidden rooms and secret passages |
-| **Resilience** (RES) | The Nomadic way — surviving the unknown, adapting, enduring | Gives you extra chances when things go wrong |
+| **Resilience** (RES) | The Outrider way — surviving the unknown, adapting, enduring | Gives you extra chances when things go wrong |
 
 Your scores are rolled randomly (like rolling dice). You get **3 chances to re-roll** if you do not like your scores. Higher scores give you better chances in the dungeon.
 

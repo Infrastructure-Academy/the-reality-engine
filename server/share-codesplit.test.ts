@@ -122,36 +122,36 @@ describe("Code-splitting configuration", () => {
 
 // ─── Perspective Distribution Tests ───
 describe("Perspective distribution for share card", () => {
-  const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "nomadic"> = {
-    1: "nomadic", 2: "east", 3: "east", 4: "nomadic",
-    5: "west", 6: "nomadic", 7: "east", 8: "west",
-    9: "west", 10: "west", 11: "nomadic", 12: "nomadic",
+  const RELAY_PERSPECTIVES: Record<number, "west" | "east" | "outrider"> = {
+    1: "outrider", 2: "east", 3: "east", 4: "outrider",
+    5: "west", 6: "outrider", 7: "east", 8: "west",
+    9: "west", 10: "west", 11: "outrider", 12: "outrider",
   };
 
   it("counts perspectives correctly for all 12 relays", () => {
-    const counts = { west: 0, east: 0, nomadic: 0 };
+    const counts = { west: 0, east: 0, outrider: 0 };
     Object.values(RELAY_PERSPECTIVES).forEach(p => counts[p]++);
 
     expect(counts.west).toBe(4);
     expect(counts.east).toBe(3);
-    expect(counts.nomadic).toBe(5);
+    expect(counts.outrider).toBe(5);
   });
 
   it("identifies dominant perspective", () => {
-    const perspectives = { west: 400, east: 300, nomadic: 500 };
+    const perspectives = { west: 400, east: 300, outrider: 500 };
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
-    expect(sorted[0][0]).toBe("nomadic");
+    expect(sorted[0][0]).toBe("outrider");
   });
 
   it("detects balanced state when perspectives are close", () => {
-    const perspectives = { west: 330, east: 340, nomadic: 330 };
+    const perspectives = { west: 330, east: 340, outrider: 330 };
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
     const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
     expect(isBalanced).toBe(true);
   });
 
   it("does not detect balanced when one perspective dominates", () => {
-    const perspectives = { west: 600, east: 200, nomadic: 200 };
+    const perspectives = { west: 600, east: 200, outrider: 200 };
     const sorted = Object.entries(perspectives).sort((a, b) => b[1] - a[1]);
     const isBalanced = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
     expect(isBalanced).toBe(false);
