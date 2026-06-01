@@ -297,8 +297,8 @@ export const appRouter = router({
           "Rail — Standardizing the Continental Rhythm (1760–1870 CE)",
           "Engine — The Internal Revolution (1870–1914 CE)",
           "AAA Triad — The Triple Convergence (1914–1969 CE)",
-          "Orbit — The Programmable Frontier (1969–2025 CE)",
-          "Human Nodes — The Torus Metaphor (2025+ CE)",
+          "Orbit — The Programmable Frontier (1969–2026 CE)",
+          "Human Nodes — The Torus Metaphor (2026+ CE)",
         ][relayNumber - 1];
 
         let situationContext = `The explorer is in Room "${roomName}" (${roomType} type) of the ${relay} dungeon. Progress: ${roomsCleared}/${totalRooms} rooms cleared.`;

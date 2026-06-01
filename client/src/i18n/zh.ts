@@ -115,8 +115,8 @@ export const ZH: Record<string, string> = {
   "relay.era.8": "1760–1870年",
   "relay.era.9": "1870–1914年",
   "relay.era.10": "1914–1969年",
-  "relay.era.11": "1969–2025年",
-  "relay.era.12": "2025年以后",
+  "relay.era.11": "1969–2026年",
+  "relay.era.12": "2026年以后",
 
   // ─── Webs ───
   "web.webs": "网络",

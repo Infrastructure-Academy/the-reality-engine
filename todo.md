@@ -430,13 +430,13 @@
 - [x] Auto-collapse after first complete view, show "Watched" indicator
 
 ## Pilot Portraits for MPNC Fleet
-- [ ] Generate pilot portrait: Scott (TB-1 Pathfinder)
-- [ ] Generate pilot portrait: Virgil (TB-2 Forgemaster)
-- [ ] Generate pilot portrait: Alan (TB-3 Starcaster)
-- [ ] Generate pilot portrait: Gordon (TB-4 Lifeline)
-- [ ] Generate pilot portrait: John (TB-5 Sentinel)
-- [ ] Upload pilot portraits to CDN
-- [ ] Embed pilot portraits on craft selection cards
+- [x] Generate pilot portrait: Scott (TB-1 Pathfinder)
+- [x] Generate pilot portrait: Virgil (TB-2 Forgemaster)
+- [x] Generate pilot portrait: Alan (TB-3 Starcaster)
+- [x] Generate pilot portrait: Gordon (TB-4 Lifeline)
+- [x] Generate pilot portrait: John (TB-5 Sentinel)
+- [x] Upload pilot portraits to CDN
+- [x] Embed pilot portraits on craft selection cards
 
 ## Sizzle Reel for Explorer Select Page
 - [ ] Create 15-second sizzle reel from existing video clips
@@ -606,8 +606,8 @@
 - [ ] Fix: ACAD meta keywords/SEO text rendering as visible text at top of page
 - [ ] Fix: ACAD ODYSSEY progress bar broken rendering
 ### MAJOR (from 5-Bot Audit)
-- [ ] Fix: Wrong date "2025" should be "2026"
-- [ ] Fix: Missing alt text on multiple images
+- [x] Fix: Wrong date "2025" should be "2026"
+- [x] Fix: Missing alt text on multiple images (verified: all <img> tags have alt attributes)
 - [ ] Fix: Some images pixelated in MEDIA section
 ### GOVERNANCE
 - [ ] Record governance finding: SITE-AVAIL-001 — Site availability failure during external audit

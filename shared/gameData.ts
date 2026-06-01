@@ -10,8 +10,8 @@ export const RELAYS = [
   { number: 8, name: "Rail", subtitle: "Standardizing the Continental Rhythm", emoji: "🚂", era: "1760–1870 CE", webType: "Machine", color: "#64748b" },
   { number: 9, name: "Engine", subtitle: "The Internal Revolution", emoji: "⚙️", era: "1870–1914 CE", webType: "Machine", color: "#b45309" },
   { number: 10, name: "AAA Triad", subtitle: "The Triple Convergence", emoji: "✈️", era: "1914–1969 CE", webType: "Digital", color: "#0284c7" },
-  { number: 11, name: "Orbit", subtitle: "The Programmable Frontier", emoji: "🛰️", era: "1969–2025 CE", webType: "Digital", color: "#6366f1" },
-  { number: 12, name: "Human Nodes", subtitle: "The Torus Metaphor", emoji: "🧠", era: "2025+ CE", webType: "Consciousness", color: "#a855f7" },
+  { number: 11, name: "Orbit", subtitle: "The Programmable Frontier", emoji: "🛰️", era: "1969–2026 CE", webType: "Digital", color: "#6366f1" },
+  { number: 12, name: "Human Nodes", subtitle: "The Torus Metaphor", emoji: "🧠", era: "2026+ CE", webType: "Consciousness", color: "#a855f7" },
 ] as const;
 
 // ─── 5 Great Webs ───
@@ -36,6 +36,7 @@ export const FITS_TYPES = [
 export const CRAFTS = [
   {
     id: "tb1", name: "TB-1 Pathfinder", className: "Arrow-Class", pilot: "Scott / IQ",
+    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scott-tb1-pathfinder-DZj9NBLGQLUSnVJXUGjwik.webp",
     role: "RAPID-RESPONSE RECONNAISSANCE",
     description: "Long-range reconnaissance craft built for terrain mapping and environmental survey. First to arrive, first to report.",
     fits: "senser", web: "Natural",
@@ -45,6 +46,7 @@ export const CRAFTS = [
   },
   {
     id: "tb2", name: "TB-2 Forgemaster", className: "Griffin-Class", pilot: "Virgil / EQ",
+    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/virgil-tb2-forgemaster-oGwZDTd5owF7Ko76uh4Jua.webp",
     role: "HEAVY ENGINEERING & CONSTRUCTION",
     description: "Heavy-lift engineering platform carrying modular pods for construction, demolition, and infrastructure deployment.",
     fits: "thinker", web: "Machine",
@@ -54,6 +56,7 @@ export const CRAFTS = [
   },
   {
     id: "tb3", name: "TB-3 Starcaster", className: "Zeta-Class", pilot: "Alan / CQ",
+    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/alan-tb3-starcaster-9bR8gpM6DDuyJsQQKSmer7.webp",
     role: "COMMUNICATIONS & SIGNAL INTELLIGENCE",
     description: "Orbital communications relay and deep-space signal intelligence vessel. The Starcaster weaves the digital web.",
     fits: "intuitive", web: "Digital",
@@ -63,6 +66,7 @@ export const CRAFTS = [
   },
   {
     id: "tb4", name: "TB-4 Lifeline", className: "Leviathan-Class", pilot: "Gordon / Deep CQ",
+    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/gordon-tb4-lifeline-WtXh7LJJDLMkP5zgR4WDD9.webp",
     role: "MEDICAL & HUMANITARIAN RESPONSE",
     description: "Medical and humanitarian response vessel equipped with BioAura diagnostic suites. Where others build, she heals.",
     fits: "feeler", web: "Biological",
@@ -72,6 +76,7 @@ export const CRAFTS = [
   },
   {
     id: "tb5", name: "TB-5 Sentinel", className: "Citadel-Class", pilot: "John / HQ",
+    pilotImage: "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/john-tb5-sentinel-PCtGffgRQPivpFEzE8GzXR.webp",
     role: "COMMAND & CONTROL / OVERWATCH",
     description: "Command and control station maintaining persistent orbital overwatch. The Sentinel sees all, coordinates all.",
     fits: "balanced", web: "Consciousness",
