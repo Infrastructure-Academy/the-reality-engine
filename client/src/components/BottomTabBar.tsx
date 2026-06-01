@@ -3,17 +3,19 @@ import { Home, Flame, Rocket, GraduationCap, Trophy, Gamepad2, Library, MessageS
 import { useIsMobile } from "@/hooks/useMobile";  // .tsx file
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { useCallback, useState, useEffect } from "react";
+import { useT } from "@/contexts/LanguageContext";
 
 const TABS = [
-  { path: "/", label: "Home", icon: Home },
-  { path: "/play/igo", label: "iGO", icon: Layers },
-  { path: "/explore", label: "Explore", icon: Flame },
-  { path: "/flight-deck", label: "Flight", icon: Rocket },
-  { path: "/create", label: "Scholar", icon: GraduationCap },
-  { path: "/leaderboard", label: "Board", icon: Trophy },
+  { path: "/", labelKey: "tab.home", icon: Home },
+  { path: "/play/igo", labelKey: "tab.igo", icon: Layers },
+  { path: "/explore", labelKey: "tab.explore", icon: Flame },
+  { path: "/flight-deck", labelKey: "tab.flight", icon: Rocket },
+  { path: "/create", labelKey: "tab.scholar", icon: GraduationCap },
+  { path: "/leaderboard", labelKey: "tab.board", icon: Trophy },
 ] as const;
 
 export function BottomTabBar() {
+  const t = useT();
   const isMobile = useIsMobile();
   const [location, setLocation] = useLocation();
   const [gamepadConnected, setGamepadConnected] = useState(false);
@@ -53,7 +55,7 @@ export function BottomTabBar() {
       {gamepadConnected && (
         <div className="fixed top-2 right-2 z-[60] flex items-center gap-1.5 bg-card/90 border border-green-500/40 rounded-full px-3 py-1.5 backdrop-blur-sm">
           <Gamepad2 className="w-3.5 h-3.5 text-green-400" />
-          <span className="text-[10px] text-green-400 font-mono">CONNECTED</span>
+          <span className="text-[10px] text-green-400 font-mono">{t("common.connected")}</span>
         </div>
       )}
 
@@ -77,7 +79,7 @@ export function BottomTabBar() {
                   }`}
                 >
                   <Icon className={`w-5 h-5 ${isActive ? "drop-shadow-[0_0_6px_rgba(212,168,67,0.5)]" : ""}`} />
-                  <span className="text-[10px] font-medium tracking-wide">{tab.label}</span>
+                  <span className="text-[10px] font-medium tracking-wide">{t(tab.labelKey)}</span>
                 </button>
               </Link>
             );

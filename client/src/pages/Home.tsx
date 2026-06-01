@@ -5,6 +5,8 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2, Compass, Share2 } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { useT } from "@/contexts/LanguageContext";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
@@ -125,6 +127,7 @@ const INTRO_VIDEOS = [
 ];
 
 function VideoGallery() {
+  const t = useT();
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
@@ -163,10 +166,10 @@ function VideoGallery() {
           <div className="p-3">
             <div className="flex items-center justify-between mb-1">
               <h4 className="text-xs font-heading font-bold tracking-wide" style={{ color: video.color }}>
-                {video.title}
+                {t(`video.${video.id}`) || video.title}
               </h4>
             </div>
-            <p className="text-[10px] text-muted-foreground">{video.subtitle} • {video.tier}</p>
+            <p className="text-[10px] text-muted-foreground">{t(`age.${video.id}`) || video.subtitle} • {t(`tier.${video.tier.toLowerCase().replace(/ /g, '')}`) || video.tier}</p>
             <div className="flex items-center gap-1 mt-1.5">
               <Volume2 className="w-3 h-3 text-muted-foreground/60" />
               <span className="text-[10px] text-muted-foreground/60">{video.music}</span>
@@ -178,7 +181,7 @@ function VideoGallery() {
                 ? "bg-slate-500/20 text-slate-400 border border-slate-500/30 line-through"
                 : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
             }`}>
-              {video.status === "REPLACED" ? "REPLACED BY V4-B" : video.status}
+              {t(`video.${video.status.toLowerCase()}`) || video.status}
             </span>
           </div>
         </motion.div>
@@ -189,6 +192,7 @@ function VideoGallery() {
 
 /* ── Relay Collection Tracker — shows personal relay progress from localStorage ── */
 function RelayCollectionTracker() {
+  const t = useT();
   const [collection, setCollection] = useState<Set<number>>(new Set());
   const [loaded, setLoaded] = useState(false);
 
@@ -233,7 +237,7 @@ function RelayCollectionTracker() {
           <div className="flex items-center gap-2">
             <span className="text-lg">🏆</span>
             <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
-              Your Relay Collection
+              {t("collection.title")}
             </span>
           </div>
           <span
@@ -263,8 +267,8 @@ function RelayCollectionTracker() {
                 }`}
                 title={
                   collected
-                    ? `${relay.emoji} ${relay.name} — Collected!`
-                    : `${relay.emoji} ${relay.name} — Not yet collected`
+                    ? `${relay.emoji} ${t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name} — ${t("collection.collected")}`
+                    : `${relay.emoji} ${t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name} — ${t("collection.notYet")}`
                 }
               >
                 <span className={`text-base md:text-lg ${collected ? "" : "grayscale"}`}>
@@ -275,7 +279,7 @@ function RelayCollectionTracker() {
                     collected ? "text-amber-300/90" : "text-muted-foreground/60"
                   }`}
                 >
-                  {relay.name}
+                  {t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name}
                 </span>
               </div>
             );
@@ -287,19 +291,19 @@ function RelayCollectionTracker() {
           {hasAny ? (
             count === 12 ? (
               <p className="text-xs text-amber-400 font-heading tracking-wider">
-                ✨ ALL 12 RELAYS COLLECTED — FULL SET ACHIEVED ✨
+                ✨ {t("collection.allCollected")} ✨
               </p>
             ) : (
               <Link href="/explore/spinner">
                 <span className="text-xs text-amber-400/80 hover:text-amber-300 cursor-pointer font-heading tracking-wider transition-colors">
-                  Spin for more → {12 - count} remaining
+                  {t("collection.spinMore")} {12 - count} {t("collection.remaining")}
                 </span>
               </Link>
             )
           ) : (
             <Link href="/explore/spinner">
               <span className="text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
-                Play Relay Spinner to start collecting →
+                {t("collection.playSpinner")}
               </span>
             </Link>
           )}
@@ -311,6 +315,7 @@ function RelayCollectionTracker() {
 
 // ─── Web Domains Tracker (dynamic: lights up per web domain) ───
 function WebDomainsTracker() {
+  const t = useT();
   const [profileId, setProfileId] = useState<number | null>(null);
   const profileMutation = trpc.profile.getOrCreate.useMutation();
 
@@ -359,7 +364,7 @@ function WebDomainsTracker() {
           <div className="flex items-center gap-2">
             <span className="text-lg">🌐</span>
             <span className="font-heading text-sm md:text-base tracking-wider text-foreground">
-              Your Web Domains
+              {t("webDomains.title")}
             </span>
           </div>
           <span
@@ -391,7 +396,7 @@ function WebDomainsTracker() {
                   }`}
                   style={active ? { color: web.color } : undefined}
                 >
-                  {web.name}
+                  {t(`web.${web.name.toLowerCase()}`) || web.name}
                 </span>
                 <span className={`text-[8px] font-mono ${
                   active ? "text-amber-400/70" : "text-muted-foreground/40"
@@ -407,14 +412,14 @@ function WebDomainsTracker() {
         <div className="mt-3">
           <div className="flex items-center justify-between mb-1">
             <span className="text-[9px] text-muted-foreground/60 font-heading tracking-wider">
-              Dearden Field Progress
+              {t("webDomains.progress")}
             </span>
             <span
               className={`text-[9px] font-mono tracking-wider ${
                 nodeCount === 60 ? "text-amber-400" : nodeCount > 0 ? "text-amber-400/70" : "text-muted-foreground/60"
               }`}
             >
-              {nodeCount}/60 nodes
+              {nodeCount}/60 {t("webDomains.nodes")}
             </span>
           </div>
           <div className="w-full h-1.5 rounded-full bg-muted/30 overflow-hidden">
@@ -431,7 +436,7 @@ function WebDomainsTracker() {
         </div>
 
         <p className="text-center text-[10px] text-muted-foreground/60 mt-3 font-heading tracking-wider">
-          5 Great Webs × 12 Relays = 60 Nodes — The Dearden Field
+          {t("webDomains.fieldDesc")}
         </p>
       </div>
     </div>
@@ -483,6 +488,7 @@ const WEB_COLORS: Record<string, string> = {
 };
 
 function DeardenFieldSection() {
+  const t = useT();
   const [profileId, setProfileId] = useState<number | null>(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
   const [showSynthesisModal, setShowSynthesisModal] = useState(false);
@@ -542,8 +548,8 @@ function DeardenFieldSection() {
   return (
     <div className="container max-w-4xl pb-6 pt-2">
       <div className="text-center mb-3">
-        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Permanent Foundation</p>
-        <h3 className="font-heading text-lg md:text-xl text-foreground">The Dearden Field</h3>
+        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">{t("home.permanentFoundation")}</p>
+        <h3 className="font-heading text-lg md:text-xl text-foreground">{t("field.title")}</h3>
       </div>
 
       {/* Toggle: My Progress / Community Heatmap */}
@@ -556,7 +562,7 @@ function DeardenFieldSection() {
               : "border-border/30 text-muted-foreground hover:text-foreground"
           }`}
         >
-          MY PROGRESS
+          {t("dearden.myProgress")}
         </button>
         <button
           onClick={() => setShowHeatmap(true)}
@@ -566,7 +572,7 @@ function DeardenFieldSection() {
               : "border-border/30 text-muted-foreground hover:text-foreground"
           }`}
         >
-          COMMUNITY HEATMAP
+          {t("dearden.communityHeatmap")}
         </button>
       </div>
 
@@ -624,8 +630,8 @@ function DeardenFieldSection() {
             {/* Figure header */}
             <div className="relative flex items-center justify-between mb-5">
               <div>
-                <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Figure 2</p>
-                <p className="text-sm font-heading tracking-wider text-foreground/90">The Dearden Field — 5 Great Webs × 12 Civilisational Relays</p>
+                <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">{t("misc.figure2")}</p>
+                <p className="text-sm font-heading tracking-wider text-foreground/90">{t("field.title")} — {t("field.subtitle")}</p>
               </div>
               <span className={`font-mono text-sm font-bold tracking-wider ${nodeCount === 60 ? "text-amber-400" : nodeCount > 0 ? "text-amber-400/80" : "text-muted-foreground/60"}`}>
                 {nodeCount}/60
@@ -639,7 +645,7 @@ function DeardenFieldSection() {
               {RELAYS.map((relay) => (
                 <div key={relay.number} className="flex flex-col items-center justify-end pb-2">
                   <span className="text-base">{relay.emoji}</span>
-                  <span className="text-[8px] font-heading tracking-wider text-muted-foreground/70 text-center leading-tight">{relay.name}</span>
+                  <span className="text-[8px] font-heading tracking-wider text-muted-foreground/70 text-center leading-tight">{t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name}</span>
                 </div>
               ))}
 
@@ -649,7 +655,7 @@ function DeardenFieldSection() {
                   {/* Row label */}
                   <div className="flex items-center gap-1.5 pr-2 justify-end">
                     <span className="text-sm">{WEBS[wi].icon}</span>
-                    <span className="text-[9px] font-heading tracking-wider text-right" style={{ color: WEB_COLORS[web] }}>{web}</span>
+                    <span className="text-[9px] font-heading tracking-wider text-right" style={{ color: WEB_COLORS[web] }}>{t(`web.${web.toLowerCase()}`) || web}</span>
                   </div>
                   {/* 12 cells */}
                   {Array.from({ length: 12 }, (_, ri) => {
@@ -695,7 +701,7 @@ function DeardenFieldSection() {
 
             {/* Source line */}
             <p className="relative text-[8px] text-muted-foreground/30 mt-4 text-right font-mono">
-              Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness
+              {t("dearden.source") || "Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness"}
             </p>
           </div>
         </Link>
@@ -704,7 +710,7 @@ function DeardenFieldSection() {
       {/* Heatmap legend */}
       {showHeatmap && (
         <div className="flex items-center justify-center gap-2 mt-2">
-          <span className="text-[9px] text-muted-foreground/60">Few players</span>
+          <span className="text-[9px] text-muted-foreground/60">{t("misc.fewPlayers")}</span>
           <div className="flex gap-0.5">
             {[0.2, 0.4, 0.6, 0.8, 1.0].map((v) => (
               <div
@@ -714,7 +720,7 @@ function DeardenFieldSection() {
               />
             ))}
           </div>
-          <span className="text-[9px] text-muted-foreground/60">Many players</span>
+          <span className="text-[9px] text-muted-foreground/60">{t("misc.manyPlayers")}</span>
         </div>
       )}
 
@@ -729,8 +735,8 @@ function DeardenFieldSection() {
             <div className="flex items-center gap-3 px-6 py-3 rounded-xl border-2 border-amber-400 bg-amber-400/10 backdrop-blur-sm cursor-pointer hover:bg-amber-400/20 transition-colors">
               <Trophy className="w-6 h-6 text-amber-400" />
               <div>
-                <p className="font-heading text-sm tracking-wider text-amber-400">SYNTHESIS UNLOCKED</p>
-                <p className="text-[10px] text-amber-400/70">60/60 Nodes — The Dearden Field is complete</p>
+                <p className="font-heading text-sm tracking-wider text-amber-400">{t("home.synthesisUnlocked")}</p>
+                <p className="text-[10px] text-amber-400/70">{t("dearden.fieldComplete")}</p>
               </div>
               <span className="text-2xl">🏆</span>
             </div>
@@ -802,6 +808,7 @@ const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: stri
 };
 
 function YourArchetypeCard() {
+  const t = useT();
   const [collection, setCollection] = useState<Set<number>>(new Set());
   const [showCommunity, setShowCommunity] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
@@ -891,7 +898,7 @@ function YourArchetypeCard() {
           <Link href="/synthesis">
             <div className="flex items-center gap-2 mb-3 cursor-pointer group">
               <Compass className="w-4 h-4 text-amber-400" />
-              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Your Civilisational Lean</p>
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">{t("home.civilisationalLean")}</p>
               <ChevronRight className="w-3 h-3 text-amber-400/40 ml-auto group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
@@ -906,7 +913,7 @@ function YourArchetypeCard() {
                     <div>
                       <p className="font-heading text-base tracking-wider" style={{ color: meta.color }}>{patternTitle}</p>
                       <p className="text-[10px] text-muted-foreground/70">
-                        {isBalanced ? "Perspectives in harmony" : `${meta.name} perspective dominant`}
+                        {isBalanced ? t("home.perspectivesHarmony") : `${t(`perspective.${dominant}`) || meta.name} ${t("home.perspectiveDominant")}`}
                       </p>
                     </div>
                   </div>
@@ -1058,8 +1065,8 @@ function YourArchetypeCard() {
           ) : (
             <Link href="/explore">
               <div className="text-center py-3 cursor-pointer hover:opacity-80 transition-opacity">
-                <p className="text-sm text-muted-foreground/60">Explore relays to discover your civilisational lean</p>
-                <p className="text-[10px] text-muted-foreground/40 mt-1">Each relay reveals a Western, Eastern, or Outrider perspective</p>
+                <p className="text-sm text-muted-foreground/60">{t("home.exploreRelaysDiscover")}</p>
+                <p className="text-[10px] text-muted-foreground/40 mt-1">{t("home.eachRelayReveals")}</p>
               </div>
             </Link>
           )}
@@ -1071,6 +1078,7 @@ function YourArchetypeCard() {
 
 // ─── 500 Generations Timeline Strip (interactive with counter + relay glow) ───
 function GenerationsTimelineStrip() {
+  const t = useT();
   const { count: genCount, ref: counterRef } = useCountUp(500, 2500);
 
   // Read relay collection from localStorage for glow effect
@@ -1084,18 +1092,18 @@ function GenerationsTimelineStrip() {
 
   // Perspective mapping for the desktop figure
   const perspectiveOf = (n: number) => RELAY_PERSPECTIVES[n] || "outrider";
-  const perspectiveLabel: Record<string, string> = { west: "Western", east: "Eastern", outrider: "Outrider" };
+  const perspectiveLabel: Record<string, string> = { west: t("perspective.west"), east: t("perspective.east"), outrider: t("perspective.outrider") };
   const perspectiveColor: Record<string, string> = { west: "#3b82f6", east: "#ef4444", outrider: "#f59e0b" };
 
   return (
     <div className="container max-w-5xl pb-6 pt-2" ref={counterRef}>
       <div className="text-center mb-4">
-        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">12,000 Years</p>
+        <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">{t("dearden.12000years")}</p>
         <h3 className="font-heading text-lg md:text-xl text-foreground">
           <span className="text-amber-400 tabular-nums font-bold text-2xl md:text-3xl">{genCount}</span>{" "}
-          <span>Generations</span>
+          <span>{t("misc.generations")}</span>
         </h3>
-        <p className="text-[10px] text-muted-foreground/60 mt-1">From fire to programmable humans — the relay of civilisation</p>
+        <p className="text-[10px] text-muted-foreground/60 mt-1">{t("dearden.fromFire")}</p>
       </div>
 
       {/* ── MOBILE: compact grid (unchanged) ── */}
@@ -1125,7 +1133,7 @@ function GenerationsTimelineStrip() {
                     <span className={`text-[8px] font-heading tracking-wider text-center leading-tight transition-colors ${
                       collected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
                     }`}>
-                      {relay.name}
+                      {t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name}
                     </span>
                   </div>
                 </Link>
@@ -1144,8 +1152,8 @@ function GenerationsTimelineStrip() {
           {/* Figure title */}
           <div className="relative flex items-center justify-between mb-5">
             <div>
-              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">Figure 1</p>
-              <p className="text-sm font-heading tracking-wider text-foreground/90">The 12 Civilisational Relays — 500 Generations of Infrastructure</p>
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/70 font-heading">{t("misc.figure1")}</p>
+              <p className="text-sm font-heading tracking-wider text-foreground/90">{t("home.12relaysTitle")}</p>
             </div>
             <div className="flex items-center gap-3">
               {(["west", "east", "outrider"] as const).map((p) => (
@@ -1190,17 +1198,17 @@ function GenerationsTimelineStrip() {
                     <span className={`text-[9px] font-heading tracking-wider text-center leading-tight transition-colors ${
                       collected ? "text-foreground" : "text-muted-foreground/80 group-hover:text-foreground"
                     }`}>
-                      {relay.name}
+                      {t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name}
                     </span>
 
                     {/* Subtitle */}
                     <span className="text-[7px] text-muted-foreground/50 text-center leading-tight px-0.5 line-clamp-2">
-                      {relay.subtitle}
+                      {t(`relay.subtitle.${relay.number}`) || relay.subtitle}
                     </span>
 
                     {/* Era */}
                     <span className="text-[7px] text-muted-foreground/40 text-center font-mono">
-                      {relay.era}
+                      {t(`relay.era.${relay.number}`) || relay.era}
                     </span>
 
                     {/* Perspective tag */}
@@ -1222,13 +1230,13 @@ function GenerationsTimelineStrip() {
 
           {/* Web type bands at bottom */}
           <div className="relative flex items-center mt-4 pt-3 border-t border-white/5">
-            <span className="text-[8px] text-muted-foreground/50 mr-3 font-heading tracking-wider">WEBS</span>
+            <span className="text-[8px] text-muted-foreground/50 mr-3 font-heading tracking-wider">{t("web.webs") || "WEBS"}</span>
             <div className="flex-1 flex">
               {[
-                { label: "Natural", cols: 3, color: "#22c55e" },
-                { label: "Machine", cols: 4, color: "#f59e0b" },
-                { label: "Digital", cols: 4, color: "#3b82f6" },
-                { label: "Consciousness", cols: 1, color: "#a855f7" },
+                { label: "Natural", key: "natural", cols: 3, color: "#22c55e" },
+                { label: "Machine", key: "machine", cols: 4, color: "#f59e0b" },
+                { label: "Digital", key: "digital", cols: 4, color: "#3b82f6" },
+                { label: "Consciousness", key: "consciousness", cols: 1, color: "#a855f7" },
               ].map((web) => (
                 <div
                   key={web.label}
@@ -1240,7 +1248,7 @@ function GenerationsTimelineStrip() {
                     color: `${web.color}`,
                   }}
                 >
-                  {web.label}
+                  {t(`web.${web.key}`) || web.label}
                 </div>
               ))}
             </div>
@@ -1248,13 +1256,13 @@ function GenerationsTimelineStrip() {
 
           {/* Source line */}
           <p className="text-[8px] text-muted-foreground/30 mt-3 text-right font-mono">
-            Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness
+            {t("dearden.source") || "Source: An Infrastructure Odyssey — Episode 1: Calories to Consciousness"}
           </p>
         </div>
       </div>
 
       <p className="text-center text-[9px] text-muted-foreground/50 mt-4 font-heading tracking-wider">
-        Each relay — a generation’s greatest infrastructure leap. Tap to explore.
+        {t("dearden.eachRelay")}
       </p>
     </div>
   );
@@ -1262,6 +1270,7 @@ function GenerationsTimelineStrip() {
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
+  const t = useT();
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
@@ -1289,7 +1298,8 @@ export default function Home() {
             <div className="block sm:hidden">
               <SocialFollowButtons compact />
             </div>
-            <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">BETA</span>
+            <span className="px-2.5 py-1 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white animate-pulse">{t("common.beta")}</span>
+            <LanguageToggle />
             <Link href="/play/igo">
               <Button variant="ghost" size="sm" className="text-gold-dim hover:text-gold-bright gap-1.5 font-heading tracking-wider">
                 <Gamepad2 className="w-4 h-4" />
@@ -1299,24 +1309,24 @@ export default function Home() {
             <a href="#governance">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Shield className="w-4 h-4" />
-                <span className="hidden sm:inline">Governance</span>
+                <span className="hidden sm:inline">{t("home.governance")}</span>
               </Button>
             </a>
             <Link href="/resources">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Library className="w-4 h-4" />
-                <span className="hidden sm:inline">Resources</span>
+                <span className="hidden sm:inline">{t("home.resources")}</span>
               </Button>
             </Link>
             <Link href="/leaderboard">
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-1.5">
                 <Trophy className="w-4 h-4" />
-                <span className="hidden sm:inline">Leaderboard</span>
+                <span className="hidden sm:inline">{t("home.leaderboard")}</span>
               </Button>
             </Link>
             {isAuthenticated ? (
               <span className="text-sm text-muted-foreground">
-                Welcome, <span className="text-gold-gradient font-medium">{user?.name || "Commander"}</span>
+                {t("home.welcome")}, <span className="text-gold-gradient font-medium">{user?.name || t("home.commander")}</span>
               </span>
             ) : null}
           </div>
@@ -1331,13 +1341,12 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Guided Learning Platform</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">{t("home.guidedLearning")}</p>
             <h2 className="font-heading text-3xl md:text-5xl lg:text-6xl font-bold tracking-wide text-gold-gradient mb-2">
-              THE REALITY ENGINE
+              {t("home.realityEngine")}
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Navigate 12,000 years and 500 generations of civilisational infrastructure.
-              One game, all ages, 8–65+. From fire to human nodes — your odyssey begins here.
+              {t("home.heroDescription")}
             </p>
           </motion.div>
 
@@ -1349,10 +1358,10 @@ export default function Home() {
             className="flex flex-wrap justify-center gap-6 md:gap-10 mt-4 mb-2"
           >
             {[
-              { label: "Relays", value: "12", icon: Globe },
-              { label: "Great Webs", value: "5", icon: Zap },
-              { label: "Inventions", value: "91+", icon: BookOpen },
-              { label: "XP Cap", value: "24M", icon: Trophy },
+              { label: t("home.relays"), value: "12", icon: Globe },
+              { label: t("home.greatWebs"), value: "5", icon: Zap },
+              { label: t("home.inventions"), value: "91+", icon: BookOpen },
+              { label: t("home.xpCap"), value: "24M", icon: Trophy },
             ].map((stat) => (
               <div key={stat.label} className="flex items-center gap-2 text-muted-foreground">
                 <stat.icon className="w-4 h-4 text-gold-dim" />
@@ -1375,7 +1384,7 @@ export default function Home() {
             onClick={() => document.getElementById('explorer-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
             className="mt-3 mx-auto flex flex-col items-center gap-1 text-red-400 hover:text-red-300 transition-colors md:hidden"
           >
-            <span className="text-xs font-heading tracking-[0.2em] uppercase">Play Now</span>
+            <span className="text-xs font-heading tracking-[0.2em] uppercase">{t("home.playNow")}</span>
             <motion.div
               animate={{ y: [0, 6, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -1391,14 +1400,13 @@ export default function Home() {
         {/* AIM tagline */}
         <div className="container max-w-4xl text-center pt-4 pb-2">
           <p className="text-sm md:text-base text-amber-300/80 font-heading tracking-wider mb-1">
-            Where you go, <BrandI />GO follows — and sharpens your <span className="text-amber-400 font-bold">AIM</span>.
+            {t("home.aimTagline")}
           </p>
           <p className="text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-1">
-            AIM = Avatar Integration Module
+            {t("home.aimFull")}
           </p>
           <p className="text-xs md:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-2">
-            12 game formats across 3 episodes — from age 8 to 65+. One lifelong infrastructure learning system.
-            Built by <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi — Infrastructure Academy</a>.
+            {t("home.aimDescription")} <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi</a>.
           </p>
         </div>
 
@@ -1437,9 +1445,9 @@ export default function Home() {
         {/* ── THE CONVERGENCE — Why This Exists ── */}
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="text-center mb-4">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">The Formation Base</p>
-            <h3 className="font-heading text-lg md:text-xl text-foreground">GO Completely Reimagined</h3>
-            <p className="text-muted-foreground text-xs mt-1">Go × Pokémon × <span className="brand-i">i</span>AAi = <span className="brand-i">i</span>GO — Three games. Three eras. One convergence.</p>
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">{t("home.formationBase")}</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">{t("home.goReimagined")}</h3>
+            <p className="text-muted-foreground text-xs mt-1">{t("home.convergenceDesc")}</p>
           </div>
           <ImageLightbox
             src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/convergence-main_807ea243.png"
@@ -1452,29 +1460,29 @@ export default function Home() {
         <div className="container max-w-4xl pb-8 pt-2">
           <div className="relative border border-amber-500/30 rounded-lg overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(217,119,6,0.08), rgba(168,85,247,0.06), transparent)' }}>
             <div className="p-6 md:p-8 text-center">
-              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">The Rallying Cry</p>
-              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">Every player has the <span className="text-amber-400">power</span>.</h3>
-              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">More players have <span className="text-amber-400">more power</span>.</h3>
+              <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">{t("home.rallyingCry")}</p>
+              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">{t("home.everyPlayer")}</h3>
+              <h3 className="font-heading text-2xl md:text-3xl text-foreground mb-2">{t("home.morePlayers")}</h3>
               <p className="font-heading text-lg md:text-xl text-purple-300 mt-3 mb-5">
-                How many players can you rally to <span className="text-amber-400 font-bold"><BrandI />GO</span>?
+                {t("home.howManyRally")}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link href="/play/igo#register">
                   <Button className="bg-amber-500 hover:bg-amber-600 text-black font-heading tracking-wider text-xs px-6 gap-1.5">
-                    REGISTER YOUR INTEREST <ChevronRight className="w-3.5 h-3.5" />
+                    {t("home.registerInterest")} <ChevronRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>
                 <Link href="/play/igo#back-igo">
                   <Button variant="outline" size="sm" className="border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-heading tracking-wider text-xs gap-1.5">
-                    WHY BACK <span className="whitespace-nowrap" style={{letterSpacing:0}}><span className="brand-i">i</span>GO</span>? <ChevronRight className="w-3.5 h-3.5" />
+                    {t("home.whyBack")} <span className="whitespace-nowrap" style={{letterSpacing:0}}><span className="brand-i">i</span>GO</span>? <ChevronRight className="w-3.5 h-3.5" />
                   </Button>
                 </Link>
               </div>
               <div className="mt-6 pt-5 border-t border-amber-500/15">
                 <p className="text-sm md:text-base text-muted-foreground italic max-w-2xl mx-auto leading-relaxed">
-                  "iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun."
+                  {t("home.igoQuote")}
                 </p>
-                <p className="text-xs text-amber-400/70 mt-2 font-heading tracking-wider">— Ir. Nigel T. Dearden, Founder & Architect</p>
+                <p className="text-xs text-amber-400/70 mt-2 font-heading tracking-wider">— Ir. Nigel T. Dearden, {t("home.founderArchitect")}</p>
               </div>
             </div>
           </div>
@@ -1485,9 +1493,9 @@ export default function Home() {
       <section className="relative z-10 pb-12">
         <div className="container max-w-4xl">
           <div className="text-center mb-6">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">Spread The Word</p>
-            <h3 className="font-heading text-lg md:text-xl text-foreground">Share <BrandI />GO</h3>
-            <p className="text-muted-foreground text-xs mt-1">Download a card, share with your network, rally more players</p>
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">{t("home.spreadWord")}</p>
+            <h3 className="font-heading text-lg md:text-xl text-foreground">{t("home.shareIgo")}</h3>
+            <p className="text-muted-foreground text-xs mt-1">{t("home.shareDesc")}</p>
           </div>
           <ShareCardGallery />
         </div>
@@ -1502,9 +1510,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-center mb-8"
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">Watch Before You Play</p>
-            <h3 className="font-heading text-2xl md:text-3xl text-gold-gradient mb-2">Youth Intro Videos</h3>
-            <p className="text-sm text-muted-foreground max-w-xl mx-auto">8 narrated introductions across all age tiers — from Relay Spinner to Scholar mode</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">{t("home.watchBefore")}</p>
+            <h3 className="font-heading text-2xl md:text-3xl text-gold-gradient mb-2">{t("home.youthVideos")}</h3>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">{t("home.youthVideosDesc")}</p>
           </motion.div>
 
           <VideoGallery />
@@ -1520,9 +1528,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-center mb-6"
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">PoC Beta — Evidence Records</p>
-            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">Audio Verification &amp; Delivery Manifest</h3>
-            <p className="text-xs text-muted-foreground max-w-lg mx-auto">Independent AI audio bot verification — all videos pass broadcast standard. 24 March 2026.</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">{t("home.evidenceRecords")}</p>
+            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">{t("home.audioVerification")}</h3>
+            <p className="text-xs text-muted-foreground max-w-lg mx-auto">{t("home.audioVerificationDesc")}</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <motion.div
@@ -1537,8 +1545,8 @@ export default function Home() {
                 className="w-full h-auto object-contain"
               />
               <div className="p-3">
-                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">AUDIO VERIFICATION RECORD</h4>
-                <p className="text-[10px] text-muted-foreground mt-1">STT Transcription + FFmpeg volumedetect • Zero contamination • Broadcast standard</p>
+                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">{t("home.audioRecord")}</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("home.audioRecordDesc")}</p>
               </div>
             </motion.div>
             <motion.div
@@ -1553,8 +1561,8 @@ export default function Home() {
                 className="w-full h-auto object-contain"
               />
               <div className="p-3">
-                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">COMPLETE DELIVERY MANIFEST</h4>
-                <p className="text-[10px] text-muted-foreground mt-1">8 youth intro videos • All age tiers • V1–V4A approved • V4B–V5 verified</p>
+                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">{t("home.deliveryManifest")}</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("home.deliveryManifestDesc")}</p>
               </div>
             </motion.div>
           </div>
@@ -1570,9 +1578,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-center mb-8"
           >
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2"><span className="brand-i">i</span>AAi Governance Framework</p>
-            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">System Architecture &amp; Compliance</h3>
-            <p className="text-xs text-muted-foreground max-w-lg mx-auto">SAP-001 compliant construction governance — 3+1 model, no false completion</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-2">{t("home.governanceFramework")}</p>
+            <h3 className="font-heading text-xl md:text-2xl text-gold-gradient mb-2">{t("home.systemArchitecture")}</h3>
+            <p className="text-xs text-muted-foreground max-w-lg mx-auto">{t("home.governanceDesc")}</p>
           </motion.div>
 
           {/* Row 1: Four Sites Architecture — full width landscape */}
@@ -1589,8 +1597,8 @@ export default function Home() {
               loading="lazy"
             />
             <div className="p-3">
-              <h4 className="text-xs font-heading font-bold text-gold-dim tracking-wide">THE FOUR SITES — SYSTEM ARCHITECTURE V2</h4>
-              <p className="text-[10px] text-muted-foreground mt-1">3+1 Construction Governance Model • Block 443 • Memorial Leads • SAP-001 Compliant • Wynn Palace Standard</p>
+              <h4 className="text-xs font-heading font-bold text-gold-dim tracking-wide">{t("home.fourSites")}</h4>
+              <p className="text-[10px] text-muted-foreground mt-1">{t("home.fourSitesDesc")}</p>
             </div>
           </motion.div>
 
@@ -1609,8 +1617,8 @@ export default function Home() {
                 loading="lazy"
               />
               <div className="p-3">
-                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">GOV-010 — BETA PoC DISCLAIMER</h4>
-                <p className="text-[10px] text-muted-foreground mt-1">Agentic Handoff Document • Block 410 • 26 Mar 2026</p>
+                <h4 className="text-xs font-heading font-bold text-green-400 tracking-wide">{t("home.gov010")}</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("home.gov010Desc")}</p>
               </div>
             </motion.div>
 
@@ -1627,8 +1635,8 @@ export default function Home() {
                 loading="lazy"
               />
               <div className="p-3">
-                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">iA⁴i — THE EVOLUTION</h4>
-                <p className="text-[10px] text-muted-foreground mt-1">From 4ECL to iA⁴i • The Four A's • Biological ↔ Digital • SYM-001</p>
+                <h4 className="text-xs font-heading font-bold text-amber-400 tracking-wide">{t("home.ia4iEvolution")}</h4>
+                <p className="text-[10px] text-muted-foreground mt-1">{t("home.ia4iEvolutionDesc")}</p>
               </div>
             </motion.div>
           </div>
@@ -1640,7 +1648,7 @@ export default function Home() {
       {/* The Living Experiment — Infographic */}
       <section className="relative z-10 py-12 border-t border-gold-dim/20">
         <div className="container max-w-4xl mx-auto">
-          <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">The Method Behind The Engine</p>
+          <p className="text-center text-xs tracking-[0.3em] uppercase text-gold-dim/80 mb-6">{t("home.methodBehind")}</p>
           <div className="rounded-lg overflow-hidden border border-gold-dim/30 shadow-lg shadow-gold-dim/5">
             <ImageLightbox
               src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/living-experiment-infographic_05a0824a.jpeg"
@@ -1650,7 +1658,7 @@ export default function Home() {
             />
           </div>
           <p className="text-center text-[10px] text-muted-foreground/60 mt-4 font-mono">
-            MORALLY NEUTRAL &nbsp;|&nbsp; CIVIL ENGINEER LENS &nbsp;|&nbsp; SKILL NOW LOST — <span className="brand-i">i</span>AAi RECOVERS IT DIGITALLY
+            {t("home.morallyNeutral")}
           </p>
         </div>
       </section>
@@ -1663,13 +1671,13 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <p className="text-xs text-muted-foreground">
-                The Reality Engine — A Guided Learning Platform by{" "}
+                {t("home.footerTitle")}{" "}
                 <a href="https://www.infrastructure-academy.com" className="text-gold-dim hover:text-gold-bright transition-colors">
-                  Infrastructure Academy
+                  {t("home.footerAcademy")}
                 </a>
               </p>
               <p className="text-[10px] text-muted-foreground/60 mt-1">www.infrastructure-academy.com</p>
-              <p className="text-[10px] text-muted-foreground/40 mt-1">Agents: ACAD (Max) • TRE-GLP (David) • Memorial (Isaac) • Chart Room (Jenny)</p>
+              <p className="text-[10px] text-muted-foreground/40 mt-1">{t("home.footerAgents")}</p>
             </div>
             <div className="flex flex-col items-center gap-1">
               <img
@@ -1677,7 +1685,7 @@ export default function Home() {
                 alt="QR Code — www.infrastructure-academy.com"
                 className="w-20 h-20 object-contain rounded"
               />
-              <span className="text-[9px] text-muted-foreground/50">Scan to explore</span>
+              <span className="text-[9px] text-muted-foreground/50">{t("home.scanExplore")}</span>
             </div>
           </div>
         </div>

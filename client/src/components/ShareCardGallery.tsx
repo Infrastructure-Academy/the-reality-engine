@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Share2, Copy, Check, Download, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ImageLightbox } from "@/components/ImageLightbox";
+import { useT } from "@/contexts/LanguageContext";
 
 interface ShareCard {
   id: string;
@@ -123,6 +124,7 @@ function useSwipe(onSwipeLeft: () => void, onSwipeRight: () => void) {
 }
 
 function ShareCardItem({ card }: { card: ShareCard }) {
+  const t = useT();
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -203,7 +205,7 @@ function ShareCardItem({ card }: { card: ShareCard }) {
           className="flex-1 gap-1.5 border-amber-500/30 text-amber-400 hover:bg-amber-500/10 text-xs"
         >
           <Share2 className="w-3.5 h-3.5" />
-          Share
+          {t("social.share") || "Share"}
         </Button>
         <Button
           variant="outline"

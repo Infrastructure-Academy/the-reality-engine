@@ -6,6 +6,7 @@
  */
 
 import { trpc } from "@/lib/trpc";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── Social Config (consistent with Infrastructure Academy) ───
 const SOCIAL_LINKS = {
@@ -59,6 +60,7 @@ interface SocialFollowButtonsProps {
 }
 
 export function SocialFollowButtons({ followerCount, compact = false }: SocialFollowButtonsProps) {
+  const t = useT();
   // Fetch live X follower count from Chart Room bridge
   // Auto-refreshes every 10 minutes and on window focus to stay in sync with Chart Room
   const { data: liveData } = trpc.bridge.xFollowerCount.useQuery(undefined, {
@@ -106,7 +108,7 @@ export function SocialFollowButtons({ followerCount, compact = false }: SocialFo
       >
         <FacebookIcon className={compact ? "w-3 h-3" : "w-3.5 h-3.5"} />
         <span className={`font-semibold ${compact ? "text-[10px]" : "text-xs"}`}>
-          {SOCIAL_LINKS.facebook.label}
+          {t("social.follow") || SOCIAL_LINKS.facebook.label}
         </span>
       </a>
 
@@ -125,7 +127,7 @@ export function SocialFollowButtons({ followerCount, compact = false }: SocialFo
       >
         <LinkedInIcon className={compact ? "w-3 h-3" : "w-3.5 h-3.5"} />
         <span className={`font-semibold ${compact ? "text-[10px]" : "text-xs"}`}>
-          {SOCIAL_LINKS.linkedin.label}
+          {t("social.follow") || SOCIAL_LINKS.linkedin.label}
         </span>
       </a>
     </div>

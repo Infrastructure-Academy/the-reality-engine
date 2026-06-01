@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Download, Check, Loader2 } from "lucide-react";
 import { getPlayerBadge, getAllEarnedBadges } from "@shared/badges";
+import { useT } from "@/contexts/LanguageContext";
 
 interface ShareCardProps {
   patternTitle: string;
@@ -42,6 +43,7 @@ export function ShareCard({
   completedRelays,
   isComplete,
 }: ShareCardProps) {
+  const t = useT();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -327,7 +329,7 @@ export function ShareCard({
           ) : (
             <Share2 className="w-4 h-4" />
           )}
-          Share My Pattern
+          {t("share.sharePattern") || "Share My Pattern"}
         </Button>
         <Button
           onClick={handleDownload}
@@ -336,7 +338,7 @@ export function ShareCard({
           className="gap-2 border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
         >
           <Download className="w-4 h-4" />
-          Download Card
+          {t("share.downloadCard") || "Download Card"}
         </Button>
       </div>
     </div>

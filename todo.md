@@ -1151,3 +1151,22 @@
 - [x] Replace "Nomadic" with "Outrider" in test files (share-codesplit.test.ts, synthesis-leaderboard.test.ts)
 - [x] Replace "Nomadic" with "Outrider" in documentation files (handbooks, design params, slide content, explorer mode TP)
 - [x] Update todo.md historical entries from "Nomadic" to "Outrider" for consistency
+
+## Block 611: XCHANGE Nav Fix + Language Toggle + Fire Relay Trial
+- [x] Fix XCHANGE nav — remove "(Coming Soon)" hint, add live URL (xchangeapp-adbvx9fr.manus.space)
+- [x] Add language toggle (8 languages: EN/ZH/KO/JA/HI/AR/ES/VI) matching MEMORIAL's globe icon implementation
+- [ ] Build Relay 1 (Fire) Flight Deck trial — capture player input data for HICE scoring
+- [ ] Implement HICE scoring engine (H = I × E × C) from Formulae Database equations
+
+## PRIORITY 1 — POLICE COMPLIANCE: Full i18n Translation System (Block 611)
+- [ ] Build i18n infrastructure: LanguageContext, t() function, dictionary loader (matching MEMORIAL protocol)
+- [ ] Create ZH (中文) translation dictionary — ALL page strings, compliance-critical for PolyU
+- [ ] Wrap ALL components with t() calls — Home, FlightDeck, NetworkBar, BottomTabBar, all pages
+- [ ] Create KO (한국어) translation dictionary
+- [ ] Create JA (日本語) translation dictionary
+- [ ] Create HI (हिन्दी) translation dictionary
+- [ ] Create AR (العربية) translation dictionary
+- [ ] Create ES (Español) translation dictionary
+- [ ] Create VI (Tiếng Việt) translation dictionary
+- [ ] Verify ZH renders with NO English visible (except fixed images)
+- [ ] Test all 8 languages end-to-end
