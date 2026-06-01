@@ -1,3 +1,4 @@
+import { useT } from "@/contexts/LanguageContext";
 import { getPlayerBadge, getNextBadge, getAllEarnedBadges, type Badge } from "@shared/badges";
 
 interface BadgeChipProps {
@@ -7,6 +8,7 @@ interface BadgeChipProps {
 
 /** Small inline badge pill */
 export function BadgeChip({ badge, size = "sm" }: BadgeChipProps) {
+  const t = useT();
   const textSize = size === "sm" ? "text-[10px]" : "text-xs";
   const px = size === "sm" ? "px-1.5 py-0.5" : "px-2 py-1";
   return (
@@ -21,7 +23,7 @@ export function BadgeChip({ badge, size = "sm" }: BadgeChipProps) {
       }}
     >
       <span>{badge.emoji}</span>
-      <span>{badge.name.split(" ")[0]}</span>
+      <span>{t(`badge.${badge.name.split(" ")[0].toLowerCase()}`)}</span>
     </span>
   );
 }

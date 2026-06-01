@@ -669,7 +669,9 @@ function DeardenFieldSection() {
                     const isPersonal = !showHeatmap && active;
                     const relayMeta = RELAYS[ri];
                     const webMeta = WEBS[wi];
-                    const tooltipText = `${relayMeta?.emoji || ""} ${relayMeta?.name || `Relay ${relay}`} × ${webMeta?.icon || ""} ${web}\n${active ? "✓ Activated — 50,000 XP" : "Locked — 50,000 XP"}`;
+                    const relayName = t(`relay.${relayMeta?.name?.toLowerCase().replace(/ /g, '')}`) || relayMeta?.name || `Relay ${relay}`;
+                    const webName = t(`web.${web.toLowerCase()}`) || web;
+                    const tooltipText = `${relayMeta?.emoji || ""} ${relayName} × ${webMeta?.icon || ""} ${webName}\n${active ? `✓ ${t("field.activated")} — 50,000 XP` : `${t("field.locked")} — 50,000 XP`}`;
                     return (
                       <div key={key} className="flex items-center justify-center py-2 relative group/dot">
                         <div

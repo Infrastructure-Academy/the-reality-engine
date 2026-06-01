@@ -10,6 +10,7 @@ import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSou
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -99,6 +100,7 @@ function SpinningReel({ targetIndex, spinning, delay }: { targetIndex: number; s
 }
 
 export default function RelaySpinner() {
+  const t = useT();
   const [, navigate] = useLocation();
   const guestId = useMemo(() => getGuestId(), []);
 
@@ -258,7 +260,7 @@ export default function RelaySpinner() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-blue-600 text-white">SPINNER</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-blue-600 text-white">{t("spinner.badge")}</span>
             <XpCounter value={totalXp} compact color="gold" />
           </div>
           <SoundToggle compact color="gold" />
@@ -277,7 +279,7 @@ export default function RelaySpinner() {
 
         {/* Spins remaining — inline compact */}
         <div className="flex items-center justify-center gap-2 mb-3">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Spins</p>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{t("spinner.spins")}</p>
           <div className="flex items-center gap-1">
             {Array.from({ length: MAX_SPINS }).map((_, i) => (
               <div
@@ -298,8 +300,8 @@ export default function RelaySpinner() {
         <div className="relative rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm p-4 mb-3">
           {/* Machine title */}
           <div className="text-center mb-3">
-            <h2 className="font-heading text-lg font-bold tracking-wider text-gold-gradient">RELAY SPINNER</h2>
-            <p className="text-[10px] text-muted-foreground">Match symbols to unlock discoveries</p>
+            <h2 className="font-heading text-lg font-bold tracking-wider text-gold-gradient">{t("spinner.title")}</h2>
+            <p className="text-[10px] text-muted-foreground">{t("spinner.matchSymbols")}</p>
           </div>
 
           {/* Reels */}
@@ -361,7 +363,7 @@ export default function RelaySpinner() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-1.5">
               <Gift className="w-3.5 h-3.5 text-gold" />
-              <span className="text-[10px] uppercase tracking-wider text-gold font-bold">Relay Collection</span>
+              <span className="text-[10px] uppercase tracking-wider text-gold font-bold">{t("spinner.relayCollection")}</span>
             </div>
             <span className="text-[10px] font-mono text-muted-foreground">{collection.size}/12</span>
           </div>
@@ -407,7 +409,7 @@ export default function RelaySpinner() {
               <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-3">
                 <div className="flex items-center gap-1.5 mb-2">
                   <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                  <span className="text-[10px] uppercase tracking-wider text-blue-400 font-bold">Discoveries Unlocked</span>
+                  <span className="text-[10px] uppercase tracking-wider text-blue-400 font-bold">{t("spinner.discoveriesUnlocked")}</span>
                 </div>
                 <div className="grid grid-cols-6 gap-1.5">
                   {RELAYS.map((relay, idx) => {

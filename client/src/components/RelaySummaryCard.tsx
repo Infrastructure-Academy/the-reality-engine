@@ -12,6 +12,7 @@ import { narrateRelaySummary } from "@/hooks/useDavidVoice";
 import { getVoiceEnabled } from "@/hooks/useDavidVoice";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { useT } from "@/contexts/LanguageContext";
 
 interface RelaySummaryCardProps {
   relayNumber: number;
@@ -32,6 +33,7 @@ export function RelaySummaryCard({
   onContinue,
   nextRelayNumber,
 }: RelaySummaryCardProps) {
+  const t = useT();
   const relay = RELAYS.find((r) => r.number === relayNumber);
   const nextRelay = nextRelayNumber ? RELAYS.find((r) => r.number === nextRelayNumber) : null;
   const completionPct = totalInventions > 0 ? Math.round((inventionsFound / totalInventions) * 100) : 0;
@@ -163,7 +165,7 @@ export function RelaySummaryCard({
         <Link href="/appraisal">
           <div className="mt-3 p-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all cursor-pointer flex items-center gap-2 justify-center">
             <MessageSquarePlus className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[11px] text-emerald-400 font-medium">Share Your Feedback</span>
+            <span className="text-[11px] text-emerald-400 font-medium">{t("explorer.shareYourFeedback")}</span>
           </div>
         </Link>
       )}

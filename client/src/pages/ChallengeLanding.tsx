@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Swords, Zap, Trophy, ArrowRight, Sparkles, Shield, Star
 } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 function getGuestId() {
   let id = localStorage.getItem("tre_guest_id");
@@ -18,6 +19,7 @@ function getGuestId() {
 }
 
 export default function ChallengeLanding() {
+  const t = useT();
   const params = useParams<{ code: string }>();
   const [, navigate] = useLocation();
   const code = params.code?.toUpperCase() || "";
@@ -54,7 +56,7 @@ export default function ChallengeLanding() {
           className="text-center"
         >
           <Swords className="w-12 h-12 text-amber-400 mx-auto mb-4 animate-pulse" />
-          <p className="text-muted-foreground font-mono tracking-wider">DECODING CHALLENGE...</p>
+          <p className="text-muted-foreground font-mono tracking-wider">{t("challenge.decoding")}</p>
         </motion.div>
       </div>
     );
@@ -69,13 +71,13 @@ export default function ChallengeLanding() {
           className="text-center max-w-md mx-auto px-6"
         >
           <Shield className="w-16 h-16 text-red-400/60 mx-auto mb-4" />
-          <h1 className="font-heading text-2xl font-bold mb-2">Challenge Not Found</h1>
+          <h1 className="font-heading text-2xl font-bold mb-2">{t("challenge.notFound")}</h1>
           <p className="text-muted-foreground mb-6">
-            This challenge code may have expired or doesn't exist. Start your own odyssey instead.
+            {t("challenge.notFound.desc")}
           </p>
           <Link href="/explore">
             <Button className="gap-2 bg-amber-600 hover:bg-amber-500">
-              <Sparkles className="w-4 h-4" /> Start Explorer Mode
+              <Sparkles className="w-4 h-4" /> {t("challenge.startExplorer")}
             </Button>
           </Link>
         </motion.div>
@@ -97,8 +99,8 @@ export default function ChallengeLanding() {
           >
             <Swords className="w-16 h-16 text-amber-400 mx-auto mb-4" />
           </motion.div>
-          <h1 className="font-heading text-3xl font-bold text-amber-400 mb-2">CHALLENGE ACCEPTED</h1>
-          <p className="text-muted-foreground">Launching Explorer Mode...</p>
+          <h1 className="font-heading text-3xl font-bold text-amber-400 mb-2">{t("challenge.accepted")}</h1>
+          <p className="text-muted-foreground">{t("challenge.launching")}</p>
         </motion.div>
       </div>
     );
@@ -106,7 +108,7 @@ export default function ChallengeLanding() {
 
   return (
     <div className="min-h-screen bg-background text-foreground mobile-content-pad">
-      <SiteHeader title="Challenge" showBack />
+      <SiteHeader title={t("challenge.title")} showBack />
       {/* Background glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-amber-500/5 blur-[120px]" />
@@ -128,7 +130,7 @@ export default function ChallengeLanding() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/30 bg-amber-500/10">
               <Swords className="w-4 h-4 text-amber-400" />
-              <span className="text-sm font-mono tracking-wider text-amber-400">CHALLENGE RECEIVED</span>
+              <span className="text-sm font-mono tracking-wider text-amber-400">{t("challenge.received")}</span>
             </div>
           </motion.div>
 
@@ -142,7 +144,7 @@ export default function ChallengeLanding() {
             <div className="flex items-center justify-center gap-3 mb-4">
               <Trophy className="w-6 h-6 text-amber-400" />
               <h2 className="font-heading text-xl font-bold">
-                {challenge.senderName || "A Fellow Explorer"}
+                {challenge.senderName || t("challenge.fellowExplorer")}
               </h2>
             </div>
 
@@ -157,7 +159,7 @@ export default function ChallengeLanding() {
               </div>
               <div className="flex items-center gap-1.5">
                 <Star className="w-4 h-4 text-amber-400" />
-                <span>{challenge.senderRelays}/12 Relays</span>
+                <span>{challenge.senderRelays}/12 {t("challenge.relays")}</span>
               </div>
             </div>
 
@@ -175,7 +177,7 @@ export default function ChallengeLanding() {
             transition={{ delay: 0.6 }}
           >
             <h3 className="text-lg text-muted-foreground mb-6">
-              Can you beat their pattern? Navigate 12,000 years of civilisational infrastructure and discover your own archetype.
+              {t("challenge.cta")}
             </h3>
 
             <Button
@@ -185,16 +187,16 @@ export default function ChallengeLanding() {
               className="gap-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-heading tracking-wider text-lg px-8 py-6"
             >
               {profileMutation.isPending || acceptMutation.isPending ? (
-                "ACCEPTING..."
+                t("challenge.accepting")
               ) : (
                 <>
-                  ACCEPT CHALLENGE <ArrowRight className="w-5 h-5" />
+                  {t("challenge.acceptChallenge")} <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </Button>
 
             <p className="mt-4 text-xs text-muted-foreground">
-              You'll start at Relay 1: Fire — the beginning of all infrastructure
+              {t("challenge.startRelay1")}
             </p>
           </motion.div>
         </motion.div>

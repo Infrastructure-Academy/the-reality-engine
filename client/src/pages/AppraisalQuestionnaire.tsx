@@ -8,6 +8,7 @@ import {
   ArrowLeft, Star, Send, MessageCircle, CheckCircle2,
   Smile, Meh, Frown, ThumbsUp, Zap, BookOpen
 } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 type AgeGroup = "8-10" | "10-12" | "12-14" | "14-18" | "18+" | "parent" | "educator";
 type Rating = 1 | 2 | 3 | 4 | 5;
@@ -117,6 +118,7 @@ function StarRating({ value, onChange }: { value: Rating | null; onChange: (r: R
 }
 
 export default function AppraisalQuestionnaire() {
+  const t = useT();
   const { user } = useAuth();
   const [step, setStep] = useState<"intro" | "demographics" | "questions" | "submitted">("intro");
   const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null);
@@ -167,7 +169,7 @@ export default function AppraisalQuestionnaire() {
             </Link>
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4 text-amber-400" />
-              <span className="font-heading text-sm font-bold text-amber-400">APPRAISAL</span>
+              <span className="font-heading text-sm font-bold text-amber-400">{t("appraisal.title")}</span>
             </div>
           </div>
           {step === "questions" && (
@@ -198,10 +200,10 @@ export default function AppraisalQuestionnaire() {
               <h1 className="font-heading text-2xl font-bold">Playtest Appraisal</h1>
               <p className="text-muted-foreground leading-relaxed">
                 You've just explored 12,000 years of civilisational infrastructure.
-                Your honest feedback helps us make this experience better for everyone.
+                {t("appraisal.honestFeedback")}
               </p>
               <p className="text-xs text-muted-foreground/60">
-                Takes about 2 minutes. All responses are anonymous unless you choose to share your name.
+                {t("appraisal.takesMinutes")}
               </p>
               <Button
                 onClick={() => setStep("demographics")}
@@ -267,7 +269,7 @@ export default function AppraisalQuestionnaire() {
                 className="w-full bg-amber-600 hover:bg-amber-500 text-black font-heading tracking-wider"
                 size="lg"
               >
-                Continue to Questions
+                {t("appraisal.continueToQuestions")}
               </Button>
             </motion.div>
           )}
@@ -298,8 +300,8 @@ export default function AppraisalQuestionnaire() {
                     onChange={(r) => handleAnswer(currentQuestion.id, r)}
                   />
                   <div className="flex justify-between text-xs text-muted-foreground/50 px-2 mt-1">
-                    <span>Not at all</span>
-                    <span>Absolutely!</span>
+                    <span>{t("appraisal.notAtAll")}</span>
+                    <span>{t("appraisal.absolutely")}</span>
                   </div>
                 </div>
               )}
@@ -384,7 +386,7 @@ export default function AppraisalQuestionnaire() {
                   }}
                   className="w-full text-center text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
                 >
-                  Skip this question
+                  {t("appraisal.skipQuestion")}
                 </button>
               )}
             </motion.div>
@@ -403,16 +405,16 @@ export default function AppraisalQuestionnaire() {
               </div>
               <h1 className="font-heading text-2xl font-bold">Thank You!</h1>
               <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                Your feedback has been recorded and will help shape the future of
+                {t("appraisal.feedbackRecorded")}
                 Infrastructure Academy. Every response matters.
               </p>
               <div className="p-4 rounded-lg border border-amber-500/20 bg-amber-500/5 text-sm text-amber-400/80">
-                Your appraisal has been sent to the project team for review.
+                {t("appraisal.appraisalSent")}
               </div>
               <div className="flex gap-3 justify-center pt-4">
                 <Link href="/">
                   <Button variant="outline" className="font-heading">
-                    Back to Home
+                    {t("appraisal.backToHome")}
                   </Button>
                 </Link>
                 <Link href="/explorer">

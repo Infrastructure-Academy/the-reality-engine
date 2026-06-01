@@ -10,6 +10,7 @@ import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSou
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -94,6 +95,7 @@ function abilityCheck(score: number, difficulty: number): { success: boolean; ro
 }
 
 export default function DungeonCrawl() {
+  const t = useT();
   const [, navigate] = useLocation();
   const guestId = useMemo(() => getGuestId(), []);
 
@@ -325,7 +327,7 @@ export default function DungeonCrawl() {
                 </Button>
               </Link>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-emerald-600 text-white">DUNGEON CRAWL</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-emerald-600 text-white">{t("dungeon.title")}</span>
             <div className="w-16" />
           </div>
         </header>
@@ -333,7 +335,7 @@ export default function DungeonCrawl() {
         <div className="container py-8 max-w-md mx-auto text-center">
           <Swords className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">CREATE YOUR EXPLORER</h2>
-          <p className="text-sm text-muted-foreground mb-6">Roll your ability scores. Three chances to get the best combination.</p>
+          <p className="text-sm text-muted-foreground mb-6">{t("dungeon.rollAbility")}</p>
 
           {/* Ability Scores */}
           <div className="grid grid-cols-3 gap-4 mb-6">
@@ -368,7 +370,7 @@ export default function DungeonCrawl() {
               Accept & Enter
             </Button>
           </div>
-          <p className="text-[10px] text-muted-foreground">Higher scores = better chance of passing ability checks in dungeons</p>
+          <p className="text-[10px] text-muted-foreground">{t("dungeon.higherScores")}</p>
         </div>
       </div>
     );
@@ -400,7 +402,7 @@ export default function DungeonCrawl() {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-emerald-600 text-white">DUNGEON</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-emerald-600 text-white">{t("dungeon.badge")}</span>
             <XpCounter value={totalXp} compact color="gold" />
           </div>
           <SoundToggle compact color="gold" />
@@ -411,7 +413,7 @@ export default function DungeonCrawl() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4"
-          title="Your Adventure Through 12,000 Years"
+          title={t("dungeon.videoTitle")}
           subtitle="26s intro"
           accentColor="#10b981"
           glowColor="rgba(16,185,129,0.15)"
@@ -462,7 +464,7 @@ export default function DungeonCrawl() {
               <RoomIcon className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Room {currentRoom + 1} of {totalDungeonRooms}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{t("dungeon.roomOf").replace("{n}", String(currentRoom + 1)).replace("{total}", String(totalDungeonRooms))}</p>
               <h3 className="font-heading text-lg font-bold tracking-wider">{room.name}</h3>
             </div>
           </div>
@@ -484,7 +486,7 @@ export default function DungeonCrawl() {
           {/* Ability check info */}
           {room.abilityCheck && !isCleared && (
             <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 mb-4">
-              <p className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1">Ability Check Required</p>
+              <p className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1">{t("dungeon.abilityCheck")}</p>
               <p className="text-sm text-muted-foreground">
                 <span className="font-bold text-foreground capitalize">{room.abilityCheck}</span> (your score: {abilities[room.abilityCheck]}) vs difficulty {room.difficulty}
               </p>
@@ -494,7 +496,7 @@ export default function DungeonCrawl() {
           {/* Invention reveal */}
           {room.inventionIdx !== null && isCleared && inventions[room.inventionIdx] && (
             <div className="rounded-lg border border-gold/20 bg-gold/5 p-3 mb-4">
-              <p className="text-xs uppercase tracking-wider text-gold font-bold mb-1">Discovery Unlocked</p>
+              <p className="text-xs uppercase tracking-wider text-gold font-bold mb-1">{t("dungeon.discoveryUnlocked")}</p>
               <p className="text-sm font-bold text-foreground">{inventions[room.inventionIdx].name}</p>
               <p className="text-xs text-muted-foreground mt-1">{inventions[room.inventionIdx].description}</p>
             </div>
@@ -561,7 +563,7 @@ export default function DungeonCrawl() {
               </Button>
             ) : (
               <div className="flex-1 text-center py-2">
-                <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">Room Cleared ✓</p>
+                <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">{t("dungeon.roomCleared")}</p>
               </div>
             )}
           </div>
@@ -579,7 +581,7 @@ export default function DungeonCrawl() {
 
         {/* Character Sheet (mini) */}
         <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-4">
-          <p className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-3">Character Sheet</p>
+          <p className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-3">{t("dungeon.characterSheet")}</p>
           <div className="grid grid-cols-3 gap-3">
             {([
               { key: "observation" as const, label: "OBS", color: "#ef4444" },

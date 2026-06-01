@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useT } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft } from "lucide-react";
 
@@ -14,6 +15,7 @@ interface SiteHeaderProps {
 }
 
 export function SiteHeader({ title, showBack = false, rightContent, className = "" }: SiteHeaderProps) {
+  const t = useT();
   return (
     <header className={`sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80 ${className}`}>
       <div className="container flex items-center justify-between h-14">
@@ -21,7 +23,7 @@ export function SiteHeader({ title, showBack = false, rightContent, className = 
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
               {showBack ? <ArrowLeft className="w-4 h-4" /> : <Home className="w-4 h-4" />}
-              <span className="hidden sm:inline">{showBack ? "Back" : "Home"}</span>
+              <span className="hidden sm:inline">{showBack ? t("common.back") : t("common.home")}</span>
             </Button>
           </Link>
           {title && (

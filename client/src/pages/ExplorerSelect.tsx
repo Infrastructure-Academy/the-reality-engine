@@ -2,71 +2,74 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Flame, Swords, Brain, Dices } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
-const EXPLORER_MODES = [
+export default function ExplorerSelect() {
+  const t = useT();
+
+  const EXPLORER_MODES = [
   {
     id: "classic",
-    name: "Classic Explorer",
-    ages: "Ages 8–14",
-    tagline: "Tap-to-discover through 12 Civilisational Relays. The original journey.",
+    name: t("explorer.mode.classic"),
+    ages: t("explorer.mode.classicAges"),
+    tagline: t("explorer.mode.classicTagline"),
     icon: Flame,
     color: "#ef4444",
     gradient: "from-red-600/20 via-orange-600/10 to-transparent",
     border: "border-red-500/30 hover:border-red-400/60",
     glow: "hover:shadow-[0_0_40px_rgba(239,68,68,0.15)]",
-    cta: "QUICK PLAY",
+    cta: t("explorer.mode.classicCta"),
     ctaColor: "bg-red-600 hover:bg-red-500 text-white",
     entry: "/explore/prologue",
     badge: null,
   },
   {
     id: "spinner",
-    name: "Relay Spinner",
-    ages: "Ages 8–10",
-    tagline: "Pull the lever! Match relay symbols to unlock discoveries. Every spin wins something.",
+    name: t("explorer.mode.spinner"),
+    ages: t("explorer.mode.spinnerAges"),
+    tagline: t("explorer.mode.spinnerTagline"),
     icon: Dices,
     color: "#3b82f6",
     gradient: "from-blue-600/20 via-indigo-600/10 to-transparent",
     border: "border-blue-500/30 hover:border-blue-400/60",
     glow: "hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]",
-    cta: "SPIN TO PLAY",
+    cta: t("explorer.mode.spinnerCta"),
     ctaColor: "bg-blue-600 hover:bg-blue-500 text-white",
     entry: "/explore/spinner",
-    badge: "NEW",
+    badge: t("common.new"),
   },
   {
     id: "dungeon",
-    name: "Dungeon Crawl",
-    ages: "Ages 10–12",
-    tagline: "Explore 12 relay-dungeons room by room. DAVID is your Dungeon Master.",
+    name: t("explorer.mode.dungeon"),
+    ages: t("explorer.mode.dungeonAges"),
+    tagline: t("explorer.mode.dungeonTagline"),
     icon: Swords,
     color: "#10b981",
     gradient: "from-emerald-600/20 via-green-600/10 to-transparent",
     border: "border-emerald-500/30 hover:border-emerald-400/60",
     glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]",
-    cta: "ENTER DUNGEON",
+    cta: t("explorer.mode.dungeonCta"),
     ctaColor: "bg-emerald-600 hover:bg-emerald-500 text-white",
     entry: "/explore/dungeon",
-    badge: "NEW",
+    badge: t("common.new"),
   },
   {
     id: "greymatter",
-    name: "Power of Grey Matter",
-    ages: "Ages 12–14",
-    tagline: "Earn 12 relay powers. Complete missions. Transform into iMan. Push the Clock back.",
+    name: t("explorer.mode.greymatter"),
+    ages: t("explorer.mode.greymatterAges"),
+    tagline: t("explorer.mode.greymatterTagline"),
     icon: Brain,
     color: "#d4a843",
     gradient: "from-amber-600/20 via-yellow-600/10 to-transparent",
     border: "border-amber-500/30 hover:border-amber-400/60",
     glow: "hover:shadow-[0_0_40px_rgba(212,168,67,0.15)]",
-    cta: "BEGIN TRANSFORMATION",
+    cta: t("explorer.mode.greymatterCta"),
     ctaColor: "bg-amber-600 hover:bg-amber-500 text-black",
     entry: "/explore/greymatter",
-    badge: "NEW",
+    badge: t("common.new"),
   },
-] as const;
+  ] as const;
 
-export default function ExplorerSelect() {
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
       {/* Ambient glow */}
@@ -80,12 +83,12 @@ export default function ExplorerSelect() {
         <div className="container flex items-center justify-between h-14">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Home
+              <ArrowLeft className="w-4 h-4" /> {t("tab.home")}
             </Button>
           </Link>
           <div className="text-center">
-            <h1 className="text-sm font-heading font-bold tracking-wider text-gold-gradient">EXPLORER MODE</h1>
-            <p className="text-[10px] text-muted-foreground">Choose Your Pathway</p>
+            <h1 className="text-sm font-heading font-bold tracking-wider text-gold-gradient">{t("explorer.title")}</h1>
+            <p className="text-[10px] text-muted-foreground">{t("explorer.choosePathway")}</p>
           </div>
           <div className="w-20" /> {/* Spacer */}
         </div>
@@ -95,13 +98,12 @@ export default function ExplorerSelect() {
       <section className="relative z-10 pt-8 pb-4">
         <div className="container text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-3">Ages 8–14 — Four Ways to Explore</p>
+            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mb-3">{t("explorer.agesSubtitle")}</p>
             <h2 className="font-heading text-2xl md:text-4xl font-bold tracking-wide text-gold-gradient mb-2">
-              CHOOSE YOUR ADVENTURE
+              {t("explorer.chooseAdventure")}
             </h2>
             <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-              Same 12 Relays. Same 91+ inventions. Same knowledge. Four different ways to discover it.
-              Switch anytime without losing progress.
+              {t("explorer.description")}
             </p>
           </motion.div>
         </div>

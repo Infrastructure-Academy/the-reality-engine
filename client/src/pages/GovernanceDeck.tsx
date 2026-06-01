@@ -10,6 +10,7 @@ import {
   ArrowDown, Users, Search, Filter, Database, X
 } from "lucide-react";
 import { BrandI } from "@/components/BrandI";
+import { useT } from "@/contexts/LanguageContext";
 
 // CDN URLs for iCard images
 const CDN = {
@@ -144,6 +145,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function GovernanceDeck() {
+  const t = useT();
   const [activeTab, setActiveTab] = useState<Tab>("power");
   const [expandedPhase, setExpandedPhase] = useState<number | null>(null);
   const [expandedTier, setExpandedTier] = useState<number | null>(null);
@@ -205,12 +207,12 @@ export default function GovernanceDeck() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
-            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">GOVERNANCE DECK</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
+            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">{t("governance.title")}</h1>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
           </div>
         </div>
       </header>
@@ -219,10 +221,10 @@ export default function GovernanceDeck() {
       <div className="border-b border-border/50 bg-card/50">
         <div className="container flex gap-1 py-2 overflow-x-auto">
           {([
-            { id: "power" as Tab, label: "Power Card", icon: Award },
+            { id: "power" as Tab, label: t("governance.tab.power"), icon: Award },
             { id: "sap" as Tab, label: "SAP-001", icon: Shield },
-            { id: "audit" as Tab, label: "Audit Trail", icon: Database },
-            { id: "gallery" as Tab, label: "iCard Gallery", icon: BookOpen },
+            { id: "audit" as Tab, label: t("governance.tab.audit"), icon: Database },
+            { id: "gallery" as Tab, label: t("governance.tab.gallery"), icon: BookOpen },
           ]).map(tab => {
             const Icon = tab.icon;
             return (
@@ -249,10 +251,10 @@ export default function GovernanceDeck() {
           {activeTab === "power" && (
             <motion.div key="power" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Dimension: Risk, Authority & System Assurance</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Governance Deck — Power Card</h2>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("governance.dimension")}</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("governance.powerCard")}</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  10 Teaching Cards + 1 Power Card = 11. Context → Case Study → Protocol → MASTERY.
+                  {t("governance.cardDesc")}
                 </p>
               </div>
 
@@ -274,10 +276,10 @@ export default function GovernanceDeck() {
                           <span className="font-heading text-lg font-bold" style={{ color: tier.color }}>{tier.num}</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-heading text-foreground">TIER {tier.num} — {tier.title}</h4>
-                          <p className="text-xs text-muted-foreground">{tier.subtitle}</p>
+                          <h4 className="font-heading text-foreground">{t(`governance.tier.${tier.num}.title`)}</h4>
+                          <p className="text-xs text-muted-foreground">{t(`governance.tier.${tier.num}.subtitle`)}</p>
                         </div>
-                        <span className="text-xs text-muted-foreground">{tier.cards.length} card{tier.cards.length > 1 ? "s" : ""}</span>
+                        <span className="text-xs text-muted-foreground">{tier.cards.length} {t("governance.cards")}</span>
                         <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                       </div>
                       <AnimatePresence>
@@ -307,35 +309,35 @@ export default function GovernanceDeck() {
               {/* Progression */}
               <div className="bg-card border border-border/50 rounded-xl p-6">
                 <div className="flex items-center justify-center gap-3 text-sm flex-wrap">
-                  <span className="text-blue-400 font-heading">Context</span>
+                  <span className="text-blue-400 font-heading">{t("governance.context")}</span>
                   <ArrowDown className="w-4 h-4 text-muted-foreground rotate-[-90deg]" />
-                  <span className="text-amber-400 font-heading">Case Study</span>
+                  <span className="text-amber-400 font-heading">{t("governance.caseStudy")}</span>
                   <ArrowDown className="w-4 h-4 text-muted-foreground rotate-[-90deg]" />
-                  <span className="text-green-400 font-heading">Protocol</span>
+                  <span className="text-green-400 font-heading">{t("governance.protocol")}</span>
                   <ArrowDown className="w-4 h-4 text-muted-foreground rotate-[-90deg]" />
-                  <span className="text-gold font-heading text-lg">MASTERY</span>
+                  <span className="text-gold font-heading text-lg">{t("governance.mastery")}</span>
                 </div>
               </div>
 
               {/* The Line */}
               <div className="bg-card border border-border/50 rounded-xl p-6 space-y-4">
                 <div className="text-center">
-                  <h4 className="font-heading text-foreground text-lg">THE LINE</h4>
+                  <h4 className="font-heading text-foreground text-lg">{t("governance.theLine")}</h4>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
                     <Shield className="w-5 h-5 text-red-400 shrink-0" />
                     <div>
-                      <p className="text-sm font-heading text-red-400">HARD CONTROLS</p>
-                      <p className="text-xs text-muted-foreground">Barriers that shape behaviour</p>
+                      <p className="text-sm font-heading text-red-400">{t("governance.hardControls")}</p>
+                      <p className="text-xs text-muted-foreground">{t("governance.barriers")}</p>
                     </div>
                   </div>
                   <div className="h-1 bg-red-600 rounded-full mx-4" />
                   <div className="flex items-center gap-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
                     <FileText className="w-5 h-5 text-green-400 shrink-0" />
                     <div>
-                      <p className="text-sm font-heading text-green-400">SOFT CONTROLS</p>
-                      <p className="text-xs text-muted-foreground">Rules that rely on compliance</p>
+                      <p className="text-sm font-heading text-green-400">{t("governance.softControls")}</p>
+                      <p className="text-xs text-muted-foreground">{t("governance.rulesCompliance")}</p>
                     </div>
                   </div>
                 </div>
@@ -345,18 +347,18 @@ export default function GovernanceDeck() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-card border border-green-500/30 rounded-xl p-5 text-center">
                   <h4 className="font-heading text-green-400 text-sm">NIGEL ZONE</h4>
-                  <p className="text-xs text-muted-foreground mt-1">Wisdom + Knowledge</p>
-                  <p className="text-xs text-foreground/70 mt-2">Decides, Names, Frames, Approves</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t("governance.wisdomKnowledge")}</p>
+                  <p className="text-xs text-foreground/70 mt-2">{t("governance.decides")}</p>
                 </div>
                 <div className="bg-card border border-gold/30 rounded-xl p-5 text-center">
                   <h4 className="font-heading text-gold text-sm">THE INTERFACE</h4>
-                  <p className="text-xs text-muted-foreground mt-1">Cards First, Read Source</p>
-                  <p className="text-xs text-foreground/70 mt-2">Save On Receipt</p>
+                  <p className="text-xs text-muted-foreground mt-1">{t("governance.cardsFirst")}</p>
+                  <p className="text-xs text-foreground/70 mt-2">{t("governance.saveOnReceipt")}</p>
                 </div>
                 <div className="bg-card border border-blue-500/30 rounded-xl p-5 text-center">
-                  <h4 className="font-heading text-blue-400 text-sm">DAVID ZONE</h4>
-                  <p className="text-xs text-muted-foreground mt-1">Data + Information</p>
-                  <p className="text-xs text-foreground/70 mt-2">Processes, Stores, Researches, Compresses</p>
+                  <h4 className="font-heading text-blue-400 text-sm">{t("governance.davidZone")}</h4>
+                  <p className="text-xs text-muted-foreground mt-1">{t("governance.dataInfo")}</p>
+                  <p className="text-xs text-foreground/70 mt-2">{t("governance.processes")}</p>
                 </div>
               </div>
             </motion.div>
@@ -366,10 +368,10 @@ export default function GovernanceDeck() {
           {activeTab === "sap" && (
             <motion.div key="sap" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Rail Possession Logic Applied to Man + Machine</p>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("governance.railPossession")}</p>
                 <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">SAP-001 — System Assurance Protocol</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  Five phases. One protocol. The line is not safe until the system is tested.
+                  {t("governance.fivePhases")}
                 </p>
               </div>
 
@@ -422,7 +424,7 @@ export default function GovernanceDeck() {
 
               {/* Corrective Actions Chain */}
               <div className="bg-card border border-border/50 rounded-xl p-6 space-y-4">
-                <h4 className="font-heading text-gold text-sm text-center">Corrective Actions Chain</h4>
+                <h4 className="font-heading text-gold text-sm text-center">{t("governance.correctiveActions")}</h4>
                 <div className="flex flex-wrap items-center justify-center gap-1">
                   {CA_CHAIN.map((item, i) => (
                     <div key={i} className="flex items-center gap-1">
@@ -451,10 +453,10 @@ export default function GovernanceDeck() {
           {activeTab === "audit" && (
             <motion.div key="audit" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-6">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Live Database — Full Transparency</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Audit Trail</h2>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("governance.liveDatabase")}</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("governance.auditTrail")}</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  Governance records, feedback reports, and DCSN network nodes — all pulled live from the database.
+                  {t("governance.auditDesc")}
                 </p>
               </div>
 
@@ -571,7 +573,7 @@ export default function GovernanceDeck() {
                 {/* Block Ref filter for records */}
                 {auditSection === "records" && (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">Block Ref:</span>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">{t("governance.blockRef")}</span>
                     <Input
                       placeholder="e.g. B353, B402..."
                       value={govBlockRef}
@@ -588,10 +590,10 @@ export default function GovernanceDeck() {
                 {auditSection === "records" && (
                   <>
                     {govRecords.isLoading && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">Loading governance records...</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.loadingRecords")}</div>
                     )}
                     {govRecords.data && govRecords.data.length === 0 && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">No governance records match your filters.</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.noRecords")}</div>
                     )}
                     {govRecords.data?.map((record: any) => (
                       <motion.div
@@ -617,9 +619,9 @@ export default function GovernanceDeck() {
                           <p className="text-sm text-muted-foreground line-clamp-3">{record.description}</p>
                         )}
                         <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
-                          <span>Type: {record.recordType?.replace(/_/g, " ")}</span>
-                          {record.compliance && <span>Compliance: {record.compliance}</span>}
-                          <span>Created: {new Date(record.createdAt).toLocaleDateString()}</span>
+                          <span>{t("governance.type")}: {record.recordType?.replace(/_/g, " ")}</span>
+                          {record.compliance && <span>{t("governance.compliance")}: {record.compliance}</span>}
+                          <span>{t("governance.created")}: {new Date(record.createdAt).toLocaleDateString()}</span>
                         </div>
                       </motion.div>
                     ))}
@@ -630,10 +632,10 @@ export default function GovernanceDeck() {
                 {auditSection === "feedback" && (
                   <>
                     {feedbackReports.isLoading && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">Loading feedback reports...</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.loadingFeedback")}</div>
                     )}
                     {feedbackReports.data && feedbackReports.data.length === 0 && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">No feedback reports match your filters.</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.noFeedback")}</div>
                     )}
                     {feedbackReports.data?.map((report: any) => (
                       <motion.div
@@ -665,9 +667,9 @@ export default function GovernanceDeck() {
                           </div>
                         )}
                         <div className="flex items-center gap-3 text-[10px] text-muted-foreground/60">
-                          <span>Type: {report.reportType}</span>
-                          <span>Source: {report.source}</span>
-                          <span>Date: {report.reportDate}</span>
+                          <span>{t("governance.type")}: {report.reportType}</span>
+                          <span>{t("governance.source")}: {report.source}</span>
+                          <span>{t("governance.date")}: {report.reportDate}</span>
                         </div>
                       </motion.div>
                     ))}
@@ -678,10 +680,10 @@ export default function GovernanceDeck() {
                 {auditSection === "nodes" && (
                   <>
                     {dcsnNodes.isLoading && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">Loading DCSN nodes...</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.loadingDCSN")}</div>
                     )}
                     {dcsnNodes.data && dcsnNodes.data.length === 0 && (
-                      <div className="text-center py-12 text-muted-foreground text-sm">No DCSN nodes match your filters.</div>
+                      <div className="text-center py-12 text-muted-foreground text-sm">{t("governance.noDCSN")}</div>
                     )}
                     {dcsnNodes.data?.map((node: any) => (
                       <motion.div
@@ -714,7 +716,7 @@ export default function GovernanceDeck() {
                           )}
                           {node.cell && (
                             <div>
-                              <span className="text-muted-foreground/60">Cell</span>
+                              <span className="text-muted-foreground/60">{t("governance.cell")}</span>
                               <p className="text-foreground/80">{node.cell}</p>
                             </div>
                           )}
@@ -726,14 +728,14 @@ export default function GovernanceDeck() {
                           )}
                           {node.access && (
                             <div>
-                              <span className="text-muted-foreground/60">Access</span>
+                              <span className="text-muted-foreground/60">{t("governance.access")}</span>
                               <p className="text-foreground/80">{node.access}</p>
                             </div>
                           )}
                         </div>
                         {node.recruitedByName && (
                           <p className="text-[10px] text-muted-foreground/60">
-                            Recruited by Node {String(node.recruitedByNode).padStart(3, "0")} ({node.recruitedByName}) — {node.activationDate}
+                            {t("governance.recruitedBy")} Node {String(node.recruitedByNode).padStart(3, "0")} ({node.recruitedByName}) — {node.activationDate}
                           </p>
                         )}
                         {node.notes && (
@@ -751,10 +753,10 @@ export default function GovernanceDeck() {
           {activeTab === "gallery" && (
             <motion.div key="gallery" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Governance Deck — Source <span className="brand-i">i</span>Cards</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient"><BrandI />Card Gallery</h2>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Governance Deck — Source <span className="brand-i">i</span>{t("governance.cards")}</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient"><BrandI />{t("governance.cardGallery")}</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  The original <BrandI />Cards from the <BrandI />AAi archive. Tap to expand.
+                  {t("governance.iCardsDesc")}
                 </p>
               </div>
 

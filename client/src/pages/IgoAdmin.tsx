@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Users, Building2, GraduationCap, DollarSign, Gamepad2, RefreshCw, Smartphone } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useT } from "@/contexts/LanguageContext";
 
 const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; color: string; bg: string }> = {
   player: { label: "Player", icon: Gamepad2, color: "text-emerald-400", bg: "bg-emerald-400/10" },
@@ -14,6 +15,7 @@ const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; color: st
 };
 
 export default function IgoAdmin() {
+  const t = useT();
   const { data: registrations, isLoading, refetch } = trpc.igo.list.useQuery();
   const { data: stats } = trpc.igo.stats.useQuery();
   const [roleFilter, setRoleFilter] = useState<string>("all");
@@ -28,12 +30,12 @@ export default function IgoAdmin() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
             <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">iGO REGISTRATIONS</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">ADMIN</span>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("igoAdmin.title")}</span>
           </div>
           <Button variant="ghost" size="sm" onClick={() => refetch()} className="text-muted-foreground hover:text-gold">
             <RefreshCw className="w-4 h-4" />
@@ -47,7 +49,7 @@ export default function IgoAdmin() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
             <div className="bg-card border border-gold/30 rounded-lg p-4 text-center">
               <p className="text-2xl font-heading text-gold">{stats.total}</p>
-              <p className="text-[10px] text-muted-foreground tracking-wider uppercase">Total</p>
+              <p className="text-[10px] text-muted-foreground tracking-wider uppercase">{t("igoAdmin.total")}</p>
             </div>
             {Object.entries(ROLE_CONFIG).map(([key, cfg]) => {
               const count = stats.byRole[key] ?? 0;
@@ -85,13 +87,13 @@ export default function IgoAdmin() {
         {isLoading ? (
           <div className="text-center py-12">
             <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-xs text-muted-foreground">Loading registrations...</p>
+            <p className="text-xs text-muted-foreground">{t("igoAdmin.loading")}</p>
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12 bg-card border border-border/50 rounded-lg">
             <Users className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground text-sm">No registrations yet</p>
-            <p className="text-muted-foreground text-xs mt-1">Share the iGO page to start collecting interest</p>
+            <p className="text-muted-foreground text-sm">{t("igoAdmin.noRegistrations")}</p>
+            <p className="text-muted-foreground text-xs mt-1">{t("igoAdmin.sharePrompt")}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -99,13 +101,13 @@ export default function IgoAdmin() {
               <thead>
                 <tr className="border-b border-border/50 text-left">
                   <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">#</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Name</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Email</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Role</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Organisation</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.name")}</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.email")}</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.role")}</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.organisation")}</th>
                   <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">App</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Message</th>
-                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">Date</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.message")}</th>
+                  <th className="py-3 px-3 text-[10px] tracking-wider uppercase text-muted-foreground font-medium">{t("igoAdmin.date")}</th>
                 </tr>
               </thead>
               <tbody>

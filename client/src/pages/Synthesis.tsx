@@ -11,6 +11,7 @@ import {
 import { XpCounter } from "@/components/XpCounter";
 import { ShareCard } from "@/components/ShareCard";
 import { ChallengeButton } from "@/components/ChallengeButton";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── Civilizational Perspective Classification ───
 // Each relay maps to a civilizational perspective based on its historical context
@@ -173,6 +174,7 @@ function CompletionRing({ completed, total }: { completed: number; total: number
 }
 
 export default function Synthesis() {
+  const t = useT();
   const guestId = useMemo(() => getGuestId(), []);
 
   // Get or create profile
@@ -238,13 +240,13 @@ export default function Synthesis() {
 
   // Determine pattern title
   const patternTitle = useMemo(() => {
-    if (!synthesis) return "Loading...";
-    if (synthesis.isBalanced) return "The Balanced Navigator";
+    if (!synthesis) return t("synthesis.loading");
+    if (synthesis.isBalanced) return t("synthesis.balanced");
     const meta = PERSPECTIVE_META[synthesis.dominant];
     const titles: Record<string, string> = {
-      west: "The Systems Architect",
-      east: "The Harmony Weaver",
-      outrider: "The Universal Connector",
+      west: t("synthesis.archWest"),
+      east: t("synthesis.archEast"),
+      outrider: t("synthesis.archOutrider"),
     };
     return titles[synthesis.dominant] || meta.name;
   }, [synthesis]);
@@ -270,7 +272,7 @@ export default function Synthesis() {
     setMeta("og:url", window.location.href);
     setMeta("twitter:title", `${patternTitle} — The Reality Engine`, "name");
     setMeta("twitter:description", desc, "name");
-    return () => { document.title = "The Reality Engine"; };
+    return () => { document.title = t("home.title"); };
   }, [synthesis, patternTitle]);
 
   if (!synthesis) {
@@ -278,7 +280,7 @@ export default function Synthesis() {
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center mobile-content-pad">
         <div className="text-center">
           <Sparkles className="w-8 h-8 text-amber-400 mx-auto mb-3 animate-pulse" />
-          <p className="text-muted-foreground">Analyzing your journey...</p>
+          <p className="text-muted-foreground">{t("synthesis.analyzing")}</p>
         </div>
       </div>
     );
@@ -291,10 +293,10 @@ export default function Synthesis() {
         <div className="container flex items-center justify-between h-12">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Home
+              <ArrowLeft className="w-4 h-4" /> {t("common.home")}
             </Button>
           </Link>
-          <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">SYNTHESIS</h1>
+          <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">{t("synthesis.title")}</h1>
           <XpCounter value={synthesis.totalXpEarned} compact color="gold" />
         </div>
       </header>
@@ -309,17 +311,17 @@ export default function Synthesis() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4">
             <Trophy className="w-4 h-4 text-amber-400" />
             <span className="text-xs font-mono text-amber-400">
-              {synthesis.isComplete ? "ODYSSEY COMPLETE" : `${synthesis.completionCount}/12 RELAYS EXPLORED`}
+              {synthesis.isComplete ? t("synthesis.odysseyComplete") : `${synthesis.completionCount}/12 ${t("synthesis.relaysExplored")}`}
             </span>
           </div>
 
           <h2 className="font-heading text-4xl font-bold text-gold-gradient mb-2">
-            Your Discovered Pattern
+            {t("synthesis.discoveredPattern")}
           </h2>
           <p className="text-lg text-muted-foreground">
             {synthesis.isComplete
-              ? "You have traversed all 12 Civilisational Relays. Your pattern has been revealed."
-              : "Your civilisational perspective is emerging as you explore more relays."}
+              ? t("synthesis.complete.desc")
+              : t("synthesis.emerging")}
           </p>
         </motion.div>
 
@@ -330,7 +332,7 @@ export default function Synthesis() {
           transition={{ delay: 0.2 }}
           className="p-6 rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent mb-8 text-center"
         >
-          <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">YOUR CIVILISATIONAL ARCHETYPE</p>
+          <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-2">{t("synthesis.archetype")}</p>
           <h3 className="font-heading text-3xl font-bold mb-3">
             {synthesis.isBalanced ? (
               <span className="bg-gradient-to-r from-blue-400 via-amber-400 to-red-400 bg-clip-text text-transparent">{patternTitle}</span>
@@ -340,12 +342,12 @@ export default function Synthesis() {
           </h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
             {synthesis.isBalanced
-              ? "You gravitate equally toward all civilisational perspectives — a rare and valuable trait. You see infrastructure through every lens."
+              ? t("synthesis.balanced.desc")
               : PERSPECTIVE_META[synthesis.dominant].description}
           </p>
           {!synthesis.isBalanced && (
             <div className="mt-3 flex items-center justify-center gap-2">
-              <span className="text-xs text-muted-foreground">Aligned scholars:</span>
+              <span className="text-xs text-muted-foreground">{t("synthesis.alignedScholars")}</span>
               {PERSPECTIVE_META[synthesis.dominant].scholars.map(s => (
                 <span key={s} className="px-2 py-0.5 rounded text-[10px] font-mono bg-muted/30 text-foreground">{s}</span>
               ))}
@@ -361,7 +363,7 @@ export default function Synthesis() {
           className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
         >
           <div className="p-6 rounded-xl border border-border/50 bg-card/30">
-            <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4 text-center">PERSPECTIVE DISTRIBUTION</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4 text-center">{t("synthesis.perspectiveDist")}</p>
             <PerspectiveRadar
               west={synthesis.perspectives.west}
               east={synthesis.perspectives.east}
@@ -370,12 +372,12 @@ export default function Synthesis() {
           </div>
 
           <div className="p-6 rounded-xl border border-border/50 bg-card/30 flex flex-col items-center justify-center">
-            <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4">RELAY COMPLETION</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4">{t("synthesis.relayCompletion")}</p>
             <CompletionRing completed={synthesis.completionCount} total={12} />
             <div className="mt-4 grid grid-cols-3 gap-4 w-full">
               <div className="text-center">
                 <p className="text-lg font-bold font-mono">{synthesis.totalDiscoveries}</p>
-                <p className="text-[9px] text-muted-foreground uppercase">Discoveries</p>
+                <p className="text-[9px] text-muted-foreground uppercase">{t("synthesis.discoveries")}</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold font-mono text-gold-gradient">
@@ -383,13 +385,13 @@ export default function Synthesis() {
                     ? `${(synthesis.totalXpEarned / 1_000_000).toFixed(1)}M`
                     : `${(synthesis.totalXpEarned / 1000).toFixed(0)}K`}
                 </p>
-                <p className="text-[9px] text-muted-foreground uppercase">Total XP</p>
+                <p className="text-[9px] text-muted-foreground uppercase">{t("synthesis.totalXP")}</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold font-mono text-amber-400">
                   {Math.floor(synthesis.totalXpEarned / 100).toLocaleString()}
                 </p>
-                <p className="text-[9px] text-muted-foreground uppercase">BitPoints</p>
+                <p className="text-[9px] text-muted-foreground uppercase">{t("synthesis.bitpoints")}</p>
               </div>
             </div>
           </div>
@@ -407,7 +409,7 @@ export default function Synthesis() {
             className="flex items-center gap-2 mb-4 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ChevronRight className={`w-4 h-4 transition-transform ${showDetails ? "rotate-90" : ""}`} />
-            <span>Relay-by-Relay Breakdown</span>
+            <span>{t("synthesis.breakdown")}</span>
           </button>
 
           <AnimatePresence>
@@ -473,7 +475,7 @@ export default function Synthesis() {
           transition={{ delay: 0.5 }}
           className="mb-8 text-center"
         >
-          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">SHARE YOUR JOURNEY</p>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">{t("synthesis.shareJourney")}</p>
           <ShareCard
             patternTitle={patternTitle}
             dominant={synthesis.dominant}
@@ -493,7 +495,7 @@ export default function Synthesis() {
           transition={{ delay: 0.65 }}
           className="mb-8"
         >
-          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3 text-center">CHALLENGE A FRIEND</p>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3 text-center">{t("synthesis.challengeFriend")}</p>
           {profileId && (
             <ChallengeButton
               profileId={profileId}
@@ -518,8 +520,8 @@ export default function Synthesis() {
                 <MessageSquarePlus className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-emerald-400">Help Us Improve</p>
-                <p className="text-[11px] text-muted-foreground">Take 2 minutes to share your experience — your feedback shapes the next version.</p>
+                <p className="text-sm font-bold text-emerald-400">{t("synthesis.helpImprove")}</p>
+                <p className="text-[11px] text-muted-foreground">{t("synthesis.feedbackPrompt")}</p>
               </div>
               <ChevronRight className="w-5 h-5 text-emerald-400/50 shrink-0 ml-auto" />
             </div>
@@ -535,33 +537,33 @@ export default function Synthesis() {
         >
           <div className="flex items-center gap-2 mb-4">
             <BookOpen className="w-5 h-5 text-amber-400" />
-            <h3 className="font-heading text-lg font-bold">Deeper Exploration</h3>
+            <h3 className="font-heading text-lg font-bold">{t("synthesis.deeperExploration")}</h3>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            Your journey through the 12 Civilisational Relays is part of a larger work:
-            <strong className="text-foreground"> An Infrastructure Odyssey — Episode 1: Calories to Consciousness</strong>.
+            {t("synthesis.journeyPart")}
+            <strong className="text-foreground"> {t("synthesis.odysseyEp1")}</strong>.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3 rounded-lg border border-border/30 bg-muted/10">
               <div className="flex items-center gap-2 mb-1">
                 <Globe className="w-4 h-4 text-blue-400" />
-                <span className="text-xs font-bold">The Perspective</span>
+                <span className="text-xs font-bold">{t("synthesis.perspective")}</span>
               </div>
-              <p className="text-[10px] text-muted-foreground">The narrative foundation — 12,000 years of infrastructure told as story</p>
+              <p className="text-[10px] text-muted-foreground">{t("synthesis.perspectiveDesc")}</p>
             </div>
             <div className="p-3 rounded-lg border border-border/30 bg-muted/10">
               <div className="flex items-center gap-2 mb-1">
                 <Compass className="w-4 h-4 text-green-400" />
-                <span className="text-xs font-bold">The Guide</span>
+                <span className="text-xs font-bold">{t("synthesis.guide")}</span>
               </div>
-              <p className="text-[10px] text-muted-foreground">The 4-Pillar Framework — Observational, Educational, Application, Thesis</p>
+              <p className="text-[10px] text-muted-foreground">{t("synthesis.fourPillar")}</p>
             </div>
             <div className="p-3 rounded-lg border border-border/30 bg-muted/10">
               <div className="flex items-center gap-2 mb-1">
                 <Target className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-bold">The Game</span>
+                <span className="text-xs font-bold">{t("synthesis.game")}</span>
               </div>
-              <p className="text-[10px] text-muted-foreground">The Reality Engine — the Guided Learning Platform you just experienced</p>
+              <p className="text-[10px] text-muted-foreground">{t("synthesis.gameDesc")}</p>
             </div>
           </div>
         </motion.div>
@@ -575,9 +577,9 @@ export default function Synthesis() {
             className="p-6 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 to-transparent text-center mb-8"
           >
             <Award className="w-10 h-10 text-amber-400 mx-auto mb-2" />
-            <h3 className="font-heading text-xl font-bold text-amber-400 mb-1">GURU STATUS ACHIEVED</h3>
+            <h3 className="font-heading text-xl font-bold text-amber-400 mb-1">{t("synthesis.guruAchieved")}</h3>
             <p className="text-xs text-muted-foreground">
-              You have surpassed {(GURU_THRESHOLD / 1_000_000).toFixed(0)}M XP — you are among the first to master the Infrastructure Odyssey.
+              {t("synthesis.guruDesc")}
             </p>
           </motion.div>
         )}
@@ -586,28 +588,28 @@ export default function Synthesis() {
         <div className="text-center pb-8">
           <p className="text-xs text-muted-foreground mb-4">
             {synthesis.isComplete
-              ? "Your odyssey is complete, but the infrastructure never stops. Return to any relay to deepen your understanding."
-              : `${12 - synthesis.completionCount} relays remain. Continue your odyssey.`}
+              ? t("synthesis.odysseyDone")
+              : `${12 - synthesis.completionCount} ${t("synthesis.relaysRemain")}`}
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <Link href="/explore">
               <Button variant="outline" className="gap-2 border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
-                <MapIcon className="w-4 h-4" /> Explorer Mode
+                <MapIcon className="w-4 h-4" /> {t("synthesis.explorerMode")}
               </Button>
             </Link>
             <Link href="/flight-deck">
               <Button variant="outline" className="gap-2 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10">
-                <Compass className="w-4 h-4" /> Flight Deck
+                <Compass className="w-4 h-4" /> {t("synthesis.flightDeck")}
               </Button>
             </Link>
             <Link href="/leaderboard">
               <Button variant="outline" className="gap-2 border-border/50">
-                <Trophy className="w-4 h-4" /> Leaderboard
+                <Trophy className="w-4 h-4" /> {t("synthesis.leaderboard")}
               </Button>
             </Link>
             <Link href="/appraisal">
               <Button variant="outline" className="gap-2 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10">
-                <MessageSquarePlus className="w-4 h-4" /> Give Feedback
+                <MessageSquarePlus className="w-4 h-4" /> {t("synthesis.giveFeedback")}
               </Button>
             </Link>
           </div>

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search, BookOpen, Brain, Eye, Zap, Target, ChevronDown, ChevronUp } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 const SCADA_NODES = [
   {
@@ -52,6 +53,7 @@ const YODA_STEPS = [
 ];
 
 export default function YodaControl() {
+  const t = useT();
   const [yodaMode, setYodaMode] = useState<"search" | "remember">("search");
   const [activeNode, setActiveNode] = useState<string | null>(null);
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
@@ -64,12 +66,12 @@ export default function YodaControl() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
             <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">YODA CONTROL LEVER</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
           </div>
         </div>
       </header>
@@ -77,11 +79,11 @@ export default function YodaControl() {
       <main className="container py-8 max-w-5xl mx-auto space-y-12">
         {/* Title Section */}
         <section className="text-center space-y-4">
-          <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">The SCADA of Consciousness</p>
+          <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("yoda.scadaConsciousness")}</p>
           <h2 className="font-heading text-3xl md:text-5xl text-gold-gradient">YODA Control Lever</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base">
             Yoke → Orient → Decisive → Action. Three embodiments. One control system.
-            The human always holds the lever.
+            {t("yoda.humanLever")}
           </p>
         </section>
 
@@ -122,18 +124,18 @@ export default function YodaControl() {
           >
             {yodaMode === "search" ? (
               <div className="space-y-2">
-                <h3 className="font-heading text-cyan-glow text-lg">Search Mode — The Yaka Arrow</h3>
+                <h3 className="font-heading text-cyan-glow text-lg">{t("yoda.searchMode")}</h3>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  Active scanning. The YODA lever points outward — seeking new data, new connections, new nodes in the Dearden Field.
-                  Like the Yaka Arrow, it follows your intent through the matrix, finding what you need before you know you need it.
+                  {t("yoda.activeScanning")}
+                  {t("yoda.yakaArrow")}
                 </p>
               </div>
             ) : (
               <div className="space-y-2">
-                <h3 className="font-heading text-gold text-lg">Remember Mode — The Quill Mask</h3>
+                <h3 className="font-heading text-gold text-lg">{t("yoda.rememberMode")}</h3>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  Reflective integration. The YODA lever turns inward — consolidating knowledge, connecting patterns, building your thesis.
-                  Like the Quill Mask visor, it overlays what you've learned onto what you see, revealing hidden structures.
+                  {t("yoda.reflectiveIntegration")}
+                  {t("yoda.quillMask")}
                 </p>
               </div>
             )}
@@ -142,7 +144,7 @@ export default function YodaControl() {
 
         {/* Y-O-D-A Steps */}
         <section className="space-y-4">
-          <h3 className="font-heading text-gold text-xl text-center">The Four Steps</h3>
+          <h3 className="font-heading text-gold text-xl text-center">{t("yoda.fourSteps")}</h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {YODA_STEPS.map((step, i) => {
               const Icon = step.icon;
@@ -183,7 +185,7 @@ export default function YodaControl() {
 
         {/* SCADA Triangle */}
         <section className="space-y-6">
-          <h3 className="font-heading text-gold text-xl text-center">The Three Embodiments</h3>
+          <h3 className="font-heading text-gold text-xl text-center">{t("yoda.threeEmbodiments")}</h3>
           <div className="relative max-w-2xl mx-auto">
             {/* Triangle visualization */}
             <div className="flex flex-col items-center gap-8">
@@ -211,7 +213,7 @@ export default function YodaControl() {
               {/* Connecting lines visual */}
               <div className="flex items-center justify-center gap-2 text-gold/30">
                 <div className="h-px w-16 bg-gold/30" />
-                <span className="text-xs text-gold/50 font-mono">SCADA LOOP</span>
+                <span className="text-xs text-gold/50 font-mono">{t("yoda.scadaLoop")}</span>
                 <div className="h-px w-16 bg-gold/30" />
               </div>
 
@@ -250,7 +252,7 @@ export default function YodaControl() {
 
         {/* SCADA Schema Legend */}
         <section className="bg-card border border-border/50 rounded-xl p-6 space-y-4">
-          <h3 className="font-heading text-gold text-lg text-center">SCADA Schema</h3>
+          <h3 className="font-heading text-gold text-lg text-center">{t("yoda.scadaSchema")}</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             {SCADA_SCHEMA.map((item) => (
               <div key={item.letter} className="bg-background/50 rounded-lg p-4 text-center border border-border/30">
@@ -267,22 +269,22 @@ export default function YodaControl() {
 
         {/* Connection to Game */}
         <section className="bg-card border border-gold/30 rounded-xl p-6 text-center space-y-3">
-          <h3 className="font-heading text-gold text-lg">In The Reality Engine</h3>
+          <h3 className="font-heading text-gold text-lg">{t("yoda.inTre")}</h3>
           <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-            Every mode uses the YODA loop. Explorer taps to <strong className="text-foreground">Search</strong>.
-            Flight Deck pilots <strong className="text-foreground">Orient</strong> through the Dearden Field.
-            Scholars make <strong className="text-foreground">Decisive</strong> thesis choices.
-            Every action completes the loop — <strong className="text-foreground">Action</strong> transforms reality.
+            Every mode uses the YODA loop. Explorer taps to <strong className="text-foreground">{t("yoda.search")}</strong>.
+            Flight Deck pilots <strong className="text-foreground">{t("yoda.orient")}</strong> through the Dearden Field.
+            Scholars make <strong className="text-foreground">{t("yoda.decisive")}</strong> thesis choices.
+            Every action completes the loop — <strong className="text-foreground">{t("yoda.action")}</strong> transforms reality.
           </p>
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <Link href="/explore">
-              <Button variant="outline" size="sm" className="border-ember text-ember hover:bg-ember/10">Explorer</Button>
+              <Button variant="outline" size="sm" className="border-ember text-ember hover:bg-ember/10">{t("yoda.explorer")}</Button>
             </Link>
             <Link href="/flight-deck">
-              <Button variant="outline" size="sm" className="border-cyan-glow text-cyan-glow hover:bg-cyan-glow/10">Flight Deck</Button>
+              <Button variant="outline" size="sm" className="border-cyan-glow text-cyan-glow hover:bg-cyan-glow/10">{t("yoda.flightDeck")}</Button>
             </Link>
             <Link href="/create">
-              <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold/10">Scholar</Button>
+              <Button variant="outline" size="sm" className="border-gold text-gold hover:bg-gold/10">{t("yoda.scholar")}</Button>
             </Link>
           </div>
         </section>

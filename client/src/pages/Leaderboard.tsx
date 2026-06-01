@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { getPlayerBadge } from "@shared/badges";
 import { BadgeChip } from "@/components/BadgeDisplay";
+import { useT } from "@/contexts/LanguageContext";
 
 type ModeFilter = "all" | "explorer" | "flight_deck" | "scholar";
 
@@ -45,6 +46,7 @@ function formatXp(xp: number): string {
 }
 
 export default function Leaderboard() {
+  const t = useT();
   const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
 
   // Fetch live leaderboard data from DB
@@ -67,12 +69,12 @@ export default function Leaderboard() {
         <div className="container flex items-center justify-between h-12">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Home
+              <ArrowLeft className="w-4 h-4" /> {t("tab.home")}
             </Button>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">LIVE</span>
-            <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">LEADERBOARD</h1>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("leaderboard.live")}</span>
+            <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient">{t("leaderboard.title")}</h1>
           </div>
           <div />
         </div>
@@ -82,22 +84,22 @@ export default function Leaderboard() {
         {/* Title */}
         <div className="text-center mb-8">
           <Trophy className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-          <h2 className="font-heading text-3xl font-bold text-gold-gradient">Hall of Infrastructure</h2>
-          <p className="text-sm text-muted-foreground mt-1">Top explorers, pilots, and scholars across all modes</p>
+          <h2 className="font-heading text-3xl font-bold text-gold-gradient">{t("leaderboard.hallTitle")}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{t("leaderboard.subtitle")}</p>
         </div>
 
         {/* Global Stats */}
         <div className="grid grid-cols-3 gap-3 mb-8">
           <div className="p-4 rounded-lg border border-border/50 bg-card/30 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Total Players</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("leaderboard.totalPlayers")}</p>
             <p className="text-2xl font-bold font-mono">{totalPlayers}</p>
           </div>
           <div className="p-4 rounded-lg border border-border/50 bg-card/30 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Combined XP</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("leaderboard.combinedXp")}</p>
             <p className="text-2xl font-bold font-mono text-gold-gradient">{formatXp(totalXp)}</p>
           </div>
           <div className="p-4 rounded-lg border border-border/50 bg-card/30 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">GURU Status</p>
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("leaderboard.guruStatus")}</p>
             <p className="text-2xl font-bold font-mono text-amber-400">{guruCount}</p>
           </div>
         </div>
@@ -114,7 +116,7 @@ export default function Leaderboard() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              {mode === "all" ? "All Modes" : modeLabels[mode]}
+              {mode === "all" ? t("leaderboard.allModes") : t(`leaderboard.mode.${mode}`)}
             </button>
           ))}
         </div>
@@ -123,7 +125,7 @@ export default function Leaderboard() {
         {isLoading && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-amber-400 mr-2" />
-            <span className="text-muted-foreground text-sm">Loading leaderboard...</span>
+            <span className="text-muted-foreground text-sm">{t("leaderboard.loading")}</span>
           </div>
         )}
 
@@ -131,7 +133,7 @@ export default function Leaderboard() {
         {!isLoading && entries.length === 0 && (
           <div className="text-center py-12">
             <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-            <p className="text-muted-foreground text-sm">No players yet. Be the first to explore!</p>
+            <p className="text-muted-foreground text-sm">{t("leaderboard.noPlayers")}</p>
             <Link href="/explore">
               <Button variant="outline" className="mt-4 gap-2 border-amber-500/30 text-amber-400">
                 <Flame className="w-4 h-4" /> Start Exploring
@@ -145,13 +147,13 @@ export default function Leaderboard() {
           <div className="rounded-xl border border-border/50 overflow-hidden">
             {/* Header Row */}
             <div className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground border-b border-border/50">
-              <span>Rank</span>
-              <span>Player</span>
+              <span>{t("leaderboard.rank")}</span>
+              <span>{t("leaderboard.player")}</span>
               <span className="text-right md:hidden">XP</span>
               <span className="text-right hidden md:block">XP</span>
-              <span className="text-right hidden md:block">BitPoints</span>
-              <span className="text-center hidden md:block">Relays</span>
-              <span className="text-center hidden md:block">Status</span>
+              <span className="text-right hidden md:block">{t("leaderboard.bitpoints")}</span>
+              <span className="text-center hidden md:block">{t("leaderboard.relays")}</span>
+              <span className="text-center hidden md:block">{t("leaderboard.status")}</span>
             </div>
 
             {/* Entries */}
@@ -180,7 +182,7 @@ export default function Leaderboard() {
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       {getPlayerBadge(entry.totalXp) && <BadgeChip badge={getPlayerBadge(entry.totalXp)!} />}
-                      <p className="text-[10px] text-muted-foreground">{modeLabels[entry.mode]}</p>
+                      <p className="text-[10px] text-muted-foreground">{t(`leaderboard.mode.${entry.mode}`)}</p>
                       {/* Mobile-only inline stats */}
                       <span className="md:hidden text-[10px] text-muted-foreground">•</span>
                       <span className="md:hidden text-[10px] font-mono flex items-center gap-0.5"><Zap className="w-2.5 h-2.5 text-amber-400" />{formatXp(entry.bitPoints)}</span>
@@ -209,10 +211,10 @@ export default function Leaderboard() {
                     {isGuru ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30">
                         <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                        <span className="text-[10px] font-bold text-amber-400">GURU</span>
+                        <span className="text-[10px] font-bold text-amber-400">{t("leaderboard.guru")}</span>
                       </span>
                     ) : (
-                      <span className="text-[10px] text-muted-foreground">Active</span>
+                      <span className="text-[10px] text-muted-foreground">{t("leaderboard.active")}</span>
                     )}
                   </div>
                 </motion.div>
@@ -225,12 +227,10 @@ export default function Leaderboard() {
         <div className="mt-6 p-4 rounded-lg border border-border/50 bg-card/30 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <TrendingUp className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-heading font-bold">XP System</span>
+            <span className="text-sm font-heading font-bold">{t("leaderboard.xpSystem")}</span>
           </div>
           <p className="text-xs text-muted-foreground">
-            Maximum XP cap: <span className="text-gold-gradient font-bold">24,000,000</span> | 
-            BitPoints earned at 1:100 XP ratio | 
-            GURU status awarded at 1,000,000+ XP
+            {t("leaderboard.xpDesc")}
           </p>
         </div>
       </div>

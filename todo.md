@@ -1199,3 +1199,12 @@
 - [x] GP-001 i18n: all 8 languages (EN, ZH, AR, ES, HI, JA, KO, VI) with Fire relay keys
 - [x] Pre-existing test fix: BottomTabBar iGO assertion updated for i18n pattern
 - [x] All 355 tests passing
+
+## GP-001 ZH Final Compliance Pass (Block 612)
+- [x] Fix TS error in ExplorerRelay.tsx (missing useT() in DiscoveryGrid sub-component)
+- [x] Add relay.name.13 "Fractal Connector" / "分形连接器" to both EN and ZH dictionaries
+- [x] Translate Resources page: description, Download PDF, 4-Pillar Framework, Governance Deck, Frameworks, Media Catalogue, Bridge Hub, DIAMOND Classification, quote
+- [x] Translate Leaderboard "Home" button → t("tab.home")
+- [x] Translate RelaySummaryCard "Share Your Feedback" → t("explorer.shareYourFeedback")
+- [x] Update engagement-features.test.ts assertions to match i18n key patterns
+- [x] All 355 tests passing, 0 TS errors

@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileText, BookOpen, Shield, Scroll, Download, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { useT } from "@/contexts/LanguageContext";
 
 interface ResourceDoc {
   id: string;
@@ -116,6 +117,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function Resources() {
+  const t = useT();
   return (
     <div className="min-h-screen bg-background text-foreground mobile-content-pad">
       {/* Header */}
@@ -124,12 +126,12 @@ export default function Resources() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
-            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">RESOURCES</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
+            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">{t("resources.title")}</h1>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
           </div>
         </div>
       </header>
@@ -137,11 +139,10 @@ export default function Resources() {
       <main className="container py-8 max-w-5xl mx-auto space-y-8">
         {/* Hero */}
         <div className="text-center space-y-3">
-          <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">An Infrastructure Odyssey — Episode 1: Calories to Consciousness</p>
-          <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">Document Library</h2>
+          <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("resources.odysseyEp1")}</p>
+          <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("resources.docLibrary")}</h2>
           <p className="text-muted-foreground text-sm max-w-2xl mx-auto">
-            The complete collection of handbooks, design documents, Turing Papers, and governance protocols
-            that define The Reality Engine. Three volumes — Perspective, Guide, and Game — one mission.
+            {t("resources.description")}
           </p>
         </div>
 
@@ -149,17 +150,17 @@ export default function Resources() {
         <div className="flex items-center justify-center gap-6 text-sm">
           <div className="text-center">
             <p className="font-heading text-gold text-lg">{DOCUMENTS.length}</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider">DOCUMENTS</p>
+            <p className="text-[10px] text-muted-foreground tracking-wider">{t("resources.documents")}</p>
           </div>
           <div className="w-px h-8 bg-border/50" />
           <div className="text-center">
             <p className="font-heading text-cyan-400 text-lg">{DOCUMENTS.filter(d => d.status === "LOCKED").length}</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider">LOCKED</p>
+            <p className="text-[10px] text-muted-foreground tracking-wider">{t("resources.locked")}</p>
           </div>
           <div className="w-px h-8 bg-border/50" />
           <div className="text-center">
             <p className="font-heading text-green-400 text-lg">{DOCUMENTS.filter(d => d.status === "ACTIVE").length}</p>
-            <p className="text-[10px] text-muted-foreground tracking-wider">ACTIVE</p>
+            <p className="text-[10px] text-muted-foreground tracking-wider">{t("resources.active")}</p>
           </div>
         </div>
 
@@ -208,11 +209,11 @@ export default function Resources() {
 
                       {/* Download + Block Reference */}
                       <div className="flex items-center justify-between mt-3">
-                        <p className="text-[10px] font-mono text-muted-foreground/50">{doc.block} — DIAMOND Classification</p>
+                        <p className="text-[10px] font-mono text-muted-foreground/50">{doc.block} — {t("resources.diamondClass")}</p>
                         {doc.pdfUrl && (
                           <a href={doc.pdfUrl} target="_blank" rel="noopener noreferrer" download>
                             <Button variant="outline" size="sm" className="gap-1.5 text-[10px] h-7 border-gold/30 text-gold hover:bg-gold/10">
-                              <Download className="w-3 h-3" /> Download PDF
+                              <Download className="w-3 h-3" /> {t("resources.downloadPdf")}
                             </Button>
                           </a>
                         )}
@@ -227,22 +228,22 @@ export default function Resources() {
 
         {/* Three Volumes Context */}
         <div className="bg-card border border-border/50 rounded-xl p-6 space-y-4">
-          <h4 className="font-heading text-gold text-sm text-center">BOOK 1 — EPISODE 1: CALORIES TO CONSCIOUSNESS</h4>
+          <h4 className="font-heading text-gold text-sm text-center">{t("resources.book1")}</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-background/50 border border-border/30 rounded-lg p-4 text-center">
-              <p className="font-heading text-amber-400 text-sm">THE PERSPECTIVE</p>
-              <p className="text-xs text-muted-foreground mt-1">Part 1 (A & B)</p>
-              <p className="text-[10px] text-foreground/60 mt-2">Narrative foundation — the story of 12,000 years</p>
+              <p className="font-heading text-amber-400 text-sm">{t("resources.thePerspective")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("resources.part1")}</p>
+              <p className="text-[10px] text-foreground/60 mt-2">{t("resources.narrativeFoundation")}</p>
             </div>
             <div className="bg-background/50 border border-border/30 rounded-lg p-4 text-center">
-              <p className="font-heading text-blue-400 text-sm">THE GUIDE</p>
-              <p className="text-xs text-muted-foreground mt-1">Part 2 (A, B & C)</p>
-              <p className="text-[10px] text-foreground/60 mt-2">4-Pillar Framework — Observational → Educational → Application → Thesis</p>
+              <p className="font-heading text-blue-400 text-sm">{t("resources.theGuide")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("resources.part2")}</p>
+              <p className="text-[10px] text-foreground/60 mt-2">{t("resources.fourPillarFramework")}</p>
             </div>
             <div className="bg-background/50 border border-border/30 rounded-lg p-4 text-center">
-              <p className="font-heading text-green-400 text-sm">THE GAME</p>
-              <p className="text-xs text-muted-foreground mt-1">Part 3 — The Reality Engine</p>
-              <p className="text-[10px] text-foreground/60 mt-2">Interactive platform — Explorer, Flight Deck, Scholar</p>
+              <p className="font-heading text-green-400 text-sm">{t("resources.theGame")}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("resources.part3")}</p>
+              <p className="text-[10px] text-foreground/60 mt-2">{t("resources.interactivePlatform")}</p>
             </div>
           </div>
         </div>
@@ -251,28 +252,28 @@ export default function Resources() {
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/governance">
             <Button variant="outline" size="sm" className="gap-2 text-xs">
-              <Shield className="w-3 h-3" /> Governance Deck
+              <Shield className="w-3 h-3" /> {t("resources.governanceDeck")}
             </Button>
           </Link>
           <Link href="/frameworks">
             <Button variant="outline" size="sm" className="gap-2 text-xs">
-              <FileText className="w-3 h-3" /> Frameworks
+              <FileText className="w-3 h-3" /> {t("resources.frameworks")}
             </Button>
           </Link>
           <Link href="/media">
             <Button variant="outline" size="sm" className="gap-2 text-xs">
-              <ExternalLink className="w-3 h-3" /> Media Catalogue
+              <ExternalLink className="w-3 h-3" /> {t("resources.mediaCatalogue")}
             </Button>
           </Link>
           <Link href="/bridges">
             <Button variant="outline" size="sm" className="gap-2 text-xs">
-              <ExternalLink className="w-3 h-3" /> Bridge Hub
+              <ExternalLink className="w-3 h-3" /> {t("resources.bridgeHub")}
             </Button>
           </Link>
         </div>
 
         <p className="text-center text-muted-foreground text-xs italic">
-          "The line is not safe until the system is tested." — iAAi Block 353
+          {t("resources.quote")}
         </p>
       </main>
     </div>

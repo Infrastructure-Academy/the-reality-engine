@@ -25,10 +25,12 @@ import { Confetti } from "@/components/Confetti";
 import { NodeTooltip } from "@/components/NodeTooltip";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { FireRelayGame } from "@/components/FireRelayGame";
+import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "craft_select" | "fire_relay" | "hud";
 
 export default function FlightDeck() {
+  const t = useT();
   const { user, isAuthenticated } = useAuth();
   const [, navigate] = useLocation();
   const [phase, setPhase] = useState<Phase>("craft_select");
@@ -233,19 +235,19 @@ export default function FlightDeck() {
       <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <Rocket className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
-          <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">Flight Deck Access Required</h2>
+          <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{t("flight.accessRequired")}</h2>
           <p className="text-muted-foreground text-sm mb-6">
-            The Flight Deck requires authentication. Sign in to select your craft and navigate the Dearden Field.
+            {t("flight.authDesc")}
           </p>
           <div className="flex flex-col gap-3">
             <a href={getLoginUrl()}>
               <Button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-heading tracking-wider">
-                <Lock className="w-4 h-4 mr-2" /> Sign In to Launch
+                <Lock className="w-4 h-4 mr-2" /> {t("flight.signIn")}
               </Button>
             </a>
             <Link href="/">
               <Button variant="ghost" className="w-full text-muted-foreground">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Mode Select
+                <ArrowLeft className="w-4 h-4 mr-2" /> {t("scholar.backToModes")}
               </Button>
             </Link>
           </div>
@@ -262,15 +264,15 @@ export default function FlightDeck() {
           <div className="container flex items-center justify-between h-12">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-                <ArrowLeft className="w-4 h-4" /> Modes
-              </Button>
-            </Link>
-            <div className="flex items-center gap-3">
+<ArrowLeft className="w-4 h-4" /> {t("scholar.modes")}
+            </Button>
+          </Link>
+          <div className="flex items-center gap-3">
               <div className="hidden sm:block">
                 <SocialFollowButtons />
               </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
-              <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient hidden md:block">MPNC FLEET — CRAFT SELECTION</h1>
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("common.beta")}</span>
+              <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient hidden md:block">{t("flight.fleetTitle")}</h1>
             </div>
             <div className="block sm:hidden">
               <SocialFollowButtons compact />
@@ -282,7 +284,7 @@ export default function FlightDeck() {
           {/* Intro Video */}
           <ExplorerVideo
             videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-clip-v5_b45064f9.mp4"
-            title="Your Cockpit Awaits, Commander"
+            title={t("flight.videoTitle")}
             subtitle="32s intro"
             accentColor="#06b6d4"
             glowColor="rgba(6,182,212,0.3)"
@@ -290,8 +292,8 @@ export default function FlightDeck() {
 
           <div className="text-center mb-8">
             <p className="text-xs tracking-[0.3em] uppercase text-cyan-400 mb-2">FITS Temperament Alignment</p>
-            <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide">Select Your Craft</h2>
-            <p className="text-sm text-muted-foreground mt-2">Each vessel aligns with a FITS temperament and a Great Web</p>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide">{t("flight.selectCraft")}</h2>
+            <p className="text-sm text-muted-foreground mt-2">{t("flight.vesselAligns")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -381,7 +383,7 @@ export default function FlightDeck() {
               <Flame className="w-4 h-4 text-orange-400" />
               <span className="font-heading text-sm font-bold text-orange-400">RELAY 1 — FIRE TRIAL</span>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("common.beta")}</span>
           </div>
         </header>
         <FireRelayGame
@@ -416,10 +418,10 @@ export default function FlightDeck() {
             <div className="hidden md:block">
               <SocialFollowButtons compact />
             </div>
-            <span className="hidden sm:inline px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <span className="hidden sm:inline px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("common.beta")}</span>
             <div className="hidden sm:flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-400">ONLINE</span>
+              <span className="text-green-400">{t("flight.online")}</span>
             </div>
             <span className="text-cyan-400 text-[10px] sm:text-xs">{totalActivated}/{totalNodes}</span>
             <XpCounter value={totalActivated * 50000} compact color="cyan" />
@@ -454,7 +456,7 @@ export default function FlightDeck() {
               <span className="text-xs font-mono text-cyan-400">{totalActivated}/{totalNodes}</span>
             </div>
             <p className="text-[10px] text-muted-foreground">
-              Tap each node to activate. Complete all 60 to unlock the Synthesis page.
+              {t("flight.tapNodeInstruction")}
             </p>
           </div>
         )}
@@ -465,7 +467,7 @@ export default function FlightDeck() {
             className="mb-4 p-4 rounded-lg border border-amber-500/40 bg-amber-500/10 text-center"
           >
             <p className="text-sm font-heading font-bold text-gold-gradient mb-1">ALL NODES ACTIVATED</p>
-            <p className="text-xs text-muted-foreground mb-2">The Dearden Field is fully mapped. View your civilizational pattern.</p>
+            <p className="text-xs text-muted-foreground mb-2">{t("flight.fieldMapped")}</p>
             <Link href="/synthesis">
               <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white font-heading tracking-wider">
                 View Synthesis <ChevronRight className="w-4 h-4 ml-1" />
@@ -637,9 +639,9 @@ export default function FlightDeck() {
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Intersection of the {RELAYS.find(r => r.number === activeNode.relay)?.name} relay with the {activeNode.web} web.
+                {t("flight.intersection").replace("{relay}", RELAYS.find(r => r.number === activeNode.relay)?.name || "").replace("{web}", activeNode.web)}
                 {selectedCraft?.web === activeNode.web && (
-                  <span className="text-cyan-400"> Your craft has affinity here — bonus XP applies.</span>
+                  <span className="text-cyan-400"> {t("flight.bonusXP")}</span>
                 )}
               </p>
             </motion.div>
@@ -689,7 +691,7 @@ export default function FlightDeck() {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-cyan-400">DAVID</p>
-                  <p className="text-[10px] text-muted-foreground">Flight Deck Co-Pilot</p>
+                  <p className="text-[10px] text-muted-foreground">{t("flight.coPilot")}</p>
                 </div>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setShowChat(false)}>
@@ -710,18 +712,18 @@ const persp: Record<string, number> = { west: 0, east: 0, outrider: 0 };
                          const pMap: Record<number, string> = { 1:"outrider",2:"east",3:"east",4:"outrider",5:"west",6:"outrider",7:"east",8:"west",9:"west",10:"west",11:"outrider",12:"outrider" };
                          ids.forEach(i => { const p = pMap[i+1]; if (p) persp[p]++; });
                          const total = persp.west + persp.east + persp.outrider;
-                        if (total < 2) return "DAVID co-pilot standing by.";
+                        if (total < 2) return t("flight.copilot.standby");
                         const sorted = Object.entries(persp).sort((a,b) => b[1]-a[1]);
                         const bal = sorted[0][1] > 0 && sorted[1][1] > 0 && (sorted[0][1] - sorted[1][1]) / sorted[0][1] < 0.15;
-                        if (bal) return "Co-pilot online, Balanced Navigator. All vectors calibrated.";
+                        if (bal) return t("flight.copilot.balanced");
                         const dom = sorted[0][0];
-                        if (dom === "west") return "Co-pilot online, Systems Architect. Engineering vectors locked.";
-                        if (dom === "east") return "Co-pilot online, Harmony Weaver. Harmonic frequencies aligned.";
-                        return "Co-pilot online, Universal Connector. All routes charted.";
-                      } catch { return "DAVID co-pilot standing by."; }
+                        if (dom === "west") return t("flight.copilot.west");
+                        if (dom === "east") return t("flight.copilot.east");
+                        return t("flight.copilot.default");
+                      } catch { return t("flight.copilot.standby"); }
                     })()}
                   </p>
-                  <p className="text-xs text-cyan-400/60 mt-1">Request mission briefings, node analysis, or navigation guidance.</p>
+                  <p className="text-xs text-cyan-400/60 mt-1">{t("flight.requestMission")}</p>
                 </div>
               )}
               {chatMessages.map((msg, i) => (
@@ -747,10 +749,10 @@ const persp: Record<string, number> = { west: 0, east: 0, outrider: 0 };
                       setChatInput("");
                     }
                   }}
-                  placeholder="Request briefing..."
+                  placeholder={t("flight.placeholder")}
                   className="flex-1 bg-input border border-cyan-500/20 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-cyan-500/50"
                 />
-                <Button size="sm" className="bg-cyan-600 hover:bg-cyan-500 text-white">Send</Button>
+                <Button size="sm" className="bg-cyan-600 hover:bg-cyan-500 text-white">{t("common.send")}</Button>
               </div>
             </div>
           </motion.div>

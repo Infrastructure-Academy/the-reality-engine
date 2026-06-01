@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, CreditCard, Star, Lock, Sparkles, Trophy, Zap, Eye } from "lucide-react";
 import { RELAYS } from "@shared/gameData";
 import { ImageLightbox } from "@/components/ImageLightbox";
+import { useT } from "@/contexts/LanguageContext";
 
 /* ── Convergence iCARD Series (DOM-004, Block 445) ── */
 const CONVERGENCE_CARDS = [
@@ -100,6 +101,7 @@ const EQUIPMENT_CARDS: GameCard[] = [
 ];
 
 export default function CardCollection() {
+  const t = useT();
   const [activeCategory, setActiveCategory] = useState<"all" | "relay" | "joker" | "equipment">("all");
   const [selectedCard, setSelectedCard] = useState<GameCard | null>(null);
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
@@ -129,12 +131,12 @@ export default function CardCollection() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
-            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider"><span className="brand-i">i</span>CARD COLLECTION</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
+            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider"><span className="brand-i">i</span>{t("cards.title")}</h1>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <Sparkles className="w-4 h-4 text-gold" />

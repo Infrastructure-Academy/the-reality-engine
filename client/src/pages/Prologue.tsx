@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Volume2, VolumeX } from "lucide-react";
 import { davidSpeak, davidStop, getVoiceEnabled, setVoiceEnabled } from "@/hooks/useDavidVoice";
+import { useT } from "@/contexts/LanguageContext";
 
 const PROLOGUE_SCENES = [
   {
@@ -74,6 +75,7 @@ const VISUAL_ELEMENTS: Record<string, { emoji: string; gradient: string }> = {
 };
 
 export default function Prologue() {
+  const t = useT();
   const [, navigate] = useLocation();
   const [currentScene, setCurrentScene] = useState(0);
   const [voiceOn, setVoiceOn] = useState(getVoiceEnabled);
@@ -149,7 +151,7 @@ export default function Prologue() {
               <span className="text-[10px] font-bold text-black">D</span>
             </div>
           </Link>
-          <span className="text-xs font-mono text-amber-400/80 tracking-wider">DAVID PROLOGUE</span>
+          <span className="text-xs font-mono text-amber-400/80 tracking-wider">{t("prologue.title")}</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={toggleVoice} className="text-muted-foreground">
@@ -226,7 +228,7 @@ export default function Prologue() {
                 className="flex items-center justify-center gap-1.5 mt-6"
               >
                 <Volume2 className="w-3 h-3 text-amber-400/60 animate-pulse" />
-                <span className="text-[9px] text-amber-400/60 font-mono">DAVID NARRATING</span>
+                <span className="text-[9px] text-amber-400/60 font-mono">{t("prologue.davidNarrating")}</span>
               </motion.div>
             )}
           </motion.div>

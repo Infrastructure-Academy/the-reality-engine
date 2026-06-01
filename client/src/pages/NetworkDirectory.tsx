@@ -8,6 +8,7 @@ import {
   ChevronLeft, ChevronRight, UserCheck, Filter, Globe,
   Tag, Plus, X, Check, Palette, Trash2, Edit2, Zap
 } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 function StatCard({ label, value, icon: Icon, color }: { label: string; value: number; icon: any; color: string }) {
   return (
@@ -45,6 +46,7 @@ function TagBadge({ name, color, onRemove }: { name: string; color: string; onRe
 }
 
 function CreateTagDialog({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const t = useT();
   const [name, setName] = useState("");
   const [color, setColor] = useState(TAG_COLORS[0]);
   const [desc, setDesc] = useState("");
@@ -60,7 +62,7 @@ function CreateTagDialog({ onClose, onCreated }: { onClose: () => void; onCreate
         </h3>
         <div className="space-y-4">
           <div>
-            <label className="text-xs text-slate-400 uppercase tracking-wider mb-1 block">Name</label>
+            <label className="text-xs text-slate-400 uppercase tracking-wider mb-1 block">{t("network.name")}</label>
             <input
               value={name}
               onChange={e => setName(e.target.value)}
@@ -69,7 +71,7 @@ function CreateTagDialog({ onClose, onCreated }: { onClose: () => void; onCreate
             />
           </div>
           <div>
-            <label className="text-xs text-slate-400 uppercase tracking-wider mb-1 block">Color</label>
+            <label className="text-xs text-slate-400 uppercase tracking-wider mb-1 block">{t("network.color")}</label>
             <div className="flex gap-2 flex-wrap">
               {TAG_COLORS.map(c => (
                 <button
@@ -86,7 +88,7 @@ function CreateTagDialog({ onClose, onCreated }: { onClose: () => void; onCreate
             <input
               value={desc}
               onChange={e => setDesc(e.target.value)}
-              placeholder="Brief description..."
+              placeholder={t("network.descPlaceholder")}
               className="w-full px-3 py-2 bg-slate-900/60 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500"
             />
           </div>
@@ -114,11 +116,12 @@ function TagAssignDropdown({ contactId, existingTags, allTags, onAssigned }: {
   allTags: { id: number; name: string; color: string | null }[];
   onAssigned: () => void;
 }) {
+  const t = useT();
   const assignTag = trpc.agn.assignTag.useMutation({ onSuccess: onAssigned });
-  const availableTags = allTags.filter(t => !existingTags.some(et => et.tagId === t.id));
+  const availableTags = allTags.filter(tag => !existingTags.some(et => et.tagId === tag.id));
 
   if (availableTags.length === 0) {
-    return <div className="text-xs text-slate-500 py-1">All tags assigned</div>;
+    return <div className="text-xs text-slate-500 py-1">{t("network.allTagsAssigned")}</div>;
   }
 
   return (
@@ -138,6 +141,7 @@ function TagAssignDropdown({ contactId, existingTags, allTags, onAssigned }: {
 }
 
 export default function NetworkDirectory() {
+  const t = useT();
   const { user, loading: authLoading } = useAuth();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -204,10 +208,10 @@ export default function NetworkDirectory() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <Users className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Network Directory</h1>
+          <h1 className="text-2xl font-bold text-white mb-2">{t("network.titleCase")}</h1>
           <p className="text-slate-400 mb-6">Sign in to access the AGN contact directory.</p>
           <a href={getLoginUrl()} className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors">
-            Sign In
+            {t("common.signIn")}
           </a>
         </div>
       </div>
@@ -223,8 +227,8 @@ export default function NetworkDirectory() {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <Globe className="w-5 h-5 text-cyan-400" />
-          <h1 className="text-lg font-bold text-white tracking-wide">AGN NETWORK DIRECTORY</h1>
-          <span className="ml-auto text-xs text-slate-500 font-mono">ADMIN</span>
+          <h1 className="text-lg font-bold text-white tracking-wide">{t("network.title")}</h1>
+          <span className="ml-auto text-xs text-slate-500 font-mono">{t("network.admin")}</span>
         </div>
       </div>
 
@@ -281,7 +285,7 @@ export default function NetworkDirectory() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
-              placeholder="Search by name or phone..."
+              placeholder={t("network.searchPlaceholder")}
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-4 py-2.5 bg-slate-800/60 border border-slate-700/50 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 text-sm"
@@ -318,7 +322,7 @@ export default function NetworkDirectory() {
               {selectedContacts.size} selected
             </span>
             <span className="text-slate-500">|</span>
-            <span className="text-xs text-slate-400">Assign tag:</span>
+            <span className="text-xs text-slate-400">{t("network.assignTag")}</span>
             {allTags.map((tag: any) => (
               <button
                 key={tag.id}
@@ -329,7 +333,7 @@ export default function NetworkDirectory() {
                 {tag.name}
               </button>
             ))}
-            {bulkAssignTag.isPending && <span className="text-xs text-slate-400">Assigning...</span>}
+            {bulkAssignTag.isPending && <span className="text-xs text-slate-400">{t("network.assigning")}</span>}
           </div>
         )}
 
@@ -341,7 +345,7 @@ export default function NetworkDirectory() {
           </span>
           {bulkTagMode && (
             <button onClick={selectAll} className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
-              Select all on page
+              {t("network.selectAll")}
             </button>
           )}
           {totalPages > 1 && (
@@ -356,12 +360,12 @@ export default function NetworkDirectory() {
           {isLoading ? (
             <div className="p-12 text-center">
               <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Loading contacts...</p>
+              <p className="text-sm text-slate-500">{t("network.loading")}</p>
             </div>
           ) : contacts.length === 0 ? (
             <div className="p-12 text-center">
               <Users className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400">No contacts found</p>
+              <p className="text-slate-400">{t("network.noContacts")}</p>
               {search && <p className="text-sm text-slate-500 mt-1">Try a different search term</p>}
             </div>
           ) : (
@@ -382,10 +386,10 @@ export default function NetworkDirectory() {
                         />
                       </th>
                     )}
-                    <th className="text-left px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Name</th>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("network.name")}</th>
                     <th className="text-left px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider hidden sm:table-cell">Phone</th>
                     <th className="text-left px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Tags</th>
-                    <th className="text-center px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Msgs</th>
+                    <th className="text-center px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">{t("network.msgs")}</th>
                     <th className="text-center px-4 py-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
@@ -461,7 +465,7 @@ export default function NetworkDirectory() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <div className="space-y-3">
                                 <div>
-                                  <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Details</div>
+                                  <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{t("network.details")}</div>
                                   <div className="text-sm text-slate-300 space-y-1">
                                     <div>Display Name: <span className="text-white">{c.displayName || "—"}</span></div>
                                     <div>First Message: <span className="text-white">{c.firstMessage || "—"}</span></div>
@@ -474,7 +478,7 @@ export default function NetworkDirectory() {
                               </div>
                               <div className="space-y-3">
                                 <div>
-                                  <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">Assign Tags</div>
+                                  <div className="text-xs text-slate-400 uppercase tracking-wider mb-1">{t("network.assignTags")}</div>
                                   {allTags && (
                                     <TagAssignDropdown
                                       contactId={c.id}

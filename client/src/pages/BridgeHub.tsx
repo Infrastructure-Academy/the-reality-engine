@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
+import { useT } from "@/contexts/LanguageContext";
 
 const BRIDGE_ICONS: Record<string, typeof Globe> = {
   "ACAD SITE": BookOpen,
@@ -41,6 +42,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function BridgeHub() {
+  const t = useT();
   const { user } = useAuth();
 
   const { data: status, isLoading: statusLoading } = trpc.bridge.status.useQuery();
@@ -109,7 +111,7 @@ export default function BridgeHub() {
               </Button>
             </Link>
             <div className="flex-1">
-              <h1 className="text-lg font-bold font-mono tracking-tight">BRIDGE HUB</h1>
+              <h1 className="text-lg font-bold font-mono tracking-tight">{t("bridges.title")}</h1>
               <p className="text-xs text-muted-foreground">Tetrahedral Observer — Four Operational Bridges</p>
             </div>
             {user && (
@@ -236,7 +238,7 @@ export default function BridgeHub() {
                           return (
                             <>
                               <SIcon className={`w-3 h-3 ${sColor}`} />
-                              <span>Last sync: {new Date((lastSync as any).syncedAt).toLocaleString()}</span>
+                              <span>{t("bridge.lastSync")}: {new Date((lastSync as any).syncedAt).toLocaleString()}</span>
                               <span className={sColor}>({(lastSync as any).status})</span>
                             </>
                           );

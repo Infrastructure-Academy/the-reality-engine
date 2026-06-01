@@ -11,6 +11,7 @@ import {
   Cog, Train, Zap, Plane, Satellite, Brain, Trophy,
   Clock, Star, Target, Award, ChevronDown, ChevronUp
 } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 // Map relay numbers to icons
 const RELAY_ICONS: Record<number, any> = {
@@ -74,6 +75,7 @@ interface TimelineEvent {
 }
 
 function TimelineItem({ event, cumulativeXp }: { event: TimelineEvent; cumulativeXp: number }) {
+  const t = useT();
   const relay = getRelayInfo(event.source, event.sourceId);
   const Icon = relay ? (RELAY_ICONS[relay.number] || Star) : getEventIcon(event.source);
   const colorClass = relay ? "text-cyan-400 bg-cyan-500/20 border-cyan-500/30" : getEventColor(event.source);
@@ -102,7 +104,7 @@ function TimelineItem({ event, cumulativeXp }: { event: TimelineEvent; cumulativ
           {relay && (
             <div className="flex items-center gap-1.5 mt-1">
               <span className="text-xs" style={{ color: relay.color }}>{relay.emoji}</span>
-              <span className="text-xs text-slate-400">Relay {relay.number}: {relay.name}</span>
+              <span className="text-xs text-slate-400">{t("journey.relayName").replace("{n}", String(relay.number)).replace("{name}", relay.name)}</span>
             </div>
           )}
           <div className="flex items-center justify-between mt-2">
@@ -120,6 +122,7 @@ function TimelineItem({ event, cumulativeXp }: { event: TimelineEvent; cumulativ
 }
 
 function BadgeTimeline({ totalXp }: { totalXp: number }) {
+  const t = useT();
   const earned = getAllEarnedBadges(totalXp);
   const next = getNextBadge(totalXp);
 
@@ -150,7 +153,7 @@ function BadgeTimeline({ totalXp }: { totalXp: number }) {
       {next && (
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-            <span>Next: {next.badge.emoji} {next.badge.name}</span>
+            <span>{t("journey.next")}: {next.badge.emoji} {next.badge.name}</span>
             <span>{Math.round(next.progress * 100)}%</span>
           </div>
           <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
@@ -169,6 +172,7 @@ function BadgeTimeline({ totalXp }: { totalXp: number }) {
 }
 
 export default function Journey() {
+  const t = useT();
   const { user, loading: authLoading } = useAuth();
   const [profileId, setProfileId] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
@@ -231,10 +235,10 @@ export default function Journey() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <Clock className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">My Journey</h1>
-          <p className="text-slate-400 mb-6">Sign in to view your exploration timeline and achievements.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">{t("journey.titleCase")}</h1>
+          <p className="text-slate-400 mb-6">{t("journey.signInPrompt")}</p>
           <a href={getLoginUrl()} className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-medium transition-colors">
-            Sign In
+            {t("common.signIn")}
           </a>
         </div>
       </div>
@@ -250,7 +254,7 @@ export default function Journey() {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <Clock className="w-5 h-5 text-cyan-400" />
-          <h1 className="text-lg font-bold text-white tracking-wide">MY JOURNEY</h1>
+          <h1 className="text-lg font-bold text-white tracking-wide">{t("journey.title")}</h1>
         </div>
       </div>
 
@@ -259,25 +263,25 @@ export default function Journey() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-center">
             <div className="text-xl font-bold text-cyan-400">{formatXp(totalXp)}</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Total XP</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{t("journey.totalXp")}</div>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-center">
             <div className="text-xl font-bold text-emerald-400">{completedRelays}/12</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Relays Done</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{t("journey.relaysDone")}</div>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-center">
             <div className="text-xl font-bold text-amber-400">{totalDiscoveries}</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Discoveries</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{t("journey.discoveries")}</div>
           </div>
           <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg p-3 text-center">
             <div className="text-xl font-bold text-purple-400">{totalNodes}/60</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">Nodes</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{t("journey.nodes")}</div>
           </div>
         </div>
 
         {/* Share Your Archetype */}
         <div className="bg-slate-800/40 border border-amber-500/20 rounded-lg p-4 text-center">
-          <p className="text-[10px] text-amber-400/60 uppercase tracking-[0.3em] mb-2">Your Player Card</p>
+          <p className="text-[10px] text-amber-400/60 uppercase tracking-[0.3em] mb-2">{t("journey.playerCard")}</p>
           <ShareArchetypeCard
             displayName={user?.name || "Anonymous Player"}
             fitsType={getProfile.data?.fitsType}
@@ -301,13 +305,13 @@ export default function Journey() {
           {timeline.isLoading ? (
             <div className="text-center py-12">
               <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm text-slate-500">Loading your journey...</p>
+              <p className="text-sm text-slate-500">{t("journey.loading")}</p>
             </div>
           ) : events.length === 0 ? (
             <div className="text-center py-12 bg-slate-800/30 border border-slate-700/30 rounded-lg">
               <Compass className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <p className="text-slate-400 font-medium">No discoveries yet</p>
-              <p className="text-sm text-slate-500 mt-1">Start exploring relays to build your timeline.</p>
+              <p className="text-slate-400 font-medium">{t("journey.noDiscoveries")}</p>
+              <p className="text-sm text-slate-500 mt-1">{t("journey.startExploring")}</p>
               <Link href="/explore" className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm rounded-lg transition-colors">
                 Begin Exploring
               </Link>
@@ -328,9 +332,9 @@ export default function Journey() {
                   className="w-full flex items-center justify-center gap-2 py-3 text-sm text-slate-400 hover:text-white transition-colors"
                 >
                   {showAll ? (
-                    <>Show Less <ChevronUp className="w-4 h-4" /></>
+                    <>{t("common.showLess")} <ChevronUp className="w-4 h-4" /></>
                   ) : (
-                    <>Show All {events.length} Events <ChevronDown className="w-4 h-4" /></>
+                    <>{t("common.showAll").replace("{n}", String(events.length))} <ChevronDown className="w-4 h-4" /></>
                   )}
                 </button>
               )}

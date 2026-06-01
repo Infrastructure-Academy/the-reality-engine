@@ -5,6 +5,7 @@ import { ArrowLeft, Search, Image, Filter, Grid3X3, LayoutList, ExternalLink } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
+import { useT } from "@/contexts/LanguageContext";
 
 const BRIDGE_COLORS: Record<string, string> = {
   ACAD: "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -20,6 +21,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 export default function MediaGallery() {
+  const t = useT();
   const [search, setSearch] = useState("");
   const [bridgeFilter, setBridgeFilter] = useState<string | undefined>();
   const [categoryFilter, setCategoryFilter] = useState<string | undefined>();
@@ -47,7 +49,7 @@ export default function MediaGallery() {
               </Button>
             </Link>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-bold font-mono tracking-tight">MEDIA CATALOGUE</h1>
+              <h1 className="text-lg font-bold font-mono tracking-tight">{t("media.title")}</h1>
               <p className="text-xs text-muted-foreground">
                 {stats?.total ?? 0} assets across {bridges.length} bridges
               </p>
@@ -79,7 +81,7 @@ export default function MediaGallery() {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search assets by title, description, or tags..."
+            placeholder={t("media.searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10 bg-card border-border"
@@ -90,7 +92,7 @@ export default function MediaGallery() {
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Filter className="w-3 h-3" />
-            <span>BRIDGE</span>
+            <span>{t("media.bridge")}</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             <Button
@@ -116,7 +118,7 @@ export default function MediaGallery() {
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground mt-2">
             <Image className="w-3 h-3" />
-            <span>CATEGORY</span>
+            <span>{t("media.category")}</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             <Button
@@ -237,7 +239,7 @@ export default function MediaGallery() {
         {!isLoading && items.length === 0 && (
           <div className="text-center py-12">
             <Image className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">No assets found matching your filters</p>
+            <p className="text-sm text-muted-foreground">{t("media.noAssets")}</p>
           </div>
         )}
       </div>

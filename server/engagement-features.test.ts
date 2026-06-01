@@ -277,14 +277,14 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
 
     it("Synthesis page has Give Feedback CTA", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/pages/Synthesis.tsx"), "utf-8");
-      expect(content).toContain("Give Feedback");
+      expect(content).toContain("synthesis.giveFeedback");
       expect(content).toContain("/appraisal");
-      expect(content).toContain("Help Us Improve");
+      expect(content).toContain("synthesis.helpImprove");
     });
 
     it("RelaySummaryCard has Share Your Feedback link on last relay", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/RelaySummaryCard.tsx"), "utf-8");
-      expect(content).toContain("Share Your Feedback");
+      expect(content).toContain("explorer.shareYourFeedback");
       expect(content).toContain("/appraisal");
     });
   });

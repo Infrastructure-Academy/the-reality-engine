@@ -13,6 +13,7 @@ import {
   Factory, Train, Plane, Satellite, Atom, Network, Layers, ArrowDown,
   CheckCircle2, Sparkles, Target, BookOpen, Shield, Zap, Trophy, Clock
 } from "lucide-react";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── 12 MODES A–L (v4 terminology) ───
 const MODES = [
@@ -56,11 +57,11 @@ const HALLS = [
 
 // ─── SUPPORTER ROLES ───
 const SUPPORTER_ROLES = [
-  { key: "player" as const, icon: Gamepad2, label: "Player", desc: "I want to play iGO" },
-  { key: "educator" as const, icon: GraduationCap, label: "Educator", desc: "I want to use iGO in my classroom" },
-  { key: "institution" as const, icon: Building2, label: "Institution", desc: "University, school, or professional body" },
-  { key: "sponsor" as const, icon: HandCoins, label: "Sponsor / Backer", desc: "I want to fund the scale-up" },
-  { key: "other" as const, icon: Users, label: "Other", desc: "General interest or partnership" },
+  { key: "player" as const, icon: Gamepad2, labelKey: "igo.role.player", descKey: "igo.role.playerDesc" },
+  { key: "educator" as const, icon: GraduationCap, labelKey: "igo.role.educator", descKey: "igo.role.educatorDesc" },
+  { key: "institution" as const, icon: Building2, labelKey: "igo.role.institution", descKey: "igo.role.institutionDesc" },
+  { key: "sponsor" as const, icon: HandCoins, labelKey: "igo.role.sponsor", descKey: "igo.role.sponsorDesc" },
+  { key: "other" as const, icon: Users, labelKey: "igo.role.other", descKey: "igo.role.otherDesc" },
 ];
 
 // ─── CDN IMAGES ───
@@ -75,16 +76,17 @@ const CDN = {
 
 // ─── IMPACT STATS ───
 const IMPACT_STATS = [
-  { value: "12", label: "RELAYS", icon: Globe },
-  { value: "5", label: "GREAT WEBS", icon: Zap },
-  { value: "91+", label: "INVENTIONS", icon: BookOpen },
-  { value: "500", label: "GENERATIONS", icon: Clock },
-  { value: "12", label: "GAME FORMATS", icon: Layers },
-  { value: "8–65+", label: "AGE RANGE", icon: Users },
-  { value: "24M", label: "XP CAP", icon: Trophy },
+  { value: "12", labelKey: "igo.stats.relays", icon: Globe },
+  { value: "5", labelKey: "igo.stats.greatWebs", icon: Zap },
+  { value: "91+", labelKey: "igo.stats.inventions", icon: BookOpen },
+  { value: "500", labelKey: "igo.stats.generations", icon: Clock },
+  { value: "12", labelKey: "igo.stats.gameFormats", icon: Layers },
+  { value: "8–65+", labelKey: "igo.stats.ageRange", icon: Users },
+  { value: "24M", labelKey: "igo.stats.xpCap", icon: Trophy },
 ];
 
 export default function IGOUmbrella() {
+  const t = useT();
   const [showContent, setShowContent] = useState(false);
   const [selectedAge, setSelectedAge] = useState<number | null>(null);
   const [filterEpisode, setFilterEpisode] = useState<number | null>(null);
@@ -103,10 +105,10 @@ export default function IGOUmbrella() {
   const registerMutation = trpc.igo.register.useMutation({
     onSuccess: () => {
       setRegSubmitted(true);
-      toast.success("Thank you! Your interest has been registered.");
+      toast.success(t("igo.toast.registered"));
     },
     onError: (err) => {
-      toast.error(err.message || "Registration failed. Please try again.");
+      toast.error(err.message || t("igo.toast.regFailed"));
     },
   });
 
@@ -169,7 +171,7 @@ export default function IGOUmbrella() {
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     if (!regName.trim() || !regEmail.trim()) {
-      toast.error("Name and email are required.");
+      toast.error(t("igo.toast.nameEmailRequired"));
       return;
     }
     registerMutation.mutate({
@@ -183,9 +185,9 @@ export default function IGOUmbrella() {
   };
 
   const statusBadge = (status: string) => {
-    if (status === "live") return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">LIVE</span>;
-    if (status === "designed") return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-amber-500/20 text-amber-300 border border-amber-500/30">DESIGNED</span>;
-    return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-slate-500/20 text-slate-300 border border-slate-500/30">ASPIRATIONAL</span>;
+    if (status === "live") return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">{t("igo.statusLive")}</span>;
+    if (status === "designed") return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-amber-500/20 text-amber-300 border border-amber-500/30">{t("igoPage.designed")}</span>;
+    return <span className="px-2 py-0.5 text-[9px] font-mono tracking-wider rounded-sm bg-slate-500/20 text-slate-300 border border-slate-500/30">{t("igoPage.aspirational")}</span>;
   };
 
   return (
@@ -194,14 +196,14 @@ export default function IGOUmbrella() {
       <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3" style={{ background: "linear-gradient(180deg, rgba(5,5,16,0.97) 0%, rgba(10,22,40,0.85) 100%)", backdropFilter: "blur(12px)" }}>
         <Link href="/" className="flex items-center gap-2 text-amber-400/70 hover:text-amber-400 transition-colors">
           <span className="text-lg">←</span>
-          <span className="font-sans text-xs tracking-wider hidden sm:inline">HOME</span>
+          <span className="font-sans text-xs tracking-wider hidden sm:inline">{t("common.home")}</span>
         </Link>
         <div className="text-center">
           <span className="font-bold text-amber-400 text-sm tracking-[0.25em]"><span className="tracking-normal"><BrandI />GO</span></span>
           <span className="ml-2 px-2 py-0.5 bg-orange-500/15 border border-orange-500/40 text-orange-400 font-mono text-[8px] tracking-widest rounded-sm">PoC BETA</span>
         </div>
         <button onClick={scrollToRegister} className="px-3 py-1.5 bg-amber-500/20 border border-amber-500/50 text-amber-300 text-xs font-bold tracking-wider rounded hover:bg-amber-500/30 transition-colors">
-          JOIN
+          {t("igo.join")}
         </button>
       </div>
 
@@ -216,29 +218,27 @@ export default function IGOUmbrella() {
               <BrandI />GO
             </h1>
             <p className="text-white/90 tracking-[0.15em] text-xl sm:text-2xl mb-3 font-semibold">
-              ONE GAME. ALL AGES. 8–65+
+              {t("igo.hero.tagline")}
             </p>
             <p className="text-amber-400/70 italic text-lg sm:text-xl max-w-2xl mx-auto mb-6">
-              Where you go, <span className="tracking-normal italic"><BrandI />GO</span> follows.
+              {t("igo.tagline")}
             </p>
           </div>
 
           {/* Value proposition */}
           <div className="max-w-3xl mx-auto mb-8">
             <p className="text-white/60 text-base sm:text-lg leading-relaxed">
-              The world's first <span className="text-amber-400 font-semibold italic">lifelong infrastructure learning game</span>. 
-              12 civilisational relays. 500 generations. 12 game formats. From a child's first spin to a Master Weaver's capstone. 
-              One architecture, one scoring system, one community — <span className="text-white/80 font-semibold">scaled across every generation</span>.
+              {t("igo.hero.desc1")} <span className="text-amber-400 font-semibold italic">{t("igo.hero.desc2")}</span>. {t("igo.hero.desc3")} <span className="text-white/80 font-semibold">{t("igo.hero.desc4")}</span>.
             </p>
           </div>
 
           {/* Impact stats bar */}
           <div className="grid grid-cols-4 sm:grid-cols-7 gap-3 max-w-4xl mx-auto mb-10">
             {IMPACT_STATS.map(s => (
-              <div key={s.label} className="text-center py-3 px-2 rounded-lg border border-white/5" style={{ background: "rgba(255,215,0,0.03)" }}>
+              <div key={s.labelKey} className="text-center py-3 px-2 rounded-lg border border-white/5" style={{ background: "rgba(255,215,0,0.03)" }}>
                 <s.icon className="w-4 h-4 mx-auto mb-1 text-amber-400/60" />
                 <div className="text-amber-400 text-lg sm:text-xl font-bold">{s.value}</div>
-                <div className="text-white/30 text-[8px] sm:text-[9px] font-mono tracking-wider">{s.label}</div>
+                <div className="text-white/30 text-[8px] sm:text-[9px] font-mono tracking-wider">{t(s.labelKey)}</div>
               </div>
             ))}
           </div>
@@ -260,7 +260,7 @@ export default function IGOUmbrella() {
 
           {/* Player's Journey Staircase — Stage Growth Visual */}
           <div className="max-w-5xl mx-auto mb-10">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/50 text-center mb-3">Stage Growth</p>
+            <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/50 text-center mb-3">{ t("igo.stageGrowth") }</p>
             <div className="rounded-lg border border-amber-400/20 overflow-hidden">
               <ImageLightbox
                 src={CDN.playersJourney}
@@ -274,17 +274,17 @@ export default function IGOUmbrella() {
           {/* Primary CTAs */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link href="/explore" className="inline-flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm tracking-wider rounded-lg transition-all hover:shadow-[0_0_30px_rgba(34,197,94,0.3)]">
-              <Gamepad2 className="w-4 h-4" /> PLAY NOW — MODES A–D LIVE
+              <Gamepad2 className="w-4 h-4" /> {t("igo.playNowLive")}
             </Link>
             <button onClick={scrollToRegister} className="inline-flex items-center gap-2 px-8 py-3 bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-sm tracking-wider rounded-lg hover:bg-amber-500/30 transition-all">
-              <HandCoins className="w-4 h-4" /> SUPPORT THE MISSION
+              <HandCoins className="w-4 h-4" /> {t("igo.supportMission")}
             </button>
           </div>
 
           {/* Social proof counter */}
           {igoStats && igoStats.total > 0 && (
             <p className="text-white/30 text-xs mt-4 font-mono tracking-wider">
-              <span className="text-amber-400/60 font-bold">{igoStats.total}</span> people have registered interest
+              <span className="text-amber-400/60 font-bold">{igoStats.total}</span> {t("igo.registeredCount")}
             </p>
           )}
 
@@ -297,9 +297,9 @@ export default function IGOUmbrella() {
             SECTION 2: FIND YOUR MODE — Interactive Age Router
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-100 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">FIND YOUR MODE</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igoPage.findMode")}</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            Tap your age bracket. <span className="brand-i">i</span>GO shows you where you enter the game.
+            {t("igo.findMode.desc")}
           </p>
 
           {/* Age selector buttons */}
@@ -327,7 +327,7 @@ export default function IGOUmbrella() {
           {/* Result panel */}
           {selectedAge !== null && matchedModes.length > 0 && (
             <div className="max-w-2xl mx-auto rounded-xl p-6 border border-amber-400/30 mb-4" style={{ background: "linear-gradient(180deg, rgba(255,215,0,0.06) 0%, rgba(10,22,40,0.95) 100%)" }}>
-              <p className="text-amber-400/60 text-xs font-mono tracking-wider mb-3">YOUR RECOMMENDED MODE{matchedModes.length > 1 ? "S" : ""}</p>
+              <p className="text-amber-400/60 text-xs font-mono tracking-wider mb-3">{t("igo.recommendedMode")}{matchedModes.length > 1 ? "S" : ""}</p>
               <div className="space-y-3">
                 {matchedModes.map(m => (
                   <div key={m.letter} className="flex items-start gap-4 p-3 rounded-lg border border-white/10" style={{ background: "rgba(10,22,40,0.6)" }}>
@@ -336,14 +336,14 @@ export default function IGOUmbrella() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-white text-base font-bold tracking-wider">{m.name}</h3>
+                        <h3 className="text-white text-base font-bold tracking-wider">{t(`igo.mode.${m.letter}`)}</h3>
                         {statusBadge(m.status)}
                       </div>
-                      <p className="text-white/40 text-xs font-mono mt-0.5">Ages {m.ages} · {m.dice} · EP.{m.episode} · {m.generation}</p>
-                      <p className="text-white/50 text-sm mt-1">{m.description}</p>
+                      <p className="text-white/40 text-xs font-mono mt-0.5">{t("igo.modeDetails").replace("{ages}", m.ages).replace("{dice}", m.dice).replace("{ep}", String(m.episode)).replace("{gen}", m.generation)}</p>
+                      <p className="text-white/50 text-sm mt-1">{t(`igo.modeDesc.${m.letter}`)}</p>
                       {m.status === "live" && (
                         <Link href="/explore" className="inline-flex items-center gap-1 mt-2 px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded text-emerald-300 text-xs font-bold tracking-wider hover:bg-emerald-500/30 transition-colors">
-                          PLAY NOW <ChevronRight className="w-3 h-3" />
+                          {t("igo.playNow")} <ChevronRight className="w-3 h-3" />
                         </Link>
                       )}
                     </div>
@@ -358,9 +358,9 @@ export default function IGOUmbrella() {
             SECTION 3: HOW IT WORKS — Lifecycle Pipeline
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-200 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">HOW IT WORKS</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igo.howItWorks")}</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            Three episodes. One lifelong journey. Same 12 relays at every stage.
+            {t("igo.howItWorks.desc")}
           </p>
 
           {/* 3 Episode cards */}
@@ -368,9 +368,9 @@ export default function IGOUmbrella() {
             {EPISODES.map(ep => (
               <div key={ep.num} className="rounded-xl p-6 border border-white/10 text-center hover:border-white/20 transition-all" style={{ background: `linear-gradient(180deg, ${ep.color}08 0%, rgba(5,5,16,0.95) 100%)` }}>
                 <div className="text-4xl mb-2 font-bold" style={{ color: ep.color }}>EP.{ep.num}</div>
-                <h3 className="text-white text-sm tracking-[0.15em] mb-2 font-bold">{ep.name}</h3>
-                <p className="text-white/40 text-xs font-mono mb-2">Ages {ep.ages} · Modes {ep.modes}</p>
-                <p className="text-white/50 text-xs leading-relaxed">{ep.desc}</p>
+                <h3 className="text-white text-sm tracking-[0.15em] mb-2 font-bold">{t(`igo.ep.${ep.num}`)}</h3>
+                <p className="text-white/40 text-xs font-mono mb-2">{t("igo.epDetails").replace("{ages}", ep.ages).replace("{modes}", ep.modes)}</p>
+                <p className="text-white/50 text-xs leading-relaxed">{t(`igo.epDesc.${ep.num}`)}</p>
               </div>
             ))}
           </div>
@@ -390,8 +390,8 @@ export default function IGOUmbrella() {
             SECTION 3B: THE CONVERGENCE — GO × POKÉMON × iAAi = iGO
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-200 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE CONVERGENCE</h2>
-          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × <BrandI />AAi = <BrandI />GO — Three games. Three eras. One convergence.</p>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igo.convergence")}</h2>
+          <p className="text-center text-muted-foreground text-sm mb-6">Go × Pokémon × <BrandI />AAi = <BrandI />{t("igoPage.goConvergence")}</p>
 
           {/* Main Convergence card */}
           <div className="max-w-3xl mx-auto mb-6">
@@ -411,8 +411,8 @@ export default function IGOUmbrella() {
                 className="w-full"
               />
               <div className="p-3 text-center">
-                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 1 — MEANING</p>
-                <p className="text-muted-foreground text-[10px] mt-1">Three games. Three eras. One convergence.</p>
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">{t("igo.payload1")}</p>
+                <p className="text-muted-foreground text-[10px] mt-1">{ t("igo.threeGames") }</p>
               </div>
             </div>
             <div className="rounded-lg border border-amber-400/20 overflow-hidden">
@@ -422,8 +422,8 @@ export default function IGOUmbrella() {
                 className="w-full"
               />
               <div className="p-3 text-center">
-                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 2 — CONTENT</p>
-                <p className="text-muted-foreground text-[10px] mt-1">The structural proof. Territory → Knowledge.</p>
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">{t("igo.payload2")}</p>
+                <p className="text-muted-foreground text-[10px] mt-1">{ t("igo.structuralProof") }</p>
               </div>
             </div>
             <div className="rounded-lg border border-amber-400/20 overflow-hidden">
@@ -433,8 +433,8 @@ export default function IGOUmbrella() {
                 className="w-full"
               />
               <div className="p-3 text-center">
-                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">PAYLOAD 3 — CONTEXT</p>
-                <p className="text-muted-foreground text-[10px] mt-1">From 2,500 BCE to 2026. Open your eye. <span className="brand-i">i</span>AAi.</p>
+                <p className="text-amber-400 text-xs tracking-[0.15em] font-bold">{t("igo.payload3")}</p>
+                <p className="text-muted-foreground text-[10px] mt-1">{ t("igo.from2500") }</p>
               </div>
             </div>
           </div>
@@ -446,7 +446,7 @@ export default function IGOUmbrella() {
             SECTION 4: THE 12 GAME FORMATS
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-300 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-6 font-bold">THE 12 GAME FORMATS</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-6 font-bold">{t("igo.gameFormats")}</h2>
 
           {/* Episode filter tabs */}
           <div className="flex flex-wrap justify-center gap-2 mb-6">
@@ -454,7 +454,7 @@ export default function IGOUmbrella() {
               onClick={() => setFilterEpisode(null)}
               className={`px-4 py-2 rounded-lg text-xs tracking-[0.15em] transition-all border font-bold ${filterEpisode === null ? "bg-amber-400/20 border-amber-400/50 text-amber-400" : "bg-transparent border-white/10 text-white/40 hover:border-white/30"}`}
             >
-              ALL 12 MODES
+              {t("igo.allModes")}
             </button>
             {EPISODES.map(ep => (
               <button
@@ -462,7 +462,7 @@ export default function IGOUmbrella() {
                 onClick={() => setFilterEpisode(ep.num)}
                 className={`px-4 py-2 rounded-lg text-xs tracking-[0.15em] transition-all border font-bold ${filterEpisode === ep.num ? "bg-amber-400/20 border-amber-400/50 text-amber-400" : "bg-transparent border-white/10 text-white/40 hover:border-white/30"}`}
               >
-                EP.{ep.num}: {ep.name}
+                EP.{ep.num}: {t(`igo.episode.${ep.num}`)}
               </button>
             ))}
           </div>
@@ -490,26 +490,26 @@ export default function IGOUmbrella() {
                   <div className="absolute top-3 right-3 z-10">{statusBadge(mode.status)}</div>
 
                   <div className="pt-14 px-4 pb-4">
-                    <h3 className="text-white text-base tracking-[0.1em] mb-1 font-bold">{mode.name}</h3>
+                    <h3 className="text-white text-base tracking-[0.1em] mb-1 font-bold">{t(`igo.mode.${mode.letter}`)}</h3>
                     <div className="flex items-center gap-2 mb-3 flex-wrap">
-                      <span className="text-white/40 text-xs font-mono">Ages {mode.ages}</span>
+                      <span className="text-white/40 text-xs font-mono">{t("igo.ages").replace("{ages}", mode.ages)}</span>
                       <span className="text-white/20">·</span>
                       <span className="text-white/40 text-xs font-mono">{mode.dice}</span>
                       <span className="text-white/20">·</span>
                       <span className="text-xs font-mono" style={{ color: EPISODES[mode.episode - 1].color + "90" }}>EP.{mode.episode}</span>
                     </div>
-                    <p className="text-white/50 text-xs leading-relaxed">{mode.description}</p>
+                    <p className="text-white/50 text-xs leading-relaxed">{t(`igo.modeDesc.${mode.letter}`)}</p>
 
                     {selectedMode?.letter === mode.letter && (
                       <div className="mt-3 pt-3 border-t border-white/10">
-                        <p className="text-white/30 text-[10px] font-mono mb-1">COMMUNITY: <span className="text-amber-400/70">{mode.generation}</span></p>
+                        <p className="text-white/30 text-[10px] font-mono mb-1">{t("igo.community")}: <span className="text-amber-400/70">{mode.generation}</span></p>
                         {isLive ? (
                           <Link href="/explore" className="inline-flex items-center gap-1 mt-2 px-4 py-1.5 bg-emerald-500/20 border border-emerald-500/40 rounded text-emerald-300 text-xs font-bold tracking-wider hover:bg-emerald-500/30 transition-colors">
-                            PLAY NOW <ChevronRight className="w-3 h-3" />
+                            {t("igo.playNow")} <ChevronRight className="w-3 h-3" />
                           </Link>
                         ) : (
                           <button onClick={(e) => { e.stopPropagation(); scrollToRegister(); }} className="inline-flex items-center gap-1 mt-2 px-4 py-1.5 bg-amber-500/20 border border-amber-500/40 rounded text-amber-300 text-xs font-bold tracking-wider hover:bg-amber-500/30 transition-colors">
-                            REGISTER INTEREST <ChevronRight className="w-3 h-3" />
+                            {t("igo.registerInterest")} <ChevronRight className="w-3 h-3" />
                           </button>
                         )}
                       </div>
@@ -525,9 +525,9 @@ export default function IGOUmbrella() {
             SECTION 5: EXHIBITION HALL GALLERY
         ══════════════════════════════════════════════════════════════ */}
         <section ref={exhibitionRef} className={`mb-20 transition-all duration-1000 delay-[400ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">THE EXHIBITION</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igo.exhibition")}</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            13 immersive halls. The physical manifestation of <span className="brand-i">i</span>GO — from Fire to the Fractal Connector.
+            {t("igo.exhibition.desc")}
           </p>
 
           {/* Horizontal scroll carousel */}
@@ -542,8 +542,8 @@ export default function IGOUmbrella() {
                     loading="lazy"
                   />
                   <div className="p-3" style={{ background: "rgba(5,5,16,0.95)" }}>
-                    <p className="text-amber-400 text-[9px] font-mono tracking-wider">HALL {hall.num}</p>
-                    <p className="text-white text-sm font-bold tracking-wider">{hall.relay.toUpperCase()}</p>
+                    <p className="text-amber-400 text-[9px] font-mono tracking-wider">{t("igo.hall")} {hall.num}</p>
+                    <p className="text-white text-sm font-bold tracking-wider">{t(`relay.name.${hall.num}`)}</p>
                     <p className="text-white/40 text-[10px] font-mono">{hall.era}</p>
                   </div>
                 </div>
@@ -560,26 +560,26 @@ export default function IGOUmbrella() {
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-500 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div className="max-w-3xl mx-auto text-center rounded-xl p-8 border border-amber-400/20" style={{ background: "linear-gradient(180deg, rgba(255,215,0,0.04) 0%, rgba(10,22,40,0.9) 100%)" }}>
-            <h2 className="text-amber-400 text-lg tracking-[0.2em] mb-6 font-bold">THE PERMANENT FOUNDATION</h2>
+            <h2 className="text-amber-400 text-lg tracking-[0.2em] mb-6 font-bold">{t("igo.permanentFoundation")}</h2>
             <div className="grid grid-cols-3 gap-6 mb-6">
               <div>
                 <div className="text-amber-400 text-3xl font-bold">12</div>
-                <div className="text-white/40 text-xs font-mono mt-1">RELAYS</div>
+                <div className="text-white/40 text-xs font-mono mt-1">{t("igo.stats.relays")}</div>
               </div>
               <div>
                 <div className="text-amber-400 text-3xl font-bold">5</div>
-                <div className="text-white/40 text-xs font-mono mt-1">GREAT WEBS</div>
+                <div className="text-white/40 text-xs font-mono mt-1">{t("igoPage.greatWebs")}</div>
               </div>
               <div>
                 <div className="text-amber-400 text-3xl font-bold">60</div>
-                <div className="text-white/40 text-xs font-mono mt-1">NODE DEARDEN FIELD</div>
+                <div className="text-white/40 text-xs font-mono mt-1">{t("igo.nodeField")}</div>
               </div>
             </div>
             <p className="text-white/50 text-sm leading-relaxed max-w-xl mx-auto mb-4">
-              Every mode — from Relay Spinner (age 8) to Master Class (age 65+) — traverses the same 12 civilisational relays, the same 5 Great Webs, and the same 60-node Dearden Field. The content deepens. The architecture never changes.
+              {t("igo.permanentFoundation.desc")}
             </p>
             <p className="text-amber-400/60 text-xs font-bold tracking-[0.15em]">
-              SAME 12 RELAYS · SAME 5 WEBS · SAME 91+ INVENTIONS · SAME DAVID AI
+              {t("igo.permanentFoundation.tagline")}
             </p>
           </div>
         </section>
@@ -588,9 +588,9 @@ export default function IGOUmbrella() {
             SECTION 7: GENERATIONS TIMELINE
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-[600ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">EVERY GENERATION. ONE GAME.</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igoPage.everyGeneration")}</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-xl mx-auto">
-            Same game, same relays, same scoring — different entry point, different peer group.
+            {t("igo.generations.desc")}
           </p>
           <div className="max-w-md mx-auto mb-6">
             <ImageLightbox
@@ -616,23 +616,22 @@ export default function IGOUmbrella() {
             SECTION 8: SUPPORT THE MISSION — Registration + Backers
         ══════════════════════════════════════════════════════════════ */}
         <section ref={registerRef} className={`mb-20 transition-all duration-1000 delay-700 ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">SUPPORT THE MISSION</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igo.supportMission")}</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-2xl mx-auto">
-            Whether you want to play, teach, partner, or fund — register your interest below. 
-            We're building the world's first lifelong infrastructure learning game and we need your support to scale.
+            {t("igo.supportMission.desc")}
           </p>
 
           {regSubmitted ? (
             <div className="max-w-lg mx-auto text-center rounded-xl p-8 border border-emerald-500/30" style={{ background: "linear-gradient(180deg, rgba(34,197,94,0.06) 0%, rgba(10,22,40,0.95) 100%)" }}>
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-              <h3 className="text-white text-xl font-bold tracking-wider mb-2">REGISTERED</h3>
-              <p className="text-white/50 text-sm mb-4">Thank you for your interest in <span className="brand-i">i</span>GO. We'll be in touch.</p>
+              <h3 className="text-white text-xl font-bold tracking-wider mb-2">{t("igo.registered")}</h3>
+              <p className="text-white/50 text-sm mb-4">{t("igo.thankYou")}</p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link href="/explore" className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider rounded-lg transition-all">
-                  <Gamepad2 className="w-4 h-4" /> PLAY NOW
+                  <Gamepad2 className="w-4 h-4" /> {t("igo.playNow")}
                 </Link>
                 <button onClick={() => setRegSubmitted(false)} className="inline-flex items-center gap-2 px-6 py-2.5 bg-white/5 border border-white/10 text-white/50 font-bold text-xs tracking-wider rounded-lg hover:bg-white/10 transition-all">
-                  REGISTER ANOTHER
+                  {t("igo.registerAnother")}
                 </button>
               </div>
             </div>
@@ -641,7 +640,7 @@ export default function IGOUmbrella() {
               <form onSubmit={handleRegister} className="rounded-xl p-6 sm:p-8 border border-amber-400/20" style={{ background: "linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(10,22,40,0.95) 100%)" }}>
                 {/* Role selector */}
                 <div className="mb-6">
-                  <label className="text-white/50 text-xs font-mono tracking-wider mb-3 block">I AM A...</label>
+                  <label className="text-white/50 text-xs font-mono tracking-wider mb-3 block">{t("igo.iAmA")}</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {SUPPORTER_ROLES.map(r => (
                       <button
@@ -656,8 +655,8 @@ export default function IGOUmbrella() {
                       >
                         <r.icon className="w-4 h-4 flex-shrink-0" />
                         <div>
-                          <div className="text-xs font-bold tracking-wider">{r.label}</div>
-                          <div className="text-[9px] opacity-60">{r.desc}</div>
+                          <div className="text-xs font-bold tracking-wider">{t(r.labelKey)}</div>
+                          <div className="text-[9px] opacity-60">{t(r.descKey)}</div>
                         </div>
                       </button>
                     ))}
@@ -667,25 +666,25 @@ export default function IGOUmbrella() {
                 {/* Name + Email */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">NAME *</label>
+                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">{t("igo.name")} *</label>
                     <input
                       type="text"
                       value={regName}
                       onChange={e => setRegName(e.target.value)}
                       required
                       className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:border-amber-400/50 focus:outline-none transition-colors placeholder:text-white/20"
-                      placeholder="Your name"
+                      placeholder={t("igo.placeholder.name")}
                     />
                   </div>
                   <div>
-                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">EMAIL *</label>
+                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">{t("igo.email")} *</label>
                     <input
                       type="email"
                       value={regEmail}
                       onChange={e => setRegEmail(e.target.value)}
                       required
                       className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:border-amber-400/50 focus:outline-none transition-colors placeholder:text-white/20"
-                      placeholder="your@email.com"
+                      placeholder={t("igo.placeholder.email")}
                     />
                   </div>
                 </div>
@@ -693,26 +692,26 @@ export default function IGOUmbrella() {
                 {/* Organisation (conditional) */}
                 {(regRole === "institution" || regRole === "sponsor" || regRole === "educator") && (
                   <div className="mb-4">
-                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">ORGANISATION</label>
+                    <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">{t("igo.organisation")}</label>
                     <input
                       type="text"
                       value={regOrg}
                       onChange={e => setRegOrg(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:border-amber-400/50 focus:outline-none transition-colors placeholder:text-white/20"
-                      placeholder="University, company, or institution name"
+                      placeholder={t("igo.placeholder.org")}
                     />
                   </div>
                 )}
 
                 {/* Message */}
                 <div className="mb-4">
-                  <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">MESSAGE (OPTIONAL)</label>
+                  <label className="text-white/50 text-xs font-mono tracking-wider mb-1 block">{t("igo.message")}</label>
                   <textarea
                     value={regMessage}
                     onChange={e => setRegMessage(e.target.value)}
                     rows={3}
                     className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:border-amber-400/50 focus:outline-none transition-colors placeholder:text-white/20 resize-none"
-                    placeholder="Tell us about your interest in iGO..."
+                    placeholder={t("igo.placeholder.message")}
                   />
                 </div>
 
@@ -728,9 +727,9 @@ export default function IGOUmbrella() {
                   <div>
                     <div className="flex items-center gap-2">
                       <Smartphone className="w-3.5 h-3.5 text-amber-400/60" />
-                      <span className="text-white/70 text-xs font-bold tracking-wider">PRE-REGISTER FOR <span className="brand-i">i</span>GO MOBILE APP</span>
+                      <span className="text-white/70 text-xs font-bold tracking-wider">{t("igo.preRegisterFor")} <span className="brand-i">i</span>{t("igoPage.goMobileApp")}</span>
                     </div>
-                    <p className="text-white/30 text-[10px] mt-0.5">Get early access when the <span className="brand-i">i</span>GO app launches</p>
+                    <p className="text-white/30 text-[10px] mt-0.5">{t("igo.earlyAccess")} <span className="brand-i">i</span>{t("igoPage.goAppLaunches")}</p>
                   </div>
                 </div>
 
@@ -740,12 +739,12 @@ export default function IGOUmbrella() {
                   disabled={registerMutation.isPending}
                   className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm tracking-wider rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {registerMutation.isPending ? "REGISTERING..." : "REGISTER MY INTEREST"}
+                  {registerMutation.isPending ? t("igo.registering") : t("igo.registerMyInterest")}
                 </button>
 
                 {!user && (
                   <p className="text-center text-white/20 text-[10px] mt-3">
-                    Already have an account? <a href={getLoginUrl()} className="text-amber-400/50 hover:text-amber-400 underline">Sign in</a> to auto-fill your details.
+                    {t("igo.alreadyAccount")} <a href={getLoginUrl()} className="text-amber-400/50 hover:text-amber-400 underline">{t("igo.signIn")}</a> {t("igo.autoFill")}
                   </p>
                 )}
               </form>
@@ -757,31 +756,31 @@ export default function IGOUmbrella() {
             SECTION 9: WHY BACK iGO — For Financial Supporters
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-20 transition-all duration-1000 delay-[800ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">WHY BACK <span className="tracking-normal"><BrandI />GO</span>?</h2>
+          <h2 className="text-amber-400 text-lg sm:text-xl tracking-[0.2em] text-center mb-2 font-bold">{t("igo.whyBack")} <span className="tracking-normal"><BrandI />GO</span>?</h2>
           <p className="text-center text-white/40 text-sm mb-8 max-w-2xl mx-auto">
-            A proven concept. A working prototype. A clear path to scale.
+            {t("igo.whyBack.desc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {[
-              { icon: CheckCircle2, title: "PROOF OF CONCEPT LIVE", desc: "4 game modes (A–D) operational with real players. Full database, AI narration, XP scoring, leaderboards — all working." },
-              { icon: Target, title: "TOTAL ADDRESSABLE MARKET", desc: "Every person aged 8–65+ who interacts with infrastructure. That's everyone. 12 entry points across 7 generations." },
-              { icon: Sparkles, title: "UNIQUE IP", desc: "12 civilisational relays, 91+ inventions, 60-node Dearden Field, DAVID AI, 4 archetypes — no competitor has this architecture." },
-              { icon: BookOpen, title: "ACADEMIC ALIGNMENT", desc: "Mapped to ABET, Washington Accord, AHEP4, UN SDGs. Ready for university integration from day one." },
-              { icon: Shield, title: "GOVERNANCE IN PLACE", desc: "Tetrahedral Observer protocol, SAP-001 governance, full audit trail. Built for institutional trust." },
-              { icon: Smartphone, title: "MOBILE APP ROADMAP", desc: "Web PoC proves the concept. Mobile app (AR-enabled for Modes G–L) is the scale vehicle. Pre-registration open now." },
+              { icon: CheckCircle2, title: "igo.why.pocLive", desc: "igo.why.pocLiveDesc" },
+              { icon: Target, title: "igo.why.tam", desc: "igo.why.tamDesc" },
+              { icon: Sparkles, title: "igo.why.uniqueIp", desc: "igo.why.uniqueIpDesc" },
+              { icon: BookOpen, title: "igo.why.academic", desc: "igo.why.academicDesc" },
+              { icon: Shield, title: "igo.why.governance", desc: "igo.why.governanceDesc" },
+              { icon: Smartphone, title: "igo.why.mobileApp", desc: "igo.why.mobileAppDesc" },
             ].map((item, i) => (
               <div key={i} className="rounded-xl p-5 border border-white/10 hover:border-amber-400/20 transition-all" style={{ background: "linear-gradient(180deg, rgba(10,22,40,0.8) 0%, rgba(5,5,16,0.95) 100%)" }}>
                 <item.icon className="w-6 h-6 text-amber-400/70 mb-3" />
-                <h3 className="text-white text-xs tracking-[0.15em] mb-2 font-bold">{item.title}</h3>
-                <p className="text-white/50 text-xs leading-relaxed">{item.desc}</p>
+                <h3 className="text-white text-xs tracking-[0.15em] mb-2 font-bold">{t(item.title)}</h3>
+                <p className="text-white/50 text-xs leading-relaxed">{t(item.desc)}</p>
               </div>
             ))}
           </div>
 
           <div className="text-center mt-8">
             <button onClick={scrollToRegister} className="inline-flex items-center gap-2 px-8 py-3 bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-sm tracking-wider rounded-lg hover:bg-amber-500/30 transition-all">
-              <HandCoins className="w-4 h-4" /> REGISTER AS A BACKER
+              <HandCoins className="w-4 h-4" /> {t("igo.registerBacker")}
             </button>
           </div>
         </section>
@@ -790,19 +789,19 @@ export default function IGOUmbrella() {
             SECTION 10: PLAY ENTRY POINTS
         ══════════════════════════════════════════════════════════════ */}
         <section className={`mb-16 transition-all duration-1000 delay-[900ms] ${showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-          <h2 className="text-amber-400 text-lg tracking-[0.2em] text-center mb-6 font-bold">ENTER THE GAME</h2>
+          <h2 className="text-amber-400 text-lg tracking-[0.2em] text-center mb-6 font-bold">{t("igoPage.enterGame")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
             <Link href="/explore" className="block rounded-xl p-6 border border-emerald-500/30 hover:border-emerald-400/60 transition-all text-center group" style={{ background: "linear-gradient(180deg, #0a2618 0%, #0a1628 100%)" }}>
               <Gamepad2 className="w-8 h-8 text-emerald-300 mx-auto mb-3 group-hover:text-emerald-200 transition-colors" />
-              <div className="text-emerald-300 text-lg tracking-[0.15em] mb-2 group-hover:text-emerald-200 transition-colors font-bold">PLAY NOW</div>
-              <p className="text-white/40 text-xs">Modes A–D are live. Explorer, Dungeon Crawl, Grey Matter, Flight Deck.</p>
-              <p className="text-emerald-400/50 text-[9px] font-mono mt-2">PoC Beta — Ages 8–18</p>
+              <div className="text-emerald-300 text-lg tracking-[0.15em] mb-2 group-hover:text-emerald-200 transition-colors font-bold">{t("igo.playNow")}</div>
+              <p className="text-white/40 text-xs">{ t("igo.modesLive") }</p>
+              <p className="text-emerald-400/50 text-[9px] font-mono mt-2">{t("igo.pocBeta")}</p>
             </Link>
             <button onClick={scrollToRegister} className="block rounded-xl p-6 border border-amber-500/20 hover:border-amber-400/50 transition-all text-center group" style={{ background: "linear-gradient(180deg, rgba(255,215,0,0.03) 0%, #0a1628 100%)" }}>
               <HandCoins className="w-8 h-8 text-amber-400/60 mx-auto mb-3 group-hover:text-amber-400 transition-colors" />
-              <div className="text-amber-400/80 text-lg tracking-[0.15em] mb-2 group-hover:text-amber-400 transition-colors font-bold">BACK THE PROJECT</div>
-              <p className="text-white/30 text-xs">Help us scale from PoC to global platform. Educators, institutions, sponsors welcome.</p>
-              <p className="text-amber-400/40 text-[9px] font-mono mt-2">Register Interest — All Roles</p>
+              <div className="text-amber-400/80 text-lg tracking-[0.15em] mb-2 group-hover:text-amber-400 transition-colors font-bold">{t("igoPage.backProject")}</div>
+              <p className="text-white/30 text-xs">{ t("igo.helpScale") }</p>
+              <p className="text-amber-400/40 text-[9px] font-mono mt-2">{ t("igo.registerRoles") }</p>
             </button>
           </div>
         </section>
@@ -810,13 +809,13 @@ export default function IGOUmbrella() {
         {/* ── FOOTER ── */}
         <footer className="text-center pb-12">
           <p className="text-white/30 text-sm italic mb-1">
-            Based on the trilogy by Nigel T. Dearden CEng CWEM
+            {t("igo.footer.trilogy")}
           </p>
           <p className="text-white/15 text-xs font-mono">
-            Episode 1: Calories to Consciousness
+            {t("igo.footer.episode1")}
           </p>
           <p className="text-orange-400/30 text-xs mt-2 tracking-wider font-mono">
-            PoC BETA — All modes in test mode
+            {t("igo.footer.pocBeta")}
           </p>
           <p className="text-amber-400/20 text-xs mt-4 tracking-[0.3em] font-bold">
             INFRASTRUCTURE ACADEMY · <BrandI />AAi

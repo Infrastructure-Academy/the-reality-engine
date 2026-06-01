@@ -11,6 +11,7 @@ import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
 import { SiteHeader } from "@/components/SiteHeader";
+import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -95,6 +96,7 @@ function getTransformationLevel(powers: number): { title: string; color: string;
 }
 
 export default function GreyMatter() {
+  const t = useT();
   const [, navigate] = useLocation();
   const guestId = useMemo(() => getGuestId(), []);
 
@@ -189,7 +191,7 @@ export default function GreyMatter() {
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative mobile-content-pad">
-      <SiteHeader title="Grey Matter" showBack />
+      <SiteHeader title={t("greymatter.title")} showBack />
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-80 h-80 bg-amber-500/8 rounded-full blur-[100px]" />
       </div>
@@ -226,11 +228,11 @@ export default function GreyMatter() {
                   {power.icon}
                 </motion.p>
               )}
-              <p className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">POWER EARNED!</p>
+              <p className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">{t("greymatter.powerEarned")}</p>
               <p className="font-heading text-xl font-bold text-amber-400 mb-2">{power.name}</p>
               <p className="text-sm text-muted-foreground mb-4">{power.description}</p>
               <p className="text-lg font-mono font-bold text-gold-gradient">+50,000 XP</p>
-              <p className="text-xs text-muted-foreground mt-2">Clock pushed back to {calculateClockTime(powersEarned).label}</p>
+              <p className="text-xs text-muted-foreground mt-2">{t("greymatter.clockPushed")} {calculateClockTime(powersEarned).label}</p>
             </motion.div>
           </motion.div>
         )}
@@ -241,11 +243,11 @@ export default function GreyMatter() {
         <div className="container flex items-center justify-between h-12">
           <Link href="/explore">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Modes
+              <ArrowLeft className="w-4 h-4" /> {t("scholar.modes")}
             </Button>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-amber-600 text-black">GREY MATTER</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-amber-600 text-black">{t("greymatter.title")}</span>
             <XpCounter value={totalXp} compact color="gold" />
           </div>
           <SoundToggle compact color="gold" />
@@ -256,7 +258,7 @@ export default function GreyMatter() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4"
-          title="Unlock the Powers That Built Everything"
+          title={t("greymatter.videoTitle")}
           subtitle="30s intro"
           accentColor="#d4a843"
           glowColor="rgba(212,168,67,0.15)"
@@ -266,20 +268,20 @@ export default function GreyMatter() {
         <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Transformation Level</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("greymatter.transformLevel")}</p>
               <p className="font-heading text-lg font-bold" style={{ color: transformation.color }}>{transformation.title}</p>
               <p className="text-[10px] text-muted-foreground">{transformation.description}</p>
             </div>
             <div className="text-center">
               <Clock className="w-8 h-8 text-amber-400 mx-auto mb-1" />
               <p className="font-mono text-lg font-bold text-amber-400">{clockTime.label}</p>
-              <p className="text-[9px] text-muted-foreground">Civilisation Clock</p>
+              <p className="text-[9px] text-muted-foreground">{t("greymatter.clock")}</p>
             </div>
           </div>
           <div className="mt-3 pt-3 border-t border-border/30">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Powers: {powersEarned}/12</span>
-              <span>{powersEarned >= 12 ? "iMAN ACHIEVED" : `${12 - powersEarned} powers to iMan`}</span>
+              <span>{t("greymatter.powers")}: {powersEarned}/12</span>
+              <span>{powersEarned >= 12 ? t("greymatter.imanAchieved") : `${12 - powersEarned} ${t("greymatter.powersToIman")}`}</span>
             </div>
             <div className="w-full h-2 rounded-full bg-border/30 mt-1.5">
               <div
@@ -317,7 +319,7 @@ export default function GreyMatter() {
                 {power.icon}
               </motion.p>
               <p className="font-heading text-lg font-bold text-gold-gradient">{power.name}</p>
-              <p className="text-sm text-muted-foreground mt-1">Power earned! This relay is complete.</p>
+              <p className="text-sm text-muted-foreground mt-1">{t("greymatter.relayComplete")}</p>
               <p className="text-xs text-emerald-400 mt-2 font-bold uppercase tracking-wider">✓ ALL PHASES COMPLETE</p>
             </div>
           ) : (
@@ -338,8 +340,8 @@ export default function GreyMatter() {
                 <div className="flex items-center gap-3 mb-2">
                   <Eye className="w-5 h-5 text-amber-400" />
                   <div>
-                    <p className="text-sm font-bold">Phase 1: Discovery</p>
-                    <p className="text-[10px] text-muted-foreground">Explore the relay's inventions and uncover its secrets</p>
+                    <p className="text-sm font-bold">{t("greymatter.phase1")}</p>
+                    <p className="text-[10px] text-muted-foreground">{t("greymatter.exploreInventions")}</p>
                   </div>
                 </div>
                 {!currentMission.discoveryComplete ? (
@@ -366,8 +368,8 @@ export default function GreyMatter() {
                 <div className="flex items-center gap-3 mb-2">
                   <Lightbulb className="w-5 h-5 text-blue-400" />
                   <div>
-                    <p className="text-sm font-bold">Phase 2: Knowledge</p>
-                    <p className="text-[10px] text-muted-foreground">Connect the dots — how does this relay link to others?</p>
+                    <p className="text-sm font-bold">{t("greymatter.phase2")}</p>
+                    <p className="text-[10px] text-muted-foreground">{t("greymatter.connectDots")}</p>
                   </div>
                 </div>
                 {currentMission.discoveryComplete && !currentMission.knowledgeComplete ? (
@@ -394,8 +396,8 @@ export default function GreyMatter() {
                 <div className="flex items-center gap-3 mb-2">
                   <Flame className="w-5 h-5 text-purple-400" />
                   <div>
-                    <p className="text-sm font-bold">Phase 3: Application</p>
-                    <p className="text-[10px] text-muted-foreground">Apply the knowledge — earn the power, push the Clock back</p>
+                    <p className="text-sm font-bold">{t("greymatter.phase3")}</p>
+                    <p className="text-[10px] text-muted-foreground">{t("greymatter.applyKnowledge")}</p>
                   </div>
                 </div>
                 {currentMission.knowledgeComplete && !currentMission.applicationComplete ? (
@@ -418,7 +420,7 @@ export default function GreyMatter() {
         <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-3">
           <div className="flex items-center gap-2 mb-2">
             <Brain className="w-4 h-4 text-amber-400" />
-            <span className="text-xs uppercase tracking-wider text-amber-400 font-bold">Powers of Grey Matter</span>
+            <span className="text-xs uppercase tracking-wider text-amber-400 font-bold">{t("greymatter.powers")}</span>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {Object.entries(RELAY_POWERS).map(([num, p]) => {
@@ -468,7 +470,7 @@ export default function GreyMatter() {
             <p className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">
               BY THE POWER OF GREY MATTER!
             </p>
-            <p className="font-heading text-xl font-bold text-amber-400 mb-2">I HAVE THE KNOWLEDGE!</p>
+            <p className="font-heading text-xl font-bold text-amber-400 mb-2">{t("greymatter.haveKnowledge")}</p>
             <p className="text-sm text-muted-foreground">
               You are now <span className="text-gold font-bold">iMan</span>. All 12 powers earned.
               The Civilisation Clock has been pushed back to {clockTime.label}.

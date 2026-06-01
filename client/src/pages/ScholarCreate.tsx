@@ -14,6 +14,7 @@ import { ExplorerVideo } from "@/components/ExplorerVideo";
 import { playPhaseTransition, playMilestoneFanfare, hapticMilestone } from "@/hooks/useEngagementFx";
 import { MilestoneOverlay } from "@/components/MilestoneOverlay";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
+import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
 
@@ -69,6 +70,7 @@ function rollD20(): number {
 }
 
 export default function ScholarCreate() {
+  const t = useT();
   const { user, isAuthenticated } = useAuth();
   const [phase, setPhase] = useState<Phase>("fits_assessment");
   const [milestoneLevel, setMilestoneLevel] = useState<25 | 50 | 75 | 100 | null>(null);
@@ -174,19 +176,19 @@ export default function ScholarCreate() {
       <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-8">
           <GraduationCap className="w-16 h-16 text-amber-500 mx-auto mb-4" />
-          <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">Scholar Access Required</h2>
+          <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{ t("scholar.accessRequired") }</h2>
           <p className="text-muted-foreground text-sm mb-6">
-            The Scholar path requires authentication. Sign in to begin your character creation and thesis journey.
+            {t("scholar.authRequired.desc")}
           </p>
           <div className="flex flex-col gap-3">
             <a href={getLoginUrl()}>
               <Button className="w-full bg-amber-600 hover:bg-amber-500 text-black font-heading tracking-wider">
-                <Lock className="w-4 h-4 mr-2" /> Sign In to Begin
+                <Lock className="w-4 h-4 mr-2" /> {t("scholar.signIn")}
               </Button>
             </a>
             <Link href="/">
               <Button variant="ghost" className="w-full text-muted-foreground">
-                <ArrowLeft className="w-4 h-4 mr-2" /> Back to Mode Select
+                <ArrowLeft className="w-4 h-4 mr-2" /> {t("scholar.backToModes")}
               </Button>
             </Link>
           </div>
@@ -202,21 +204,21 @@ export default function ScholarCreate() {
         <div className="container flex items-center justify-between h-12">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              <ArrowLeft className="w-4 h-4" /> Modes
+              <ArrowLeft className="w-4 h-4" /> {t("scholar.modes")}
             </Button>
           </Link>
           <div className="flex items-center gap-3">
             <div className="hidden md:block">
               <SocialFollowButtons compact />
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("common.beta")}</span>
             <h1 className="font-heading text-sm font-bold tracking-wider text-gold-gradient hidden sm:block">
-              SCHOLAR — {phase === "fits_assessment" ? "FITS ASSESSMENT" : phase === "dice_roll" ? "ABILITY SCORES" : phase === "character_sheet" ? "CHARACTER SHEET" : "THESIS TRACKER"}
+              {t("scholar.title")} — {phase === "fits_assessment" ? t("scholar.phase.fits") : phase === "dice_roll" ? t("scholar.phase.ability") : phase === "character_sheet" ? t("scholar.phase.sheet") : t("scholar.phase.thesis")}
             </h1>
           </div>
           <Button variant="ghost" size="sm" onClick={() => setShowChat(!showChat)} className="text-muted-foreground gap-1">
             <MessageCircle className="w-4 h-4" />
-            <span className="hidden sm:inline text-xs">DAVID</span>
+            <span className="hidden sm:inline text-xs">{t("scholar.david")}</span>
           </Button>
         </div>
       </header>
@@ -226,7 +228,7 @@ export default function ScholarCreate() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-clip-v6_adca97d1.mp4"
-          title="The Deepest Journey of All"
+          title={t("scholar.videoTitle")}
           subtitle="32s intro"
           accentColor="#f59e0b"
           glowColor="rgba(245,158,11,0.3)"
@@ -265,12 +267,12 @@ export default function ScholarCreate() {
             <motion.div key="fits" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
               <div className="text-center mb-6">
                 <Brain className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-                <h2 className="font-heading text-2xl font-bold">FITS Temperament Assessment</h2>
+                <h2 className="font-heading text-2xl font-bold">{t("scholar.fitsAssessment")}</h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Feeler · Intuitive · Thinker · Senser — Discover your civilisational temperament
+                  {t("scholar.fits.desc")}
                 </p>
                 <p className="text-xs text-muted-foreground/60 font-mono mt-2">
-                  Question {currentQuestion + 1} of {FITS_QUESTIONS.length}
+                  {t("scholar.question")} {currentQuestion + 1} / {FITS_QUESTIONS.length}
                 </p>
               </div>
 
@@ -316,7 +318,7 @@ export default function ScholarCreate() {
             <motion.div key="dice" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
               <div className="text-center mb-6">
                 <Dices className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-                <h2 className="font-heading text-2xl font-bold">Roll Your Ability Scores</h2>
+                <h2 className="font-heading text-2xl font-bold">{t("scholar.rollAbility")}</h2>
                 <p className="text-sm text-muted-foreground mt-1">
                   4d6 drop lowest for each ability + D20 bonus roll
                 </p>
@@ -329,12 +331,12 @@ export default function ScholarCreate() {
 
               {/* Character Name */}
               <div className="mb-6">
-                <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Character Name</label>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{t("scholar.characterName")}</label>
                 <input
                   type="text"
                   value={characterName}
                   onChange={(e) => setCharacterName(e.target.value)}
-                  placeholder="Enter your scholar name..."
+                  placeholder={t("scholar.namePlaceholder")}
                   className="w-full bg-input border border-border/50 rounded-lg px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber-500/50 font-heading text-lg"
                 />
               </div>
@@ -348,7 +350,7 @@ export default function ScholarCreate() {
                   size="lg"
                 >
                   <Dices className={`w-5 h-5 mr-2 ${isRolling ? "animate-spin" : ""}`} />
-                  {isRolling ? "Rolling..." : `Roll Ability Scores (${rollsRemaining} remaining)`}
+                  {isRolling ? t("scholar.rolling") : `${t("scholar.rollAbility")} (${rollsRemaining} ${t("scholar.remaining")})`}
                 </Button>
               </div>
 
@@ -381,11 +383,11 @@ export default function ScholarCreate() {
                   animate={{ scale: 1, opacity: 1 }}
                   className="text-center mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/5"
                 >
-                  <p className="text-xs uppercase tracking-wider text-amber-400 mb-1">D20 Bonus Roll</p>
+                  <p className="text-xs uppercase tracking-wider text-amber-400 mb-1">{t("scholar.d20Bonus")}</p>
                   <p className={`text-5xl font-bold font-mono ${d20Result === 20 ? "text-amber-400 animate-pulse" : "text-foreground"}`}>
                     {d20Result}
                   </p>
-                  {d20Result === 20 && <p className="text-sm text-amber-400 mt-1 font-bold">NATURAL 20 — Critical Success!</p>}
+                  {d20Result === 20 && <p className="text-sm text-amber-400 mt-1 font-bold">{t("scholar.nat20")}</p>}
                   <p className="text-xs text-muted-foreground mt-2">
                     Starting XP: <span className="text-gold-gradient font-bold">{startingXp.toLocaleString()}</span>
                   </p>
@@ -396,7 +398,7 @@ export default function ScholarCreate() {
               {Object.keys(abilityRolls).length > 0 && (
                 <div className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-card/30">
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Score</p>
+                    <p className="text-xs text-muted-foreground">{ t("scholar.totalScore") }</p>
                     <p className="text-xl font-bold font-mono">{totalAbilityScore}</p>
                   </div>
                   <Button
@@ -424,7 +426,7 @@ export default function ScholarCreate() {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-muted-foreground">Starting XP</p>
+                    <p className="text-xs text-muted-foreground">{ t("scholar.startingXP") }</p>
                     <p className="text-lg font-bold text-gold-gradient font-mono">{startingXp.toLocaleString()}</p>
                   </div>
                 </div>
@@ -470,7 +472,7 @@ export default function ScholarCreate() {
                   <div className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-card/30 mb-6">
                     <div className="flex items-center gap-2">
                       <Dices className="w-5 h-5 text-amber-400" />
-                      <span className="text-sm">D20 Bonus Roll</span>
+                      <span className="text-sm">{t("scholar.d20Bonus")}</span>
                     </div>
                     <span className="text-xl font-bold font-mono text-amber-400">{d20Result}</span>
                   </div>
@@ -507,15 +509,15 @@ export default function ScholarCreate() {
             <motion.div key="thesis" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
               <div className="text-center mb-6">
                 <BookOpen className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-                <h2 className="font-heading text-2xl font-bold">Thesis Development</h2>
+                <h2 className="font-heading text-2xl font-bold">{ t("scholar.thesisDev") }</h2>
                 <p className="text-sm text-muted-foreground">
-                  Navigate the 12 Relays to build your infrastructure thesis — DAVID serves as your Dungeon Master
+                  {t("scholar.navigateRelays")}
                 </p>
               </div>
 
               {/* Thesis Title */}
               <div className="mb-6">
-                <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">Thesis Title</label>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1 block">{ t("scholar.thesisTitle") }</label>
                 <input
                   type="text"
                   value={thesisTitle}
@@ -527,7 +529,7 @@ export default function ScholarCreate() {
 
               {/* Relay Completion Grid */}
               <div className="mb-6">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Relay Research Progress</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">{t("scholar.relayResearch")}</p>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {RELAYS.map(relay => {
                     const isCompleted = thesisRelays.has(relay.number);
@@ -567,29 +569,29 @@ export default function ScholarCreate() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <GraduationCap className="w-5 h-5 text-amber-500" />
-                    <span className="font-heading text-sm font-bold">Academic Assessment</span>
+                    <span className="font-heading text-sm font-bold">{t("scholar.academicAssessment")}</span>
                   </div>
                   <span className="text-xs font-mono text-amber-400">{calculateGrade(thesisRelays.size, startingXp)}</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-2 rounded-lg bg-card/30 text-center">
-                    <p className="text-[10px] text-muted-foreground">Relays Researched</p>
+                    <p className="text-[10px] text-muted-foreground">{t("scholar.relaysResearched")}</p>
                     <p className="text-xl font-bold font-mono">{thesisRelays.size}/12</p>
                   </div>
                   <div className="p-2 rounded-lg bg-card/30 text-center">
-                    <p className="text-[10px] text-muted-foreground">Current XP</p>
+                    <p className="text-[10px] text-muted-foreground">{t("scholar.currentXp")}</p>
                     <p className="text-xl font-bold font-mono text-gold-gradient">{startingXp.toLocaleString()}</p>
                   </div>
                 </div>
 
                 <div className="mt-3 text-xs text-muted-foreground">
-                  <p className="font-bold mb-1">Grading Thresholds:</p>
+                  <p className="font-bold mb-1">{t("scholar.gradingThresholds")}</p>
                   <div className="grid grid-cols-2 gap-1">
-                    <span>Distinction: 12 relays + 20M XP</span>
-                    <span>Merit: 10 relays + 15M XP</span>
-                    <span>Pass: 8 relays + 10M XP</span>
-                    <span>Third: 6 relays + 5M XP</span>
+                    <span>{t("scholar.grade.distinction")}: 12 {t("challenge.relays")} + 20M XP</span>
+                    <span>{t("scholar.grade.merit")}: 10 {t("challenge.relays")} + 15M XP</span>
+                    <span>{t("scholar.grade.pass")}: 8 {t("challenge.relays")} + 10M XP</span>
+                    <span>{t("scholar.grade.third")}: 6 {t("challenge.relays")} + 5M XP</span>
                   </div>
                 </div>
               </div>
@@ -614,8 +616,8 @@ export default function ScholarCreate() {
                   <span className="text-[10px] font-bold text-black">D</span>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-amber-400">DAVID</p>
-                  <p className="text-[10px] text-muted-foreground">Dungeon Master</p>
+                  <p className="text-sm font-bold text-amber-400">{t("scholar.david")}</p>
+                  <p className="text-[10px] text-muted-foreground">{t("scholar.dungeonMaster")}</p>
                 </div>
               </div>
               <Button variant="ghost" size="sm" onClick={() => setShowChat(false)}>
@@ -627,8 +629,8 @@ export default function ScholarCreate() {
               {chatMessages.length === 0 && (
                 <div className="text-center py-8">
                   <Sparkles className="w-8 h-8 text-amber-500/40 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">DAVID awaits your command, Scholar.</p>
-                  <p className="text-xs text-amber-400/60 mt-1">Ask for thesis guidance, relay analysis, or Socratic inquiry.</p>
+                  <p className="text-sm text-muted-foreground">{t("scholar.davidAwaits")}</p>
+                  <p className="text-xs text-amber-400/60 mt-1">{t("scholar.askGuidance")}</p>
                 </div>
               )}
               {chatMessages.map((msg, i) => (
@@ -654,10 +656,10 @@ export default function ScholarCreate() {
                       setChatInput("");
                     }
                   }}
-                  placeholder="Consult the Dungeon Master..."
+                  placeholder={t("scholar.consultDM")}
                   className="flex-1 bg-input border border-amber-500/20 rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-amber-500/50"
                 />
-                <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-black">Send</Button>
+                <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-black">{ t("common.send") }</Button>
               </div>
             </div>
           </motion.div>

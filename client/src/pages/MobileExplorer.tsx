@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { Link, useParams } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, Star, Trophy, Flame, TreePine, Waves, Compass, Map, Ship, Scissors, TrainFront, Cog, Satellite, Globe, Zap } from "lucide-react";
 import { RELAYS } from "@shared/gameData";
@@ -10,6 +11,7 @@ const RELAY_ICONS = [Flame, TreePine, Waves, Compass, Map, Ship, Scissors, Train
 const RELAY_COLORS = ["#ef4444", "#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#06b6d4", "#ec4899", "#6366f1", "#f97316", "#eab308", "#8b5cf6", "#14b8a6"];
 
 export default function MobileExplorer() {
+  const t = useT();
   const params = useParams<{ relayNum?: string }>();
   const initialRelay = params.relayNum ? parseInt(params.relayNum) - 1 : 0;
   const [currentRelay, setCurrentRelay] = useState(Math.max(0, Math.min(11, initialRelay)));
@@ -66,8 +68,8 @@ export default function MobileExplorer() {
           </Button>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
-          <span className="font-heading text-gold text-sm">EXPLORER</span>
+          <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
+          <span className="font-heading text-gold text-sm">{t("explore.title")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Star className="w-4 h-4 text-gold" />
@@ -119,7 +121,7 @@ export default function MobileExplorer() {
                 <Icon className="w-10 h-10" style={{ color }} />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Relay {currentRelay + 1} of 12</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">{t("explorer.relayOf12").replace("{n}", String(currentRelay + 1))}</p>
                 <h2 className="font-heading text-2xl" style={{ color }}>{relay.name}</h2>
                 <p className="text-xs text-muted-foreground">{relay.era}</p>
               </div>
@@ -127,7 +129,7 @@ export default function MobileExplorer() {
 
             {/* Story Card */}
             <div className="bg-card border border-border/50 rounded-2xl p-5 space-y-3">
-              <h3 className="font-heading text-gold text-sm">The Story</h3>
+              <h3 className="font-heading text-gold text-sm">{ t("explorer.theStory") }</h3>
               <p className="text-sm text-foreground/80 leading-relaxed">
                 {relay.subtitle} — spanning {relay.era}. Part of the {relay.webType} Web.
               </p>
@@ -136,7 +138,7 @@ export default function MobileExplorer() {
             {/* Discovery Grid — Large Tap Targets */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-heading text-gold text-sm">Discoveries</h3>
+                <h3 className="font-heading text-gold text-sm">{ t("explorer.discoveries") }</h3>
                 <span className="text-xs text-muted-foreground">{relayDiscovered}/{relayInventions.length} found</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -168,7 +170,7 @@ export default function MobileExplorer() {
                           <div className="w-10 h-10 rounded-full bg-border/20 flex items-center justify-center">
                             <span className="text-lg">?</span>
                           </div>
-                          <p className="text-[10px] text-muted-foreground mt-2">Tap to discover</p>
+                          <p className="text-[10px] text-muted-foreground mt-2">{ t("explorer.tapDiscover") }</p>
                         </div>
                       )}
                     </motion.button>
@@ -180,7 +182,7 @@ export default function MobileExplorer() {
             {/* Progress Bar */}
             <div className="bg-card border border-border/50 rounded-2xl p-4 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Relay Progress</span>
+                <span className="text-muted-foreground">{ t("explorer.relayProgress") }</span>
                 <span className="font-bold" style={{ color }}>
                   {relayInventions.length > 0 ? Math.round((relayDiscovered / relayInventions.length) * 100) : 0}%
                 </span>
@@ -201,7 +203,7 @@ export default function MobileExplorer() {
               <button onClick={() => goToRelay(-1)} className="flex items-center gap-1 text-xs text-muted-foreground">
                 <ChevronLeft className="w-5 h-5" /> Prev
               </button>
-              <span className="text-[10px] text-muted-foreground/50">Swipe to navigate</span>
+              <span className="text-[10px] text-muted-foreground/50">{ t("explorer.swipeNav") }</span>
               <button onClick={() => goToRelay(1)} className="flex items-center gap-1 text-xs text-muted-foreground">
                 Next <ChevronRight className="w-5 h-5" />
               </button>
@@ -215,17 +217,17 @@ export default function MobileExplorer() {
         <Link href="/">
           <button className="flex flex-col items-center gap-0.5 px-3 py-1 text-muted-foreground">
             <Globe className="w-5 h-5" />
-            <span className="text-[10px]">Home</span>
+            <span className="text-[10px]">{ t("tab.home") }</span>
           </button>
         </Link>
         <button className="flex flex-col items-center gap-0.5 px-3 py-1 text-gold">
           <Sparkles className="w-5 h-5" />
-          <span className="text-[10px]">Explore</span>
+          <span className="text-[10px]">{ t("tab.explore") }</span>
         </button>
         <Link href="/leaderboard">
           <button className="flex flex-col items-center gap-0.5 px-3 py-1 text-muted-foreground">
             <Trophy className="w-5 h-5" />
-            <span className="text-[10px]">Rank</span>
+            <span className="text-[10px]">{ t("tab.rank") }</span>
           </button>
         </Link>
       </nav>
@@ -241,7 +243,7 @@ export default function MobileExplorer() {
           >
             <div className="bg-card/95 backdrop-blur-sm border-2 border-gold/50 rounded-3xl p-8 text-center shadow-2xl">
               <Sparkles className="w-12 h-12 text-gold mx-auto mb-3" />
-              <p className="font-heading text-gold text-xl">Discovery!</p>
+              <p className="font-heading text-gold text-xl">{ t("explorer.discovery") }</p>
               <p className="text-sm text-muted-foreground mt-1">+100 XP</p>
             </div>
           </motion.div>

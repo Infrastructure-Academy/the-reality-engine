@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Compass, Scale, Ship, Shield, FileText, Wrench, ChevronRight, Image } from "lucide-react";
 import { BrandI } from "@/components/BrandI";
+import { useT } from "@/contexts/LanguageContext";
 
 // CDN URLs for iCard images
 const FRAMEWORK_CDN = {
@@ -42,6 +43,7 @@ const SOFT_CONTROLS = ["Documentation", "Archiving", "Housekeeping"];
 type Tab = "compass" | "laws" | "walkby";
 
 export default function Frameworks() {
+  const t = useT();
   const [activeTab, setActiveTab] = useState<Tab>("compass");
   const [activeLaw, setActiveLaw] = useState<number | null>(null);
   const [activeLevel, setActiveLevel] = useState<number | null>(null);
@@ -55,12 +57,12 @@ export default function Frameworks() {
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-gold">
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t("common.back")}
               </Button>
             </Link>
             <div className="h-6 w-px bg-border/50" />
-            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">FRAMEWORKS</h1>
-            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">BETA</span>
+            <h1 className="font-heading text-gold text-sm md:text-base tracking-wider">{t("frameworks.title")}</h1>
+            <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
           </div>
         </div>
       </header>
@@ -98,8 +100,8 @@ export default function Frameworks() {
           {activeTab === "compass" && (
             <motion.div key="compass" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">The New North</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">The Consciousness Compass</h2>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("frameworks.newNorth")}</p>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("frameworks.consciousnessCompass")}</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
                   C · W · E · S — Not magnetic north, but consciousness north.
                   Gyroscopic. Self-correcting. Nuclear powered. The quantum clock.
@@ -170,11 +172,11 @@ export default function Frameworks() {
           {activeTab === "laws" && (
             <motion.div key="laws" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
-                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">Asimov 3 becomes 4 — The Missing Law</p>
+                <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("frameworks.asimov")}</p>
                 <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">4 Laws of <BrandI />AAi</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
                   4/3 to 3/4 — The Mirror Inversion. Asimov gave us three laws of robotics.
-                  We add the missing second law: Collaborate.
+                  {t("frameworks.secondLaw")}
                 </p>
               </div>
 
@@ -200,7 +202,7 @@ export default function Frameworks() {
                           <div className="flex items-center gap-2">
                             <h4 className="font-heading text-foreground">{law.title}</h4>
                             {law.num === 2 && (
-                              <span className="text-[9px] font-bold bg-gold/20 text-gold px-1.5 py-0.5 rounded">MISSING LAW</span>
+                              <span className="text-[9px] font-bold bg-gold/20 text-gold px-1.5 py-0.5 rounded">{t("frameworks.missingLaw")}</span>
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground">{law.subtitle}</p>
@@ -232,13 +234,13 @@ export default function Frameworks() {
             <motion.div key="walkby" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">TP-013 — 4-Level Control Hierarchy</p>
-                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">The Walkby</h2>
+                <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("frameworks.walkby")}</h2>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
                   Bridge → Chart Room → Engine Room → Bilge.
-                  The engine room can never walk the deck.
+                  {t("frameworks.engineRoom")}
                 </p>
                 <div className="inline-block bg-red-600/20 border border-red-600/40 rounded-lg px-4 py-2 mt-2">
-                  <p className="text-red-400 text-sm font-bold">AI CANNOT DO THE WALKBY</p>
+                  <p className="text-red-400 text-sm font-bold">{t("frameworks.aiWalkby")}</p>
                 </div>
               </div>
 
@@ -260,7 +262,7 @@ export default function Frameworks() {
                         <span className="text-2xl">{level.icon}</span>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground">Level {level.level}</span>
+                            <span className="text-xs text-muted-foreground">{t("frameworks.level").replace("{n}", String(level.level))}</span>
                             <div className="h-px flex-1 bg-border/30" />
                           </div>
                           <h4 className="font-heading text-lg" style={{ color: level.color }}>{level.name}</h4>
@@ -287,7 +289,7 @@ export default function Frameworks() {
               {/* Controls */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                 <div className="bg-card border border-red-600/30 rounded-xl p-5">
-                  <h4 className="font-heading text-red-400 text-sm mb-3">HARD CONTROLS</h4>
+                  <h4 className="font-heading text-red-400 text-sm mb-3">{t("frameworks.hardControls")}</h4>
                   <ul className="space-y-2">
                     {HARD_CONTROLS.map(c => (
                       <li key={c} className="flex items-center gap-2 text-sm text-foreground/80">
@@ -297,7 +299,7 @@ export default function Frameworks() {
                   </ul>
                 </div>
                 <div className="bg-card border border-gold/30 rounded-xl p-5">
-                  <h4 className="font-heading text-gold text-sm mb-3">SOFT CONTROLS</h4>
+                  <h4 className="font-heading text-gold text-sm mb-3">{t("frameworks.softControls")}</h4>
                   <ul className="space-y-2">
                     {SOFT_CONTROLS.map(c => (
                       <li key={c} className="flex items-center gap-2 text-sm text-foreground/80">
@@ -309,8 +311,8 @@ export default function Frameworks() {
               </div>
 
               <p className="text-center text-muted-foreground text-xs italic max-w-lg mx-auto">
-                "The engine room can never walk the deck." — The physical walkby is the ultimate hard control.
-                A human must physically inspect. AI cannot replace presence.
+                {t("frameworks.walkbyQuote")}
+                
               </p>
 
               {/* Walkby iCard */}
@@ -322,8 +324,8 @@ export default function Frameworks() {
                   loading="lazy"
                 />
                 <div className="p-4 text-center">
-                  <h4 className="font-heading text-gold text-sm">The Walkby <BrandI />Card</h4>
-                  <p className="text-xs text-muted-foreground">TP-013 — 4-Level Control Hierarchy — <span className="brand-i">i</span>AAi Archive</p>
+                  <h4 className="font-heading text-gold text-sm">The Walkby <BrandI />{t("frameworks.card")}</h4>
+                  <p className="text-xs text-muted-foreground">TP-013 — 4-Level Control Hierarchy — <span className="brand-i">i</span>{t("frameworks.aaiArchive")}</p>
                 </div>
               </div>
             </motion.div>
@@ -340,8 +342,8 @@ export default function Frameworks() {
                   loading="lazy"
                 />
                 <div className="p-4 text-center">
-                  <h4 className="font-heading text-gold text-sm">4 Laws of <BrandI />AAi — <BrandI />Card</h4>
-                  <p className="text-xs text-muted-foreground">Asimov 3 becomes 4 — The Missing Law — <span className="brand-i">i</span>AAi Archive</p>
+                  <h4 className="font-heading text-gold text-sm">4 Laws of <BrandI />AAi — <BrandI />{t("frameworks.card")}</h4>
+                  <p className="text-xs text-muted-foreground">Asimov 3 becomes 4 — The Missing Law — <span className="brand-i">i</span>{t("frameworks.aaiArchive")}</p>
                 </div>
               </div>
 
@@ -354,8 +356,8 @@ export default function Frameworks() {
                   loading="lazy"
                 />
                 <div className="p-4 text-center">
-                  <h4 className="font-heading text-gold text-sm">Tetrahedral Observer</h4>
-                  <p className="text-xs text-muted-foreground">The 4-point consciousness model — <span className="brand-i">i</span>AAi Archive</p>
+                  <h4 className="font-heading text-gold text-sm">{t("frameworks.tetrahedralObserver")}</h4>
+                  <p className="text-xs text-muted-foreground">The 4-point consciousness model — <span className="brand-i">i</span>{t("frameworks.aaiArchive")}</p>
                 </div>
               </div>
             </motion.div>
