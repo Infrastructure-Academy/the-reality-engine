@@ -7,7 +7,7 @@ import { CRAFTS, RELAYS, WEBS, FITS_TYPES } from "@shared/gameData";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Zap, Shield, Radio, Compass, Eye, Gauge,
-  ChevronRight, MessageCircle, Lock, Rocket
+  ChevronRight, MessageCircle, Lock, Rocket, Flame
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { playNodeActivationSound, playXpSound, hapticTap } from "@/hooks/useSoundEffects";
@@ -24,8 +24,9 @@ import { usePinchZoom } from "@/hooks/usePinchZoom";
 import { Confetti } from "@/components/Confetti";
 import { NodeTooltip } from "@/components/NodeTooltip";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
+import { FireRelayGame } from "@/components/FireRelayGame";
 
-type Phase = "craft_select" | "hud";
+type Phase = "craft_select" | "fire_relay" | "hud";
 
 export default function FlightDeck() {
   const { user, isAuthenticated } = useAuth();
@@ -133,6 +134,15 @@ export default function FlightDeck() {
 
   const handleSelectCraft = useCallback((craft: typeof CRAFTS[number]) => {
     setSelectedCraft(craft);
+    setPhase("fire_relay");
+  }, []);
+
+  const handleFireRelayComplete = useCallback((scores: { iScore: number; eScore: number; cScore: number; hScore: number }) => {
+    // Store scores for display, then advance to HUD
+    console.log("[FlightDeck] Fire relay complete:", scores);
+  }, []);
+
+  const handleFireRelayExit = useCallback(() => {
     setPhase("hud");
   }, []);
 
@@ -347,6 +357,31 @@ export default function FlightDeck() {
             })}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // ─── FIRE RELAY PHASE ───
+  if (phase === "fire_relay" && profileId) {
+    return (
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield">
+        <header className="border-b border-orange-500/20 backdrop-blur-md bg-background/80">
+          <div className="container flex items-center justify-between h-12">
+            <Button variant="ghost" size="sm" onClick={() => setPhase("craft_select")} className="text-muted-foreground gap-1">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <div className="flex items-center gap-2">
+              <Flame className="w-4 h-4 text-orange-400" />
+              <span className="font-heading text-sm font-bold text-orange-400">RELAY 1 — FIRE TRIAL</span>
+            </div>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">BETA</span>
+          </div>
+        </header>
+        <FireRelayGame
+          profileId={profileId}
+          onComplete={handleFireRelayComplete}
+          onExit={handleFireRelayExit}
+        />
       </div>
     );
   }

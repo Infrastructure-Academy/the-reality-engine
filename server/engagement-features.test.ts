@@ -271,7 +271,7 @@ describe("Engagement Layer — JG Inspector Feedback Response", () => {
     it("BottomTabBar includes iGO tab linking to /play/igo", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/BottomTabBar.tsx"), "utf-8");
       expect(content).toContain("/play/igo");
-      expect(content).toContain("iGO");
+      expect(content).toContain("tab.igo");
       expect(content).toContain("Layers");
     });
 

@@ -635,5 +635,134 @@ export const appRouter = router({
         return db.getPlayerDecisions(input.profileId);
       }),
   }),
+
+  // ─── Fire Relay Procedures (R01 Trial Gameplay) ───
+  fire: router({
+    startSession: protectedProcedure
+      .input(z.object({ profileId: z.number() }))
+      .mutation(async ({ input }) => {
+        const sessionId = await db.createFireSession(input.profileId);
+        if (!sessionId) return { success: false, error: "Failed to create session" };
+        return { success: true, sessionId };
+      }),
+
+    recordCardResponse: protectedProcedure
+      .input(z.object({
+        sessionId: z.number(),
+        profileId: z.number(),
+        cardNumber: z.number().min(1).max(48),
+        cardGroup: z.string(),
+        cardName: z.string(),
+        responseType: z.enum(["comparison", "empathy_choice", "creative_connection", "ranking", "isi_assessment"]),
+        responseValue: z.any(),
+        isCorrect: z.boolean().nullable(),
+        axisContribution: z.enum(["I", "E", "C"]),
+        pointsEarned: z.number(),
+        timeTakenMs: z.number().nullable(),
+      }))
+      .mutation(async ({ input }) => {
+        const responseId = await db.saveFireCardResponse(input);
+        if (!responseId) return { success: false, error: "Failed to save response" };
+        return { success: true, responseId };
+      }),
+
+    calculateHICE: protectedProcedure
+      .input(z.object({
+        sessionId: z.number(),
+        profileId: z.number(),
+        sessionDurationSec: z.number(),
+      }))
+      .mutation(async ({ input }) => {
+        // Retrieve session with all responses
+        const session = await db.getFireSession(input.sessionId);
+        if (!session) return { success: false, error: "Session not found" };
+
+        const responses = session.responses || [];
+        if (responses.length === 0) return { success: false, error: "No responses recorded" };
+
+        // Calculate raw axis scores from card responses
+        const iResponses = responses.filter(r => r.axisContribution === "I");
+        const eResponses = responses.filter(r => r.axisContribution === "E");
+        const cResponses = responses.filter(r => r.axisContribution === "C");
+
+        // Raw scores: sum of points earned per axis
+        const iRaw = iResponses.reduce((sum, r) => sum + (r.pointsEarned || 0), 0);
+        const eRaw = eResponses.reduce((sum, r) => sum + (r.pointsEarned || 0), 0);
+        const cRaw = cResponses.reduce((sum, r) => sum + (r.pointsEarned || 0), 0);
+
+        // Normalize raw scores to 70-160 range (mapping from 0-maxPossible)
+        // Max possible per axis: ~16 cards × 100 points = 1600
+        const maxPerAxis = 1600;
+        const normalizeToIQ = (raw: number) => Math.min(160, 70 + (raw / maxPerAxis) * 90);
+
+        const iNorm = normalizeToIQ(iRaw);
+        const eNorm = normalizeToIQ(eRaw);
+
+        // Scale using EQ-013: (Raw - 70) / 90 × 9.9 + 0.1
+        const scaleAxis = (norm: number) => Math.max(0.1, Math.min(10.0, ((norm - 70) / 90) * 9.9 + 0.1));
+
+        const iScore = scaleAxis(iNorm);
+        const eScore = scaleAxis(eNorm);
+
+        // C-axis uses relay completion lookup + TRD/ISI contribution
+        // For single relay trial: base CQ = 0.1 (0 relays) + bonus from creative responses
+        const cNorm = normalizeToIQ(cRaw);
+        const cScore = Math.max(0.1, Math.min(10.0, scaleAxis(cNorm) * 0.8 + 0.1 * 1)); // 1 relay partial credit
+
+        // H = I × E × C (EQ-001)
+        const hScore = Math.round((iScore * eScore * cScore) * 1000) / 1000;
+
+        // Seesaw: I/C ratio (EQ-007)
+        const seesawRatio = cScore > 0 ? Math.round((iScore / cScore) * 100) / 100 : 99;
+        let seesawState: "body_heavy" | "balanced" | "mind_heavy" = "balanced";
+        if (seesawRatio > 1.5) seesawState = "body_heavy";
+        else if (seesawRatio < 0.7) seesawState = "mind_heavy";
+
+        // FITS type determination from response patterns
+        const correctCount = responses.filter(r => r.isCorrect === true).length;
+        const empathyCount = responses.filter(r => r.responseType === "empathy_choice").length;
+        const creativeCount = responses.filter(r => r.responseType === "creative_connection").length;
+        const comparisonCount = responses.filter(r => r.responseType === "comparison").length;
+
+        let fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced" = "balanced";
+        const maxType = Math.max(comparisonCount, empathyCount, creativeCount, correctCount);
+        if (maxType === comparisonCount) fitsType = "senser";
+        else if (maxType === empathyCount) fitsType = "feeler";
+        else if (maxType === creativeCount) fitsType = "intuitive";
+        else if (maxType === correctCount) fitsType = "thinker";
+
+        // Finalize session
+        const success = await db.finalizeFireSession(input.sessionId, {
+          iScore,
+          eScore,
+          cScore,
+          hScore,
+          seesawRatio,
+          seesawState,
+          fitsType,
+          sessionDurationSec: input.sessionDurationSec,
+        });
+
+        return {
+          success,
+          scores: { iScore, eScore, cScore, hScore },
+          seesaw: { ratio: seesawRatio, state: seesawState },
+          fitsType,
+          stats: { totalResponses: responses.length, iCount: iResponses.length, eCount: eResponses.length, cCount: cResponses.length },
+        };
+      }),
+
+    getSession: publicProcedure
+      .input(z.object({ sessionId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getFireSession(input.sessionId);
+      }),
+
+    getSessionsByProfile: publicProcedure
+      .input(z.object({ profileId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getFireSessionsByProfile(input.profileId);
+      }),
+  }),
 });
 export type AppRouter = typeof appRouter;

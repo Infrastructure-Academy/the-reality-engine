@@ -5,7 +5,8 @@ import {
   relayProgress, deardenNodes, nodeActivations, characters,
   xpTransactions, chatMessages, leaderboard, challengeInvites,
   agnContacts, contactTags, contactTagAssignments, mediaCatalogue, bridgeSyncLog,
-  playerDecisions, governanceRecords, feedbackReports, dcsnNodes, igoInterest
+  playerDecisions, governanceRecords, feedbackReports, dcsnNodes, igoInterest,
+  fireSessions, fireCardResponses
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1038,6 +1039,128 @@ export async function getIgoInterestList() {
     return await db.select().from(igoInterest).orderBy(sql`${igoInterest.createdAt} DESC`);
   } catch (error) {
     console.error("[Database] Failed to get iGO interest list:", error);
+    return [];
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FIRE RELAY SESSION HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+export async function createFireSession(profileId: number): Promise<number | null> {
+  const db = await getDb();
+  if (!db) { console.warn("[Database] Cannot create fire session: database not available"); return null; }
+  try {
+    const [result] = await db.insert(fireSessions).values({
+      profileId,
+      cardsCompleted: 0,
+      totalCards: 48,
+    });
+    return (result as any).insertId;
+  } catch (error) {
+    console.error("[Database] Failed to create fire session:", error);
+    return null;
+  }
+}
+
+export async function saveFireCardResponse(data: {
+  sessionId: number;
+  profileId: number;
+  cardNumber: number;
+  cardGroup: string;
+  cardName: string;
+  responseType: "comparison" | "empathy_choice" | "creative_connection" | "ranking" | "isi_assessment";
+  responseValue: any;
+  isCorrect: boolean | null;
+  axisContribution: "I" | "E" | "C";
+  pointsEarned: number;
+  timeTakenMs: number | null;
+}): Promise<number | null> {
+  const db = await getDb();
+  if (!db) { console.warn("[Database] Cannot save fire card response: database not available"); return null; }
+  try {
+    const [result] = await db.insert(fireCardResponses).values({
+      sessionId: data.sessionId,
+      profileId: data.profileId,
+      cardNumber: data.cardNumber,
+      cardGroup: data.cardGroup,
+      cardName: data.cardName,
+      responseType: data.responseType,
+      responseValue: data.responseValue,
+      isCorrect: data.isCorrect,
+      axisContribution: data.axisContribution,
+      pointsEarned: data.pointsEarned,
+      timeTakenMs: data.timeTakenMs,
+    });
+    // Update cards completed count
+    await db.update(fireSessions)
+      .set({ cardsCompleted: sql`${fireSessions.cardsCompleted} + 1` })
+      .where(eq(fireSessions.id, data.sessionId));
+    return (result as any).insertId;
+  } catch (error) {
+    console.error("[Database] Failed to save fire card response:", error);
+    return null;
+  }
+}
+
+export async function finalizeFireSession(sessionId: number, scores: {
+  iScore: number;
+  eScore: number;
+  cScore: number;
+  hScore: number;
+  seesawRatio: number;
+  seesawState: "body_heavy" | "balanced" | "mind_heavy";
+  fitsType: "senser" | "intuitive" | "thinker" | "feeler" | "balanced";
+  sessionDurationSec: number;
+}): Promise<boolean> {
+  const db = await getDb();
+  if (!db) { console.warn("[Database] Cannot finalize fire session: database not available"); return false; }
+  try {
+    await db.update(fireSessions)
+      .set({
+        iScore: scores.iScore,
+        eScore: scores.eScore,
+        cScore: scores.cScore,
+        hScore: scores.hScore,
+        seesawRatio: scores.seesawRatio,
+        seesawState: scores.seesawState,
+        fitsType: scores.fitsType,
+        sessionDurationSec: scores.sessionDurationSec,
+        completedAt: sql`NOW()`,
+      })
+      .where(eq(fireSessions.id, sessionId));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to finalize fire session:", error);
+    return false;
+  }
+}
+
+export async function getFireSession(sessionId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [session] = await db.select().from(fireSessions).where(eq(fireSessions.id, sessionId));
+    if (!session) return null;
+    const responses = await db.select().from(fireCardResponses)
+      .where(eq(fireCardResponses.sessionId, sessionId))
+      .orderBy(asc(fireCardResponses.cardNumber));
+    return { ...session, responses };
+  } catch (error) {
+    console.error("[Database] Failed to get fire session:", error);
+    return null;
+  }
+}
+
+export async function getFireSessionsByProfile(profileId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(fireSessions)
+      .where(eq(fireSessions.profileId, profileId))
+      .orderBy(desc(fireSessions.startedAt));
+  } catch (error) {
+    console.error("[Database] Failed to get fire sessions by profile:", error);
     return [];
   }
 }

@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, bigint } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean, bigint, float } from "drizzle-orm/mysql-core";
 
 // ─── Core User Table (from template) ───
 export const users = mysqlTable("users", {
@@ -366,3 +366,49 @@ export const igoInterest = mysqlTable("igo_interest", {
 });
 export type IgoInterest = typeof igoInterest.$inferSelect;
 export type InsertIgoInterest = typeof igoInterest.$inferInsert;
+
+
+// ─── Fire Relay Sessions (Relay 1 Flight Deck Trial — HICE Data Capture) ───
+export const fireSessions = mysqlTable("fire_sessions", {
+  id: int("id").autoincrement().primaryKey(),
+  profileId: int("profileId").notNull(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+  // ICE Axis Scores (scaled 0.1–10.0)
+  iScore: float("iScore"), // Intelligence axis
+  eScore: float("eScore"), // Emotional axis
+  cScore: float("cScore"), // Creative axis
+  hScore: float("hScore"), // H = I × E × C (0.001–1000)
+  // Seesaw balance
+  seesawRatio: float("seesawRatio"), // I/C ratio (balanced = 0.7–1.5)
+  seesawState: mysqlEnum("seesawState", ["body_heavy", "balanced", "mind_heavy"]),
+  // Player classification
+  fitsType: mysqlEnum("fireFitsType", ["senser", "intuitive", "thinker", "feeler", "balanced"]),
+  // Session metadata
+  cardsCompleted: int("cardsCompleted").default(0),
+  totalCards: int("totalCards").default(48),
+  sessionDurationSec: int("sessionDurationSec"),
+});
+export type FireSession = typeof fireSessions.$inferSelect;
+
+// ─── Fire Card Responses (Individual card interactions within a session) ───
+export const fireCardResponses = mysqlTable("fire_card_responses", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: int("sessionId").notNull(),
+  profileId: int("profileId").notNull(),
+  // Card identification
+  cardNumber: int("cardNumber").notNull(), // 1–48
+  cardGroup: varchar("cardGroup", { length: 32 }).notNull(), // ORIGIN, SIGNAL, CRAFT, RITUAL, MYTH, FUEL, TRANSFORM, ENGINE, SCIENCE, ECOLOGY, HAZARD
+  cardName: varchar("cardName", { length: 128 }).notNull(),
+  // Response data
+  responseType: mysqlEnum("responseType", ["comparison", "empathy_choice", "creative_connection", "ranking", "isi_assessment"]).notNull(),
+  responseValue: json("responseValue"), // Flexible: { chosen: "x", correct: true/false, score: n }
+  isCorrect: boolean("isCorrect"), // For comparison/ranking responses
+  // Axis contribution
+  axisContribution: mysqlEnum("axisContribution", ["I", "E", "C"]).notNull(),
+  pointsEarned: int("pointsEarned").default(0), // Raw points before scaling
+  // Timing
+  timeTakenMs: int("timeTakenMs"), // Response time in milliseconds
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type FireCardResponse = typeof fireCardResponses.$inferSelect;

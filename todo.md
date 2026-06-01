@@ -1159,14 +1159,43 @@
 - [ ] Implement HICE scoring engine (H = I × E × C) from Formulae Database equations
 
 ## PRIORITY 1 — POLICE COMPLIANCE: Full i18n Translation System (Block 611)
-- [ ] Build i18n infrastructure: LanguageContext, t() function, dictionary loader (matching MEMORIAL protocol)
-- [ ] Create ZH (中文) translation dictionary — ALL page strings, compliance-critical for PolyU
-- [ ] Wrap ALL components with t() calls — Home, FlightDeck, NetworkBar, BottomTabBar, all pages
-- [ ] Create KO (한국어) translation dictionary
-- [ ] Create JA (日本語) translation dictionary
-- [ ] Create HI (हिन्दी) translation dictionary
-- [ ] Create AR (العربية) translation dictionary
-- [ ] Create ES (Español) translation dictionary
-- [ ] Create VI (Tiếng Việt) translation dictionary
-- [ ] Verify ZH renders with NO English visible (except fixed images)
-- [ ] Test all 8 languages end-to-end
+- [x] Build i18n infrastructure: LanguageContext, t() function, dictionary loader (matching MEMORIAL protocol)
+- [x] Create ZH (中文) translation dictionary — ALL page strings, compliance-critical for PolyU
+- [x] Wrap ALL components with t() calls — Home, FlightDeck, NetworkBar, BottomTabBar, all pages
+- [x] Create KO (한국어) translation dictionary
+- [x] Create JA (日本語) translation dictionary
+- [x] Create HI (हिन्दी) translation dictionary
+- [x] Create AR (العربية) translation dictionary
+- [x] Create ES (Español) translation dictionary
+- [x] Create VI (Tiếng Việt) translation dictionary
+- [x] Verify ZH renders with NO English visible (except fixed images)
+- [x] Test all 8 languages end-to-end
+
+## Block 611b: Relay 1 (Fire) Flight Deck Trial — HICE Data Capture
+- [ ] Add fire_sessions table (profileId, startedAt, completedAt, iScore, eScore, cScore, hScore, seesawRatio, fitsType)
+- [ ] Add fire_card_responses table (sessionId, cardNumber, cardGroup, responseType, responseValue, timeTaken, axisContribution)
+- [ ] Generate migration SQL and apply via webdev_execute_sql
+- [ ] Create DB helpers for fire session CRUD and card response recording
+- [ ] Create tRPC procedures: fire.startSession, fire.submitResponse, fire.completeSession, fire.getScore
+- [ ] Build Fire Flight Deck UI — cockpit HUD presenting 48 Tecton cards with interaction prompts
+- [ ] Card interaction mechanics: Top Trumps comparison (feeds I-axis), empathy/social choices (feeds E-axis), creative connections (feeds C-axis)
+- [ ] Implement HICE scoring engine: I = COG-based, E = SOC+CTRL-based, C = relay progress lookup
+- [ ] Display live ICE vector during gameplay (3-axis radar/bar visualization)
+- [ ] Show final HICE score on session completion with Seesaw balance ratio
+- [ ] Add ZH translations for all Fire Flight Deck content per GP-001
+- [ ] Write vitest tests for HICE scoring calculations
+
+## Fire Relay Trial (R01) — Block 611b
+- [x] Database schema: fire_sessions, fire_card_responses tables
+- [x] Database helpers: createFireSession, recordFireCardResponse, getFireSessionResponses, calculateAndStoreHICE
+- [x] tRPC procedures: fire.startSession, fire.recordCardResponse, fire.calculateHICE
+- [x] Shared module: fireCards.ts with all 48 cards, stats, groups, challenge generators
+- [x] FireRelayGame component with briefing/playing/results phases
+- [x] Comparison challenges (I-axis via COG)
+- [x] Empathy choice challenges (E-axis via SOC+CTRL)
+- [x] Creative connection challenges (C-axis via TRD+ISI)
+- [x] HICE score calculation (H = I × E × C) with seesaw ratio
+- [x] FlightDeck integration: fire_relay phase between craft_select and HUD
+- [x] GP-001 i18n: all 8 languages (EN, ZH, AR, ES, HI, JA, KO, VI) with Fire relay keys
+- [x] Pre-existing test fix: BottomTabBar iGO assertion updated for i18n pattern
+- [x] All 355 tests passing
