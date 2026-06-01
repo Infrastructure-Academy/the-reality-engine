@@ -426,8 +426,8 @@
 - [x] Checkpoint and deliver
 
 ## Auto-Hide Watch Intro After First View
-- [ ] Update ExplorerVideo component with localStorage watched state
-- [ ] Auto-collapse after first complete view, show "Watched" indicator
+- [x] Update ExplorerVideo component with localStorage watched state
+- [x] Auto-collapse after first complete view, show "Watched" indicator
 
 ## Pilot Portraits for MPNC Fleet
 - [ ] Generate pilot portrait: Scott (TB-1 Pathfinder)
@@ -912,12 +912,12 @@
 - [x] Checkpoint saved (f7d85a7c)
 
 ## Block 460: Pipeline Image Touch-Zone Hotspots
-- [ ] Restore original pipeline PNG image (replace InteractivePipeline component)
-- [ ] Overlay invisible CSS touch zones on each mode box in the image
-- [ ] Each touch zone links to the correct game route
-- [ ] Touch zones work on mobile (tap) and desktop (click)
-- [ ] Keep visited-mode glow detection from localStorage
-- [ ] Checkpoint and publish
+- [x] Restore original pipeline PNG image (replace InteractivePipeline component)
+- [x] Overlay invisible CSS touch zones on each mode box in the image
+- [x] Each touch zone links to the correct game route
+- [x] Touch zones work on mobile (tap) and desktop (click)
+- [x] Keep visited-mode glow detection from localStorage
+- [x] Checkpoint and publish
 
 ## Block 460b: FOCUSED — Landing Page + Videos + Player Journey
 - [x] Replace old Master Grid on iGO page with v3 pipeline image + PipelineHotspots
@@ -1155,8 +1155,8 @@
 ## Block 611: XCHANGE Nav Fix + Language Toggle + Fire Relay Trial
 - [x] Fix XCHANGE nav — remove "(Coming Soon)" hint, add live URL (xchangeapp-adbvx9fr.manus.space)
 - [x] Add language toggle (8 languages: EN/ZH/KO/JA/HI/AR/ES/VI) matching MEMORIAL's globe icon implementation
-- [ ] Build Relay 1 (Fire) Flight Deck trial — capture player input data for HICE scoring
-- [ ] Implement HICE scoring engine (H = I × E × C) from Formulae Database equations
+- [x] Build Relay 1 (Fire) Flight Deck trial — capture player input data for HICE scoring
+- [x] Implement HICE scoring engine (H = I × E × C) from Formulae Database equations
 
 ## PRIORITY 1 — POLICE COMPLIANCE: Full i18n Translation System (Block 611)
 - [x] Build i18n infrastructure: LanguageContext, t() function, dictionary loader (matching MEMORIAL protocol)
@@ -1172,18 +1172,18 @@
 - [x] Test all 8 languages end-to-end
 
 ## Block 611b: Relay 1 (Fire) Flight Deck Trial — HICE Data Capture
-- [ ] Add fire_sessions table (profileId, startedAt, completedAt, iScore, eScore, cScore, hScore, seesawRatio, fitsType)
-- [ ] Add fire_card_responses table (sessionId, cardNumber, cardGroup, responseType, responseValue, timeTaken, axisContribution)
-- [ ] Generate migration SQL and apply via webdev_execute_sql
-- [ ] Create DB helpers for fire session CRUD and card response recording
-- [ ] Create tRPC procedures: fire.startSession, fire.submitResponse, fire.completeSession, fire.getScore
-- [ ] Build Fire Flight Deck UI — cockpit HUD presenting 48 Tecton cards with interaction prompts
-- [ ] Card interaction mechanics: Top Trumps comparison (feeds I-axis), empathy/social choices (feeds E-axis), creative connections (feeds C-axis)
-- [ ] Implement HICE scoring engine: I = COG-based, E = SOC+CTRL-based, C = relay progress lookup
-- [ ] Display live ICE vector during gameplay (3-axis radar/bar visualization)
-- [ ] Show final HICE score on session completion with Seesaw balance ratio
-- [ ] Add ZH translations for all Fire Flight Deck content per GP-001
-- [ ] Write vitest tests for HICE scoring calculations
+- [x] Add fire_sessions table (profileId, startedAt, completedAt, iScore, eScore, cScore, hScore, seesawRatio, fitsType)
+- [x] Add fire_card_responses table (sessionId, cardNumber, cardGroup, responseType, responseValue, timeTaken, axisContribution)
+- [x] Generate migration SQL and apply via webdev_execute_sql
+- [x] Create DB helpers for fire session CRUD and card response recording
+- [x] Create tRPC procedures: fire.startSession, fire.submitResponse, fire.completeSession, fire.getScore
+- [x] Build Fire Flight Deck UI — cockpit HUD presenting 48 Tecton cards with interaction prompts
+- [x] Card interaction mechanics: Top Trumps comparison (feeds I-axis), empathy/social choices (feeds E-axis), creative connections (feeds C-axis)
+- [x] Implement HICE scoring engine: I = COG-based, E = SOC+CTRL-based, C = relay progress lookup
+- [x] Display live ICE vector during gameplay (3-axis radar/bar visualization)
+- [x] Show final HICE score on session completion with Seesaw balance ratio
+- [x] Add ZH translations for all Fire Flight Deck content per GP-001
+- [x] Write vitest tests for HICE scoring calculations
 
 ## Fire Relay Trial (R01) — Block 611b
 - [x] Database schema: fire_sessions, fire_card_responses tables
