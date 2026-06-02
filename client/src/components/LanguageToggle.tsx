@@ -3,11 +3,13 @@
  * 8-language selector matching MEMORIAL's implementation.
  * Globe icon + current language code, dropdown with all 8 options.
  * Uses LanguageContext for state — switching language translates entire page.
- * 
- * FIXED: iOS Safari touch handling — uses onPointerDown for reliable mobile taps.
+ *
+ * CRITICAL FIX: Uses native <select> element for guaranteed mobile compatibility.
+ * Previous custom dropdown had a race condition where mousedown outside-click
+ * handler closed the dropdown before onClick could fire on items.
+ * Native <select> avoids this entirely and works perfectly on iOS Safari.
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
 import { useLanguage, LANGUAGES, type LangCode } from "@/contexts/LanguageContext";
 
 function GlobeIcon({ className }: { className?: string }) {
@@ -36,38 +38,10 @@ interface LanguageToggleProps {
 
 export function LanguageToggle({ compact = false }: LanguageToggleProps) {
   const { lang, setLang } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close dropdown on outside click/touch
-  useEffect(() => {
-    function handleOutside(e: Event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    if (isOpen) {
-      // Use pointerdown for both touch and mouse — fires before click
-      document.addEventListener("pointerdown", handleOutside);
-      return () => document.removeEventListener("pointerdown", handleOutside);
-    }
-  }, [isOpen]);
-
-  const selectLang = useCallback((code: LangCode) => {
-    setLang(code);
-    setIsOpen(false);
-  }, [setLang]);
 
   return (
-    <div ref={dropdownRef} className="relative">
-      <button
-        type="button"
-        onPointerDown={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
-        title="Select language"
+    <div className="relative inline-flex items-center">
+      <div
         className={`
           inline-flex items-center gap-1.5 rounded-full
           border border-white/20 hover:border-white/40
@@ -75,53 +49,32 @@ export function LanguageToggle({ compact = false }: LanguageToggleProps) {
           transition-all duration-200 cursor-pointer select-none
           ${compact ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs"}
         `}
-        style={{ backgroundColor: "rgba(255,255,255,0.05)", touchAction: "manipulation" }}
+        style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
       >
         <GlobeIcon className={compact ? "w-3 h-3" : "w-3.5 h-3.5"} />
         <span className="font-mono font-bold tracking-wide">{lang}</span>
         <svg
           viewBox="0 0 10 6"
           fill="currentColor"
-          className={`w-2.5 h-2.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className="w-2.5 h-2.5"
         >
           <path d="M0 0l5 6 5-6z" />
         </svg>
-      </button>
-
-      {isOpen && (
-        <div
-          className="absolute top-full right-0 mt-1 z-[10000] rounded-md overflow-hidden shadow-xl"
-          style={{
-            backgroundColor: "#0f1d32",
-            border: "1px solid rgba(255,255,255,0.15)",
-            minWidth: "160px",
-          }}
-        >
-          {LANGUAGES.map((l) => (
-            <button
-              key={l.code}
-              type="button"
-              onPointerDown={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                selectLang(l.code);
-              }}
-              className={`
-                w-full flex items-center justify-between px-3 py-3 text-sm
-                transition-colors cursor-pointer select-none
-                ${lang === l.code
-                  ? "bg-white/10 text-white font-bold"
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
-                }
-              `}
-              style={{ touchAction: "manipulation" }}
-            >
-              <span>{l.label}</span>
-              <span className="font-mono text-[10px] opacity-60">{l.native}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      </div>
+      {/* Native select overlaid for guaranteed mobile touch handling */}
+      <select
+        value={lang}
+        onChange={(e) => setLang(e.target.value as LangCode)}
+        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        style={{ fontSize: "16px" /* prevents iOS zoom */ }}
+        aria-label="Select language"
+      >
+        {LANGUAGES.map((l) => (
+          <option key={l.code} value={l.code}>
+            {l.label} ({l.native})
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
