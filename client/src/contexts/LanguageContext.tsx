@@ -62,7 +62,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       const stored = localStorage.getItem("iaai-lang");
       if (stored && DICTIONARIES[stored as LangCode]) return stored as LangCode;
     }
-    return "ZH";
+    return "EN";
   });
 
   const setLang = useCallback((newLang: LangCode) => {
