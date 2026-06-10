@@ -8,9 +8,10 @@
  * Mobile: all 5 links visible — no hamburger menu.
  * Behaviour: same-tab navigation within iAAi network.
  * i18n: all labels use t() from LanguageContext.
+ * Cross-domain: appends ?lang= to all outbound links for language persistence.
  */
 
-import { useT } from "@/contexts/LanguageContext";
+import { useT, useLanguage } from "@/contexts/LanguageContext";
 
 /* 14×14 SVG icon paths per site */
 const ICONS: Record<string, { path: string; viewBox?: string }> = {
@@ -94,6 +95,21 @@ function SiteIcon({ siteId, color, size = 14 }: { siteId: string; color: string;
 
 export function NetworkBar() {
   const t = useT();
+  const { lang } = useLanguage();
+
+  /** Append ?lang= to cross-domain URLs for language persistence */
+  function buildUrl(baseUrl: string): string {
+    // Internal links (same site) don't need the param
+    if (baseUrl.startsWith("/")) return baseUrl;
+    // External iAAi links — append lang param
+    try {
+      const url = new URL(baseUrl);
+      url.searchParams.set("lang", lang);
+      return url.toString();
+    } catch {
+      return baseUrl;
+    }
+  }
 
   return (
     <nav
@@ -109,7 +125,7 @@ export function NetworkBar() {
         return (
           <a
             key={site.id}
-            href={site.url}
+            href={buildUrl(site.url)}
             title={`${site.agent} — ${t(site.subKey)}`}
             className="group relative flex items-center justify-center gap-1.5 px-2 sm:px-3 h-full text-[11px] tracking-wider transition-opacity hover:opacity-100 whitespace-nowrap"
             style={{

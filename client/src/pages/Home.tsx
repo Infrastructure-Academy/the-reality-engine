@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronRight, Zap, Globe, BookOpen, Trophy, Library, Play, Volume2, Shield, ArrowDown, Gamepad2, Compass, Share2 } from "lucide-react";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { LanguageToggle } from "@/components/LanguageToggle";
-import { useT } from "@/contexts/LanguageContext";
+import { useT, useLanguage } from "@/contexts/LanguageContext";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { PipelineHotspots } from "@/components/PipelineHotspots";
@@ -1273,6 +1273,7 @@ function GenerationsTimelineStrip() {
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const t = useT();
+  const { lang } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
@@ -1408,7 +1409,7 @@ export default function Home() {
             {t("home.aimFull")}
           </p>
           <p className="text-xs md:text-sm text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-2">
-            {t("home.aimDescription")} <a href="https://www.infrastructure-academy.com" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi</a>.
+            {t("home.aimDescription")} <a href={`https://www.infrastructure-academy.com?lang=${lang}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi</a>.
           </p>
         </div>
 
@@ -1674,7 +1675,7 @@ export default function Home() {
             <div className="text-center md:text-left">
               <p className="text-xs text-muted-foreground">
                 {t("home.footerTitle")}{" "}
-                <a href="https://www.infrastructure-academy.com" className="text-gold-dim hover:text-gold-bright transition-colors">
+                <a href={`https://www.infrastructure-academy.com?lang=${lang}`} className="text-gold-dim hover:text-gold-bright transition-colors">
                   {t("home.footerAcademy")}
                 </a>
               </p>

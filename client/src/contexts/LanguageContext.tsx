@@ -3,10 +3,13 @@
  * Full i18n translation system matching MEMORIAL protocol.
  * 8 languages: EN, ZH, KO, JA, HI, AR, ES, VI
  * Uses flat key-value dictionaries with dot-notation keys.
- * t() function returns translated string or falls back to EN then key.
+ *
+ * Cross-domain persistence: Accepts ?lang=ZH (or any valid code) in the URL.
+ * When detected, it overrides localStorage and persists for the session.
+ * This allows navigation from infrastructure-academy.com/?lang=ZH to carry through.
  */
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { EN } from "@/i18n/en";
 import { ZH } from "@/i18n/zh";
 import { KO } from "@/i18n/ko";
@@ -40,6 +43,41 @@ const DICTIONARIES: Record<LangCode, Record<string, string>> = {
   VI,
 };
 
+const STORAGE_KEY = "iaai-lang";
+
+/** Detect language from URL ?lang= parameter */
+function getLangFromURL(): LangCode | null {
+  if (typeof window === "undefined") return null;
+  const params = new URLSearchParams(window.location.search);
+  const urlLang = params.get("lang")?.toUpperCase();
+  if (urlLang && DICTIONARIES[urlLang as LangCode]) {
+    return urlLang as LangCode;
+  }
+  return null;
+}
+
+/** Resolve initial language: URL param > localStorage > default EN */
+function resolveInitialLang(): LangCode {
+  // Priority 1: URL parameter (cross-domain navigation)
+  const urlLang = getLangFromURL();
+  if (urlLang) {
+    // Persist it immediately so it sticks
+    localStorage.setItem(STORAGE_KEY, urlLang);
+    // Clean the URL param without reload
+    const url = new URL(window.location.href);
+    url.searchParams.delete("lang");
+    window.history.replaceState({}, "", url.toString());
+    return urlLang;
+  }
+  // Priority 2: localStorage (returning visitor)
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && DICTIONARIES[stored as LangCode]) return stored as LangCode;
+  }
+  // Priority 3: default EN
+  return "EN";
+}
+
 interface LanguageContextType {
   lang: LangCode;
   setLang: (lang: LangCode) => void;
@@ -57,19 +95,18 @@ interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [lang, setLangState] = useState<LangCode>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("iaai-lang");
-      if (stored && DICTIONARIES[stored as LangCode]) return stored as LangCode;
-    }
-    return "EN";
-  });
+  const [lang, setLangState] = useState<LangCode>(resolveInitialLang);
+
+  // Set document attributes on mount and lang change
+  useEffect(() => {
+    document.documentElement.lang = lang.toLowerCase();
+    document.documentElement.dir = lang === "AR" ? "rtl" : "ltr";
+  }, [lang]);
 
   const setLang = useCallback((newLang: LangCode) => {
     setLangState(newLang);
-    localStorage.setItem("iaai-lang", newLang);
+    localStorage.setItem(STORAGE_KEY, newLang);
     document.documentElement.lang = newLang.toLowerCase();
-    // RTL for Arabic
     document.documentElement.dir = newLang === "AR" ? "rtl" : "ltr";
   }, []);
 
