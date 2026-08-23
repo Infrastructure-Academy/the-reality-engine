@@ -1208,3 +1208,7 @@
 - [x] Translate RelaySummaryCard "Share Your Feedback" → t("explorer.shareYourFeedback")
 - [x] Update engagement-features.test.ts assertions to match i18n key patterns
 - [x] All 355 tests passing, 0 TS errors
+## Blocking Mobile Navigation — PLAY NOW
+- [x] Convert the Home-page “PLAY NOW” prompt into an accessible, tappable game-entry control on mobile and desktop
+- [ ] Verify the control opens the intended game-entry route from the deployed mobile site
+- [x] Add/update Vitest coverage for the Home-page game-entry control

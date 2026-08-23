@@ -126,6 +126,14 @@ describe("PWA & Mobile Features", () => {
         expect(content).toContain("mobile-content-pad");
       }
     });
+
+    it("Home PLAY NOW is a direct, accessible link to the game entry route", () => {
+      const content = fs.readFileSync(path.join(clientDir, "src/pages/Home.tsx"), "utf-8");
+      expect(content).toContain('data-testid="home-play-now"');
+      expect(content).toContain('href="/explore"');
+      expect(content).toContain('aria-label={t("home.playNow")}');
+      expect(content).not.toContain("document.getElementById('explorer-card')");
+    });
   });
 
   describe("iCard Image Embedding", () => {

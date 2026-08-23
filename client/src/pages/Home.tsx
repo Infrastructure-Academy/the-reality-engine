@@ -1379,22 +1379,23 @@ export default function Home() {
             <ContinueBanner />
           </div>
 
-          {/* Pulsing PLAY NOW arrow — visible on mobile */}
-          <motion.button
+          {/* Direct game entry — a real link with a mobile-safe touch target */}
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            onClick={() => document.getElementById('explorer-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-            className="mt-3 mx-auto flex flex-col items-center gap-1 text-red-400 hover:text-red-300 transition-colors md:hidden"
+            className="mt-4 flex justify-center"
           >
-            <span className="text-xs font-heading tracking-[0.2em] uppercase">{t("home.playNow")}</span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            <Link
+              href="/explore"
+              aria-label={t("home.playNow")}
+              data-testid="home-play-now"
+              className="inline-flex min-h-12 min-w-44 touch-manipulation items-center justify-center gap-2 rounded-lg border border-red-400/50 bg-red-500/10 px-6 py-3 text-red-300 transition-colors hover:border-red-300 hover:bg-red-500/20 hover:text-red-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <ArrowDown className="w-5 h-5" />
-            </motion.div>
-          </motion.button>
+              <Play className="h-5 w-5 fill-current" aria-hidden="true" />
+              <span className="text-sm font-heading tracking-[0.2em] uppercase">{t("home.playNow")}</span>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
