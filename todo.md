@@ -1219,3 +1219,26 @@
 - [x] Prepare approval-gated caption and video-link options without publishing content.
 - [ ] Preserve the existing videos and verify any selected destination links before publication.
 - [ ] Do not publish, schedule, delete, or edit Instagram content without explicit user approval.
+
+## Reddit discoverability audit — 2026-08-24
+- [ ] Verify what the live Academy site says about iAAi and Civilisational Systems Engineering (CSE).
+- [ ] Audit live metadata, robots, sitemap, canonical terms, and structured content for discoverability.
+- [ ] Compare authoritative site language with Reddit results and unrelated meanings of CSE.
+- [ ] Report the verified gap and propose non-destructive discoverability improvements.
+
+## Reddit evidence correction — 2026-08-24
+- [x] Treat the supplied screenshot as evidence about Reddit discoverability, not as a claim that the Academy website contains no iAAi or CSE information.
+- [x] Verify the exact Reddit finding: unrelated uses of CSE dominate and no authoritative Reddit explanation of the Academy’s CSE is surfaced.
+- [x] Report the distinction plainly without conflating Reddit absence with website absence.
+
+## SEO and analytics exploration — 2026-08-24
+- [x] Audit live iAAi/CSE metadata, robots, sitemap, canonical, and structured-data signals.
+- [x] Identify the actual analytics system instrumented on the Academy site.
+- [ ] Retrieve measured analytics results available through authorized connectors or dashboards.
+- [x] Separate measured results from SEO recommendations and identify any missing Google Analytics access.
+- [x] Prepare crawler improvements for approval before changing the Academy repository.
+
+## Analytics access update — 2026-08-25
+- [x] Record Google Analytics sign-in blockage caused by unrecognized device/location.
+- [x] Continue with accessible first-party site analytics and public crawler signals.
+- [ ] Do not report Google Analytics traffic figures without authenticated property access.
