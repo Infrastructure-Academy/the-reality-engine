@@ -1242,3 +1242,16 @@
 - [x] Record Google Analytics sign-in blockage caused by unrecognized device/location.
 - [x] Continue with accessible first-party site analytics and public crawler signals.
 - [ ] Do not report Google Analytics traffic figures without authenticated property access.
+
+## SEO deployment verification — 2026-08-25
+- [x] Publish canonical-host repair to Infrastructure-Academy/infra-acad003 after integrating newer remote commits.
+- [x] Verify live robots.txt points to https://www.infrastructure-academy.com/sitemap.xml.
+- [x] Verify live sitemap.xml contains 111 canonical www.infrastructure-academy.com URLs and zero stale manus.space URLs.
+- [x] Verify live homepage exposes iAAi and Civilisational Systems Engineering (CSE) metadata and definitions.
+- [x] Verify representative restored Academy routes return HTTP 200.
+- [x] Record Google Analytics access limitation: GA4 tag exists as G-2V0JTTfM97, but Google blocked the unrecognized sign-in; no traffic figures reported.
+- [ ] Obtain authenticated Google Analytics reports from a recognized device or user-provided export.
+
+## SEO result
+- [x] Immediate crawler-host defect repaired and checked live.
+- [ ] Further SEO enhancements remain optional and approval-gated.
