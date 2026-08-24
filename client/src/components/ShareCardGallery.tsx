@@ -20,7 +20,7 @@ const SHARE_CARDS: ShareCard[] = [
     imageUrl:
       "/manus-storage/share-card-civil-truth-fixed_7ef0693a.png",
     shareText:
-      "Infrastructure is the invisible foundation of civilisation. Civil engineering — the skill now lost — iAAi recovers it digitally.\n\ntwinearth.world — Infrastructure Academy | iAAi",
+      "Infrastructure is the invisible foundation of civilisation. Civil engineering — the skill now lost — iAAi recovers it digitally.\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi",
   },
   {
     id: "authenticity",
@@ -29,7 +29,7 @@ const SHARE_CARDS: ShareCard[] = [
     imageUrl:
       "/manus-storage/share-card-authenticity-fixed_da4880dd.png",
     shareText:
-      "iGO is built on authenticity and reputational certainty — a real civil engineer, real infrastructure, real education.\n\ntwinearth.world — Infrastructure Academy | iAAi",
+      "iGO is built on authenticity and reputational certainty — a real civil engineer, real infrastructure, real education.\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi",
   },
   {
     id: "founder",
@@ -38,11 +38,11 @@ const SHARE_CARDS: ShareCard[] = [
     imageUrl:
       "/manus-storage/share-card-founder-fixed_10188111.png",
     shareText:
-      '"iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun." — Ir. Nigel T. Dearden\n\ntwinearth.world — Infrastructure Academy | iAAi',
+      '"iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun." — Ir. Nigel T. Dearden\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi',
   },
 ];
 
-const SITE_URL = "https://twinearth.world";
+const SITE_URL = "https://realityeng-epdhlkrn.manus.space";
 const SWIPE_THRESHOLD = 50; // minimum px to trigger swipe
 
 /** Copy text to clipboard with fallback */

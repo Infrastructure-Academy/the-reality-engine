@@ -1255,3 +1255,14 @@
 ## SEO result
 - [x] Immediate crawler-host defect repaired and checked live.
 - [ ] Further SEO enhancements remain optional and approval-gated.
+
+## Twin Earth reference removal — 2026-08-25
+- [x] Audit TRE source, documentation, environment/configuration, and connected Academy deployment references for `Twin Earth` and `twinearth.world`.
+- [x] Remove or correct inappropriate Twin Earth references so the public identity remains iAAi / Infrastructure Academy / QUEST.
+- [x] Preserve any necessary historical audit evidence without presenting Twin Earth as the user’s owned iAAi domain.
+- [x] Run tests and verify public identity surfaces after correction.
+- [ ] Report all removed, corrected, and intentionally retained references.
+
+## Twin Earth safety gate
+- [x] Do not alter unrelated domains, original media, or preserved iAAi content.
+- [ ] Do not claim removal is complete until source and live identity surfaces are checked.

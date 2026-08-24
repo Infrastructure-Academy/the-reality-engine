@@ -17,7 +17,7 @@ const SHARE_CARDS = [
     imageUrl:
       "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-rally_851c0d30.png",
     shareText:
-      "Every player has the power. More players have more power. How many players can you rally to iGO? 🎮\n\ntwinearth.world — Infrastructure Academy | iAAi",
+      "Every player has the power. More players have more power. How many players can you rally to iGO? 🎮\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi",
   },
   {
     id: "civil-truth",
@@ -26,7 +26,7 @@ const SHARE_CARDS = [
     imageUrl:
       "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-civil-truth_eafadda9.png",
     shareText:
-      "Infrastructure is the invisible foundation of civilisation. Civil engineering — the skill now lost — iAAi recovers it digitally.\n\ntwinearth.world — Infrastructure Academy | iAAi",
+      "Infrastructure is the invisible foundation of civilisation. Civil engineering — the skill now lost — iAAi recovers it digitally.\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi",
   },
   {
     id: "authenticity",
@@ -35,7 +35,7 @@ const SHARE_CARDS = [
     imageUrl:
       "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-authenticity_74dd38cb.png",
     shareText:
-      "iGO is built on authenticity and reputational certainty — a real civil engineer, real infrastructure, real education.\n\ntwinearth.world — Infrastructure Academy | iAAi",
+      "iGO is built on authenticity and reputational certainty — a real civil engineer, real infrastructure, real education.\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi",
   },
   {
     id: "founder",
@@ -44,7 +44,7 @@ const SHARE_CARDS = [
     imageUrl:
       "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/share-card-founder_675d2a2a.png",
     shareText:
-      '"iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun." — Ir. Nigel T. Dearden\n\ntwinearth.world — Infrastructure Academy | iAAi',
+      '"iGO is not eGO or GOslow — it is a shaping tool and an edutainment Rosetta Stone to be played with like a toy. Learning was always meant to be fun." — Ir. Nigel T. Dearden\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi',
   },
 ];
 
@@ -97,7 +97,7 @@ describe("ShareCardGallery data integrity", () => {
 
   it("share text includes site domain", () => {
     for (const card of SHARE_CARDS) {
-      expect(card.shareText).toContain("twinearth.world");
+      expect(card.shareText).toContain("realityeng-epdhlkrn.manus.space");
     }
   });
 });

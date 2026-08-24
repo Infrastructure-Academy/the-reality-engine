@@ -210,7 +210,7 @@ export function ShareArchetypeCard({
     ctx.fillText("iGO — GUIDED LEARNING PLATFORM — INFRASTRUCTURE ACADEMY · iAAi", W / 2, H - 50);
     ctx.fillStyle = "rgba(212, 168, 67, 0.3)";
     ctx.font = "10px monospace";
-    ctx.fillText("twinearth.world — Navigate 12,000 years of civilisational infrastructure", W / 2, H - 32);
+    ctx.fillText("realityeng-epdhlkrn.manus.space — Navigate 12,000 years of civilisational infrastructure", W / 2, H - 32);
 
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), "image/png", 1.0);
@@ -228,7 +228,7 @@ export function ShareArchetypeCard({
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({
             title: `${displayName} — iGO Player Card`,
-            text: `I'm a ${fits?.name || "Player"} in iGO! ${relaysCompleted}/12 relays explored, ${formatXp(totalXp)} XP. What's your archetype?\n\ntwinearth.world — Infrastructure Academy | iAAi`,
+            text: `I'm a ${fits?.name || "Player"} in iGO! ${relaysCompleted}/12 relays explored, ${formatXp(totalXp)} XP. What's your archetype?\n\nrealityeng-epdhlkrn.manus.space — Infrastructure Academy | iAAi`,
             files: [file],
           });
           return;

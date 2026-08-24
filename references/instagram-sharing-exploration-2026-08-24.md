@@ -22,3 +22,21 @@ No Instagram post, story, reel, edit, deletion, or schedule has been performed. 
 
 1. Instagram connector runtime tool list and read-only responses from the 24 August 2026 session.
 2. [Instagram Help Center — About link sticker on Instagram Stories](https://help.instagram.com/192168966243613/), accessed 24 August 2026.
+
+
+## Public video verification — 25 August 2026
+
+The following preserved CDN-hosted videos were checked read-only and each returned HTTP 200. Their CDN `Content-Type` is `application/octet-stream`, so Instagram should ingest them by their `.mp4` extension and the exact URL should be retained in the publication proposal.
+
+| Candidate | Format / use | Verified CDN URL |
+|---|---|---|
+| iAAi Teaser | 30-second teaser | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IAAI_Teaser_30s_ad87eb51.mp4 |
+| WhatsApp / Stories | 9:16 vertical | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IAAI_WhatsApp_Stories_9x16_8c7aca76.mp4 |
+| iAAi Twitter Teaser | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IAAI_Twitter_Teaser_16x9_9cddb68c.mp4 |
+| iAAi LinkedIn Professional | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/IAAI_LinkedIn_Professional_16x9_fd21eefc.mp4 |
+| iGO trailer | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/iGO_trailer_v7_6a22857c.mp4 |
+| iGO Architecture Movie | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/iGO_Movie_SHARE_WITH_TEAM_16x9_7c72b3fe.mp4 |
+| Reality Engine Trailer | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/reality-engine-trailer_7e837497.mp4 |
+| Investor Companion | 16:9 | https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/kUQZAex2uPvgKcHnt7bmh3/final_investor_companion_5aa32eb1.mp4 |
+
+No Instagram content was created, edited, scheduled, or published. The canonical campaign destination remains https://www.infrastructure-academy.com/; for Reels/feed posts, use “link in bio” unless a currently available native link surface is explicitly confirmed; for Stories, use a link sticker.
