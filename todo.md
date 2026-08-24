@@ -1212,3 +1212,10 @@
 - [x] Convert the Home-page “PLAY NOW” prompt into an accessible, tappable game-entry control on mobile and desktop
 - [ ] Verify the control opens the intended game-entry route from the deployed mobile site
 - [x] Add/update Vitest coverage for the Home-page game-entry control
+
+## Instagram sharing exploration — 2026-08-24
+- [x] Inspect the enabled Instagram connector for read-only account/post access and publication capabilities.
+- [x] Define a link-first sharing workflow that points to https://www.infrastructure-academy.com/.
+- [x] Prepare approval-gated caption and video-link options without publishing content.
+- [ ] Preserve the existing videos and verify any selected destination links before publication.
+- [ ] Do not publish, schedule, delete, or edit Instagram content without explicit user approval.
