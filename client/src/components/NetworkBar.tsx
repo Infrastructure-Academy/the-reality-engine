@@ -39,7 +39,7 @@ const SITES = [
     subKey: "network.academy.sub",
     agent: "MAX",
     color: "#DC2626",
-    url: "https://infra-acad-kuqzaex2.manus.space",
+    url: "https://www.infrastructure-academy.com",
   },
   {
     id: "quest",
