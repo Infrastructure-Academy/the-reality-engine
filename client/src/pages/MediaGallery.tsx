@@ -51,7 +51,9 @@ export default function MediaGallery() {
             <div className="flex-1 min-w-0">
               <h1 className="text-lg font-bold font-mono tracking-tight">{t("media.title")}</h1>
               <p className="text-xs text-muted-foreground">
-                {stats?.total ?? 0} assets across {bridges.length} bridges
+                {stats
+                  ? `${stats.total} assets across ${bridges.length} bridges`
+                  : t("media.loadingCatalogue")}
               </p>
             </div>
             <div className="flex gap-1">

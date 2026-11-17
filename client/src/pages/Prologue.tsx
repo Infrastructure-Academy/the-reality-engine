@@ -8,62 +8,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useLocation, Link } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Volume2, VolumeX } from "lucide-react";
 import { davidSpeak, davidStop, getVoiceEnabled, setVoiceEnabled } from "@/hooks/useDavidVoice";
 import { useT } from "@/contexts/LanguageContext";
-
-const PROLOGUE_SCENES = [
-  {
-    id: "scene1",
-    text: "The clock reads one minute to midnight.",
-    subtext: "Not a clock on a wall. The Civilisation Clock — the one that measures whether humanity remembers what it built.",
-    davidLine: "The clock reads one minute to midnight. Not a clock on a wall. The Civilisation Clock. The one that measures whether humanity remembers what it built.",
-    visual: "clock",
-    delay: 0,
-  },
-  {
-    id: "scene2",
-    text: "Twelve thousand years of infrastructure — fire, roads, engines, satellites — reduced to a fading signal.",
-    subtext: "The knowledge is still there. Scattered across twelve relays. But no one is listening.",
-    davidLine: "Twelve thousand years of infrastructure. Fire. Roads. Engines. Satellites. All of it reduced to a fading signal. The knowledge is still there, scattered across twelve relays. But no one is listening.",
-    visual: "signal",
-    delay: 0,
-  },
-  {
-    id: "scene3",
-    text: "Except you.",
-    subtext: "You are the last human after midnight. The one who chose to look back before moving forward.",
-    davidLine: "Except you. You are the last human after midnight. The one who chose to look back before moving forward.",
-    visual: "human",
-    delay: 0,
-  },
-  {
-    id: "scene4",
-    text: "My name is DAVID.",
-    subtext: "I am your guide through the twelve Civilisational Relays. Each one holds the inventions that built this world. Your mission: rediscover them. Every discovery pushes the clock back from midnight.",
-    davidLine: "My name is DAVID. I am your guide through the twelve Civilisational Relays. Each one holds the inventions that built this world. Your mission is to rediscover them. Every discovery pushes the clock back from midnight.",
-    visual: "david",
-    delay: 0,
-  },
-  {
-    id: "scene5",
-    text: "But this is not just a journey of discovery.",
-    subtext: "At the end of each relay, you will face a choice. A real dilemma from history. What you choose will shape who you become — Builder, Philosopher, Pragmatist, or Visionary.",
-    davidLine: "But this is not just a journey of discovery. At the end of each relay, you will face a choice. A real dilemma from history. What you choose will shape who you become. Builder. Philosopher. Pragmatist. Or Visionary.",
-    visual: "choice",
-    delay: 0,
-  },
-  {
-    id: "scene6",
-    text: "The first relay awaits. Fire — the eternal constant.",
-    subtext: "Are you ready to begin?",
-    davidLine: "The first relay awaits. Fire. The eternal constant. Are you ready to begin?",
-    visual: "fire",
-    delay: 0,
-  },
-];
+import { PROLOGUE_BEGIN_LABEL, PROLOGUE_SCENES } from "@shared/prologueScenes";
 
 const VISUAL_ELEMENTS: Record<string, { emoji: string; gradient: string }> = {
   clock: { emoji: "🕐", gradient: "from-red-600/30 via-orange-600/20 to-transparent" },
@@ -181,15 +131,7 @@ export default function Prologue() {
 
       {/* Main scene content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-6">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={scene.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-center max-w-lg"
-          >
+          <div key={scene.id} className="text-center max-w-lg">
             {/* Visual emoji */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
@@ -201,24 +143,14 @@ export default function Prologue() {
             </motion.div>
 
             {/* Main text */}
-            <motion.h1
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="font-heading text-2xl md:text-3xl font-bold leading-tight mb-4 text-foreground"
-            >
+            <h1 className="font-heading text-2xl md:text-3xl font-bold leading-tight mb-4 text-foreground">
               {scene.text}
-            </motion.h1>
+            </h1>
 
             {/* Subtext */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="text-base md:text-lg text-muted-foreground leading-relaxed"
-            >
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
               {scene.subtext}
-            </motion.p>
+            </p>
 
             {/* DAVID narrating indicator */}
             {voiceOn && isNarrating && (
@@ -231,8 +163,7 @@ export default function Prologue() {
                 <span className="text-[9px] text-amber-400/60 font-mono">{t("prologue.davidNarrating")}</span>
               </motion.div>
             )}
-          </motion.div>
-        </AnimatePresence>
+          </div>
       </div>
 
       {/* Bottom navigation */}
@@ -244,7 +175,7 @@ export default function Prologue() {
         >
           {isLastScene ? (
             <>
-              BEGIN RELAY 1 🔥
+              {PROLOGUE_BEGIN_LABEL} 🔥
               <ChevronRight className="w-5 h-5" />
             </>
           ) : (

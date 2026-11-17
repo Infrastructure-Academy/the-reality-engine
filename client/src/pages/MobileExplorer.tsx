@@ -6,18 +6,41 @@ import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "
 import { ArrowLeft, ChevronLeft, ChevronRight, Sparkles, Star, Trophy, Flame, TreePine, Waves, Compass, Map, Ship, Scissors, TrainFront, Cog, Satellite, Globe, Zap } from "lucide-react";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS } from "@shared/inventions";
+import { classicXpPerDiscovery, hydrateTotalXp, presentPlayerCopy } from "@shared/playerProgress";
+import { loadDiscoveries, mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
+import { trpc } from "@/lib/trpc";
 
 const RELAY_ICONS = [Flame, TreePine, Waves, Compass, Map, Ship, Scissors, TrainFront, Cog, Zap, Satellite, Globe];
 const RELAY_COLORS = ["#ef4444", "#22c55e", "#3b82f6", "#a855f7", "#f59e0b", "#06b6d4", "#ec4899", "#6366f1", "#f97316", "#eab308", "#8b5cf6", "#14b8a6"];
+
+function getGuestId(): string {
+  let id = localStorage.getItem("tre_guest_id");
+  if (!id) {
+    id = "g_" + Math.random().toString(36).slice(2, 12);
+    localStorage.setItem("tre_guest_id", id);
+  }
+  return id;
+}
 
 export default function MobileExplorer() {
   const t = useT();
   const params = useParams<{ relayNum?: string }>();
   const initialRelay = params.relayNum ? parseInt(params.relayNum) - 1 : 0;
-  const [currentRelay, setCurrentRelay] = useState(Math.max(0, Math.min(11, initialRelay)));
-  const [discoveredItems, setDiscoveredItems] = useState<Set<string>>(new Set());
+  const [currentRelay, setCurrentRelay] = useState(Math.max(0, Math.min(11, Number.isFinite(initialRelay) ? initialRelay : 0)));
+  const [discoveries, setDiscoveries] = useState(() => loadDiscoveries());
   const [showCelebration, setShowCelebration] = useState(false);
+  const [lastAward, setLastAward] = useState(0);
   const [totalXP, setTotalXP] = useState(0);
+  const [profileId, setProfileId] = useState<number | null>(null);
+  const guestId = useMemo(() => getGuestId(), []);
+  const profileMutation = trpc.profile.getOrCreate.useMutation();
+  const addXpMutation = trpc.profile.addXp.useMutation();
+  const progressMutation = trpc.progress.upsert.useMutation();
+  const { data: relayRecord } = trpc.relays.getByNumber.useQuery({ number: currentRelay + 1 });
+  const { data: savedProgress } = trpc.progress.getForProfile.useQuery(
+    { profileId: profileId! },
+    { enabled: !!profileId },
+  );
   const dragX = useMotionValue(0);
   const swipeThreshold = 50;
 
@@ -26,20 +49,56 @@ export default function MobileExplorer() {
     return (INVENTIONS[currentRelay + 1] || []).map((inv, idx) => ({ ...inv, idx }));
   }, [currentRelay]);
 
-  const relayKey = `relay-${currentRelay}`;
-  const relayDiscovered = useMemo(() => {
-    return Array.from(discoveredItems).filter(id => id.startsWith(relayKey)).length;
-  }, [discoveredItems, relayKey]);
+  const relayNumber = currentRelay + 1;
+  const relayDiscovered = discoveries[relayNumber]?.length ?? 0;
 
-  const handleDiscover = useCallback((inventionId: string) => {
-    const key = `${relayKey}-${inventionId}`;
-    if (!discoveredItems.has(key)) {
-      setDiscoveredItems(prev => { const next = new Set(Array.from(prev)); next.add(key); return next; });
-      setTotalXP(prev => prev + 100);
-      setShowCelebration(true);
-      setTimeout(() => setShowCelebration(false), 1500);
+  useEffect(() => {
+    profileMutation.mutate({ guestId, mode: "explorer" }, {
+      onSuccess: (profile) => {
+        if (!profile) return;
+        setProfileId(profile.id);
+        setTotalXP((prev) => hydrateTotalXp(prev, profile.totalXp));
+      },
+    });
+  }, [guestId]);
+
+  useEffect(() => {
+    if (!savedProgress) return;
+    mergeServerDiscoveries(savedProgress);
+    setDiscoveries(loadDiscoveries());
+  }, [savedProgress]);
+
+  const handleDiscover = useCallback((inventionIndex: number) => {
+    const already = discoveries[relayNumber]?.includes(inventionIndex);
+    if (already) return;
+    const added = noteDiscovery(relayNumber, inventionIndex);
+    if (!added) return;
+    const next = loadDiscoveries();
+    setDiscoveries(next);
+    const award = classicXpPerDiscovery(relayRecord?.xpReward, relayInventions.length);
+    setLastAward(award);
+    setTotalXP((prev) => prev + award);
+    setShowCelebration(true);
+    setTimeout(() => setShowCelebration(false), 1500);
+    const found = next[relayNumber] ?? [];
+    const pct = Math.round((found.length / Math.max(relayInventions.length, 1)) * 100);
+    if (profileId) {
+      progressMutation.mutate({
+        profileId,
+        relayNumber,
+        discoveredItems: found,
+        completionPct: pct,
+        xpEarned: found.length * award,
+      });
+      addXpMutation.mutate({
+        profileId,
+        amount: award,
+        source: "relay_discovery",
+        sourceId: `relay-${relayNumber}-item-${inventionIndex}`,
+        description: `Discovered invention #${inventionIndex + 1} in Relay ${relayNumber}`,
+      });
     }
-  }, [discoveredItems, relayKey]);
+  }, [discoveries, relayNumber, relayInventions.length, relayRecord?.xpReward, profileId]);
 
   const goToRelay = useCallback((dir: number) => {
     setCurrentRelay(prev => {
@@ -69,7 +128,7 @@ export default function MobileExplorer() {
         </Link>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-bold bg-red-600 text-white px-1.5 py-0.5 rounded">{t("common.beta")}</span>
-          <span className="font-heading text-gold text-sm">{t("explore.title")}</span>
+          <span className="font-heading text-gold text-sm">{t("explorer.title")}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <Star className="w-4 h-4 text-gold" />
@@ -131,7 +190,7 @@ export default function MobileExplorer() {
             <div className="bg-card border border-border/50 rounded-2xl p-5 space-y-3">
               <h3 className="font-heading text-gold text-sm">{ t("explorer.theStory") }</h3>
               <p className="text-sm text-foreground/80 leading-relaxed">
-                {relay.subtitle} — spanning {relay.era}. Part of the {relay.webType} Web.
+                {presentPlayerCopy(`${relay.subtitle}. Spanning ${relay.era}. Part of the ${relay.webType} Web.`)}
               </p>
             </div>
 
@@ -143,13 +202,11 @@ export default function MobileExplorer() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {relayInventions.map((inv) => {
-                  const invKey = `${inv.name.toLowerCase().replace(/\s+/g, '-')}`;
-                  const key = `${relayKey}-${invKey}`;
-                  const isDiscovered = discoveredItems.has(key);
+                  const isDiscovered = (discoveries[relayNumber] ?? []).includes(inv.idx);
                   return (
                     <motion.button
-                      key={invKey}
-                      onClick={() => handleDiscover(invKey)}
+                      key={inv.idx}
+                      onClick={() => handleDiscover(inv.idx)}
                       className={`relative rounded-2xl p-5 text-left transition-all min-h-[100px] ${
                         isDiscovered
                           ? "bg-card border-2"
@@ -163,7 +220,7 @@ export default function MobileExplorer() {
                           <Sparkles className="w-5 h-5 mb-2" style={{ color }} />
                           <p className="text-sm font-heading text-foreground">{inv.name}</p>
                           <p className="text-[10px] text-muted-foreground mt-1">{inv.date}</p>
-                          <p className="text-[10px] text-foreground/60 mt-1 line-clamp-2">{inv.description}</p>
+                          <p className="text-[10px] text-foreground/60 mt-1 line-clamp-2">{presentPlayerCopy(inv.description)}</p>
                         </>
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full">
@@ -227,7 +284,7 @@ export default function MobileExplorer() {
         <Link href="/leaderboard">
           <button className="flex flex-col items-center gap-0.5 px-3 py-1 text-muted-foreground">
             <Trophy className="w-5 h-5" />
-            <span className="text-[10px]">{ t("tab.rank") }</span>
+            <span className="text-[10px]">{ t("tab.board") }</span>
           </button>
         </Link>
       </nav>
@@ -244,7 +301,7 @@ export default function MobileExplorer() {
             <div className="bg-card/95 backdrop-blur-sm border-2 border-gold/50 rounded-3xl p-8 text-center shadow-2xl">
               <Sparkles className="w-12 h-12 text-gold mx-auto mb-3" />
               <p className="font-heading text-gold text-xl">{ t("explorer.discovery") }</p>
-              <p className="text-sm text-muted-foreground mt-1">+100 XP</p>
+              <p className="text-sm text-muted-foreground mt-1">+{lastAward.toLocaleString()} XP</p>
             </div>
           </motion.div>
         )}

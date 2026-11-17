@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
+import { hydrateTotalXp } from "@shared/playerProgress";
+import { loadDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
@@ -107,12 +109,13 @@ export default function RelaySpinner() {
   // Profile
   const profileMutation = trpc.profile.getOrCreate.useMutation();
   const addXpMutation = trpc.profile.addXp.useMutation();
+  const progressMutation = trpc.progress.upsert.useMutation();
   const [profileId, setProfileId] = useState<number | null>(null);
 
   useEffect(() => {
     profileMutation.mutate(
       { guestId, mode: "explorer" },
-      { onSuccess: (p) => { if (p) setProfileId(p.id); } }
+      { onSuccess: (p) => { if (p) { setProfileId(p.id); setTotalXp((prev) => hydrateTotalXp(prev, p.totalXp)); } } }
     );
   }, [guestId]);
 
@@ -138,10 +141,20 @@ export default function RelaySpinner() {
 
   // Discovery tracking — inventions unlocked per relay
   const [discoveries, setDiscoveries] = useState<Record<number, number[]>>(() => {
+    const shared: Record<number, number[]> = {};
+    for (const [relay, items] of Object.entries(loadDiscoveries())) {
+      shared[Number(relay) - 1] = items;
+    }
     try {
       const saved = localStorage.getItem("tre_spinner_discoveries");
-      return saved ? JSON.parse(saved) : {};
-    } catch { return {}; }
+      const local = saved ? JSON.parse(saved) as Record<string, number[]> : {};
+      const merged = { ...shared };
+      for (const [index, items] of Object.entries(local)) {
+        const key = Number(index);
+        merged[key] = Array.from(new Set([...(merged[key] ?? []), ...items]));
+      }
+      return merged;
+    } catch { return shared; }
   });
 
   // Save collection and discoveries to localStorage
@@ -219,6 +232,16 @@ export default function RelaySpinner() {
         const nextIdx = existing.length;
         const updated = { ...discoveries, [dominantRelay]: [...existing, nextIdx] };
         setDiscoveries(updated);
+        noteDiscovery(dominantRelay + 1, nextIdx);
+        if (profileId) {
+          progressMutation.mutate({
+            profileId,
+            relayNumber: dominantRelay + 1,
+            discoveredItems: updated[dominantRelay],
+            completionPct: Math.round((updated[dominantRelay].length / Math.max(relayInventions.length, 1)) * 100),
+            xpEarned: 0,
+          });
+        }
       }
 
       // Jackpot adds to collection
@@ -226,7 +249,7 @@ export default function RelaySpinner() {
         setCollection(prev => new Set(Array.from(prev).concat([newReels[0]])));
       }
     }, 1400);
-  }, [spinning, spinsRemaining, profileId, discoveries]);
+  }, [spinning, spinsRemaining, profileId, discoveries, progressMutation]);
 
   const totalDiscoveries = Object.values(discoveries).reduce((sum, arr) => sum + arr.length, 0);
 

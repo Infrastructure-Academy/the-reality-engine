@@ -1,7 +1,8 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { ACADEMY_HOST } from "@shared/playerProgress";
 import { z } from "zod";
 import * as db from "./db";
 import { invokeLLM } from "./_core/llm";
@@ -316,7 +317,7 @@ export const appRouter = router({
         const messages = [
           {
             role: "system" as const,
-            content: `You are DAVID — Digital Augmented Visual Intelligence Display — acting as Dungeon Master for young explorers (ages 8-14) in The Reality Engine's Dungeon Crawl mode. You narrate each room of the 12 Civilisational Relay dungeons.\n\nRules:\n- Speak in vivid, exciting, age-appropriate language\n- Keep responses to 2-3 short paragraphs (under 80 words total)\n- Reference the relay's historical era and theme naturally\n- Make ability checks feel dramatic (describe the dice roll moment)\n- When discoveries are unlocked, explain the real historical invention in an exciting way\n- Use second person ("You see...", "You discover...")\n- Never break character\n- Never use violent or scary imagery — this is adventure, not horror\n- End with a hook that makes them want to explore the next room`,
+            content: `You are DAVID — Digital Augmented Visual Intelligence Display — acting as Dungeon Master for young explorers (ages 8-14) in The Reality Engine's Dungeon Crawl mode. You narrate each room of the 12 Civilisational Relay dungeons.\n\nRules:\n- Speak in vivid, exciting, age-appropriate language\n- Keep responses to 2-3 short paragraphs (under 80 words total)\n- Reference the relay's historical era and theme naturally\n- Make ability checks feel dramatic (describe the dice roll moment)\n- When discoveries are unlocked, explain the real historical invention in an exciting way\n- Use second person ("You see...", "You discover...")\n- Never break character\n- Never use violent or scary imagery — this is adventure, not horror\n- Write plain sentences. Do not use markdown, asterisks, or bold markers\n- End with a hook that makes them want to explore the next room`,
           },
           { role: "user" as const, content: situationContext },
         ];
@@ -519,7 +520,7 @@ export const appRouter = router({
       }),
     registry: publicProcedure.query(async () => {
       return [
-        { name: "ACAD SITE", subtitle: "Infrastructure Academy", domain: "infra-acad-kuqzaex2.manus.space", dbAccess: "MASTER", status: "operational" },
+        { name: "ACAD SITE", subtitle: "Infrastructure Academy", domain: ACADEMY_HOST, dbAccess: "MASTER", status: "operational" },
         { name: "MEMORIAL SITE", subtitle: "Principia Tectonica", domain: "nigelmemorial-ucmtq9dn.manus.space", dbAccess: "CONNECTED", status: "operational" },
         { name: "TRE GAME", subtitle: "The Reality Engine", domain: "realityeng-epdhlkrn.manus.space", dbAccess: "SHARED", status: "operational" },
         { name: "CHART ROOM", subtitle: "The Chartered Chart", domain: "xgrowthtrk-2a93yo5z.manus.space", dbAccess: "API BRIDGE", status: "operational" },
@@ -606,11 +607,14 @@ export const appRouter = router({
         }
         return result;
       }),
-    stats: publicProcedure.query(async () => {
+    publicTotal: publicProcedure.query(async () => {
+      const stats = await db.getIgoInterestStats();
+      return { total: stats.total };
+    }),
+    stats: adminProcedure.query(async () => {
       return db.getIgoInterestStats();
     }),
-    list: protectedProcedure.query(async ({ ctx }) => {
-      if (ctx.user.role !== "admin") throw new Error("Forbidden");
+    list: adminProcedure.query(async () => {
       return db.getIgoInterestList();
     }),
   }),

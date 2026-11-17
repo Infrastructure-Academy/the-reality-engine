@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
+import { DUNGEON_COUNT, dungeonsCleared, hydrateTotalXp, presentPlayerCopy } from "@shared/playerProgress";
+import { noteDiscovery } from "@/lib/sharedProgress";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Swords, DoorOpen, Eye, Shield, Compass, ChevronRight, ChevronLeft, Scroll, Zap, Map, MessageSquare, Loader2 } from "lucide-react";
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
@@ -107,7 +109,7 @@ export default function DungeonCrawl() {
   useEffect(() => {
     profileMutation.mutate(
       { guestId, mode: "explorer" },
-      { onSuccess: (p) => { if (p) setProfileId(p.id); } }
+      { onSuccess: (p) => { if (p) { setProfileId(p.id); setTotalXp((prev) => hydrateTotalXp(prev, p.totalXp)); } } }
     );
   }, [guestId]);
 
@@ -129,7 +131,11 @@ export default function DungeonCrawl() {
     const saved = localStorage.getItem("tre_dungeon_relay");
     return saved ? parseInt(saved, 10) : 1;
   });
-  const [currentRoom, setCurrentRoom] = useState(0);
+  const [currentRoom, setCurrentRoom] = useState(() => {
+    const saved = localStorage.getItem("tre_dungeon_room");
+    const room = saved ? parseInt(saved, 10) : 0;
+    return Number.isFinite(room) && room >= 0 && room < 8 ? room : 0;
+  });
   const [roomsCleared, setRoomsCleared] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem("tre_dungeon_cleared");
@@ -156,6 +162,9 @@ export default function DungeonCrawl() {
   useEffect(() => {
     localStorage.setItem("tre_dungeon_relay", String(currentRelay));
   }, [currentRelay]);
+  useEffect(() => {
+    localStorage.setItem("tre_dungeon_room", String(currentRoom));
+  }, [currentRoom]);
   useEffect(() => {
     localStorage.setItem("tre_dungeon_cleared", JSON.stringify(Array.from(roomsCleared)));
   }, [roomsCleared]);
@@ -228,6 +237,7 @@ export default function DungeonCrawl() {
       const xp = result.success ? room.xpReward : Math.floor(room.xpReward * 0.5);
       setTotalXp(prev => prev + xp);
       setRoomsCleared(prev => new Set(Array.from(prev).concat([roomKey])));
+      if (room.inventionIdx !== null) noteDiscovery(currentRelay, room.inventionIdx);
 
       if (profileId) {
         addXpMutation.mutate({
@@ -246,6 +256,7 @@ export default function DungeonCrawl() {
       // Auto-clear rooms without checks
       setTotalXp(prev => prev + room.xpReward);
       setRoomsCleared(prev => new Set(Array.from(prev).concat([roomKey])));
+      if (room.inventionIdx !== null) noteDiscovery(currentRelay, room.inventionIdx);
       if (profileId) {
         addXpMutation.mutate({
           profileId, amount: room.xpReward, source: "dungeon",
@@ -481,7 +492,7 @@ export default function DungeonCrawl() {
             </div>
           )}
 
-          <p className="text-sm text-muted-foreground leading-relaxed mb-2">{room.description}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-2">{presentPlayerCopy(room.description)}</p>
 
           {/* Ability check info */}
           {room.abilityCheck && !isCleared && (
@@ -542,7 +553,7 @@ export default function DungeonCrawl() {
                     <span className="italic">DAVID is narrating...</span>
                   </div>
                 ) : (
-                  <p className="text-sm text-foreground/90 leading-relaxed italic">{narration}</p>
+                  <p className="text-sm text-foreground/90 leading-relaxed italic">{presentPlayerCopy(narration ?? "")}</p>
                 )}
               </motion.div>
             )}
@@ -596,7 +607,9 @@ export default function DungeonCrawl() {
           </div>
           <div className="mt-3 pt-3 border-t border-border/30 text-center">
             <p className="text-xs font-mono text-muted-foreground">
-              Dungeons cleared: <span className="text-emerald-400 font-bold">{dungeonProgress}/{totalDungeonRooms}</span>
+              Rooms cleared: <span className="text-emerald-400 font-bold">{dungeonProgress}/{totalDungeonRooms}</span>
+              <span className="mx-2 text-border">·</span>
+              Dungeons cleared: <span className="text-emerald-400 font-bold">{dungeonsCleared(roomsCleared)}/{DUNGEON_COUNT}</span>
             </p>
           </div>
         </div>

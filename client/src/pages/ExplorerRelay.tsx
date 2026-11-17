@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
 import { INVENTIONS, type Invention } from "@shared/inventions";
+import { classicXpPerDiscovery, presentPlayerCopy } from "@shared/playerProgress";
+import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronRight, Zap, Star, BookOpen,
@@ -86,7 +88,7 @@ function NarrativeBlock({ relay }: { relay: any }) {
         <BookOpen className="w-4 h-4 text-gold" />
         <span className="text-xs uppercase tracking-wider text-gold font-bold">{ t("explorer.theStory") }</span>
       </div>
-      <p className="text-sm leading-relaxed text-foreground/90 italic">{relay.narrative}</p>
+      <p className="text-sm leading-relaxed text-foreground/90 italic">{presentPlayerCopy(relay.narrative)}</p>
       {relay.quote && (
         <blockquote className="mt-3 pl-3 border-l-2 border-gold/40">
           <p className="text-xs text-muted-foreground italic">"{relay.quote}"</p>
@@ -103,7 +105,7 @@ function MissionBlock({ relay }: { relay: any }) {
   return (
     <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5">
       <p className="text-xs uppercase tracking-wider text-amber-400 mb-1 font-bold">{ t("explorer.missionObjective") }</p>
-      <p className="text-sm text-foreground/80">{relay.missionObjective}</p>
+      <p className="text-sm text-foreground/80">{presentPlayerCopy(relay.missionObjective)}</p>
     </div>
   );
 }
@@ -173,7 +175,7 @@ function DiscoveryGrid({
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-2 space-y-1.5 overflow-hidden"
                   >
-                    <p className="text-xs text-foreground/80 leading-relaxed">{meta.description}</p>
+                    <p className="text-xs text-foreground/80 leading-relaxed">{presentPlayerCopy(meta.description)}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-mono text-muted-foreground">{meta.date}</span>
                       <span className={`text-[10px] font-bold uppercase tracking-wider ${sigColors[meta.significance] || "text-muted-foreground"}`}>
@@ -421,8 +423,18 @@ export default function ExplorerRelay() {
   const t = useT();
   const params = useParams<{ relayNum: string }>();
   const [, navigate] = useLocation();
-  const relayNum = parseInt(params.relayNum || "1", 10);
+  const rawRelay = params.relayNum || "";
+  const relayNum = parseInt(rawRelay, 10);
+  const relayValid = Number.isInteger(relayNum) && relayNum >= 1 && relayNum <= 12;
   const relayMeta = RELAYS.find(r => r.number === relayNum) || RELAYS[0];
+
+  useEffect(() => {
+    if (rawRelay === "grey-matter" || rawRelay === "greymatter") {
+      navigate("/explore/greymatter", { replace: true });
+    } else if (!relayValid) {
+      navigate("/explore", { replace: true });
+    }
+  }, [rawRelay, relayValid, navigate]);
 
   const [guestId] = useState(getGuestId);
   const [showChat, setShowChat] = useState(false);
@@ -501,6 +513,7 @@ export default function ExplorerRelay() {
           }
         } catch { /* ignore parse errors */ }
       }
+      mergeServerDiscoveries(savedProgress);
     }
   }, [savedProgress, relayNum]);
 
@@ -510,6 +523,7 @@ export default function ExplorerRelay() {
       if (prev.has(idx)) return prev; // already discovered
       const next = new Set(prev);
       next.add(idx);
+      noteDiscovery(relayNum, idx);
 
       // ─── Enhanced Sound + Haptic (web-typed + streak) ───
       const streak = registerDiscovery();
@@ -554,7 +568,7 @@ export default function ExplorerRelay() {
         const discoveredArr = Array.from(next);
         const totalItems = inventions.length || 1;
         const pct = Math.round((discoveredArr.length / totalItems) * 100);
-        const xpEach = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(totalItems, 1)) : 10000;
+        const xpEach = classicXpPerDiscovery(relay?.xpReward, totalItems);
         const totalXp = discoveredArr.length * xpEach;
 
         // Save progress
@@ -587,7 +601,7 @@ export default function ExplorerRelay() {
     return () => { davidStop(); };
   }, [relayNum]);
 
-  const xpPerItem = relay?.xpReward ? Math.floor(relay.xpReward / Math.max(inventions.length, 1)) : 10000;
+  const xpPerItem = classicXpPerDiscovery(relay?.xpReward, inventions.length);
   const totalXpEarned = discoveredItems.size * xpPerItem;
   const completionPct = inventions.length > 0 ? Math.round((discoveredItems.size / inventions.length) * 100) : 0;
   const canGoPrev = relayNum > 1;
@@ -612,6 +626,8 @@ export default function ExplorerRelay() {
     [canGoNext, canGoPrev, relayNum, navigate]
   );
   useGamepad(handleGamepadButton);
+
+  if (!relayValid) return null;
 
   if (isLoading) {
     return (

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Flame, Dices, Sword, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RELAYS } from "@shared/gameData";
+import { GREY_MATTER_PATH, continueDungeonLabel } from "@shared/playerProgress";
 
 type SavedProgress = {
   mode: string;
@@ -38,15 +39,15 @@ function detectProgress(): SavedProgress | null {
     // Check Dungeon Crawl progress
     const dungeonCreated = localStorage.getItem("tre_dungeon_created");
     if (dungeonCreated === "true") {
-      const dungeonRelay = parseInt(localStorage.getItem("tre_dungeon_relay") || "0", 10);
-      const relayName = RELAYS[dungeonRelay]?.name || "Fire";
+      const storedRelay = parseInt(localStorage.getItem("tre_dungeon_relay") || "1", 10);
+      const relay = continueDungeonLabel(Number.isFinite(storedRelay) ? storedRelay : 1, RELAYS);
       return {
         mode: "dungeon",
         label: "Dungeon Crawl",
         icon: Sword,
         color: "#a855f7",
         href: "/explore/dungeon",
-        detail: `Relay ${dungeonRelay + 1}: ${relayName}`,
+        detail: `Relay ${relay.number}: ${relay.name}`,
       };
     }
 
@@ -61,7 +62,7 @@ function detectProgress(): SavedProgress | null {
           label: "Grey Matter",
           icon: Brain,
           color: "#6b7280",
-          href: "/explore/grey-matter",
+          href: GREY_MATTER_PATH,
           detail: `${completed} missions completed`,
         };
       }

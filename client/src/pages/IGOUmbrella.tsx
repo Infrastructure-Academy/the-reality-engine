@@ -112,7 +112,7 @@ export default function IGOUmbrella() {
     },
   });
 
-  const { data: igoStats } = trpc.igo.stats.useQuery();
+  const { data: igoStats } = trpc.igo.publicTotal.useQuery();
 
   const registerRef = useRef<HTMLDivElement>(null);
   const exhibitionRef = useRef<HTMLDivElement>(null);

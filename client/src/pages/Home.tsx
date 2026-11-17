@@ -13,7 +13,9 @@ import { PipelineHotspots } from "@/components/PipelineHotspots";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { ShareCard } from "@/components/ShareCard";
 import { BrandI } from "@/components/BrandI";
-import { useState, useEffect, useMemo, useRef, useCallback, Fragment } from "react";
+import { useState, useEffect, useMemo, useCallback, Fragment } from "react";
+import { STATED_GENERATIONS } from "@shared/playerProgress";
+import { useLitRelays } from "@/lib/sharedProgress";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
 
@@ -193,31 +195,7 @@ function VideoGallery() {
 /* ── Relay Collection Tracker — shows personal relay progress from localStorage ── */
 function RelayCollectionTracker() {
   const t = useT();
-  const [collection, setCollection] = useState<Set<number>>(new Set());
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("tre_spinner_collection");
-      if (saved) setCollection(new Set(JSON.parse(saved)));
-    } catch { /* ignore corrupt data */ }
-    setLoaded(true);
-  }, []);
-
-  // Listen for storage changes (e.g. if player collects a relay in another tab)
-  useEffect(() => {
-    const handler = () => {
-      try {
-        const saved = localStorage.getItem("tre_spinner_collection");
-        if (saved) setCollection(new Set(JSON.parse(saved)));
-      } catch { /* ignore */ }
-    };
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, []);
-
-  if (!loaded) return null;
-
+  const collection = useLitRelays();
   const count = collection.size;
   const hasAny = count > 0;
 
@@ -441,40 +419,6 @@ function WebDomainsTracker() {
       </div>
     </div>
   );
-}
-
-// ─── useCountUp hook (scroll-triggered counter animation) ───
-function useCountUp(target: number, duration = 2000) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const tick = (now: number) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            // Ease-out cubic
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.round(eased * target));
-            if (progress < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return { count, ref };
 }
 
 // ─── Dearden Field Animated Section (links to Explore) ───
@@ -811,25 +755,9 @@ const PERSPECTIVE_INFO: Record<string, { name: string; color: string; icon: stri
 
 function YourArchetypeCard() {
   const t = useT();
-  const [collection, setCollection] = useState<Set<number>>(new Set());
+  const collection = useLitRelays();
   const [showCommunity, setShowCommunity] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
-
-  // Initial load + live storage listener for cross-tab updates
-  const readCollection = useCallback(() => {
-    try {
-      const saved = localStorage.getItem("tre_spinner_collection");
-      if (saved) setCollection(new Set(JSON.parse(saved)));
-    } catch { /* ignore */ }
-  }, []);
-
-  useEffect(() => { readCollection(); }, [readCollection]);
-
-  useEffect(() => {
-    const handler = () => readCollection();
-    window.addEventListener("storage", handler);
-    return () => window.removeEventListener("storage", handler);
-  }, [readCollection]);
 
   // Community archetype distribution
   const { data: communityData } = trpc.dearden.communityArchetype.useQuery(undefined, {
@@ -1081,16 +1009,7 @@ function YourArchetypeCard() {
 // ─── 500 Generations Timeline Strip (interactive with counter + relay glow) ───
 function GenerationsTimelineStrip() {
   const t = useT();
-  const { count: genCount, ref: counterRef } = useCountUp(500, 2500);
-
-  // Read relay collection from localStorage for glow effect
-  const [collection, setCollection] = useState<Set<number>>(new Set());
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("tre_spinner_collection");
-      if (saved) setCollection(new Set(JSON.parse(saved)));
-    } catch { /* ignore */ }
-  }, []);
+  const collection = useLitRelays();
 
   // Perspective mapping for the desktop figure
   const perspectiveOf = (n: number) => RELAY_PERSPECTIVES[n] || "outrider";
@@ -1098,11 +1017,11 @@ function GenerationsTimelineStrip() {
   const perspectiveColor: Record<string, string> = { west: "#3b82f6", east: "#ef4444", outrider: "#f59e0b" };
 
   return (
-    <div className="container max-w-5xl pb-6 pt-2" ref={counterRef}>
+    <div className="container max-w-5xl pb-6 pt-2">
       <div className="text-center mb-4">
         <p className="text-[10px] tracking-[0.3em] uppercase text-amber-400/60 mb-1">{t("dearden.12000years")}</p>
-        <h3 className="font-heading text-lg md:text-xl text-foreground">
-          <span className="text-amber-400 tabular-nums font-bold text-2xl md:text-3xl">{genCount}</span>{" "}
+        <h3 className="font-heading text-lg md:text-xl text-foreground" aria-label={`${STATED_GENERATIONS} ${t("misc.generations")}`}>
+          <span className="text-amber-400 tabular-nums font-bold text-2xl md:text-3xl">{STATED_GENERATIONS}</span>{" "}
           <span>{t("misc.generations")}</span>
         </h3>
         <p className="text-[10px] text-muted-foreground/60 mt-1">{t("dearden.fromFire")}</p>

@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS, WEBS, XP_CAP, GURU_THRESHOLD } from "@shared/gameData";
+import { countExploredRelays } from "@shared/playerProgress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Trophy, Star, Zap, Globe, Compass, BookOpen,
@@ -235,6 +236,7 @@ export default function Synthesis() {
       totalDiscoveries,
       completionCount: completedRelays.length,
       isComplete: completedRelays.length >= 12,
+      exploredCount: countExploredRelays(progressData),
     };
   }, [progressData]);
 
@@ -256,7 +258,7 @@ export default function Synthesis() {
   // Dynamic OG meta tags for social sharing
   useEffect(() => {
     if (!synthesis || !patternTitle) return;
-    const desc = `I'm "${patternTitle}" in The Reality Engine! ${synthesis.completionCount}/12 relays explored, ${synthesis.totalDiscoveries} discoveries. What's your civilisational pattern?`;
+    const desc = `I'm "${patternTitle}" in The Reality Engine! ${synthesis.exploredCount}/12 relays explored, ${synthesis.totalDiscoveries} discoveries. What's your civilisational pattern?`;
     const setMeta = (prop: string, content: string, attr = "property") => {
       let el = document.querySelector(`meta[${attr}="${prop}"]`) as HTMLMetaElement | null;
       if (!el) {
@@ -311,7 +313,7 @@ export default function Synthesis() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 mb-4">
             <Trophy className="w-4 h-4 text-amber-400" />
             <span className="text-xs font-mono text-amber-400">
-              {synthesis.isComplete ? t("synthesis.odysseyComplete") : `${synthesis.completionCount}/12 ${t("synthesis.relaysExplored")}`}
+              {synthesis.isComplete ? t("synthesis.odysseyComplete") : `${synthesis.exploredCount}/12 ${t("synthesis.relaysExplored")}`}
             </span>
           </div>
 
@@ -373,7 +375,7 @@ export default function Synthesis() {
 
           <div className="p-6 rounded-xl border border-border/50 bg-card/30 flex flex-col items-center justify-center">
             <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-4">{t("synthesis.relayCompletion")}</p>
-            <CompletionRing completed={synthesis.completionCount} total={12} />
+            <CompletionRing completed={synthesis.exploredCount} total={12} />
             <div className="mt-4 grid grid-cols-3 gap-4 w-full">
               <div className="text-center">
                 <p className="text-lg font-bold font-mono">{synthesis.totalDiscoveries}</p>
@@ -483,7 +485,7 @@ export default function Synthesis() {
             perspectives={synthesis.perspectives}
             totalXp={synthesis.totalXpEarned}
             discoveries={synthesis.totalDiscoveries}
-            completedRelays={synthesis.completionCount}
+            completedRelays={synthesis.exploredCount}
             isComplete={synthesis.isComplete}
           />
         </motion.div>
@@ -502,7 +504,7 @@ export default function Synthesis() {
               senderName={`Explorer-${guestId.slice(0, 6)}`}
               senderArchetype={patternTitle}
               senderXp={synthesis.totalXpEarned}
-              senderRelays={synthesis.completionCount}
+              senderRelays={synthesis.exploredCount}
             />
           )}
         </motion.div>
@@ -589,7 +591,7 @@ export default function Synthesis() {
           <p className="text-xs text-muted-foreground mb-4">
             {synthesis.isComplete
               ? t("synthesis.odysseyDone")
-              : `${12 - synthesis.completionCount} ${t("synthesis.relaysRemain")}`}
+              : `${12 - synthesis.exploredCount} ${t("synthesis.relaysRemain")}`}
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <Link href="/explore">
