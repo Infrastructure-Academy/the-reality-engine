@@ -111,12 +111,39 @@ function ServiceWorkerRegistrar() {
   return null;
 }
 
+/** Remove a platform watermark if one is injected after load. */
+function HideManusWatermark() {
+  useEffect(() => {
+    const strip = () => {
+      document.querySelectorAll("a, button, div, span").forEach((node) => {
+        if (!(node instanceof HTMLElement)) return;
+        const ownText = Array.from(node.childNodes)
+          .filter((child) => child.nodeType === Node.TEXT_NODE)
+          .map((child) => child.textContent ?? "")
+          .join("")
+          .trim();
+        if (!/^made with manus$/i.test(ownText) && !/^built with manus$/i.test(ownText)) return;
+        (node.closest("a") ?? node).remove();
+      });
+    };
+    strip();
+    const first = window.setTimeout(strip, 1000);
+    const later = window.setTimeout(strip, 4000);
+    return () => {
+      window.clearTimeout(first);
+      window.clearTimeout(later);
+    };
+  }, []);
+  return null;
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <HideManusWatermark />
           <ServiceWorkerRegistrar />
           <NetworkBar />
           <EyeOpenAnimation />
