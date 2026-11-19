@@ -518,6 +518,7 @@ export const EN: Record<string, string> = {
   "media.category": "CATEGORY",
   "media.noAssets": "No assets found matching your filters",
   "media.title": "MEDIA CATALOGUE",
+  "media.loadingCatalogue": "Loading the catalogue…",
   "network.admin": "ADMIN",
   "network.allTagsAssigned": "All tags assigned",
   "network.assignTag": "Assign tag:",

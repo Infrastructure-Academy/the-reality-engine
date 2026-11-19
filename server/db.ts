@@ -9,6 +9,7 @@ import {
   fireSessions, fireCardResponses
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { mergeRelayProgress } from "@shared/playerProgress";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -124,15 +125,21 @@ export async function upsertRelayProgress(profileId: number, relayNumber: number
   if (!db) return;
   const existing = await db.select().from(relayProgress)
     .where(and(eq(relayProgress.profileId, profileId), eq(relayProgress.relayNumber, relayNumber))).limit(1);
+  const merged = mergeRelayProgress(existing[0], { discoveredItems, completionPct, xpEarned });
   if (existing[0]) {
     await db.update(relayProgress).set({
-      discoveredItems: JSON.stringify(discoveredItems), completionPct, xpEarned,
-      completedAt: completionPct >= 100 ? new Date() : null,
+      discoveredItems: JSON.stringify(merged.discoveredItems),
+      completionPct: merged.completionPct,
+      xpEarned: merged.xpEarned,
+      completedAt: merged.completionPct >= 100 ? new Date() : existing[0].completedAt,
     }).where(eq(relayProgress.id, existing[0].id));
   } else {
     await db.insert(relayProgress).values({
-      profileId, relayNumber, discoveredItems: JSON.stringify(discoveredItems),
-      completionPct, xpEarned, completedAt: completionPct >= 100 ? new Date() : null,
+      profileId, relayNumber,
+      discoveredItems: JSON.stringify(merged.discoveredItems),
+      completionPct: merged.completionPct,
+      xpEarned: merged.xpEarned,
+      completedAt: merged.completionPct >= 100 ? new Date() : null,
     });
   }
 }

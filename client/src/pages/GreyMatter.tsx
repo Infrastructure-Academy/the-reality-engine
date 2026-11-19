@@ -12,6 +12,7 @@ import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useT } from "@/contexts/LanguageContext";
+import { PROGRESS_EVENT, hydrateTotalXp } from "@shared/playerProgress";
 
 // ─── Guest ID ───
 function getGuestId(): string {
@@ -108,7 +109,7 @@ export default function GreyMatter() {
   useEffect(() => {
     profileMutation.mutate(
       { guestId, mode: "explorer" },
-      { onSuccess: (p) => { if (p) setProfileId(p.id); } }
+      { onSuccess: (p) => { if (p) { setProfileId(p.id); setTotalXp((prev) => hydrateTotalXp(prev, p.totalXp)); } } }
     );
   }, [guestId]);
 
@@ -126,6 +127,7 @@ export default function GreyMatter() {
   // Persistence
   useEffect(() => {
     localStorage.setItem("tre_gm_missions", JSON.stringify(missions));
+    window.dispatchEvent(new Event(PROGRESS_EVENT));
   }, [missions]);
 
   const currentMission = missions[currentRelay] || INITIAL_MISSION;
@@ -468,9 +470,8 @@ export default function GreyMatter() {
               🧠
             </motion.p>
             <p className="font-heading text-2xl font-bold tracking-wider text-gold-gradient mb-2">
-              BY THE POWER OF GREY MATTER!
+              BY THE POWER OF GREY MATTER — I HAVE THE KNOWLEDGE!
             </p>
-            <p className="font-heading text-xl font-bold text-amber-400 mb-2">{t("greymatter.haveKnowledge")}</p>
             <p className="text-sm text-muted-foreground">
               You are now <span className="text-gold font-bold">iMan</span>. All 12 powers earned.
               The Civilisation Clock has been pushed back to {clockTime.label}.

@@ -12,6 +12,7 @@
  */
 
 import { useT, useLanguage } from "@/contexts/LanguageContext";
+import { ACADEMY_URL } from "@shared/playerProgress";
 
 /* 14×14 SVG icon paths per site */
 const ICONS: Record<string, { path: string; viewBox?: string }> = {
@@ -39,7 +40,7 @@ const SITES = [
     subKey: "network.academy.sub",
     agent: "MAX",
     color: "#DC2626",
-    url: "https://www.infrastructure-academy.com",
+    url: ACADEMY_URL,
   },
   {
     id: "quest",

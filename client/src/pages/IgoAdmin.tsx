@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users, Building2, GraduationCap, DollarSign, Gamepad2, RefreshCw, Smartphone } from "lucide-react";
+import { ArrowLeft, Users, Building2, GraduationCap, DollarSign, Gamepad2, RefreshCw, Smartphone, Lock } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useT } from "@/contexts/LanguageContext";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; color: string; bg: string }> = {
   player: { label: "Player", icon: Gamepad2, color: "text-emerald-400", bg: "bg-emerald-400/10" },
@@ -16,9 +18,47 @@ const ROLE_CONFIG: Record<string, { label: string; icon: typeof Users; color: st
 
 export default function IgoAdmin() {
   const t = useT();
-  const { data: registrations, isLoading, refetch } = trpc.igo.list.useQuery();
-  const { data: stats } = trpc.igo.stats.useQuery();
+  const { user, loading } = useAuth();
+  const isAdmin = user?.role === "admin";
+  const { data: registrations, isLoading, refetch } = trpc.igo.list.useQuery(undefined, { enabled: isAdmin, retry: false });
+  const { data: stats } = trpc.igo.stats.useQuery(undefined, { enabled: isAdmin, retry: false });
   const [roleFilter, setRoleFilter] = useState<string>("all");
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center mobile-content-pad">
+        <div className="text-center max-w-md mx-auto p-8">
+          <Lock className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">Administrator access required</h2>
+          <p className="text-muted-foreground text-sm mb-6">
+            iGO registrations are visible only to an authenticated administrator.
+          </p>
+          <div className="flex flex-col gap-3">
+            {!user && (
+              <a href={getLoginUrl()}>
+                <Button className="w-full bg-red-600 hover:bg-red-500 text-white font-heading tracking-wider">
+                  <Lock className="w-4 h-4 mr-2" /> Sign in
+                </Button>
+              </a>
+            )}
+            <Link href="/">
+              <Button variant="ghost" className="w-full text-muted-foreground">
+                <ArrowLeft className="w-4 h-4 mr-2" /> Back
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const filtered = registrations?.filter(r => roleFilter === "all" || r.role === roleFilter) ?? [];
 

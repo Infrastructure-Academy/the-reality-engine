@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { GREY_MATTER_PATH, SCHOLAR_PATH } from "@shared/playerProgress";
 
 /**
  * Touch-zone hotspot overlay on the original pipeline PNG.
@@ -36,13 +37,13 @@ const HOTSPOTS: Hotspot[] = [
 
   // ── LAYER 2 — Scholar + Academic (Designed) ──
   // Touch zones expanded vertically for mobile tappability (was 17% → 21%)
-  { id: "E", label: "Scholar Mode",    href: "/scholar",  left: 27, top: 33, width: 26, height: 21 },
+  { id: "E", label: "Scholar Mode",    href: SCHOLAR_PATH,  left: 27, top: 33, width: 26, height: 21 },
   { id: "F", label: "Academic Mode",   href: "/play/igo", left: 62, top: 33, width: 26, height: 21 },
 
   // ── LAYER 1 — The Reality Engine (Live) ──
   { id: "A", label: "Relay Spinner",   href: "/explore/spinner",     left: 17, top: 62, width: 17, height: 22 },
   { id: "B", label: "Dungeon Crawl",   href: "/explore/dungeon",     left: 37, top: 62, width: 17, height: 22 },
-  { id: "C", label: "Grey Matter",     href: "/explore/grey-matter", left: 56, top: 62, width: 17, height: 22 },
+  { id: "C", label: "Grey Matter",     href: GREY_MATTER_PATH, left: 56, top: 62, width: 17, height: 22 },
   { id: "D", label: "Flight Deck",     href: "/flight-deck",         left: 76, top: 62, width: 17, height: 22 },
 ];
 

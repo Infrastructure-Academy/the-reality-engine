@@ -63,9 +63,11 @@ function Router() {
         <Route path={"/explore/spinner"} component={RelaySpinner} />
         <Route path={"/explore/dungeon"} component={DungeonCrawl} />
         <Route path={"/explore/greymatter"} component={GreyMatter} />
+        <Route path={"/explore/grey-matter"} component={GreyMatter} />
         <Route path={"/explore/:relayNum"} component={ExplorerRelay} />
         <Route path={"/flight-deck"} component={FlightDeck} />
         <Route path={"/create"} component={ScholarCreate} />
+        <Route path={"/scholar"} component={ScholarCreate} />
         <Route path={"/leaderboard"} component={Leaderboard} />
         <Route path={"/yoda"} component={YodaControl} />
         <Route path={"/frameworks"} component={Frameworks} />

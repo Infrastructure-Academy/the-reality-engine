@@ -82,7 +82,7 @@ export default function YodaControl() {
           <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("yoda.scadaConsciousness")}</p>
           <h2 className="font-heading text-3xl md:text-5xl text-gold-gradient">YODA Control Lever</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base">
-            Yoke → Orient → Decisive → Action. Three embodiments. One control system.
+            Yoke → Orient → Decisive → Action. Three embodiments. One control system.{" "}
             {t("yoda.humanLever")}
           </p>
         </section>
@@ -126,7 +126,7 @@ export default function YodaControl() {
               <div className="space-y-2">
                 <h3 className="font-heading text-cyan-glow text-lg">{t("yoda.searchMode")}</h3>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  {t("yoda.activeScanning")}
+                  {t("yoda.activeScanning")}{" "}
                   {t("yoda.yakaArrow")}
                 </p>
               </div>
@@ -134,7 +134,7 @@ export default function YodaControl() {
               <div className="space-y-2">
                 <h3 className="font-heading text-gold text-lg">{t("yoda.rememberMode")}</h3>
                 <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-                  {t("yoda.reflectiveIntegration")}
+                  {t("yoda.reflectiveIntegration")}{" "}
                   {t("yoda.quillMask")}
                 </p>
               </div>

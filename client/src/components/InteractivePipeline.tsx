@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { GREY_MATTER_PATH, SCHOLAR_PATH } from "@shared/playerProgress";
 
 /* ── Mode definitions matching the Pipeline image exactly ── */
 type PipelineMode = {
@@ -16,12 +17,12 @@ type PipelineMode = {
 const LAYER_1: PipelineMode[] = [
   { letter: "A", name: "Relay Spinner", ages: "8–10", status: "live", href: "/explore/spinner", visitKey: "tre_spinner_collection" },
   { letter: "B", name: "Dungeon Crawl", ages: "10–12", status: "live", href: "/explore/dungeon", visitKey: "tre_dungeon_created" },
-  { letter: "C", name: "Grey Matter", ages: "12–14", status: "live", href: "/explore/grey-matter", visitKey: "tre_gm_missions" },
+  { letter: "C", name: "Grey Matter", ages: "12–14", status: "live", href: GREY_MATTER_PATH, visitKey: "tre_gm_missions" },
   { letter: "D", name: "Flight Deck", ages: "14–18", status: "live", href: "/flight-deck", visitKey: "tre_prologue_seen" },
 ];
 
 const LAYER_2: PipelineMode[] = [
-  { letter: "E", name: "Scholar Mode", ages: "18+", status: "designed", href: "/scholar", visitKey: null },
+  { letter: "E", name: "Scholar Mode", ages: "18+", status: "designed", href: SCHOLAR_PATH, visitKey: null },
   { letter: "F", name: "Academic Mode", ages: "University", status: "designed", href: "/play/igo", visitKey: null },
 ];
 

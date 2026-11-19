@@ -95,10 +95,10 @@ export default function Frameworks() {
       </div>
 
       <main className="container py-8 max-w-5xl mx-auto">
-        <AnimatePresence mode="wait">
+        <div data-framework-panel={activeTab}>
           {/* ─── CONSCIOUSNESS COMPASS ─── */}
           {activeTab === "compass" && (
-            <motion.div key="compass" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
+            <motion.div key="compass" initial={{ opacity: 1, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("frameworks.newNorth")}</p>
                 <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("frameworks.consciousnessCompass")}</h2>
@@ -170,7 +170,7 @@ export default function Frameworks() {
 
           {/* ─── 4 LAWS OF iAAi ─── */}
           {activeTab === "laws" && (
-            <motion.div key="laws" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
+            <motion.div key="laws" initial={{ opacity: 1, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">{t("frameworks.asimov")}</p>
                 <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">4 Laws of <BrandI />AAi</h2>
@@ -231,7 +231,7 @@ export default function Frameworks() {
 
           {/* ─── THE WALKBY ─── */}
           {activeTab === "walkby" && (
-            <motion.div key="walkby" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
+            <motion.div key="walkby" initial={{ opacity: 1, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
               <div className="text-center space-y-3">
                 <p className="text-gold-dim text-xs tracking-[0.3em] uppercase">TP-013 — 4-Level Control Hierarchy</p>
                 <h2 className="font-heading text-3xl md:text-4xl text-gold-gradient">{t("frameworks.walkby")}</h2>
@@ -362,7 +362,7 @@ export default function Frameworks() {
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </div>
       </main>
     </div>
   );

@@ -1,11 +1,19 @@
-import { Link } from "wouter";
+import { useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Flame, Swords, Brain, Dices } from "lucide-react";
 import { useT } from "@/contexts/LanguageContext";
+import { parseRelayQuery } from "@shared/playerProgress";
 
 export default function ExplorerSelect() {
   const t = useT();
+  const [, navigate] = useLocation();
+
+  useEffect(() => {
+    const relay = parseRelayQuery(window.location.search);
+    if (relay) navigate(`/explore/${relay}`, { replace: true });
+  }, [navigate]);
 
   const EXPLORER_MODES = [
   {

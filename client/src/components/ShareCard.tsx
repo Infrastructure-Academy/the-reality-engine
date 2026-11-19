@@ -217,7 +217,7 @@ export function ShareCard({
     const stats = [
       { label: "TOTAL XP", value: formatXp(totalXp), color: "#f59e0b" },
       { label: "DISCOVERIES", value: discoveries.toString(), color: "#06b6d4" },
-      { label: "RELAYS COMPLETED", value: `${completedRelays} / 12`, color: isComplete ? "#f59e0b" : "#a1a1aa" },
+      { label: "RELAYS EXPLORED", value: `${completedRelays} / 12`, color: isComplete ? "#f59e0b" : "#a1a1aa" },
       { label: "BITPOINTS", value: Math.floor(totalXp / 100).toLocaleString(), color: "#a855f7" },
       { label: "DOMINANT PERSPECTIVE", value: isBalanced ? "BALANCED" : dominant.toUpperCase(), color: isBalanced ? "#f59e0b" : PERSPECTIVE_COLORS[dominant] },
     ];
