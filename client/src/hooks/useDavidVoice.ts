@@ -3,7 +3,10 @@
  * Provides a narrator voice for key discovery moments.
  * Separate toggle from sound effects (voice vs SFX).
  * Persisted to localStorage.
+ * Yields while the relay storyteller is speaking, so a discovery bark cannot cut the story.
  */
+
+import { storytellerOwnsSpeech } from "@/lib/storyteller";
 
 // ─── Global Voice State ───
 const VOICE_KEY = "tre_voice_enabled";
@@ -121,6 +124,7 @@ export function davidSpeak(text: string, options?: {
   onEnd?: () => void;
 }) {
   if (!isVoiceEnabled()) return;
+  if (storytellerOwnsSpeech()) return;
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 
   // Cancel any ongoing speech
