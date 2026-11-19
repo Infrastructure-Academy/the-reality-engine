@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { GREY_MATTER_PATH, SCHOLAR_PATH } from "../shared/playerProgress";
+import { GREY_MATTER_PATH, SCHOLAR_PATH, classicXpFromDiscoveries } from "../shared/playerProgress";
+import { INVENTIONS } from "../shared/inventions";
+import { QUEST_GA_MEASUREMENT_ID } from "../client/src/const";
 import {
   PLATE_EPISODES,
   PLATE_FOUNDATION,
@@ -101,6 +103,22 @@ describe("Home plate gates", () => {
     expect(gates).not.toContain("Memorial");
     expect(gates).not.toContain("Hui");
     expect(gates).not.toContain("peer review");
+    expect(gates).toContain("press-play-engage");
+    expect(gates).toContain('href="/explore/spinner"');
+    expect(gates).toContain("useSharedDiscoveryXp");
+    expect(gates).not.toContain('0 {t("home.door.xp")}');
+    expect(gates).toContain("whitespace-nowrap");
+    expect(gates).not.toContain("PoC LIVE");
+    expect(source("client/index.html")).toContain(QUEST_GA_MEASUREMENT_ID);
+    expect(source("client/index.html")).toContain("googletagmanager.com/gtag/js?id=G-2V0JTTFM97");
+    expect(QUEST_GA_MEASUREMENT_ID).toBe("G-2V0JTTFM97");
+  });
+
+  it("sums classic Explorer XP from stored discoveries and leaves an empty map at zero", () => {
+    expect(classicXpFromDiscoveries({}, { 1: INVENTIONS[1].length })).toBe(0);
+    const one = classicXpFromDiscoveries({ 1: [0] }, { 1: INVENTIONS[1].length });
+    expect(one).toBe(Math.floor(10_000 / INVENTIONS[1].length));
+    expect(one).toBeGreaterThan(0);
   });
 
   it("does not recut the twelve-mode list on the iGO page", () => {

@@ -235,6 +235,7 @@ export const ZH: Record<string, string> = {
   "home.gates.chooseEpisode": "选择篇章",
   "home.gates.listenFire": "聆听第1章",
   "home.gates.enter": "进入",
+  "home.pressPlay": "按播放，立即进入",
   "home.door.rank": "探索者",
   "home.door.xp": "XP",
   "home.door.ofTwelve": "已发现的12条中继",

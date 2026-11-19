@@ -16,7 +16,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useT } from "@/contexts/LanguageContext";
-import { useLitRelays } from "@/lib/sharedProgress";
+import { useLitRelays, useSharedDiscoveryXp } from "@/lib/sharedProgress";
+import { getPlayerBadge } from "@shared/badges";
 import {
   PLATE_EPISODES,
   PLATE_FOUNDATION,
@@ -48,10 +49,34 @@ const EPISODE_ICONS: Record<PlateEpisodeId, LucideIcon> = {
   3: Building2,
 };
 
+function formatXp(xp: number): string {
+  return xp.toLocaleString("en-GB");
+}
+
+export function PressPlayMark() {
+  const t = useT();
+  const label = t("home.pressPlay");
+  return (
+    <Link
+      href="/explore/spinner"
+      data-testid="press-play-engage"
+      aria-label={label}
+      className="flex min-h-11 w-full items-center justify-center gap-3 rounded-xl border border-amber-300/70 bg-[#0a1628] px-4 text-amber-100 shadow-[0_0_24px_rgba(251,191,36,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+    >
+      <svg viewBox="0 0 24 24" className="h-6 w-6 fill-amber-300" aria-hidden="true">
+        <path d="M8 5.14v13.72L19.5 12 8 5.14z" />
+      </svg>
+      <span className="font-heading text-sm tracking-wide sm:text-base">{label}</span>
+    </Link>
+  );
+}
+
 function DoorProgressStrip() {
   const t = useT();
   const discovered = useLitRelays().size;
-  const rank = t("home.door.rank");
+  const xp = useSharedDiscoveryXp();
+  const badge = getPlayerBadge(xp);
+  const rank = badge?.name ?? t("home.door.rank");
 
   return (
     <div
@@ -61,7 +86,7 @@ function DoorProgressStrip() {
     >
       <p className="mx-auto flex max-w-6xl items-center justify-between gap-2 font-mono text-[11px] text-amber-100">
         <span className="inline-flex min-h-11 items-center rounded-full border border-amber-400/40 px-3 text-amber-200">{rank}</span>
-        <span className="inline-flex min-h-11 items-center tabular-nums">0 {t("home.door.xp")}</span>
+        <span className="inline-flex min-h-11 items-center tabular-nums" data-testid="home-door-xp">{formatXp(xp)} {t("home.door.xp")}</span>
         <span className="inline-flex min-h-11 items-center tabular-nums" aria-label={`${discovered} ${t("home.door.ofTwelve")}`}>
           {discovered}/12
         </span>
@@ -196,7 +221,10 @@ export function GameModeGates() {
   return (
     <section id="game-gates" aria-labelledby="game-gates-title" data-testid="home-game-gates">
       <DoorProgressStrip />
-      <div className="container max-w-6xl px-3 pb-4 pt-3">
+      <div className="container max-w-6xl px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+        <div className="mb-3">
+          <PressPlayMark />
+        </div>
         <div className="mb-3 text-center">
           <h2 id="game-gates-title" className="font-heading text-xl font-bold tracking-wide text-gold-gradient md:text-3xl">
             {PLATE_TITLE}
@@ -219,9 +247,10 @@ export function GameModeGates() {
 
         {open ? (
           <div className="mt-3 space-y-2" data-testid={`episode-panel-${open.id}`}>
-            <div className="flex items-center justify-between gap-2">
-              <h3 className="font-heading text-sm text-amber-100">
-                {`Episode ${open.id} (Ages ${open.ages}): ${open.name}`}
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="min-w-0 font-heading text-sm leading-snug text-amber-100">
+                <span className="block text-[11px] text-amber-200/80">{`Episode ${open.id} · Ages ${open.ages}`}</span>
+                <span className="block whitespace-nowrap">{open.name}</span>
               </h3>
               <button
                 type="button"

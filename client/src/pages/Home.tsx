@@ -10,6 +10,8 @@ import { useT, useLanguage } from "@/contexts/LanguageContext";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
 import { GameModeGates } from "@/components/GameModeGates";
+import { BadgeCollection } from "@/components/BadgeDisplay";
+import { useSharedDiscoveryXp } from "@/lib/sharedProgress";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { ShareCard } from "@/components/ShareCard";
 import { BrandI } from "@/components/BrandI";
@@ -193,6 +195,16 @@ function VideoGallery() {
 }
 
 /* ── Relay Collection Tracker — shows personal relay progress from localStorage ── */
+function DoorBadges() {
+  const xp = useSharedDiscoveryXp();
+  return (
+    <div className="container max-w-4xl px-3 pb-6" data-testid="home-badge-collection">
+      <h3 className="mb-2 font-heading text-sm tracking-wide text-amber-100">Badges</h3>
+      <BadgeCollection totalXp={xp} />
+    </div>
+  );
+}
+
 function RelayCollectionTracker() {
   const t = useT();
   const collection = useLitRelays();
@@ -1256,6 +1268,8 @@ export default function Home() {
       </header>
 
       <GameModeGates />
+      <RelayCollectionTracker />
+      <DoorBadges />
 
       {/* Hero Section */}
       <section className="relative z-10 pt-6 pb-4 md:pt-10 md:pb-6">
@@ -1334,9 +1348,6 @@ export default function Home() {
             {t("home.aimDescription")} <a href={`https://www.infrastructure-academy.com?lang=${lang}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi</a>.
           </p>
         </div>
-
-        {/* ── YOUR RELAY COLLECTION ── */}
-        <RelayCollectionTracker />
 
         {/* ── YOUR WEB DOMAINS + DEARDEN FIELD ── */}
         <WebDomainsTracker />

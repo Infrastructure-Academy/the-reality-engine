@@ -73,6 +73,9 @@ if (!published.includes("<div id=\"root\">") && !published.includes("<div id=\"r
 if (/manus-runtime|__MANUS_HOST_DEV__|Made with Manus|manus\.space/i.test(published)) {
   problems.push("index.html still exposes Manus");
 }
+if (!published.includes("G-2V0JTTFM97")) {
+  problems.push("index.html is missing the Academy Google Analytics tag");
+}
 if (!fs.existsSync(path.join(docs, "404.html"))) problems.push("404.html missing");
 const assetDir = path.join(docs, "assets");
 if (!fs.existsSync(assetDir)) problems.push("assets directory missing");

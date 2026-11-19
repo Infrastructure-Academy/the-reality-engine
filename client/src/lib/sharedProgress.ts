@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { INVENTIONS } from "@shared/inventions";
 import {
   DISCOVERIES_KEY,
   GM_MISSIONS_KEY,
   PROGRESS_EVENT,
   SPINNER_COLLECTION_KEY,
+  classicXpFromDiscoveries,
   earnedPowerRelays,
   litRelayIndexes,
   parseDiscoveredItems,
@@ -68,6 +70,32 @@ function readLitIndexes(): number[] {
     earnedPowers = earnedPowerRelays(JSON.parse(localStorage.getItem(GM_MISSIONS_KEY) || "{}"));
   } catch { /* ignore corrupt mission data */ }
   return litRelayIndexes({ discoveries, spinnerCollection, earnedPowers });
+}
+
+const INVENTION_COUNTS: Record<number, number> = Object.fromEntries(
+  Object.entries(INVENTIONS).map(([relay, items]) => [Number(relay), items.length]),
+);
+
+/** Classic Explorer XP already implied by the shared discovery map. Empty play is 0. */
+export function readSharedDiscoveryXp(): number {
+  return classicXpFromDiscoveries(loadDiscoveries(), INVENTION_COUNTS);
+}
+
+export function useSharedDiscoveryXp(): number {
+  const [xp, setXp] = useState(0);
+
+  useEffect(() => {
+    const refresh = () => setXp(readSharedDiscoveryXp());
+    refresh();
+    window.addEventListener(PROGRESS_EVENT, refresh);
+    window.addEventListener("storage", refresh);
+    return () => {
+      window.removeEventListener(PROGRESS_EVENT, refresh);
+      window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  return xp;
 }
 
 /** Relays lit by a discovery, a spinner collection, or a Grey Matter power. */
