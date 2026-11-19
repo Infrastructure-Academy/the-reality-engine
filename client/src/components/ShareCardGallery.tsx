@@ -127,6 +127,7 @@ function useSwipe(onSwipeLeft: () => void, onSwipeRight: () => void) {
 function ShareCardItem({ card }: { card: ShareCard }) {
   const t = useT();
   const [copied, setCopied] = useState(false);
+  const [imageReady, setImageReady] = useState(true);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -184,14 +185,17 @@ function ShareCardItem({ card }: { card: ShareCard }) {
 
   return (
     <div className="flex flex-col">
-      {/* Card image with lightbox */}
-      <div className="rounded-lg overflow-hidden border border-amber-500/20 mb-3">
-        <ImageLightbox
-          src={card.imageUrl}
-          alt={`${card.title} — ${card.subtitle}`}
-          className="w-full h-auto object-contain"
-        />
-      </div>
+      {/* Drop the frame when the file is missing, so Pages does not show a blank card. */}
+      {imageReady ? (
+        <div className="rounded-lg overflow-hidden border border-amber-500/20 mb-3">
+          <ImageLightbox
+            src={card.imageUrl}
+            alt={`${card.title} — ${card.subtitle}`}
+            className="w-full h-auto object-contain"
+            onError={() => setImageReady(false)}
+          />
+        </div>
+      ) : null}
 
       {/* Card info */}
       <h4 className="font-heading text-sm tracking-wider text-foreground mb-0.5">{card.title}</h4>
@@ -217,15 +221,17 @@ function ShareCardItem({ card }: { card: ShareCard }) {
         >
           {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleDownload}
-          className="gap-1.5 border-border/40 text-muted-foreground hover:text-foreground text-xs"
-          title="Download image"
-        >
-          <Download className="w-3.5 h-3.5" />
-        </Button>
+        {imageReady ? (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownload}
+            className="gap-1.5 border-border/40 text-muted-foreground hover:text-foreground text-xs"
+            title="Download image"
+          >
+            <Download className="w-3.5 h-3.5" />
+          </Button>
+        ) : null}
       </div>
     </div>
   );

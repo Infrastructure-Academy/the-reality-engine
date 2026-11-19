@@ -6,9 +6,10 @@ interface ImageLightboxProps {
   alt: string;
   className?: string;
   loading?: "lazy" | "eager";
+  onError?: () => void;
 }
 
-export function ImageLightbox({ src, alt, className = "", loading }: ImageLightboxProps) {
+export function ImageLightbox({ src, alt, className = "", loading, onError }: ImageLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const open = useCallback(() => setIsOpen(true), []);
@@ -45,6 +46,7 @@ export function ImageLightbox({ src, alt, className = "", loading }: ImageLightb
           alt={alt}
           className={`${className} bg-slate-800/50`}
           loading={loading}
+          onError={onError}
         />
         {/* Zoom overlay on hover */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center">

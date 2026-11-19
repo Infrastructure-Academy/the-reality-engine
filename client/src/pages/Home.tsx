@@ -9,7 +9,7 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { useT, useLanguage } from "@/contexts/LanguageContext";
 import { ImageLightbox } from "@/components/ImageLightbox";
 import { ContinueBanner } from "@/components/ContinueBanner";
-import { PipelineHotspots } from "@/components/PipelineHotspots";
+import { GameModeGates } from "@/components/GameModeGates";
 import { ShareCardGallery } from "@/components/ShareCardGallery";
 import { ShareCard } from "@/components/ShareCard";
 import { BrandI } from "@/components/BrandI";
@@ -1333,24 +1333,7 @@ export default function Home() {
           </p>
         </div>
 
-        {/* ── PIPELINE DASHBOARD + PLAYER'S JOURNEY ── */}
-        {/* Side-by-side on desktop, stacked on mobile */}
-        <div className="container max-w-7xl px-2 md:px-4">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-stretch">
-            {/* Pipeline — instant dashboard */}
-            <div className="lg:w-1/2 flex items-center glow-pulse overflow-hidden">
-              <PipelineHotspots />
-            </div>
-            {/* Player's Journey — the growth story */}
-            <div className="lg:w-1/2 glow-pulse overflow-hidden" style={{ aspectRatio: '2752/1536' }}>
-              <ImageLightbox
-                src="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/igo-player-glory-arc_01ca1bbc.png"
-                alt="The Player's Journey — From Spark to Master: 11 game modes showing lifelong learning progression from age 8 to 65+"
-                className="w-full h-full object-contain rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
+        <GameModeGates />
 
         {/* ── YOUR RELAY COLLECTION ── */}
         <RelayCollectionTracker />

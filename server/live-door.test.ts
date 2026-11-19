@@ -148,7 +148,7 @@ describe("live-door route and progress fixes", () => {
     expect(app).toContain('path={"/explore/greymatter"}');
     expect(app).toContain('path={"/scholar"}');
     expect(app).toContain('path={"/create"}');
-    const homeLinks = source("client/src/components/InteractivePipeline.tsx") + source("client/src/components/PipelineHotspots.tsx") + source("client/src/components/ContinueBanner.tsx");
+    const homeLinks = source("shared/plateGates.ts") + source("client/src/components/InteractivePipeline.tsx") + source("client/src/components/PipelineHotspots.tsx") + source("client/src/components/ContinueBanner.tsx");
     expect(homeLinks).not.toContain("/explore/grey-matter");
     expect(homeLinks).not.toContain('"/scholar"');
     expect(homeLinks).toContain("GREY_MATTER_PATH");
