@@ -18,9 +18,10 @@ import { StreakIndicator } from "@/components/StreakIndicator";
 import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
-import { SoundToggle } from "@/components/SoundToggle";
-import { VoiceToggle } from "@/components/VoiceToggle";
-import { narrateDiscovery, narrateRelayIntro, narrateRelayComplete, davidStop } from "@/hooks/useDavidVoice";
+import { StorytellerControl } from "@/components/StorytellerControl";
+import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
+import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
+import { useStoryLocale, useStoryteller } from "@/hooks/useStoryteller";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { RelayDilemmaCard } from "@/components/RelayDilemma";
 import { useT } from "@/contexts/LanguageContext";
@@ -50,10 +51,11 @@ function pickLayout(relayNum: number): LayoutVariant {
 // ─── Shared Sub-Components ───
 
 function RelayHeader({
-  relayMeta, relayNum, canGoPrev, canGoNext, navigate
+  relayMeta, relayNum, canGoPrev, canGoNext, navigate, subtitle
 }: {
   relayMeta: typeof RELAYS[number]; relayNum: number;
   canGoPrev: boolean; canGoNext: boolean; navigate: (to: string) => void;
+  subtitle?: string;
 }) {
   return (
     <div className="flex items-center justify-between mb-6">
@@ -65,7 +67,7 @@ function RelayHeader({
         <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide text-gold-gradient">
           Relay {relayNum}: {relayMeta.name}
         </h2>
-        <p className="text-sm text-muted-foreground">{relayMeta.subtitle}</p>
+        <p className="text-sm text-muted-foreground">{subtitle || relayMeta.subtitle}</p>
         <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
       </div>
       <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
@@ -78,13 +80,15 @@ function RelayHeader({
 function NarrativeBlock({ relay }: { relay: any }) {
   const t = useT();
   if (!relay?.narrative) return null;
+  const heading = relay?.labels?.story || t("explorer.theStory");
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className="p-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm"
+      lang={relay.speechLang}
     >
       <div className="flex items-center gap-2 mb-2">
         <BookOpen className="w-4 h-4 text-gold" />
-        <span className="text-xs uppercase tracking-wider text-gold font-bold">{ t("explorer.theStory") }</span>
+        <span className="text-xs uppercase tracking-wider text-gold font-bold">{heading}</span>
       </div>
       <p className="text-sm leading-relaxed text-foreground/90 italic">{relay.narrative}</p>
       {relay.quote && (
@@ -100,9 +104,10 @@ function NarrativeBlock({ relay }: { relay: any }) {
 function MissionBlock({ relay }: { relay: any }) {
   const t = useT();
   if (!relay?.missionObjective) return null;
+  const heading = relay?.labels?.objective || t("explorer.missionObjective");
   return (
-    <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5">
-      <p className="text-xs uppercase tracking-wider text-amber-400 mb-1 font-bold">{ t("explorer.missionObjective") }</p>
+    <div className="p-3 rounded-lg border border-amber-500/20 bg-amber-500/5" lang={relay.speechLang}>
+      <p className="text-xs uppercase tracking-wider text-amber-400 mb-1 font-bold">{heading}</p>
       <p className="text-sm text-foreground/80">{relay.missionObjective}</p>
     </div>
   );
@@ -269,7 +274,7 @@ function LayoutClassic({
 }: LayoutProps) {
   return (
     <div className="space-y-6">
-      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} />
+      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
       <NarrativeBlock relay={relay} />
       <MissionBlock relay={relay} />
       <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
@@ -290,7 +295,7 @@ function LayoutSplitHorizon({
 }: LayoutProps) {
   return (
     <div className="space-y-6">
-      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} />
+      <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
 
       {/* Web type + era context bar */}
       <div className="flex items-center justify-between">
@@ -329,6 +334,9 @@ function LayoutMissionBriefing({
   xpPerItem, completionPct, canGoPrev, canGoNext, navigate
 }: LayoutProps) {
   const t = useT();
+  const briefing = relay?.labels?.briefing || t("explorer.missionBriefing");
+  const relayLine = (relay?.labels?.relayOf || t("explorer.relayOf12")).replace("{n}", String(relayNum));
+  const subtitle = relay?.subtitle || t(`relay.subtitle.${relayNum}`) || relayMeta.subtitle;
   return (
     <div className="space-y-6">
       {/* Compact header with era timeline */}
@@ -354,14 +362,14 @@ function LayoutMissionBriefing({
 
       {/* Full-width mission banner (hero position) */}
       {relay?.missionObjective && (
-        <div className="p-5 rounded-xl border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent">
+        <div className="p-5 rounded-xl border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent" lang={relay?.speechLang}>
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded bg-amber-500/20 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-amber-400" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wider text-amber-400 font-bold">{ t("explorer.missionBriefing") }</p>
-              <p className="text-[10px] text-muted-foreground">{t("explorer.relayOf12").replace("{n}", String(relayNum))} — {t(`relay.subtitle.${relayNum}`) || relayMeta.subtitle}</p>
+              <p className="text-xs uppercase tracking-wider text-amber-400 font-bold">{briefing}</p>
+              <p className="text-[10px] text-muted-foreground">{relayLine} — {subtitle}</p>
             </div>
           </div>
           <p className="text-sm text-foreground/90 leading-relaxed">{relay.missionObjective}</p>
@@ -423,6 +431,13 @@ export default function ExplorerRelay() {
   const [, navigate] = useLocation();
   const relayNum = parseInt(params.relayNum || "1", 10);
   const relayMeta = RELAYS.find(r => r.number === relayNum) || RELAYS[0];
+  const storyLocale = useStoryLocale();
+  const authored = useMemo(
+    () => localizeRelayStory(relayMeta.number, storyLocale),
+    [relayMeta.number, storyLocale],
+  );
+  const storyScript = useMemo(() => (authored ? buildStoryScript(authored) : []), [authored]);
+  const storyteller = useStoryteller(storyScript, `${relayMeta.number}:${storyLocale}`);
 
   const [guestId] = useState(getGuestId);
   const [showChat, setShowChat] = useState(false);
@@ -443,8 +458,14 @@ export default function ExplorerRelay() {
   const [relayStartTime] = useState(() => Date.now());
   const streakTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Fetch relay data from DB
-  const { data: relay, isLoading } = trpc.relays.getByNumber.useQuery({ number: relayNum });
+  // The authored story is always available. The API, when it answers, supplies the live XP reward.
+  const { data: apiRelay } = trpc.relays.getByNumber.useQuery(
+    { number: relayMeta.number },
+    { retry: false, refetchOnWindowFocus: false },
+  );
+  const relay = authored
+    ? { ...authored, xpReward: apiRelay?.xpReward || authored.xpReward }
+    : apiRelay;
 
   // Create guest profile
   const profileMutation = trpc.profile.getOrCreate.useMutation();
@@ -487,6 +508,17 @@ export default function ExplorerRelay() {
     { enabled: !!profileId }
   );
 
+  // Local progress keeps the static door playable when the API is absent.
+  const progressKey = `tre_relay_found_${relayMeta.number}`;
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(progressKey);
+      if (!raw) return;
+      const items = JSON.parse(raw);
+      if (Array.isArray(items)) setDiscoveredItems(new Set(items));
+    } catch { /* ignore corrupt local progress */ }
+  }, [progressKey]);
+
   // Restore discovered items from DB on load
   useEffect(() => {
     if (savedProgress && savedProgress.length > 0) {
@@ -510,6 +542,7 @@ export default function ExplorerRelay() {
       if (prev.has(idx)) return prev; // already discovered
       const next = new Set(prev);
       next.add(idx);
+      try { localStorage.setItem(progressKey, JSON.stringify(Array.from(next))); } catch { /* ignore quota */ }
 
       // ─── Enhanced Sound + Haptic (web-typed + streak) ───
       const streak = registerDiscovery();
@@ -577,13 +610,10 @@ export default function ExplorerRelay() {
 
       return next;
     });
-  }, [profileId, relayNum, inventions.length, relay?.xpReward, inventionData, relayMeta.name]);
+  }, [profileId, relayNum, inventions.length, relay?.xpReward, inventionData, relayMeta.name, progressKey]);
 
-  // DAVID voice: narrate relay intro on first visit
+  // Stop any leftover announcer line when leaving the relay. The storyteller stops itself.
   useEffect(() => {
-    if (relay && relayMeta) {
-      narrateRelayIntro(relayMeta.name, relayMeta.era);
-    }
     return () => { davidStop(); };
   }, [relayNum]);
 
@@ -612,17 +642,6 @@ export default function ExplorerRelay() {
     [canGoNext, canGoPrev, relayNum, navigate]
   );
   useGamepad(handleGamepadButton);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground text-sm">{ t("explorer.loading") }</p>
-        </div>
-      </div>
-    );
-  }
 
   const layoutProps: LayoutProps = {
     relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
@@ -657,8 +676,17 @@ export default function ExplorerRelay() {
             <span className="text-muted-foreground font-mono text-xs">{completionPct}%</span>
           </div>
           <div className="flex items-center gap-1">
-            <SoundToggle compact color="gold" />
-            <VoiceToggle compact color="gold" />
+            {authored && (
+              <StorytellerControl
+                labels={authored.labels}
+                phase={storyteller.phase}
+                available={storyteller.available}
+                onListen={storyteller.listen}
+                onPause={storyteller.pause}
+                onResume={storyteller.resume}
+                onStop={storyteller.stop}
+              />
+            )}
             <span className="text-[9px] text-muted-foreground/50 font-mono hidden sm:inline" title="Layout variant">
               <Shuffle className="w-3 h-3 inline mr-0.5" />{LAYOUT_NAMES[layoutVariant]}
             </span>

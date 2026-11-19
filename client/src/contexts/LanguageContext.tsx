@@ -10,6 +10,7 @@
  */
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { langFromBrowserTags } from "@/lib/storyLocale";
 import { EN } from "@/i18n/en";
 import { ZH } from "@/i18n/zh";
 import { KO } from "@/i18n/ko";
@@ -74,7 +75,13 @@ function resolveInitialLang(): LangCode {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && DICTIONARIES[stored as LangCode]) return stored as LangCode;
   }
-  // Priority 3: default EN
+  // Priority 3: the browser language, so a first visit speaks the player's language
+  if (typeof navigator !== "undefined") {
+    const tags = navigator.languages?.length ? navigator.languages : [navigator.language];
+    const detected = langFromBrowserTags(tags);
+    if (detected) return detected;
+  }
+  // Priority 4: default EN
   return "EN";
 }
 

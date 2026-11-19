@@ -1,0 +1,20 @@
+{
+  "name": "The Reality Engine — Infrastructure Academy",
+  "short_name": "TRE",
+  "description": "Navigate 12,000 years of civilisational infrastructure through three distinct pathways. From fire to human nodes — your odyssey begins here.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a12",
+  "theme_color": "#d4a843",
+  "categories": ["education", "games"],
+  "scope": "/",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
