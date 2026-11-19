@@ -1255,6 +1255,8 @@ export default function Home() {
         </div>
       </header>
 
+      <GameModeGates />
+
       {/* Hero Section */}
       <section className="relative z-10 pt-6 pb-4 md:pt-10 md:pb-6">
         <div className="container text-center">
@@ -1332,8 +1334,6 @@ export default function Home() {
             {t("home.aimDescription")} <a href={`https://www.infrastructure-academy.com?lang=${lang}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300 underline underline-offset-2"><BrandI />AAi</a>.
           </p>
         </div>
-
-        <GameModeGates />
 
         {/* ── YOUR RELAY COLLECTION ── */}
         <RelayCollectionTracker />
