@@ -1,30 +1,154 @@
+import { useState } from "react";
 import { Link } from "wouter";
-import { ChevronRight } from "lucide-react";
+import {
+  Award,
+  Brain,
+  Building2,
+  ChevronRight,
+  Compass,
+  Dices,
+  Flame,
+  GraduationCap,
+  Medal,
+  Rocket,
+  Swords,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { useT } from "@/contexts/LanguageContext";
+import { useLitRelays } from "@/lib/sharedProgress";
 import {
   PLATE_EPISODES,
   PLATE_FOUNDATION,
   PLATE_GATES,
   PLATE_SUBTITLE,
   PLATE_TITLE,
+  type PlateEpisode,
+  type PlateEpisodeId,
   type PlateGate,
 } from "@shared/plateGates";
 
-function PlayableGate({ gate, enter, agesLabel }: { gate: PlateGate & { href: string }; enter: string; agesLabel: string }) {
+const ICONS: Record<string, LucideIcon> = {
+  "relay-spinner": Dices,
+  "dungeon-crawl": Swords,
+  "grey-matter": Brain,
+  "flight-deck": Rocket,
+  scholar: GraduationCap,
+  graduate: Award,
+  chartered: Medal,
+  "senior-leader": Compass,
+  "industry-leader": Building2,
+  champion: Flame,
+  "mentor-class": Users,
+};
+
+const EPISODE_ICONS: Record<PlateEpisodeId, LucideIcon> = {
+  1: Flame,
+  2: Compass,
+  3: Building2,
+};
+
+function DoorProgressStrip() {
+  const t = useT();
+  const discovered = useLitRelays().size;
+  const rank = t("home.door.rank");
+
+  return (
+    <div
+      data-testid="home-progress-strip"
+      className="sticky z-30 border-b border-amber-400/30 bg-[#0a1628]/95 px-3 py-2 backdrop-blur-md"
+      style={{ top: "calc(36px + env(safe-area-inset-top, 0px))" }}
+    >
+      <p className="mx-auto flex max-w-6xl items-center justify-between gap-2 font-mono text-[11px] text-amber-100">
+        <span className="inline-flex min-h-11 items-center rounded-full border border-amber-400/40 px-3 text-amber-200">{rank}</span>
+        <span className="inline-flex min-h-11 items-center tabular-nums">0 {t("home.door.xp")}</span>
+        <span className="inline-flex min-h-11 items-center tabular-nums" aria-label={`${discovered} ${t("home.door.ofTwelve")}`}>
+          {discovered}/12
+        </span>
+      </p>
+    </div>
+  );
+}
+
+function StatusBadge({ live, label }: { live: boolean; label: string }) {
+  return (
+    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-heading tracking-wide ${live ? "bg-emerald-500/20 text-emerald-300" : "bg-white/10 text-slate-300"}`}>
+      {label}
+    </span>
+  );
+}
+
+function EpisodeDoor({
+  episode,
+  expanded,
+  onChoose,
+  liveLabel,
+  comingSoon,
+}: {
+  episode: PlateEpisode;
+  expanded: boolean;
+  onChoose: () => void;
+  liveLabel: string;
+  comingSoon: string;
+}) {
+  const Icon = EPISODE_ICONS[episode.id];
+  const agesLabel = `Episode ${episode.id} (Ages ${episode.ages}): ${episode.name}`;
+  return (
+    <button
+      type="button"
+      data-testid={`episode-door-${episode.id}`}
+      aria-expanded={expanded}
+      aria-label={agesLabel}
+      onClick={onChoose}
+      className="flex min-h-16 w-full items-center gap-3 rounded-xl border px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+      style={{
+        borderColor: expanded ? episode.accent : `${episode.accent}66`,
+        background: `linear-gradient(90deg, ${episode.accent}22, #0a1628)`,
+      }}
+    >
+      <span
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+        style={{ background: `${episode.accent}22`, color: episode.accent }}
+      >
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-2">
+          <span className="font-heading text-sm text-amber-50">{episode.name}</span>
+          <StatusBadge live={episode.playable} label={episode.playable ? liveLabel : comingSoon} />
+        </span>
+        <span className="mt-0.5 block font-mono text-[11px] text-amber-100/70">Ages {episode.ages}</span>
+        <span className="block text-xs text-slate-300">{episode.hook}</span>
+      </span>
+    </button>
+  );
+}
+
+function PlayableGate({ gate, enter, agesLabel, liveLabel }: { gate: PlateGate & { href: string }; enter: string; agesLabel: string; liveLabel: string }) {
+  const Icon = ICONS[gate.id] ?? Flame;
   return (
     <Link
       href={gate.href}
       data-testid={`gate-${gate.id}`}
-      aria-label={`${gate.name}, ${agesLabel} ${gate.ages}, ${enter}`}
-      className="group flex min-h-28 flex-col justify-between rounded-xl border border-amber-400/50 bg-amber-500/10 p-4 text-left transition-colors hover:border-amber-300 hover:bg-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      aria-label={`${gate.name}, ${agesLabel} ${gate.ages}, ${gate.hook}, ${enter}`}
+      className="flex min-h-16 w-full items-center gap-3 rounded-xl border px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+      style={{ borderColor: `${gate.accent}88`, background: `linear-gradient(90deg, ${gate.accent}18, #07111f)` }}
     >
-      <span>
-        <span className="block font-heading text-base font-semibold tracking-wide text-foreground">{gate.name}</span>
-        <span className="mt-1 block font-mono text-[11px] text-amber-200/80">
-          {agesLabel} {gate.ages}
-        </span>
+      <span
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+        style={{ background: `${gate.accent}24`, color: gate.accent }}
+      >
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
-      <span className="mt-4 inline-flex items-center gap-1 text-xs font-heading tracking-wide text-amber-300">
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-2">
+          <span className="font-heading text-base text-amber-50">{gate.name}</span>
+          <StatusBadge live label={liveLabel} />
+        </span>
+        <span className="mt-0.5 block font-mono text-[11px] text-amber-100/70">{agesLabel} {gate.ages}</span>
+        <span className="block text-sm text-slate-200">{gate.hook}</span>
+      </span>
+      <span className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-3 text-xs font-heading text-amber-100" style={{ background: `${gate.accent}28` }}>
         {enter}
         <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
       </span>
@@ -33,83 +157,105 @@ function PlayableGate({ gate, enter, agesLabel }: { gate: PlateGate & { href: st
 }
 
 function ComingSoonGate({ gate, comingSoon, agesLabel }: { gate: PlateGate; comingSoon: string; agesLabel: string }) {
+  const Icon = ICONS[gate.id] ?? Flame;
   return (
     <article
       data-testid={`gate-${gate.id}`}
       aria-disabled="true"
       aria-label={`${gate.name}, ${agesLabel} ${gate.ages}, ${comingSoon}`}
-      className="flex min-h-28 flex-col justify-between rounded-xl border border-white/10 bg-white/[0.03] p-4"
+      className="flex min-h-16 w-full items-center gap-3 rounded-xl border border-white/10 bg-[#07111f] px-3 py-2"
     >
-      <span>
-        <span className="block font-heading text-base font-semibold tracking-wide text-foreground/80">{gate.name}</span>
-        <span className="mt-1 block font-mono text-[11px] text-muted-foreground">
-          {agesLabel} {gate.ages}
-        </span>
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/5 text-slate-400">
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
-      <span className="mt-4 text-xs font-heading tracking-wide text-muted-foreground">{comingSoon}</span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center justify-between gap-2">
+          <span className="font-heading text-base text-slate-200">{gate.name}</span>
+          <StatusBadge live={false} label={comingSoon} />
+        </span>
+        <span className="mt-0.5 block font-mono text-[11px] text-slate-400">{agesLabel} {gate.ages}</span>
+      </span>
     </article>
   );
 }
 
 /**
- * The eleven plate gates on Home. Playable gates are real routes.
- * Later modules are labelled Coming soon and are not links.
+ * Age-routed door. First paint is the three episodes.
+ * A chosen episode reveals its modes. Only Episode 1 modes are links.
  */
 export function GameModeGates() {
   const t = useT();
+  const [openEpisode, setOpenEpisode] = useState<PlateEpisodeId | null>(null);
   const enter = t("home.gates.enter");
   const comingSoon = t("home.gates.comingSoon");
+  const liveLabel = t("home.gates.live");
   const agesLabel = t("home.gates.ages");
+  const open = PLATE_EPISODES.find((episode) => episode.id === openEpisode) ?? null;
+  const gates = open ? PLATE_GATES.filter((gate) => gate.episode === open.id) : [];
 
   return (
-    <section id="game-gates" aria-labelledby="game-gates-title" className="container max-w-6xl px-4 pb-8 pt-2" data-testid="home-game-gates">
-      <div className="mb-6 text-center">
-        <h2 id="game-gates-title" className="font-heading text-2xl font-bold tracking-wide text-gold-gradient md:text-4xl">
-          {PLATE_TITLE}
-        </h2>
-        <p className="mt-2 text-sm text-amber-200/80 md:text-base">{PLATE_SUBTITLE}</p>
-        <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t("home.gates.choose")}</p>
-        <p className="mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-muted-foreground/80">{t("home.gates.overlap")}</p>
-      </div>
+    <section id="game-gates" aria-labelledby="game-gates-title" data-testid="home-game-gates">
+      <DoorProgressStrip />
+      <div className="container max-w-6xl px-3 pb-4 pt-3">
+        <div className="mb-3 text-center">
+          <h2 id="game-gates-title" className="font-heading text-xl font-bold tracking-wide text-gold-gradient md:text-3xl">
+            {PLATE_TITLE}
+          </h2>
+          <p className="mt-1 text-xs text-amber-200/80 md:text-sm">{PLATE_SUBTITLE}</p>
+        </div>
 
-      <div className="space-y-8">
-        {PLATE_EPISODES.map((episode) => {
-          const gates = PLATE_GATES.filter((gate) => gate.episode === episode.id);
-          const status = episode.playable ? t("home.gates.openToPlay") : comingSoon;
-          return (
-            <div key={episode.id}>
-              <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="font-heading text-sm tracking-wide text-foreground md:text-base">
-                  {`Episode ${episode.id} (Ages ${episode.ages}): ${episode.name}`}
-                </h3>
-                <p className={`text-[11px] font-heading tracking-wide ${episode.playable ? "text-amber-300" : "text-muted-foreground"}`}>
-                  {status}
-                </p>
-              </div>
-              <div
-                className={
-                  episode.id === 1
-                    ? "grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5"
-                    : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-                }
+        <div className="space-y-2" role="group" aria-label={t("home.gates.chooseEpisode")}>
+          {PLATE_EPISODES.map((episode) => (
+            <EpisodeDoor
+              key={episode.id}
+              episode={episode}
+              expanded={openEpisode === episode.id}
+              onChoose={() => setOpenEpisode((current) => current === episode.id ? null : episode.id)}
+              liveLabel={liveLabel}
+              comingSoon={comingSoon}
+            />
+          ))}
+        </div>
+
+        {open ? (
+          <div className="mt-3 space-y-2" data-testid={`episode-panel-${open.id}`}>
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="font-heading text-sm text-amber-100">
+                {`Episode ${open.id} (Ages ${open.ages}): ${open.name}`}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setOpenEpisode(null)}
+                className="inline-flex min-h-11 items-center px-2 text-xs text-amber-200 underline-offset-2 hover:underline"
               >
-                {gates.map((gate) =>
-                  gate.href
-                    ? <PlayableGate key={gate.id} gate={{ ...gate, href: gate.href }} enter={enter} agesLabel={agesLabel} />
-                    : <ComingSoonGate key={gate.id} gate={gate} comingSoon={comingSoon} agesLabel={agesLabel} />
-                )}
-              </div>
+                {t("home.gates.allEpisodes")}
+              </button>
             </div>
-          );
-        })}
-      </div>
+            {gates.map((gate) =>
+              gate.href
+                ? <PlayableGate key={gate.id} gate={{ ...gate, href: gate.href }} enter={enter} agesLabel={agesLabel} liveLabel={liveLabel} />
+                : <ComingSoonGate key={gate.id} gate={gate} comingSoon={comingSoon} agesLabel={agesLabel} />
+            )}
+            {open.playable ? (
+              <Link
+                href="/explore/1"
+                data-testid="gate-listen-fire"
+                className="inline-flex min-h-11 items-center text-sm text-amber-200 underline underline-offset-2"
+              >
+                {t("home.gates.listenFire")}
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
 
-      <p className="mt-8 text-center font-mono text-xs tracking-wide text-amber-200/70 md:text-sm">{PLATE_FOUNDATION}</p>
-      <p className="mt-3 text-center text-xs text-muted-foreground">
-        <Link href="/play/igo" className="underline underline-offset-2 hover:text-amber-300">
-          {t("home.gates.widerGuide")}
-        </Link>
-      </p>
+        <p className="mt-4 text-center font-mono text-[11px] tracking-wide text-amber-200/70">{PLATE_FOUNDATION}</p>
+        <p className="mt-1 text-center text-[11px] text-slate-400">{t("home.gates.overlap")}</p>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          <Link href="/play/igo" className="inline-flex min-h-11 items-center underline underline-offset-2 hover:text-amber-300">
+            {t("home.gates.widerGuide")}
+          </Link>
+        </p>
+      </div>
     </section>
   );
 }

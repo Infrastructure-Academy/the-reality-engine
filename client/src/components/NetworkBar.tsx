@@ -116,7 +116,8 @@ export function NetworkBar() {
     <nav
       className="fixed top-0 left-0 right-0 flex items-center justify-center gap-0"
       style={{
-        height: "36px",
+        height: "calc(36px + env(safe-area-inset-top, 0px))",
+        paddingTop: "env(safe-area-inset-top, 0px)",
         backgroundColor: "#0a1628",
         zIndex: 60,
       }}

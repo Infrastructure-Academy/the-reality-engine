@@ -147,7 +147,7 @@ function App() {
           <ServiceWorkerRegistrar />
           <NetworkBar />
           <EyeOpenAnimation />
-          <div style={{ paddingTop: "36px" }}>
+          <div style={{ paddingTop: "calc(36px + env(safe-area-inset-top, 0px))" }}>
             <Router />
           </div>
           <BottomTabBar />

@@ -286,7 +286,7 @@
   /* Mobile bottom padding when tab bar is present */
   @media (max-width: 767px) {
     .mobile-content-pad {
-      padding-bottom: 5rem;
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
     }
   }
 

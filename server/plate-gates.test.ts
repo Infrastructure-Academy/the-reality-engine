@@ -43,6 +43,20 @@ describe("Home plate gates", () => {
     expect(names).not.toContain("Master Class");
   });
 
+  it("keeps the legacy hooks and does not invent later-mode routes", () => {
+    const byId = Object.fromEntries(PLATE_GATES.map((gate) => [gate.id, gate.hook]));
+    expect(byId["relay-spinner"]).toBe("Spin to discover");
+    expect(byId["dungeon-crawl"]).toBe("Begin your quest");
+    expect(byId["grey-matter"]).toBe("Test your brain");
+    expect(byId["flight-deck"]).toBe("Take the helm");
+    expect(byId["scholar"]).toBe("Shape your study");
+    expect(PLATE_EPISODES.map((episode) => episode.hook)).toEqual([
+      "Five live ways to play.",
+      "The career doors, still ahead.",
+      "Leadership, still ahead.",
+    ]);
+  });
+
   it("enters Episode 1 through the existing play routes", () => {
     const playable = PLATE_GATES.filter((gate) => gate.episode === 1);
     expect(playable.map((gate) => gate.href)).toEqual([
@@ -74,7 +88,12 @@ describe("Home plate gates", () => {
     expect(home).toContain("<GameModeGates />");
     expect(home).not.toContain("PipelineHotspots");
     expect(gates).toContain("ComingSoonGate");
+    expect(gates).toContain("episode-door-");
+    expect(gates).toContain("home-progress-strip");
     expect(gates).toContain("gate.href");
+    expect(gates).not.toContain("twinearth");
+    expect(gates).not.toContain("Manus");
+    expect(gates).not.toContain("MICE");
     expect(gates).not.toContain("Academic");
     expect(gates).not.toContain("Industry Champion");
     expect(gates).not.toContain("Master Class");
