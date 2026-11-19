@@ -3,6 +3,9 @@ export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 /** Public Quest door. GitHub Pages serves this after merge to main. */
 export const QUEST_PUBLIC_URL = "https://app.infrastructure-academy.com";
 
+/** Same GA4 property as the Academy site. Do not add a second measurement ID. */
+export const QUEST_GA_MEASUREMENT_ID = "G-2V0JTTFM97";
+
 // Generate login URL at runtime so redirect URI reflects the current origin.
 export const getLoginUrl = () => {
   const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;

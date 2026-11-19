@@ -1,5 +1,5 @@
 import { useT } from "@/contexts/LanguageContext";
-import { getPlayerBadge, getNextBadge, getAllEarnedBadges, type Badge } from "@shared/badges";
+import { BADGES, getPlayerBadge, getNextBadge, getAllEarnedBadges, type Badge } from "@shared/badges";
 
 interface BadgeChipProps {
   badge: Badge;
@@ -70,7 +70,6 @@ interface BadgeCollectionProps {
 /** Full badge collection display — shows earned and locked badges */
 export function BadgeCollection({ totalXp }: BadgeCollectionProps) {
   const earned = getAllEarnedBadges(totalXp);
-  const { BADGES } = require("@shared/badges");
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

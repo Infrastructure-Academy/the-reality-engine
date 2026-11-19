@@ -38,6 +38,21 @@ export function classicXpPerDiscovery(xpReward: number | null | undefined, inven
   return Math.floor(reward / Math.max(1, inventionCount));
 }
 
+/** Sum of the classic Explorer award already used on a relay, across the shared discovery map. */
+export function classicXpFromDiscoveries(
+  map: DiscoveryMap,
+  inventionCounts: Readonly<Record<number, number>>,
+): number {
+  let total = 0;
+  for (const [key, items] of Object.entries(map)) {
+    const relay = Number(key);
+    const inventions = inventionCounts[relay];
+    if (!inventions || !items?.length) continue;
+    total += items.length * classicXpPerDiscovery(undefined, inventions);
+  }
+  return total;
+}
+
 export function parseRelayQuery(search: string): number | null {
   const query = search.startsWith("?") ? search.slice(1) : search;
   const raw = new URLSearchParams(query).get("relay");

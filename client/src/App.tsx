@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BottomTabBar } from "./components/BottomTabBar";
@@ -10,7 +10,8 @@ import { GamepadIndicator } from "./components/GamepadIndicator";
 import { DiscoveryHints } from "./components/DiscoveryHints";
 import { NetworkBar } from "./components/NetworkBar";
 import { EyeOpenAnimation } from "./components/EyeOpenAnimation";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
+import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
 
 // ─── Eagerly loaded (critical path) ───
 import Home from "./pages/Home";
@@ -53,9 +54,30 @@ function PageLoader() {
   );
 }
 
+function QuestAnalytics() {
+  const [location] = useLocation();
+  const skipFirst = useRef(true);
+  useEffect(() => {
+    if (skipFirst.current) {
+      skipFirst.current = false;
+      return;
+    }
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    if (typeof gtag !== "function") return;
+    gtag("event", "page_view", {
+      page_path: location,
+      page_location: `${QUEST_PUBLIC_URL}${location}`,
+      send_to: QUEST_GA_MEASUREMENT_ID,
+    });
+  }, [location]);
+  return null;
+}
+
 function Router() {
   return (
-    <Suspense fallback={<PageLoader />}>
+    <>
+      <QuestAnalytics />
+      <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/explore"} component={ExplorerSelect} />
@@ -89,7 +111,8 @@ function Router() {
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>
-    </Suspense>
+      </Suspense>
+    </>
   );
 }
 

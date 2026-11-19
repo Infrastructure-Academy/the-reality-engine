@@ -188,6 +188,7 @@ export const EN: Record<string, string> = {
   "home.gates.chooseEpisode": "Choose an episode",
   "home.gates.listenFire": "Listen to Relay 1",
   "home.gates.enter": "Enter",
+  "home.pressPlay": "Press Play to engage NOW",
   "home.door.rank": "Explorer",
   "home.door.xp": "XP",
   "home.door.ofTwelve": "of 12 relays discovered",
