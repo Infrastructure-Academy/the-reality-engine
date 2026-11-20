@@ -288,18 +288,18 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         const { relayNumber, roomType, roomName, abilityCheck, checkResult, inventionName, inventionDescription, playerAbilities, roomsCleared, totalRooms } = input;
         const relay = [
-          "Fire — The Eternal Constant (pre-10,000 BCE)",
-          "Tree — The Living Foundation (10,000–5,000 BCE)",
-          "River — Cradles of Continuity (5,000–3,000 BCE)",
-          "Horse — The Velocity of Intent (3,000–1,000 BCE)",
-          "Roads — Arteries of Intent (1,000 BCE–500 CE)",
-          "Ships — The Master Weaver's Reach (500–1500 CE)",
-          "Loom — The Binary Birth (1500–1760 CE)",
-          "Rail — Standardizing the Continental Rhythm (1760–1870 CE)",
-          "Engine — The Internal Revolution (1870–1914 CE)",
-          "AAA Triad — The Triple Convergence (1914–1969 CE)",
-          "Orbit — The Programmable Frontier (1969–2026 CE)",
-          "Human Nodes — The Torus Metaphor (2026+ CE)",
+          "Fire — The First Platform (pre-10,000 BCE)",
+          "Tree — The Living Machine (10,000–5,000 BCE)",
+          "River — The Liquid Highway (5,000–3,000 BCE)",
+          "Horse — The Steering Revolution (3,000–1,000 BCE)",
+          "Roads — The Path That Connected Everything (1,000 BCE–500 CE)",
+          "Ships — The Vessel That Made the World One (500–1500 CE)",
+          "Loom — The Machine That Wove Civilisation (1500–1760 CE)",
+          "Rail — The Iron Horse That Standardised Time (1760–1870 CE)",
+          "Engine — The Machine That Multiplied Muscle (1870–1914 CE)",
+          "AAA Triad — Automobiles, Aviation & Airwaves (1914–1969 CE)",
+          "Orbit — Satellites, Space Stations & Planetary Infrastructure (1969–2026 CE)",
+          "Human Nodes — Robots, AI, Biosynthetics & Quantum (2026+ CE)",
         ][relayNumber - 1];
 
         let situationContext = `The explorer is in Room "${roomName}" (${roomType} type) of the ${relay} dungeon. Progress: ${roomsCleared}/${totalRooms} rooms cleared.`;

@@ -16,6 +16,10 @@ import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
 // ─── Eagerly loaded (critical path) ───
 import Home from "./pages/Home";
 import ExplorerRelay from "./pages/ExplorerRelay";
+// Spinner is on the critical path. A lazy chunk that imports this entry
+// can stay pending on iPhone Safari, so /explore/spinner never leaves
+// "LOADING MODULE...". Home's Play control opens this route.
+import RelaySpinner from "./pages/RelaySpinner";
 
 // ─── Lazy loaded (heavy pages, code-split) ───
 const FlightDeck = lazy(() => import("./pages/FlightDeck"));
@@ -34,7 +38,6 @@ const MediaGallery = lazy(() => import("./pages/MediaGallery"));
 const BridgeHub = lazy(() => import("./pages/BridgeHub"));
 const Resources = lazy(() => import("./pages/Resources"));
 const ExplorerSelect = lazy(() => import("./pages/ExplorerSelect"));
-const RelaySpinner = lazy(() => import("./pages/RelaySpinner"));
 const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
 const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));

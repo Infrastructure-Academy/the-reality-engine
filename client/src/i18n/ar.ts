@@ -55,7 +55,7 @@ export const AR: Record<string, string> = {
   "relay.engine": "المحرك",
   "relay.orbit": "المدار",
   "relay.humanNodes": "العقد البشرية",
-  "relay.theEternalConstant": "الثابت الأبدي",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12 تتابعاً حضارياً — 500 جيل من البنية التحتية",
   "web.natural": "طبيعي",
   "web.machine": "آلي",

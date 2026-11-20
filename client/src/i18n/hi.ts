@@ -55,7 +55,7 @@ export const HI: Record<string, string> = {
   "relay.engine": "इंजन",
   "relay.orbit": "कक्षा",
   "relay.humanNodes": "मानव नोड्स",
-  "relay.theEternalConstant": "शाश्वत स्थिरांक",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12 सभ्यता रिले — 500 पीढ़ियों की अवसंरचना",
   "web.natural": "प्राकृतिक",
   "web.machine": "यंत्र",

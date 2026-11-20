@@ -1039,40 +1039,28 @@ function GenerationsTimelineStrip() {
         <p className="text-[10px] text-muted-foreground/60 mt-1">{t("dearden.fromFire")}</p>
       </div>
 
-      {/* ── MOBILE: compact grid (unchanged) ── */}
+      {/* ── MOBILE: readable relay titles at iPhone width ── */}
       <div className="md:hidden">
-        <div className="relative">
-          <div className="absolute top-4 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-40" />
-          <div className="grid grid-cols-6 gap-y-6 gap-x-1">
-            {RELAYS.map((relay) => {
-              const collected = collection.has(relay.number - 1);
-              return (
-                <Link key={relay.number} href={`/explore?relay=${relay.number}`}>
-                  <div className="flex flex-col items-center gap-1 group cursor-pointer">
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all group-hover:scale-110 ${
-                        collected ? "ring-2 ring-offset-1 ring-offset-background" : ""
-                      }`}
-                      style={{
-                        borderColor: collected ? relay.color : `${relay.color}60`,
-                        background: collected ? `${relay.color}30` : `${relay.color}15`,
-                        boxShadow: collected
-                          ? `0 0 12px ${relay.color}60, 0 0 24px ${relay.color}30`
-                          : `0 0 8px ${relay.color}20`,
-                      }}
-                    >
-                      <span className={`text-sm ${collected ? "" : "grayscale opacity-60"}`}>{relay.emoji}</span>
-                    </div>
-                    <span className={`text-[8px] font-heading tracking-wider text-center leading-tight transition-colors ${
-                      collected ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
-                    }`}>
-                      {t(`relay.${relay.name.toLowerCase().replace(/ /g, '')}`) || relay.name}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+        <div className="mb-3 h-0.5 bg-gradient-to-r from-red-500 via-amber-500 via-blue-500 to-purple-500 opacity-60" />
+        <div className="grid grid-cols-2 gap-2">
+          {RELAYS.map((relay) => {
+            const collected = collection.has(relay.number - 1);
+            const name = t(`relay.${relay.name.toLowerCase().replace(/ /g, "")}`) || relay.name;
+            const subtitle = t(`relay.subtitle.${relay.number}`) || relay.subtitle;
+            return (
+              <Link key={relay.number} href={`/explore?relay=${relay.number}`} className="block h-full">
+                <div className={`flex min-h-11 items-center gap-2 rounded-lg border px-2 py-2 ${
+                  collected ? "border-amber-400/50 bg-amber-500/10" : "border-border/40 bg-card/20"
+                }`}>
+                  <span className={`text-xl leading-none ${collected ? "" : "grayscale opacity-70"}`} aria-hidden="true">{relay.emoji}</span>
+                  <span className="min-w-0 text-left">
+                    <span className="block text-xs font-heading tracking-wide text-foreground">{name}</span>
+                    <span className="block text-[11px] leading-snug text-muted-foreground">{subtitle}</span>
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

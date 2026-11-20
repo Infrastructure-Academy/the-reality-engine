@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -9,7 +9,7 @@ import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft, ChevronRight, Zap, Star, BookOpen,
-  ArrowLeft, Sparkles, MessageCircle, Shuffle
+  ArrowLeft, Sparkles, MessageCircle
 } from "lucide-react";
 import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
@@ -20,7 +20,8 @@ import { StreakIndicator } from "@/components/StreakIndicator";
 import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
-import { StorytellerControl } from "@/components/StorytellerControl";
+import { StoryPlayBar } from "@/components/StoryPlayBar";
+import { storyAudioUrl } from "@/lib/storyAudio";
 import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
 import { useStoryLocale, useStoryteller } from "@/hooks/useStoryteller";
@@ -69,7 +70,7 @@ function RelayHeader({
         <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-wide text-gold-gradient">
           Relay {relayNum}: {relayMeta.name}
         </h2>
-        <p className="text-sm text-muted-foreground">{subtitle || relayMeta.subtitle}</p>
+        <p className="text-sm text-muted-foreground" data-testid="relay-subtitle">{subtitle || relayMeta.subtitle}</p>
         <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
       </div>
       <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
@@ -272,11 +273,12 @@ function EraTimeline({ relayNum }: { relayNum: number }) {
 // ═══════════════════════════════════════════════════════════
 function LayoutClassic({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   return (
     <div className="space-y-6">
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
+      {storyPlayer}
       <NarrativeBlock relay={relay} />
       <MissionBlock relay={relay} />
       <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
@@ -293,11 +295,12 @@ function LayoutClassic({
 // ═══════════════════════════════════════════════════════════
 function LayoutSplitHorizon({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   return (
     <div className="space-y-6">
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
+      {storyPlayer}
 
       {/* Web type + era context bar */}
       <div className="flex items-center justify-between">
@@ -333,7 +336,7 @@ function LayoutSplitHorizon({
 // ═══════════════════════════════════════════════════════════
 function LayoutMissionBriefing({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   const t = useT();
   const briefing = relay?.labels?.briefing || t("explorer.missionBriefing");
@@ -353,6 +356,7 @@ function LayoutMissionBriefing({
               <h2 className="font-heading text-xl md:text-2xl font-bold tracking-wide text-gold-gradient">
                 {relayMeta.name}
               </h2>
+              <p className="text-sm text-muted-foreground" data-testid="relay-subtitle">{subtitle}</p>
               <p className="text-[10px] text-muted-foreground font-mono">{relayMeta.era}</p>
             </div>
           </div>
@@ -361,6 +365,7 @@ function LayoutMissionBriefing({
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
+      {storyPlayer}
 
       {/* Full-width mission banner (hero position) */}
       {relay?.missionObjective && (
@@ -416,13 +421,8 @@ interface LayoutProps {
   canGoPrev: boolean;
   canGoNext: boolean;
   navigate: (to: string) => void;
+  storyPlayer: ReactNode;
 }
-
-const LAYOUT_NAMES: Record<LayoutVariant, string> = {
-  1: "Classic Scroll",
-  2: "Split Horizon",
-  3: "Mission Briefing",
-};
 
 // ═══════════════════════════════════════════════════════════
 // MAIN COMPONENT
@@ -659,54 +659,44 @@ export default function ExplorerRelay() {
 
   if (!relayValid) return null;
 
+  const storyPlayer = authored ? (
+    <StoryPlayBar
+      audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
+      labels={authored.labels}
+      speech={storyteller}
+    />
+  ) : null;
+
   const layoutProps: LayoutProps = {
     relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-    xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
+    xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer,
   };
 
   return (
     <div ref={swipeRef} className="min-h-screen bg-background text-foreground bg-starfield relative mobile-content-pad">
       {/* Top Bar */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
-        <div className="container flex items-center justify-between h-12">
-          <div className="flex items-center gap-2">
+        <div className="container flex flex-wrap items-center justify-between gap-1 py-1 min-h-12">
+          <div className="flex items-center gap-1">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
+              <Button variant="ghost" size="sm" className="min-h-11 gap-1.5 text-muted-foreground">
                 <ArrowLeft className="w-4 h-4" /> Home
               </Button>
             </Link>
-            <span className="text-muted-foreground/40">|</span>
             <Link href="/explore/prologue">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
-                <BookOpen className="w-3 h-3" /> Story
+              <Button variant="ghost" size="sm" className="min-h-11 text-xs text-muted-foreground gap-1">
+                <BookOpen className="w-4 h-4" /> Story
               </Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <div className="hidden md:block">
               <SocialFollowButtons compact />
             </div>
             <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-red-600 text-white">{t("common.beta")}</span>
             <XpCounter value={totalXpEarned} compact color="gold" />
-            <span className="text-muted-foreground font-mono text-xs">|</span>
             <span className="text-muted-foreground font-mono text-xs">{completionPct}%</span>
-          </div>
-          <div className="flex items-center gap-1">
-            {authored && (
-              <StorytellerControl
-                labels={authored.labels}
-                phase={storyteller.phase}
-                available={storyteller.available}
-                onListen={storyteller.listen}
-                onPause={storyteller.pause}
-                onResume={storyteller.resume}
-                onStop={storyteller.stop}
-              />
-            )}
-            <span className="text-[9px] text-muted-foreground/50 font-mono hidden sm:inline" title="Layout variant">
-              <Shuffle className="w-3 h-3 inline mr-0.5" />{LAYOUT_NAMES[layoutVariant]}
-            </span>
-            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={() => setShowChat(!showChat)}>
+            <Button variant="ghost" size="sm" className="min-h-11 gap-1.5 text-muted-foreground" onClick={() => setShowChat(!showChat)}>
               <MessageCircle className="w-4 h-4" />
               <span className="hidden sm:inline">DAVID</span>
             </Button>

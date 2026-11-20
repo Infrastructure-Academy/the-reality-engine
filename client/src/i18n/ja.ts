@@ -67,7 +67,7 @@ export const JA: Record<string, string> = {
   "relay.orbit": "軌道",
   "relay.humanNodes": "人間ノード",
   "relay.fractalConnector": "フラクタルコネクター",
-  "relay.theEternalConstant": "永遠の定数",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12の文明リレー — 500世代のインフラ",
   "web.natural": "自然",
   "web.machine": "機械",

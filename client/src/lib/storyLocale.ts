@@ -17,6 +17,12 @@ export interface StoryChrome {
   story: string;
   listen: string;
   listenTo: string;
+  play: string;
+  playing: string;
+  starting: string;
+  playbackFailed: string;
+  recorded: string;
+  position: string;
   pause: string;
   pauseStory: string;
   resume: string;
@@ -38,6 +44,12 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     story: "The Story",
     listen: "Listen",
     listenTo: "Listen to the mission briefing, the story, and the quote",
+    play: "Play",
+    playing: "Playing",
+    starting: "Starting",
+    playbackFailed: "Playback did not start. Press Play again.",
+    recorded: "Recorded storyteller",
+    position: "Story position",
     pause: "Pause",
     pauseStory: "Pause the story",
     resume: "Resume",
@@ -57,6 +69,12 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     story: "故事",
     listen: "聆聽",
     listenTo: "聆聽任務簡報、故事和引文",
+    play: "播放",
+    playing: "播放中",
+    starting: "啟動中",
+    playbackFailed: "未能開始播放。請再按播放。",
+    recorded: "預錄講述",
+    position: "故事進度",
     pause: "暫停",
     pauseStory: "暫停講述",
     resume: "繼續",
@@ -76,6 +94,12 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     story: "故事",
     listen: "聆听",
     listenTo: "聆听任务简报、故事和引文",
+    play: "播放",
+    playing: "播放中",
+    starting: "启动中",
+    playbackFailed: "未能开始播放。请再按播放。",
+    recorded: "预录讲述",
+    position: "故事进度",
     pause: "暂停",
     pauseStory: "暂停讲述",
     resume: "继续",

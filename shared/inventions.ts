@@ -9,7 +9,7 @@ export interface Invention {
 }
 
 export const INVENTIONS: Record<number, Invention[]> = {
-  // ═══ RELAY 1: FIRE — The Eternal Constant ═══
+  // ═══ RELAY 1: FIRE — The First Platform ═══
   1: [
     { name: "Hearth", description: "The controlled domestic fire pit — humanity's first infrastructure. A fixed point around which shelters, cooking, and social gathering organised. The hearth turned nomads into settlers.", date: "~400,000 BCE", significance: "foundational" },
     { name: "Torch", description: "Portable fire — the first mobile technology. A burning branch carried into darkness extended human activity beyond daylight and enabled exploration of caves, forests, and the unknown.", date: "~400,000 BCE", significance: "foundational" },
@@ -22,7 +22,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Slash-and-Burn", description: "Controlled burning of forest to clear land for agriculture. This technique fed the Neolithic Revolution and enabled the first permanent farming settlements across every continent.", date: "~7000 BCE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 2: TREE — The Living Foundation ═══
+  // ═══ RELAY 2: TREE — The Living Machine ═══
   2: [
     { name: "Longhouse", description: "Timber-framed communal dwelling housing extended families. From Viking Scandinavia to Iroquois North America, the longhouse was civilisation's first scalable housing solution.", date: "~5000 BCE", significance: "foundational" },
     { name: "Palisade", description: "A defensive wall of sharpened wooden stakes. The palisade protected early settlements from raiders and predators — the first perimeter security infrastructure.", date: "~8000 BCE", significance: "foundational" },
@@ -35,7 +35,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Cork Harvest", description: "Stripping bark from Quercus suber (cork oak) without killing the tree — a renewable harvest repeated approximately 12 times over a 200-year lifespan. Cork became essential for waterproofing, insulation, and bottle sealing. The practice proves infrastructure need not destroy its source.", date: "~3000 BCE", significance: "transformative" },
   ],
 
-  // ═══ RELAY 3: RIVER — Cradles of Continuity ═══
+  // ═══ RELAY 3: RIVER — The Liquid Highway ═══
   3: [
     { name: "Irrigation Canal", description: "Engineered channels diverting river water to farmland. Irrigation canals in Mesopotamia and Egypt turned arid plains into breadbaskets, feeding the first cities.", date: "~6000 BCE", significance: "paradigm-shift" },
     { name: "Aqueduct", description: "Gravity-fed water channels spanning valleys and mountains. Roman aqueducts delivered millions of litres daily to cities — an engineering feat unmatched for 1,500 years.", date: "~312 BCE", significance: "revolutionary" },
@@ -47,7 +47,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Water Mill", description: "A wheel turned by flowing water to grind grain. The water mill was the ancient world's first automated machine — replacing human labour with natural energy.", date: "~300 BCE", significance: "revolutionary" },
   ],
 
-  // ═══ RELAY 4: HORSE — The Velocity of Intent ═══
+  // ═══ RELAY 4: HORSE — The Steering Revolution ═══
   4: [
     { name: "Chariot", description: "A two-wheeled vehicle drawn by horses at speed. The chariot was the first weapons platform, the first rapid transport, and the symbol of power from Egypt to China.", date: "~2000 BCE", significance: "revolutionary" },
     { name: "Saddle", description: "A shaped seat strapped to a horse's back. The saddle transformed riding from precarious balance to stable platform — enabling cavalry, long-distance travel, and mounted combat.", date: "~700 BCE", significance: "transformative" },
@@ -58,7 +58,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Horse Collar", description: "A padded collar distributing pulling force across the horse's shoulders instead of its throat. This simple invention tripled a horse's hauling capacity and revolutionised agriculture.", date: "~500 CE", significance: "transformative" },
   ],
 
-  // ═══ RELAY 5: ROADS — Arteries of Intent ═══
+  // ═══ RELAY 5: ROADS — The Path That Connected Everything ═══
   5: [
     { name: "Paved Road", description: "A prepared surface of stone, gravel, or brick for wheeled traffic. The Appian Way (312 BCE) set the standard — Roman roads connected an empire of 60 million people.", date: "~4000 BCE", significance: "paradigm-shift" },
     { name: "Milestone", description: "A stone marker indicating distance along a road. Roman milestones created the first standardised navigation system — every mile measured from the Golden Milestone in Rome.", date: "~250 BCE", significance: "foundational" },
@@ -70,7 +70,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Toll Gate", description: "A controlled access point where travellers paid for road use. Toll gates funded road maintenance and represented one of the earliest forms of infrastructure financing.", date: "~700 BCE", significance: "transformative" },
   ],
 
-  // ═══ RELAY 6: SHIPS — The Master Weaver's Reach ═══
+  // ═══ RELAY 6: SHIPS — The Vessel That Made the World One ═══
   6: [
     { name: "Keel", description: "A structural backbone running the length of a ship's hull. The keel gave vessels directional stability and strength — enabling larger ships and open-ocean voyages.", date: "~3000 BCE", significance: "revolutionary" },
     { name: "Lateen Sail", description: "A triangular sail allowing ships to sail closer to the wind. The lateen sail transformed maritime capability — Arab dhows and Mediterranean vessels could now navigate against prevailing winds.", date: "~200 CE", significance: "transformative" },
@@ -83,7 +83,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Anchor", description: "A heavy device lowered to the seabed to hold a vessel in position. The anchor turned any sheltered water into a temporary port — enabling trade, resupply, and exploration.", date: "~2000 BCE", significance: "foundational" },
   ],
 
-  // ═══ RELAY 7: LOOM — The Binary Birth ═══
+  // ═══ RELAY 7: LOOM — The Machine That Wove Civilisation ═══
   7: [
     { name: "Spinning Jenny", description: "James Hargreaves' multi-spindle spinning frame (1764). One worker could now operate eight spindles simultaneously — the machine that launched the Industrial Revolution.", date: "1764 CE", significance: "revolutionary" },
     { name: "Power Loom", description: "Edmund Cartwright's mechanised weaving machine (1785). The power loom moved textile production from cottages to factories — creating the factory system itself.", date: "1785 CE", significance: "paradigm-shift" },
@@ -94,7 +94,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Punch Card", description: "A stiff card with holes encoding data or instructions. From Jacquard looms to Hollerith census machines to early IBM computers — the punch card was computing's first medium.", date: "1725 CE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 8: RAIL — Standardizing the Continental Rhythm ═══
+  // ═══ RELAY 8: RAIL — The Iron Horse That Standardised Time ═══
   8: [
     { name: "Steam Locomotive", description: "George Stephenson's Rocket (1829) proved steam traction viable for passenger and freight rail. The locomotive shrank continents — London to Manchester in 2 hours instead of 2 days.", date: "1804 CE", significance: "paradigm-shift" },
     { name: "Standard Gauge", description: "The 4 ft 8½ in track width adopted as the global standard. Standardisation meant trains could run across networks without transhipment — interoperability as infrastructure principle.", date: "1846 CE", significance: "revolutionary" },
@@ -106,7 +106,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Telegraph", description: "Electrical signals transmitted along wires at the speed of light. The telegraph followed the railway — together they created the first real-time communication network spanning continents.", date: "1837 CE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 9: ENGINE — The Internal Revolution ═══
+  // ═══ RELAY 9: ENGINE — The Machine That Multiplied Muscle ═══
   9: [
     { name: "Assembly Line", description: "Henry Ford's moving assembly line (1913) reduced Model T build time from 12 hours to 93 minutes. Mass production made the automobile affordable — and redefined manufacturing forever.", date: "1913 CE", significance: "paradigm-shift" },
     { name: "Highway", description: "Purpose-built roads for high-speed motor vehicle traffic. From Germany's Autobahn to America's Interstate system — highways reshaped geography, commerce, and daily life.", date: "1924 CE", significance: "revolutionary" },
@@ -117,7 +117,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Automobile", description: "Karl Benz's Patent-Motorwagen (1886) — the first true automobile. The car gave individuals unprecedented mobility and reshaped cities, suburbs, and the very concept of distance.", date: "1886 CE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 10: AAA TRIAD — The Triple Convergence ═══
+  // ═══ RELAY 10: AAA TRIAD — Automobiles, Aviation & Airwaves ═══
   10: [
     { name: "Biplane", description: "The Wright Brothers' Flyer (1903) proved powered heavier-than-air flight possible. Within 40 years, aircraft would carry passengers across oceans and bombs across continents.", date: "1903 CE", significance: "paradigm-shift" },
     { name: "Jet Engine", description: "Frank Whittle and Hans von Ohain's turbojet (1939) doubled aircraft speed. Jet propulsion made intercontinental travel routine — shrinking the world to hours instead of weeks.", date: "1939 CE", significance: "revolutionary" },
@@ -130,7 +130,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Transistor", description: "Bell Labs' semiconductor switch (1947) — the building block of all modern electronics. The transistor replaced vacuum tubes and launched the digital age. Every chip contains billions.", date: "1947 CE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 11: ORBIT — The Programmable Frontier ═══
+  // ═══ RELAY 11: ORBIT — Satellites, Space Stations & Planetary Infrastructure ═══
   11: [
     { name: "GPS", description: "The Global Positioning System — 24+ satellites providing centimetre-accurate location data worldwide. GPS underpins navigation, logistics, agriculture, finance, and emergency services.", date: "1978 CE", significance: "paradigm-shift" },
     { name: "Internet Protocol", description: "TCP/IP — the universal language of networked computers. Vint Cerf and Bob Kahn's protocol suite (1974) enabled any computer to talk to any other — creating the Internet.", date: "1974 CE", significance: "paradigm-shift" },
@@ -142,7 +142,7 @@ export const INVENTIONS: Record<number, Invention[]> = {
     { name: "Smartphone", description: "A pocket computer combining phone, camera, GPS, internet, and thousands of applications. The smartphone (2007) put more computing power in your hand than Apollo 11 had on board.", date: "2007 CE", significance: "paradigm-shift" },
   ],
 
-  // ═══ RELAY 12: HUMAN NODES — The Torus Metaphor ═══
+  // ═══ RELAY 12: HUMAN NODES — Robots, AI, Biosynthetics & Quantum ═══
   12: [
     { name: "Neural Interface", description: "Direct communication pathways between the human brain and external devices. Neural interfaces promise to merge biological cognition with digital processing — the next frontier of human capability.", date: "2020+ CE", significance: "paradigm-shift" },
     { name: "Quantum Computer", description: "Computers exploiting quantum mechanical phenomena to solve problems impossible for classical machines. Quantum computing could crack encryption, simulate molecules, and optimise global logistics.", date: "2019 CE", significance: "paradigm-shift" },
