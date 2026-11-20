@@ -97,9 +97,9 @@ describe("exhibition portal first cut", () => {
       "River",
       "Horse",
       "Roads",
+      "Ships",
       "Loom",
       "Rail",
-      "Ships",
       "Engine",
       "AAA Triad",
       "Orbit",
@@ -109,9 +109,13 @@ describe("exhibition portal first cut", () => {
     expect(HALL_CARDS[0].href).toBe("/explore/1");
     expect(HALL_CARDS.slice(1).every((hall) => hall.href === null)).toBe(true);
     expect(HALL_CARDS.map((hall) => hall.id)).not.toContain("planet");
-    expect(HALL_CARDS[5].name).toBe("Loom");
-    expect(HALL_CARDS[6].name).toBe("Rail");
-    expect(HALL_CARDS[7].name).toBe("Ships");
+    expect(HALL_CARDS.slice(0, 12).map((hall) => hall.name)).toEqual(RELAYS.map((relay) => relay.name));
+    expect(HALL_CARDS.slice(4, 8).map((hall) => `${hall.number} ${hall.name} ${hall.plate} ${hall.when}`)).toEqual([
+      "5 Roads The Roman Network 300 BCE",
+      "6 Ships The Ocean Relay 1500 CE",
+      "7 Loom The Pattern Engine 1780 CE",
+      "8 Rail The Iron Horse 1830 CE",
+    ]);
   });
 
   it("keeps Human Nodes and the Fractal Connector as two stations, and the zero as substrate", () => {
@@ -155,6 +159,12 @@ describe("exhibition portal first cut", () => {
     expect(page).toContain("mobile-content-pad");
     expect(page).toContain("{RECEIVED_ZERO}");
     expect(model).toContain(RECEIVED_ZERO);
+    expect(RECEIVED_ZERO).toBe(
+      "The planet is the zero (0). Without it there would be no our reality or the contest. It is the substrate from which the 13 rise, in episodes 1–3, spiralling upward, a boundary-condition reset to explore.",
+    );
+    expect(RECEIVED_ZERO).not.toContain("gender vision");
+    expect(page).not.toContain("gender vision");
+    expect(model).not.toContain("gender vision");
     expect(page).toContain("harnessed discoveries");
     expect(page).toContain('href={hall.href}');
     expect(page).toContain("portal-episode-1");

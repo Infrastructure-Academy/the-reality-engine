@@ -18,7 +18,7 @@ export const PLATE_SHA256 = "e9f17f7338f73c3ac89c061120de6fd7ab68b66443e5184f2de
 
 /** Nigel’s placement, held as received. */
 export const RECEIVED_ZERO =
-  "The planet is the zero (0). Without it there would be no our reality or the contest. It is the substrate from which the 13 rise, in episodes 1–3, in the gender vision, spiralling upward, a boundary-condition reset to explore.";
+  "The planet is the zero (0). Without it there would be no our reality or the contest. It is the substrate from which the 13 rise, in episodes 1–3, spiralling upward, a boundary-condition reset to explore.";
 
 export const ZERO_IS_NOT_A_HALL = "The zero is not a fourteenth hall.";
 
@@ -76,16 +76,16 @@ export type HallCard = {
   href: typeof FIRE_HALL_PATH | null;
 };
 
-/** Exhibition twin, in the plate’s printed order. Fractal Connector stays the thirteenth card. */
+/** Exhibition twin, numbered with the locked relay line. Fractal Connector stays the thirteenth card. */
 export const HALL_CARDS: readonly HallCard[] = [
   { id: "fire", number: 1, name: "Fire", plate: "The First Infrastructure", when: "pre-10,000 BCE", href: FIRE_HALL_PATH },
   { id: "tree", number: 2, name: "Tree", plate: "The Living Structure", when: "pre-10,000 BCE", href: null },
   { id: "river", number: 3, name: "River", plate: "Hydraulic Civilisation", when: "8,000 BCE", href: null },
   { id: "horse", number: 4, name: "Horse", plate: "The Mobile Engine", when: "4,000 BCE", href: null },
   { id: "roads", number: 5, name: "Roads", plate: "The Roman Network", when: "300 BCE", href: null },
-  { id: "loom", number: 6, name: "Loom", plate: "The Pattern Engine", when: "1780 CE", href: null },
-  { id: "rail", number: 7, name: "Rail", plate: "The Iron Horse", when: "1830 CE", href: null },
-  { id: "ships", number: 8, name: "Ships", plate: "The Ocean Relay", when: "1500 CE", href: null },
+  { id: "ships", number: 6, name: "Ships", plate: "The Ocean Relay", when: "1500 CE", href: null },
+  { id: "loom", number: 7, name: "Loom", plate: "The Pattern Engine", when: "1780 CE", href: null },
+  { id: "rail", number: 8, name: "Rail", plate: "The Iron Horse", when: "1830 CE", href: null },
   { id: "engine", number: 9, name: "Engine", plate: "The Power Multiplier", when: "1880 CE", href: null },
   { id: "aaa-triad", number: 10, name: "AAA Triad", plate: "The Modern Network", when: "1980 CE", href: null },
   { id: "orbit", number: 11, name: "Orbit", plate: "The Third Dimension", when: "1960 CE", href: null },
