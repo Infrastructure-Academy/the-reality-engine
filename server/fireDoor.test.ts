@@ -14,11 +14,19 @@ import {
   fireDoorGesture,
   fireDoorOpened,
 } from "@/lib/fireDoorAudio";
+import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
+import {
+  FIRE_STORY_CUES,
+  FIRE_STORY_SPEECH_SECONDS,
+  FIRE_STORY_VOICE,
+  FIRE_STORY_WORDS,
+  fireCaptionAt,
+} from "@/lib/fireStoryCues";
 
 const source = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const sha256 = (path: string) => createHash("sha256").update(readFileSync(new URL(`../${path}`, import.meta.url))).digest("hex");
 
-const STORY_HASH = "d96598f919a50defe601f8996ff29372b4e5932ea8996b9668f5fe07f2172870";
+const STORY_HASH = "8edf3af7e66e227e4a7b2aa004312f7ae242829a871d576d4406fb3b9db9ee20";
 
 describe("fire door experience", () => {
   it("keeps the issued story recording and adds a voice for each of the nine cards", () => {
@@ -58,8 +66,8 @@ describe("fire door experience", () => {
     expect(preview).not.toMatch(/autoPlay|autoplay|\.play\(/);
     const relay = source("client/src/pages/ExplorerRelay.tsx");
     const stage = relay.slice(relay.indexOf('data-testid="fire-stage"'));
-    expect(stage.indexOf("<FirePreviewPlayer />")).toBeGreaterThanOrEqual(0);
-    expect(stage.indexOf("<FirePreviewPlayer />")).toBeLessThan(stage.indexOf("compact"));
+    expect(stage.indexOf("<FirePit")).toBeGreaterThanOrEqual(0);
+    expect(stage.indexOf("<FirePit")).toBeLessThan(stage.indexOf("compact"));
   });
 
   it("pauses the story for a card voice and keeps ambience under the voice", () => {
@@ -84,8 +92,29 @@ describe("fire door experience", () => {
     expect(bar).toContain("pauseForCard");
     expect(bar).toContain("resumeIfHeld");
     expect(bar).toContain('data-compact={compact ? "true" : "false"}');
-    expect(bar).toContain("min-h-11 min-w-11");
+    expect(bar).toContain("inline-flex h-8 min-w-8");
     expect(bar).not.toMatch(/autoPlay|autoplay/);
+  });
+
+  it("reads the existing Fire script in Sonia's voice, with captions and a full-width pit", () => {
+    const script = buildStoryScript(localizeRelayStory(1, "en")!).map((part) => part.text);
+    expect(FIRE_STORY_CUES.map((cue) => cue.text)).toEqual(script);
+    expect(FIRE_STORY_VOICE).toBe("en-GB-SoniaNeural");
+    expect(FIRE_STORY_WORDS).toBe(86);
+    const wordsPerMinute = FIRE_STORY_WORDS / (FIRE_STORY_SPEECH_SECONDS / 60);
+    expect(wordsPerMinute).toBeGreaterThanOrEqual(120);
+    expect(wordsPerMinute).toBeLessThanOrEqual(140);
+    expect(fireCaptionAt(0)).toBe("Mission Briefing");
+    expect(fireCaptionAt(21)).toContain("explosion of intent");
+    expect(fireCaptionAt(44)).toBe("Ferdinand Foch");
+    const pit = source("client/src/components/FirePit.tsx");
+    expect(pit).toContain("w-full");
+    expect(pit).toContain("requestAnimationFrame");
+    expect(pit).not.toContain("fire-preview");
+    const relay = source("client/src/pages/ExplorerRelay.tsx");
+    expect(relay).toContain("<FirePit");
+    expect(relay).not.toContain("FirePreviewPlayer");
+    expect(pit).toContain('data-testid="fire-caption"');
   });
 
   it("names this door's nine-set harnessed discoveries and leaves the home door alone", () => {

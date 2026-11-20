@@ -21,8 +21,9 @@ import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
-import { FirePreviewPlayer } from "@/components/FirePreviewPlayer";
+import { FirePit } from "@/components/FirePit";
 import { storyAudioUrl } from "@/lib/storyAudio";
+import { fireCaptionAt } from "@/lib/fireStoryCues";
 import { useFireDoor } from "@/hooks/useFireDoor";
 import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
@@ -669,6 +670,7 @@ export default function ExplorerRelay() {
 
   const fireDoor = relayValid && relayNum === 1;
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
+  const [storySeconds, setStorySeconds] = useState(0);
 
   if (!relayValid) return null;
 
@@ -763,7 +765,7 @@ export default function ExplorerRelay() {
           <>
             {fireDoor && (
               <div data-testid="fire-stage">
-                <FirePreviewPlayer />
+                <FirePit caption={fireCaptionAt(storySeconds)} />
                 {authored && (
                   <StoryPlayBar
                     ref={doorAudio.storyRef}
@@ -771,6 +773,7 @@ export default function ExplorerRelay() {
                     audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
                     labels={authored.labels}
                     speech={storyteller}
+                    onTime={setStorySeconds}
                   />
                 )}
                 <audio
