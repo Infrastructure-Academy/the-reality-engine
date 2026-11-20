@@ -18,8 +18,9 @@ interface StoryPlayBarProps {
   audioSrc: string | null;
   labels: StoryChrome;
   speech: SpeechControls;
-  /** Slim strip under the Fire preview. Other relays keep the full bar. */
+  /** Slim strip under the Fire pit. Other relays keep the full bar. */
   compact?: boolean;
+  onTime?: (seconds: number) => void;
 }
 
 export interface StoryPlayHandle {
@@ -36,12 +37,14 @@ export interface StoryPlayHandle {
  * Other relays wait for Play. The Fire door may call begin() when the door opens.
  */
 export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(function StoryPlayBar({
-  audioSrc, labels, speech, compact = false,
+  audioSrc, labels, speech, compact = false, onTime,
 }, ref) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const intent = useRef<"play" | "pause" | "stop">("stop");
   const holdForCard = useRef(false);
   const heldResume = useRef(false);
+  const onTimeRef = useRef(onTime);
+  onTimeRef.current = onTime;
   const stopSpeech = useRef(speech.stop);
   stopSpeech.current = speech.stop;
   const [phase, setPhase] = useState<BarPhase>("idle");
@@ -231,13 +234,14 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
     setCurrent(0);
     setPhase("idle");
     setNotice("");
+    onTimeRef.current?.(0);
   }
 
   const button = compact
-    ? "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 text-sm font-semibold disabled:cursor-not-allowed"
+    ? "inline-flex h-8 min-w-8 items-center justify-center rounded px-2 text-xs font-semibold disabled:cursor-not-allowed"
     : "inline-flex min-h-11 w-full items-center justify-center rounded-lg px-3 text-base font-semibold disabled:cursor-not-allowed";
-  const solid = `${button} bg-amber-400 text-black`;
-  const quiet = `${button} border-2 border-amber-300 bg-amber-950 text-amber-50`;
+  const solid = `${button} ${compact ? "border border-amber-200" : "border-2 border-amber-300"} bg-amber-400 text-black`;
+  const quiet = `${button} ${compact ? "border border-amber-300/70" : "border-2 border-amber-300"} bg-amber-950 text-amber-50`;
 
   return (
     <div
@@ -246,7 +250,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
       data-testid="story-play-bar"
       data-compact={compact ? "true" : "false"}
       className={compact
-        ? "relative mt-2 rounded-lg border border-amber-400/40 bg-[#1a1208]/90 px-2 py-1.5"
+        ? "relative mt-1 flex items-center gap-2 rounded-md border border-amber-400/30 bg-[#1a1208]/80 px-1.5 py-1"
         : "relative rounded-xl border border-amber-400/50 bg-[#1a1208] p-3"}
       onKeyDown={(event) => {
         if (event.key === "Escape") {
@@ -267,7 +271,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
           </span>
         </div>
       )}
-      <div className={compact ? "flex items-center gap-1.5" : "grid grid-cols-3 gap-2"}>
+      <div className={compact ? "flex shrink-0 items-center gap-1" : "grid grid-cols-3 gap-2"}>
         <button
           type="button"
           data-testid="story-play"
@@ -299,14 +303,14 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
           <span
             aria-live="polite"
             data-testid="story-status"
-            className="ml-auto font-mono text-[11px] tabular-nums text-amber-100"
+            className="font-mono text-[10px] tabular-nums text-amber-100/90"
           >
             {status ? `${status} ` : ""}{formatStoryTime(current)} / {formatStoryTime(duration)}
           </span>
         )}
       </div>
       {audioSrc && (
-        <div className={compact ? "mt-0.5" : "mt-2"}>
+        <div className={compact ? "min-w-0 flex-1" : "mt-2"}>
           {!compact && (
             <div className="flex items-center justify-between font-mono text-[11px] text-amber-100/80">
               <span>{formatStoryTime(current)}</span>
@@ -323,7 +327,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
             aria-label={labels.position}
             disabled={!duration}
             className={compact
-              ? "h-6 w-full accent-amber-400 disabled:opacity-40"
+              ? "h-4 w-full accent-amber-400 disabled:opacity-40"
               : "h-11 w-full accent-amber-400 disabled:opacity-40"}
             onChange={(event) => {
               const audio = audioRef.current;
@@ -365,11 +369,13 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
             intent.current = "stop";
             setCurrent(0);
             setPhase("idle");
+            onTimeRef.current?.(0);
           }}
           onTimeUpdate={() => {
             const audio = audioRef.current;
             if (!audio) return;
             setCurrent(audio.currentTime);
+            onTimeRef.current?.(audio.currentTime);
             // A discovery chime uses Web Audio and can drop Safari back to the
             // ambient session, which the silent switch mutes. Keep the story in playback.
             if (!audio.paused) declareStoryPlayback();
