@@ -21,6 +21,7 @@ import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
+import { FirePreviewPlayer } from "@/components/FirePreviewPlayer";
 import { storyAudioUrl } from "@/lib/storyAudio";
 import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
@@ -740,6 +741,7 @@ export default function ExplorerRelay() {
           />
         ) : (
           <>
+            {relayNum === 1 && <FirePreviewPlayer />}
             {/* Render the randomly selected layout */}
             {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
             {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
