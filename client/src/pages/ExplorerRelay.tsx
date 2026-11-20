@@ -23,6 +23,7 @@ import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePreviewPlayer } from "@/components/FirePreviewPlayer";
 import { storyAudioUrl } from "@/lib/storyAudio";
+import { useFireDoor } from "@/hooks/useFireDoor";
 import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
 import { useStoryLocale, useStoryteller } from "@/hooks/useStoryteller";
@@ -118,18 +119,23 @@ function MissionBlock({ relay }: { relay: any }) {
 }
 
 function DiscoveryGrid({
-  inventions, inventionData, discoveredItems, handleDiscover, xpPerItem, columns = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+  inventions, inventionData, discoveredItems, handleDiscover, xpPerItem, columns = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4",
+  livingFire = false, onCardVoice,
 }: {
   inventions: string[]; inventionData?: Invention[]; discoveredItems: Set<number>; handleDiscover: (idx: number) => void;
   xpPerItem: number; columns?: string;
+  livingFire?: boolean;
+  onCardVoice?: (idx: number) => void;
 }) {
   const t = useT();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   return (
     <div>
-      <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2">
+      <p data-testid="discover-label" className={`text-xs tracking-wider text-muted-foreground mb-3 flex items-center gap-2 ${livingFire ? "" : "uppercase"}`}>
         <Sparkles className="w-3.5 h-3.5 text-gold" />
-        {t("explore.tapDiscover")} — {inventions.length} {t("explore.inventions")}
+        {livingFire
+          ? t("explore.harnessedDiscoveries")
+          : `${t("explore.tapDiscover")} — ${inventions.length} ${t("explore.inventions")}`}
       </p>
       <div className={`grid ${columns} gap-3`}>
         {inventions.map((inv, idx) => {
@@ -147,6 +153,7 @@ function DiscoveryGrid({
               key={idx}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
+                onCardVoice?.(idx);
                 if (!isDiscovered) {
                   handleDiscover(idx);
                   setExpandedIdx(idx);
@@ -154,7 +161,7 @@ function DiscoveryGrid({
                   setExpandedIdx(isExpanded ? null : idx);
                 }
               }}
-              className={`relative p-3 rounded-lg border text-left transition-all duration-300 ${
+              className={`relative p-3 rounded-lg border text-left transition-all duration-300 ${livingFire ? "fire-card" : ""} ${
                 isDiscovered
                   ? "border-gold/40 bg-gold/10"
                   : "border-border/50 bg-card/30 hover:border-border"
@@ -274,7 +281,7 @@ function EraTimeline({ relayNum }: { relayNum: number }) {
 // ═══════════════════════════════════════════════════════════
 function LayoutClassic({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer, livingFire, onCardVoice,
 }: LayoutProps) {
   return (
     <div className="space-y-6">
@@ -282,7 +289,7 @@ function LayoutClassic({
       {storyPlayer}
       <NarrativeBlock relay={relay} />
       <MissionBlock relay={relay} />
-      <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
+      <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} livingFire={livingFire} onCardVoice={onCardVoice} />
       <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
       <RelayNavigator currentRelay={relayNum} />
     </div>
@@ -296,7 +303,7 @@ function LayoutClassic({
 // ═══════════════════════════════════════════════════════════
 function LayoutSplitHorizon({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer, livingFire, onCardVoice,
 }: LayoutProps) {
   return (
     <div className="space-y-6">
@@ -314,7 +321,7 @@ function LayoutSplitHorizon({
         {/* Left: Discovery Grid (hero position) */}
         <div className="space-y-4">
           <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
-            xpPerItem={xpPerItem} columns="grid-cols-2 sm:grid-cols-3" />
+            xpPerItem={xpPerItem} columns="grid-cols-2 sm:grid-cols-3" livingFire={livingFire} onCardVoice={onCardVoice} />
         </div>
 
         {/* Right: Narrative + Mission + Progress stacked */}
@@ -337,7 +344,7 @@ function LayoutSplitHorizon({
 // ═══════════════════════════════════════════════════════════
 function LayoutMissionBriefing({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer, livingFire, onCardVoice,
 }: LayoutProps) {
   const t = useT();
   const briefing = relay?.labels?.briefing || t("explorer.missionBriefing");
@@ -399,7 +406,7 @@ function LayoutMissionBriefing({
 
       {/* Discovery grid (wider) */}
       <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover}
-        xpPerItem={xpPerItem} columns="grid-cols-3 sm:grid-cols-4 md:grid-cols-5" />
+        xpPerItem={xpPerItem} columns="grid-cols-3 sm:grid-cols-4 md:grid-cols-5" livingFire={livingFire} onCardVoice={onCardVoice} />
 
       {/* Relay navigator */}
       <EraTimeline relayNum={relayNum} />
@@ -423,6 +430,8 @@ interface LayoutProps {
   canGoNext: boolean;
   navigate: (to: string) => void;
   storyPlayer: ReactNode;
+  livingFire?: boolean;
+  onCardVoice?: (idx: number) => void;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -595,7 +604,7 @@ export default function ExplorerRelay() {
       // DAVID voice narration for discovery
       const invName = inventionData[idx]?.name || `Invention ${idx + 1}`;
       const relName = relayMeta.name;
-      narrateDiscovery(invName, relName);
+      if (relayNum !== 1) narrateDiscovery(invName, relName);
 
       // Persist to DB if we have a profile
       if (profileId) {
@@ -658,9 +667,17 @@ export default function ExplorerRelay() {
   );
   useGamepad(handleGamepadButton);
 
+  const fireDoor = relayValid && relayNum === 1;
+  const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
+
   if (!relayValid) return null;
 
-  const storyPlayer = authored ? (
+  const playFireCard = (idx: number) => {
+    const name = inventionData[idx]?.name;
+    if (name) doorAudio.playCard(name);
+  };
+
+  const storyPlayer = authored && !fireDoor ? (
     <StoryPlayBar
       audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
       labels={authored.labels}
@@ -671,6 +688,8 @@ export default function ExplorerRelay() {
   const layoutProps: LayoutProps = {
     relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
     xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer,
+    livingFire: fireDoor,
+    onCardVoice: fireDoor ? playFireCard : undefined,
   };
 
   return (
@@ -732,6 +751,7 @@ export default function ExplorerRelay() {
             inventionsFound={discoveredItems.size}
             totalInventions={inventions.length}
             xpEarned={totalXpEarned}
+            discoveryNoun={fireDoor ? "harnessed discoveries" : undefined}
             timeSpent={Math.round((Date.now() - relayStartTime) / 1000)}
             onContinue={() => {
               setShowRelaySummary(false);
@@ -741,7 +761,34 @@ export default function ExplorerRelay() {
           />
         ) : (
           <>
-            {relayNum === 1 && <FirePreviewPlayer />}
+            {fireDoor && (
+              <div data-testid="fire-stage">
+                <FirePreviewPlayer />
+                {authored && (
+                  <StoryPlayBar
+                    ref={doorAudio.storyRef}
+                    compact
+                    audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
+                    labels={authored.labels}
+                    speech={storyteller}
+                  />
+                )}
+                <audio
+                  ref={doorAudio.ambienceRef}
+                  data-testid="fire-ambience"
+                  src={doorAudio.ambienceUrl}
+                  loop
+                  preload="auto"
+                />
+                <audio
+                  ref={doorAudio.cardRef}
+                  data-testid="fire-card-voice"
+                  preload="auto"
+                  onEnded={doorAudio.finishCard}
+                  onError={doorAudio.finishCard}
+                />
+              </div>
+            )}
             {/* Render the randomly selected layout */}
             {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
             {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}

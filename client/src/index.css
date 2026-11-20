@@ -308,6 +308,45 @@
     animation: heatBreathe 2.5s ease-in-out infinite;
   }
 
+  /* Living fire on the Fire door cards. Transform and opacity only, so a phone can keep nine of them smooth. */
+  .fire-card {
+    overflow: hidden;
+  }
+  .fire-card::before,
+  .fire-card::after {
+    content: "";
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    bottom: -30%;
+    height: 85%;
+    pointer-events: none;
+    border-radius: 50% 50% 0 0;
+  }
+  .fire-card::before {
+    background: radial-gradient(ellipse at 50% 100%, rgba(255, 150, 30, 0.55), rgba(180, 40, 0, 0.16) 42%, transparent 70%);
+    animation: fireFlicker 0.68s ease-in-out infinite;
+  }
+  .fire-card::after {
+    background:
+      radial-gradient(ellipse at 32% 100%, rgba(255, 220, 120, 0.45), transparent 46%),
+      radial-gradient(ellipse at 68% 100%, rgba(255, 80, 0, 0.4), transparent 48%);
+    animation: fireLick 0.91s ease-in-out infinite;
+  }
+  @keyframes fireFlicker {
+    0% { opacity: 0.45; transform: translate3d(0, 2%, 0) scale(1, 0.92); }
+    18% { opacity: 0.92; transform: translate3d(-2%, -6%, 0) scale(1.06, 1.08); }
+    37% { opacity: 0.38; transform: translate3d(2%, 0, 0) scale(0.94, 0.88); }
+    55% { opacity: 0.84; transform: translate3d(-1%, -4%, 0) scale(1.02, 1.12); }
+    74% { opacity: 0.5; transform: translate3d(3%, -1%, 0) scale(1.08, 0.9); }
+    100% { opacity: 0.7; transform: translate3d(0, -3%, 0) scale(0.98, 1.04); }
+  }
+  @keyframes fireLick {
+    0% { opacity: 0.3; transform: translate3d(0, 8%, 0) scaleX(0.9); }
+    40% { opacity: 0.75; transform: translate3d(-3%, -8%, 0) scaleX(1.08); }
+    100% { opacity: 0.42; transform: translate3d(3%, -2%, 0) scaleX(0.96); }
+  }
+
   @keyframes confettiFall {
     0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
     100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
