@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -23,6 +23,7 @@ import { XpCounter } from "@/components/XpCounter";
 import { StorytellerControl } from "@/components/StorytellerControl";
 import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
+import { recordedStorySrc } from "@/lib/recordedStory";
 import { useStoryLocale, useStoryteller } from "@/hooks/useStoryteller";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { RelayDilemmaCard } from "@/components/RelayDilemma";
@@ -272,11 +273,12 @@ function EraTimeline({ relayNum }: { relayNum: number }) {
 // ═══════════════════════════════════════════════════════════
 function LayoutClassic({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   return (
     <div className="space-y-6">
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
+      {storyPlayer}
       <NarrativeBlock relay={relay} />
       <MissionBlock relay={relay} />
       <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} />
@@ -293,11 +295,12 @@ function LayoutClassic({
 // ═══════════════════════════════════════════════════════════
 function LayoutSplitHorizon({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   return (
     <div className="space-y-6">
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
+      {storyPlayer}
 
       {/* Web type + era context bar */}
       <div className="flex items-center justify-between">
@@ -333,7 +336,7 @@ function LayoutSplitHorizon({
 // ═══════════════════════════════════════════════════════════
 function LayoutMissionBriefing({
   relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-  xpPerItem, completionPct, canGoPrev, canGoNext, navigate
+  xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer
 }: LayoutProps) {
   const t = useT();
   const briefing = relay?.labels?.briefing || t("explorer.missionBriefing");
@@ -361,6 +364,7 @@ function LayoutMissionBriefing({
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
+      {storyPlayer}
 
       {/* Full-width mission banner (hero position) */}
       {relay?.missionObjective && (
@@ -416,6 +420,7 @@ interface LayoutProps {
   canGoPrev: boolean;
   canGoNext: boolean;
   navigate: (to: string) => void;
+  storyPlayer: ReactNode;
 }
 
 const LAYOUT_NAMES: Record<LayoutVariant, string> = {
@@ -659,9 +664,22 @@ export default function ExplorerRelay() {
 
   if (!relayValid) return null;
 
+  const storyPlayer = authored ? (
+    <StorytellerControl
+      labels={authored.labels}
+      phase={storyteller.phase}
+      available={storyteller.available}
+      recordingSrc={recordedStorySrc(relayMeta.number, storyLocale)}
+      onListen={storyteller.listen}
+      onPause={storyteller.pause}
+      onResume={storyteller.resume}
+      onStop={storyteller.stop}
+    />
+  ) : null;
+
   const layoutProps: LayoutProps = {
     relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
-    xpPerItem, completionPct, canGoPrev, canGoNext, navigate,
+    xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer,
   };
 
   return (
@@ -692,17 +710,6 @@ export default function ExplorerRelay() {
             <span className="text-muted-foreground font-mono text-xs">{completionPct}%</span>
           </div>
           <div className="flex items-center gap-1">
-            {authored && (
-              <StorytellerControl
-                labels={authored.labels}
-                phase={storyteller.phase}
-                available={storyteller.available}
-                onListen={storyteller.listen}
-                onPause={storyteller.pause}
-                onResume={storyteller.resume}
-                onStop={storyteller.stop}
-              />
-            )}
             <span className="text-[9px] text-muted-foreground/50 font-mono hidden sm:inline" title="Layout variant">
               <Shuffle className="w-3 h-3 inline mr-0.5" />{LAYOUT_NAMES[layoutVariant]}
             </span>

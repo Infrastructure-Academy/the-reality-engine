@@ -1,6 +1,8 @@
 /**
- * Storyteller speech session.
+ * Storyteller speech session, used when a relay has no recorded track.
  * Speaks only after listen() — never from construction.
+ * The first utterance is spoken inside the tap. Speaking is reported only from onstart,
+ * so a browser that accepts the call and stays silent does not light Speaking first.
  * Pause holds the current sentence. Stop cancels and returns to the start.
  * A caller must dispose() on navigation so speech does not continue off the page.
  */
@@ -20,6 +22,7 @@ export interface StoryUtterance {
   rate: number;
   pitch: number;
   voice: VoiceLike | null;
+  onstart: (() => void) | null;
   onend: (() => void) | null;
   onerror: ((error: string) => void) | null;
 }
@@ -45,6 +48,7 @@ export class StorytellerEngine {
   phase: StoryPhase = "idle";
   index = 0;
   private generation = 0;
+  private intent: StoryPhase = "idle";
   private keepAlive: ReturnType<typeof setInterval> | null = null;
 
   constructor(
@@ -57,33 +61,32 @@ export class StorytellerEngine {
     const passages = this.readPassages();
     if (passages.length === 0) return;
     this.generation += 1;
-    const generation = this.generation;
     this.synth.cancel();
     this.index = 0;
-    this.setPhase("speaking");
-    queueMicrotask(() => {
-      if (generation !== this.generation) return;
-      if (this.phase !== "speaking") return;
-      this.speakIndex(0);
-    });
+    this.intent = "speaking";
+    // Stay idle until onstart. A queued speak that produces nothing must not say Speaking.
+    if (this.phase !== "idle") this.setPhase("idle");
+    this.speakIndex(0);
   }
 
   pause() {
-    if (this.phase !== "speaking") return;
+    if (this.intent !== "speaking") return;
     this.generation += 1;
+    this.intent = "paused";
     this.synth.cancel();
     this.clearKeepAlive();
     this.setPhase("paused");
   }
 
   resume() {
-    if (this.phase !== "paused") return;
-    this.setPhase("speaking");
+    if (this.intent !== "paused") return;
+    this.intent = "speaking";
     this.speakIndex(this.index);
   }
 
   stop() {
     this.generation += 1;
+    this.intent = "idle";
     this.synth.cancel();
     this.clearKeepAlive();
     this.index = 0;
@@ -102,8 +105,9 @@ export class StorytellerEngine {
 
   private speakIndex(index: number) {
     const passages = this.readPassages();
-    if (this.phase !== "speaking") return;
+    if (this.intent !== "speaking") return;
     if (index >= passages.length) {
+      this.intent = "idle";
       this.clearKeepAlive();
       this.index = 0;
       this.setPhase("idle");
@@ -120,15 +124,27 @@ export class StorytellerEngine {
       rate: prosody.rate,
       pitch: prosody.pitch,
       voice,
+      onstart: () => {
+        if (generation !== this.generation) return;
+        if (this.intent !== "speaking") return;
+        this.setPhase("speaking");
+      },
       onend: () => {
         if (generation !== this.generation) return;
-        if (this.phase !== "speaking") return;
+        if (this.intent !== "speaking") return;
         this.speakIndex(index + 1);
       },
       onerror: (error) => {
         if (generation !== this.generation) return;
         if (error === "interrupted" || error === "canceled" || error === "cancelled") return;
-        if (this.phase !== "speaking") return;
+        if (this.intent !== "speaking") return;
+        // A failure before any sound must not march through the script as if it were speaking.
+        if (this.phase !== "speaking") {
+          this.intent = "idle";
+          this.clearKeepAlive();
+          this.setPhase("idle");
+          return;
+        }
         this.speakIndex(index + 1);
       },
     };
@@ -177,9 +193,12 @@ export function browserStorySynth(): StorySynth | null {
         );
         if (match) spoken.voice = match;
       }
+      spoken.onstart = () => utterance.onstart?.();
       spoken.onend = () => utterance.onend?.();
       spoken.onerror = (event) => utterance.onerror?.(event.error);
       synth.speak(spoken);
+      // iOS leaves the synth paused after cancel(). resume() has to happen in this same tap.
+      synth.resume();
     },
   };
 }

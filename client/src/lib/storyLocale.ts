@@ -26,6 +26,11 @@ export interface StoryChrome {
   speaking: string;
   paused: string;
   stopped: string;
+  ready: string;
+  starting: string;
+  couldNotStart: string;
+  couldNotStartHelp: string;
+  position: string;
   unavailable: string;
   relayOf: string;
 }
@@ -36,8 +41,8 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     briefing: "Mission Briefing",
     objective: "Mission Objective",
     story: "The Story",
-    listen: "Listen",
-    listenTo: "Listen to the mission briefing, the story, and the quote",
+    listen: "Play",
+    listenTo: "Play the mission briefing, the story, and the quote",
     pause: "Pause",
     pauseStory: "Pause the story",
     resume: "Resume",
@@ -47,6 +52,11 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     speaking: "Speaking",
     paused: "Paused",
     stopped: "Stopped",
+    ready: "Ready",
+    starting: "Starting",
+    couldNotStart: "No sound yet",
+    couldNotStartHelp: "Sound did not start. Turn the volume up and press Play again.",
+    position: "Story position",
     unavailable: "Speech is not available in this browser",
     relayOf: "Relay {n} of 12",
   },
@@ -55,8 +65,8 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     briefing: "任務簡報",
     objective: "任務目標",
     story: "故事",
-    listen: "聆聽",
-    listenTo: "聆聽任務簡報、故事和引文",
+    listen: "播放",
+    listenTo: "播放任務簡報、故事和引文",
     pause: "暫停",
     pauseStory: "暫停講述",
     resume: "繼續",
@@ -66,6 +76,11 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     speaking: "正在講述",
     paused: "已暫停",
     stopped: "已停止",
+    ready: "就緒",
+    starting: "開始中",
+    couldNotStart: "尚未出聲",
+    couldNotStartHelp: "聲音沒有開始。請調高音量，再按播放。",
+    position: "故事進度",
     unavailable: "此瀏覽器不提供語音",
     relayOf: "第 {n} 程，共 12 程",
   },
@@ -74,8 +89,8 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     briefing: "任务简报",
     objective: "任务目标",
     story: "故事",
-    listen: "聆听",
-    listenTo: "聆听任务简报、故事和引文",
+    listen: "播放",
+    listenTo: "播放任务简报、故事和引文",
     pause: "暂停",
     pauseStory: "暂停讲述",
     resume: "继续",
@@ -85,6 +100,11 @@ const CHROME: Record<StoryLocale, StoryChrome> = {
     speaking: "正在讲述",
     paused: "已暂停",
     stopped: "已停止",
+    ready: "就绪",
+    starting: "开始中",
+    couldNotStart: "尚未出声",
+    couldNotStartHelp: "声音没有开始。请调高音量，再按播放。",
+    position: "故事进度",
     unavailable: "此浏览器不提供语音",
     relayOf: "第 {n} 程，共 12 程",
   },
