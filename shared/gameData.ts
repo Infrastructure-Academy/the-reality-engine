@@ -1,17 +1,17 @@
 // ─── 12 Civilisational Relays ───
 export const RELAYS = [
-  { number: 1, name: "Fire", subtitle: "The Eternal Constant", emoji: "🔥", era: "pre-10,000 BCE", webType: "Natural", color: "#ef4444" },
-  { number: 2, name: "Tree", subtitle: "The Living Foundation", emoji: "🌳", era: "10,000–5,000 BCE", webType: "Natural", color: "#22c55e" },
-  { number: 3, name: "River", subtitle: "Cradles of Continuity", emoji: "🌊", era: "5,000–3,000 BCE", webType: "Natural", color: "#3b82f6" },
-  { number: 4, name: "Horse", subtitle: "The Velocity of Intent", emoji: "🐎", era: "3,000–1,000 BCE", webType: "Machine", color: "#d97706" },
-  { number: 5, name: "Roads", subtitle: "Arteries of Intent", emoji: "🛤️", era: "1,000 BCE–500 CE", webType: "Machine", color: "#a16207" },
-  { number: 6, name: "Ships", subtitle: "The Master Weaver's Reach", emoji: "⛵", era: "500–1500 CE", webType: "Machine", color: "#0891b2" },
-  { number: 7, name: "Loom", subtitle: "The Binary Birth", emoji: "🧶", era: "1500–1760 CE", webType: "Digital", color: "#9333ea" },
-  { number: 8, name: "Rail", subtitle: "Standardizing the Continental Rhythm", emoji: "🚂", era: "1760–1870 CE", webType: "Machine", color: "#64748b" },
-  { number: 9, name: "Engine", subtitle: "The Internal Revolution", emoji: "⚙️", era: "1870–1914 CE", webType: "Machine", color: "#b45309" },
-  { number: 10, name: "AAA Triad", subtitle: "The Triple Convergence", emoji: "✈️", era: "1914–1969 CE", webType: "Digital", color: "#0284c7" },
-  { number: 11, name: "Orbit", subtitle: "The Programmable Frontier", emoji: "🛰️", era: "1969–2026 CE", webType: "Digital", color: "#6366f1" },
-  { number: 12, name: "Human Nodes", subtitle: "The Torus Metaphor", emoji: "🧠", era: "2026+ CE", webType: "Consciousness", color: "#a855f7" },
+  { number: 1, name: "Fire", subtitle: "The First Platform", emoji: "🔥", era: "pre-10,000 BCE", webType: "Natural", color: "#ef4444" },
+  { number: 2, name: "Tree", subtitle: "The Living Machine", emoji: "🌳", era: "10,000–5,000 BCE", webType: "Natural", color: "#22c55e" },
+  { number: 3, name: "River", subtitle: "The Liquid Highway", emoji: "🌊", era: "5,000–3,000 BCE", webType: "Natural", color: "#3b82f6" },
+  { number: 4, name: "Horse", subtitle: "The Steering Revolution", emoji: "🐎", era: "3,000–1,000 BCE", webType: "Machine", color: "#d97706" },
+  { number: 5, name: "Roads", subtitle: "The Path That Connected Everything", emoji: "🛤️", era: "1,000 BCE–500 CE", webType: "Machine", color: "#a16207" },
+  { number: 6, name: "Ships", subtitle: "The Vessel That Made the World One", emoji: "⛵", era: "500–1500 CE", webType: "Machine", color: "#0891b2" },
+  { number: 7, name: "Loom", subtitle: "The Machine That Wove Civilisation", emoji: "🧶", era: "1500–1760 CE", webType: "Digital", color: "#9333ea" },
+  { number: 8, name: "Rail", subtitle: "The Iron Horse That Standardised Time", emoji: "🚂", era: "1760–1870 CE", webType: "Machine", color: "#64748b" },
+  { number: 9, name: "Engine", subtitle: "The Machine That Multiplied Muscle", emoji: "⚙️", era: "1870–1914 CE", webType: "Machine", color: "#b45309" },
+  { number: 10, name: "AAA Triad", subtitle: "Automobiles, Aviation & Airwaves", emoji: "✈️", era: "1914–1969 CE", webType: "Digital", color: "#0284c7" },
+  { number: 11, name: "Orbit", subtitle: "Satellites, Space Stations & Planetary Infrastructure", emoji: "🛰️", era: "1969–2026 CE", webType: "Digital", color: "#6366f1" },
+  { number: 12, name: "Human Nodes", subtitle: "Robots, AI, Biosynthetics & Quantum", emoji: "🧠", era: "2026+ CE", webType: "Consciousness", color: "#a855f7" },
 ] as const;
 
 // ─── 5 Great Webs ───

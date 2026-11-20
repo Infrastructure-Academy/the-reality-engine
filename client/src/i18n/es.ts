@@ -65,7 +65,7 @@ export const ES: Record<string, string> = {
   "relay.engine": "Motor",
   "relay.orbit": "Órbita",
   "relay.humanNodes": "Nodos humanos",
-  "relay.theEternalConstant": "La constante eterna",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12 relevos civilizacionales — 500 generaciones de infraestructura",
   "web.natural": "Natural",
   "web.machine": "Máquina",

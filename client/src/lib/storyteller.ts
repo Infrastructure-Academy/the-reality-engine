@@ -20,6 +20,7 @@ export interface StoryUtterance {
   rate: number;
   pitch: number;
   voice: VoiceLike | null;
+  onstart: (() => void) | null;
   onend: (() => void) | null;
   onerror: ((error: string) => void) | null;
 }
@@ -56,29 +57,26 @@ export class StorytellerEngine {
   listen() {
     const passages = this.readPassages();
     if (passages.length === 0) return;
-    this.generation += 1;
-    const generation = this.generation;
-    this.synth.cancel();
+    // iOS drops speech when cancel() and speak() happen in the same tap.
+    // From idle the queue is already empty, so the first speak stays in the gesture.
+    if (this.phase !== "idle") {
+      this.generation += 1;
+      this.synth.cancel();
+      this.clearKeepAlive();
+    }
     this.index = 0;
-    this.setPhase("speaking");
-    queueMicrotask(() => {
-      if (generation !== this.generation) return;
-      if (this.phase !== "speaking") return;
-      this.speakIndex(0);
-    });
+    this.speakIndex(0);
   }
 
   pause() {
-    if (this.phase !== "speaking") return;
     this.generation += 1;
     this.synth.cancel();
     this.clearKeepAlive();
-    this.setPhase("paused");
+    if (this.phase === "speaking") this.setPhase("paused");
   }
 
   resume() {
     if (this.phase !== "paused") return;
-    this.setPhase("speaking");
     this.speakIndex(this.index);
   }
 
@@ -102,7 +100,6 @@ export class StorytellerEngine {
 
   private speakIndex(index: number) {
     const passages = this.readPassages();
-    if (this.phase !== "speaking") return;
     if (index >= passages.length) {
       this.clearKeepAlive();
       this.index = 0;
@@ -120,6 +117,13 @@ export class StorytellerEngine {
       rate: prosody.rate,
       pitch: prosody.pitch,
       voice,
+      // Speaking is lit only after the browser accepts the utterance.
+      // Setting it on the tap made iPhone show SPEAKING with no sound.
+      onstart: () => {
+        if (generation !== this.generation) return;
+        this.setPhase("speaking");
+        this.ensureKeepAlive();
+      },
       onend: () => {
         if (generation !== this.generation) return;
         if (this.phase !== "speaking") return;
@@ -128,11 +132,14 @@ export class StorytellerEngine {
       onerror: (error) => {
         if (generation !== this.generation) return;
         if (error === "interrupted" || error === "canceled" || error === "cancelled") return;
-        if (this.phase !== "speaking") return;
+        if (this.phase !== "speaking") {
+          this.clearKeepAlive();
+          this.setPhase("idle");
+          return;
+        }
         this.speakIndex(index + 1);
       },
     };
-    this.ensureKeepAlive();
     this.synth.speak(utterance);
   }
 
@@ -167,19 +174,33 @@ export function browserStorySynth(): StorySynth | null {
     getVoices: () => synth.getVoices(),
     speak: (utterance) => {
       const spoken = new SpeechSynthesisUtterance(utterance.text);
-      spoken.lang = utterance.lang;
-      spoken.rate = utterance.rate;
-      spoken.pitch = utterance.pitch;
-      spoken.volume = 1;
+      const voices = synth.getVoices();
+      let lang = utterance.lang;
       if (utterance.voice) {
-        const match = synth.getVoices().find((voice) =>
+        const match = voices.find((voice) =>
           voice.name === utterance.voice?.name && voice.lang === utterance.voice?.lang
         );
         if (match) spoken.voice = match;
       }
+      // iOS stays silent if lang is en-GB and that voice was never installed.
+      if (!spoken.voice && lang.toLowerCase().startsWith("en-gb") && voices.length > 0) {
+        const hasBritish = voices.some((voice) => voice.lang.toLowerCase().startsWith("en-gb"));
+        if (!hasBritish) {
+          const english = voices.find((voice) => voice.lang.toLowerCase().startsWith("en"));
+          if (english) lang = english.lang;
+        }
+      }
+      spoken.lang = lang;
+      spoken.rate = utterance.rate;
+      spoken.pitch = utterance.pitch;
+      spoken.volume = 1;
+      spoken.onstart = () => utterance.onstart?.();
       spoken.onend = () => utterance.onend?.();
       spoken.onerror = (event) => utterance.onerror?.(event.error);
       synth.speak(spoken);
+      // iOS often leaves the utterance paused, with speaking still true.
+      if (synth.paused) synth.resume();
+      synth.resume();
     },
   };
 }

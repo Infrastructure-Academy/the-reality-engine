@@ -65,7 +65,7 @@ export const VI: Record<string, string> = {
   "relay.engine": "Động cơ",
   "relay.orbit": "Quỹ đạo",
   "relay.humanNodes": "Nút nhân loại",
-  "relay.theEternalConstant": "Hằng số vĩnh cửu",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12 tiếp sức văn minh — 500 thế hệ hạ tầng",
   "web.natural": "Tự nhiên",
   "web.machine": "Máy móc",

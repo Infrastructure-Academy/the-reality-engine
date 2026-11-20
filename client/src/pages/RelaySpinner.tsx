@@ -87,7 +87,7 @@ function SpinningReel({ targetIndex, spinning, delay }: { targetIndex: number; s
   const relay = RELAYS[displayIndex];
   return (
     <motion.div
-      className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 transition-all"
+      className="w-[5.4rem] h-28 sm:w-24 sm:h-28 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 px-1 transition-all"
       style={{
         borderColor: spinning ? "#ffffff30" : `${relay.color}60`,
         backgroundColor: spinning ? "#ffffff08" : `${relay.color}10`,
@@ -96,7 +96,8 @@ function SpinningReel({ targetIndex, spinning, delay }: { targetIndex: number; s
       transition={spinning ? { repeat: Infinity, duration: 0.15 } : {}}
     >
       <span className="text-2xl sm:text-3xl">{relay.emoji}</span>
-      <span className="text-[9px] font-mono text-muted-foreground leading-none">{relay.name}</span>
+      <span className="text-[9px] font-mono text-foreground/80 leading-none">{relay.name}</span>
+      <span className="text-[8px] text-center leading-tight text-muted-foreground line-clamp-3">{relay.subtitle}</span>
     </motion.div>
   );
 }
@@ -262,23 +263,21 @@ export default function RelaySpinner() {
 
       {/* Header — compact */}
       <header className="sticky top-0 z-20 border-b border-border/50 backdrop-blur-md bg-background/80">
-        <div className="container flex items-center justify-between h-11">
-          <div className="flex items-center gap-1.5">
+        <div className="container flex flex-wrap items-center justify-between gap-1 py-1">
+          <div className="flex items-center gap-1">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground h-8 px-2">
-                <ArrowLeft className="w-3.5 h-3.5" /> Home
+              <Button variant="ghost" size="sm" className="min-h-11 gap-1 text-muted-foreground px-2">
+                <ArrowLeft className="w-4 h-4" /> Home
               </Button>
             </Link>
-            <span className="text-muted-foreground/40">|</span>
             <Link href="/explore">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground h-8 px-2">
+              <Button variant="ghost" size="sm" className="min-h-11 text-xs text-muted-foreground px-2">
                 Modes
               </Button>
             </Link>
-            <span className="text-muted-foreground/40">|</span>
             <Link href="/explore/prologue">
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1 h-8 px-2">
-                <BookOpen className="w-3 h-3" /> Story
+              <Button variant="ghost" size="sm" className="min-h-11 text-xs text-muted-foreground gap-1 px-2">
+                <BookOpen className="w-4 h-4" /> Story
               </Button>
             </Link>
           </div>
@@ -286,7 +285,9 @@ export default function RelaySpinner() {
             <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase bg-blue-600 text-white">{t("spinner.badge")}</span>
             <XpCounter value={totalXp} compact color="gold" />
           </div>
-          <SoundToggle compact color="gold" />
+          <div className="[&_button]:min-h-11 [&_button]:min-w-11 [&_button]:px-3">
+            <SoundToggle color="gold" />
+          </div>
         </div>
       </header>
 
@@ -338,7 +339,8 @@ export default function RelaySpinner() {
           <Button
             onClick={handleSpin}
             disabled={spinning || spinsRemaining <= 0}
-            className="w-full h-12 text-base font-heading tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-40"
+            className="w-full min-h-11 h-12 text-base font-heading tracking-wider bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white disabled:opacity-40"
+            data-testid="spinner-lever"
             size="lg"
           >
             {spinning ? (
@@ -401,7 +403,8 @@ export default function RelaySpinner() {
                       ? "border-gold/40 bg-gold/10"
                       : "border-border/30 bg-card/20 opacity-40"
                   }`}
-                  title={collected ? `${relay.name} — Collected!` : `${relay.name} — Need Jackpot`}
+                  title={`${relay.name} — ${relay.subtitle}`}
+                  aria-label={`${relay.name}. ${relay.subtitle}`}
                 >
                   <span className="text-base">{relay.emoji}</span>
                   <span className="text-[7px] font-mono text-muted-foreground leading-none">{relay.name}</span>

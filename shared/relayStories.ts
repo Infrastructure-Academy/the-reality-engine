@@ -30,9 +30,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 443000,
     quoteAuthor: "Ferdinand Foch",
     subtitle: {
-      en: "The Eternal Constant",
-      "zh-HK": "永恆常數",
-      "zh-CN": "永恒常数",
+      en: "The First Platform",
+      "zh-HK": "第一個平台",
+      "zh-CN": "第一个平台",
     },
     quote: {
       en: "The most powerful weapon on earth is the human soul on fire.",
@@ -55,9 +55,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 520000,
     quoteAuthor: "Ralph Waldo Emerson",
     subtitle: {
-      en: "The Living Foundation",
-      "zh-HK": "活的基礎",
-      "zh-CN": "活的基础",
+      en: "The Living Machine",
+      "zh-HK": "活的機器",
+      "zh-CN": "活的机器",
     },
     quote: {
       en: "The creation of a thousand forests is in one acorn.",
@@ -80,9 +80,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 610000,
     quoteAuthor: "Paolo Lugari",
     subtitle: {
-      en: "Cradles of Continuity",
-      "zh-HK": "連續性的搖籃",
-      "zh-CN": "连续性的摇篮",
+      en: "The Liquid Highway",
+      "zh-HK": "液態公路",
+      "zh-CN": "液态公路",
     },
     quote: {
       en: "Civilisation has been a permanent dialogue between human beings and water.",
@@ -105,9 +105,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 720000,
     quoteAuthor: "Spanish Proverb",
     subtitle: {
-      en: "The Velocity of Intent",
-      "zh-HK": "意圖的速度",
-      "zh-CN": "意图的速度",
+      en: "The Steering Revolution",
+      "zh-HK": "轉向革命",
+      "zh-CN": "转向革命",
     },
     quote: {
       en: "A horse is worth more than riches.",
@@ -130,9 +130,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 850000,
     quoteAuthor: "Ancient Proverb",
     subtitle: {
-      en: "Arteries of Intent",
-      "zh-HK": "意圖的動脈",
-      "zh-CN": "意图的动脉",
+      en: "The Path That Connected Everything",
+      "zh-HK": "連接一切的道路",
+      "zh-CN": "连接一切的道路",
     },
     quote: {
       en: "All roads lead to Rome.",
@@ -155,9 +155,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 980000,
     quoteAuthor: "George Herbert",
     subtitle: {
-      en: "The Master Weaver's Reach",
-      "zh-HK": "大師織工的觸及",
-      "zh-CN": "大师织工的触及",
+      en: "The Vessel That Made the World One",
+      "zh-HK": "使世界合而為一的船隻",
+      "zh-CN": "使世界合而为一的船只",
     },
     quote: {
       en: "He that would learn to pray, let him go to sea.",
@@ -180,9 +180,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 1100000,
     quoteAuthor: "Lewis Mumford",
     subtitle: {
-      en: "The Binary Birth",
-      "zh-HK": "二進制的誕生",
-      "zh-CN": "二进制的诞生",
+      en: "The Machine That Wove Civilisation",
+      "zh-HK": "織就文明的機器",
+      "zh-CN": "织就文明的机器",
     },
     quote: {
       en: "The loom is the mother of all machines.",
@@ -205,9 +205,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 1300000,
     quoteAuthor: "The Quarterly Review, 1825",
     subtitle: {
-      en: "Standardizing the Continental Rhythm",
-      "zh-HK": "大陸節律的標準化",
-      "zh-CN": "大陆节律的标准化",
+      en: "The Iron Horse That Standardised Time",
+      "zh-HK": "把時間標準化的鐵馬",
+      "zh-CN": "把时间标准化的铁马",
     },
     quote: {
       en: "What can be more palpably absurd than the prospect held out of locomotives travelling twice as fast as stagecoaches?",
@@ -230,9 +230,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 1500000,
     quoteAuthor: "Lewis Mumford",
     subtitle: {
-      en: "The Internal Revolution",
-      "zh-HK": "內部革命",
-      "zh-CN": "内部革命",
+      en: "The Machine That Multiplied Muscle",
+      "zh-HK": "倍增肌力的機器",
+      "zh-CN": "倍增肌力的机器",
     },
     quote: {
       en: "The automobile has not merely taken over the street, it has dissolved the living tissue of the city.",
@@ -255,9 +255,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 1700000,
     quoteAuthor: "Orville Wright",
     subtitle: {
-      en: "The Triple Convergence",
-      "zh-HK": "三重融合",
-      "zh-CN": "三重融合",
+      en: "Automobiles, Aviation & Airwaves",
+      "zh-HK": "汽車、航空與電波",
+      "zh-CN": "汽车、航空与电波",
     },
     quote: {
       en: "The airplane stays up because it doesn't have the time to fall.",
@@ -280,9 +280,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 1900000,
     quoteAuthor: "Konstantin Tsiolkovsky",
     subtitle: {
-      en: "The Programmable Frontier",
-      "zh-HK": "可編程前沿",
-      "zh-CN": "可编程前沿",
+      en: "Satellites, Space Stations & Planetary Infrastructure",
+      "zh-HK": "衛星、太空站與行星基建",
+      "zh-CN": "卫星、太空站与行星基建",
     },
     quote: {
       en: "The Earth is the cradle of humanity, but mankind cannot stay in the cradle forever.",
@@ -305,9 +305,9 @@ export const RELAY_STORIES: readonly RelayStory[] = [
     xpReward: 2400000,
     quoteAuthor: "Nigel T. Dearden",
     subtitle: {
-      en: "The Torus Metaphor",
-      "zh-HK": "環面隱喻",
-      "zh-CN": "环面隐喻",
+      en: "Robots, AI, Biosynthetics & Quantum",
+      "zh-HK": "機械人、人工智能、生物合成與量子",
+      "zh-CN": "机器人、人工智能、生物合成与量子",
     },
     quote: {
       en: "We are the infrastructure.",

@@ -67,7 +67,7 @@ export const KO: Record<string, string> = {
   "relay.orbit": "궤도",
   "relay.humanNodes": "인간 노드",
   "relay.fractalConnector": "프랙탈 커넥터",
-  "relay.theEternalConstant": "영원한 상수",
+  "relay.theEternalConstant": "The First Platform",
   "relay.12civilisational": "12개 문명 릴레이 — 500세대의 인프라",
   "web.natural": "자연",
   "web.machine": "기계",

@@ -1,5 +1,9 @@
+import { readFileSync, existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { getRelayStory } from "@shared/relayStories";
+import { RELAYS } from "@shared/gameData";
+import { getRelayStory, RELAY_STORIES } from "@shared/relayStories";
+import { EN } from "@/i18n/en";
+import { FIRE_STORY_AUDIO_URL, formatStoryTime, storyAudioUrl } from "@/lib/storyAudio";
 import {
   buildStoryScript,
   chineseVariant,
@@ -9,6 +13,23 @@ import {
   resolveStoryLocale,
 } from "@/lib/storyLocale";
 import { StorytellerEngine, setStorytellerOwnsSpeech, storytellerOwnsSpeech, type StorySynth, type StoryUtterance } from "@/lib/storyteller";
+
+const REMARKABLE_TITLES = [
+  "The First Platform",
+  "The Living Machine",
+  "The Liquid Highway",
+  "The Steering Revolution",
+  "The Path That Connected Everything",
+  "The Vessel That Made the World One",
+  "The Machine That Wove Civilisation",
+  "The Iron Horse That Standardised Time",
+  "The Machine That Multiplied Muscle",
+  "Automobiles, Aviation & Airwaves",
+  "Satellites, Space Stations & Planetary Infrastructure",
+  "Robots, AI, Biosynthetics & Quantum",
+] as const;
+
+const source = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 class FakeSynth implements StorySynth {
   spoken: StoryUtterance[] = [];
@@ -80,7 +101,7 @@ describe("authored Fire copy", () => {
     const script = buildStoryScript(story!);
     const spoken = script.map((part) => part.text).join(" ");
     expect(spoken).toContain("Mission Briefing");
-    expect(spoken).toContain("Relay 1 of 12 — The Eternal Constant");
+    expect(spoken).toContain("Relay 1 of 12 — The First Platform");
     expect(spoken).toContain("controlled fire");
     expect(spoken).toContain("The Story");
     expect(spoken).toContain("Twelve thousand years ago");
@@ -113,6 +134,48 @@ describe("storyteller voice", () => {
   });
 });
 
+describe("remarkable relay titles", () => {
+  it("uses the printed titles as the door identity", () => {
+    expect(RELAYS.map((relay) => relay.subtitle)).toEqual([...REMARKABLE_TITLES]);
+    expect(RELAY_STORIES.map((story) => story.subtitle.en)).toEqual([...REMARKABLE_TITLES]);
+    for (let number = 1; number <= 12; number += 1) {
+      expect(EN[`relay.subtitle.${number}`]).toBe(REMARKABLE_TITLES[number - 1]);
+    }
+    expect(RELAYS[0].subtitle).toBe("The First Platform");
+    expect(REMARKABLE_TITLES[6]).toContain("Civilisation");
+    expect(REMARKABLE_TITLES[7]).toContain("Standardised");
+  });
+});
+
+describe("fire recording", () => {
+  it("plays a file for English Fire and does not autoplay", () => {
+    expect(storyAudioUrl(1, "en")).toBe(FIRE_STORY_AUDIO_URL);
+    expect(storyAudioUrl(1, "zh-HK")).toBeNull();
+    expect(storyAudioUrl(2, "en")).toBeNull();
+    expect(existsSync(new URL("../client/public/audio/relay-1-fire-en.mp3", import.meta.url))).toBe(true);
+    const bar = source("client/src/components/StoryPlayBar.tsx");
+    expect(bar).not.toMatch(/autoPlay|autoplay/);
+    expect(bar).toContain('data-testid="story-play"');
+    expect(bar).toContain("min-h-11");
+    expect(bar).toContain("onPlaying");
+    const relay = source("client/src/pages/ExplorerRelay.tsx");
+    expect(relay).toContain("StoryPlayBar");
+    expect(relay).not.toContain("StorytellerControl");
+    const home = source("client/src/components/GameModeGates.tsx");
+    expect(home).toContain('href="/explore/spinner"');
+    expect(home).not.toContain("relay-1-fire");
+    const app = source("client/src/App.tsx");
+    expect(app).toContain('import RelaySpinner from "./pages/RelaySpinner"');
+    expect(app).not.toContain('lazy(() => import("./pages/RelaySpinner"))');
+  });
+
+  it("formats the scrubber clock", () => {
+    expect(formatStoryTime(0)).toBe("0:00");
+    expect(formatStoryTime(65)).toBe("1:05");
+    expect(formatStoryTime(Number.NaN)).toBe("0:00");
+  });
+});
+
 describe("storyteller controls", () => {
   function setup() {
     const synth = new FakeSynth();
@@ -123,22 +186,26 @@ describe("storyteller controls", () => {
     return { synth, phases, engine, passages };
   }
 
-  it("does not speak until Listen", async () => {
+  it("does not speak until Listen, and does not claim speaking before the voice starts", () => {
     const { synth, engine } = setup();
     expect(synth.spoken).toHaveLength(0);
     expect(engine.phase).toBe("idle");
     engine.listen();
-    await Promise.resolve();
+    expect(synth.cancelled).toBe(0);
     expect(synth.spoken[0]?.text).toBe("Mission Briefing");
     expect(synth.spoken[0]?.rate).toBeLessThan(1);
     expect(synth.spoken[0]?.pitch).toBeGreaterThan(1);
+    expect(engine.phase).toBe("idle");
+    expect(storytellerOwnsSpeech()).toBe(false);
+    synth.spoken[0]?.onstart?.();
+    expect(engine.phase).toBe("speaking");
     expect(storytellerOwnsSpeech()).toBe(true);
   });
 
-  it("pauses, resumes, and stops without continuing on its own", async () => {
+  it("pauses, resumes, and stops without continuing on its own", () => {
     const { synth, engine } = setup();
     engine.listen();
-    await Promise.resolve();
+    synth.spoken[0]?.onstart?.();
     expect(synth.spoken).toHaveLength(1);
     engine.pause();
     synth.finish();
@@ -146,16 +213,18 @@ describe("storyteller controls", () => {
     expect(engine.phase).toBe("paused");
     engine.resume();
     expect(synth.spoken).toHaveLength(2);
+    synth.spoken[1]?.onstart?.();
+    expect(engine.phase).toBe("speaking");
     engine.stop();
     expect(engine.phase).toBe("idle");
     expect(storytellerOwnsSpeech()).toBe(false);
     expect(synth.cancelled).toBeGreaterThan(0);
   });
 
-  it("stops on dispose, as navigation must", async () => {
-    const { engine } = setup();
+  it("stops on dispose, as navigation must", () => {
+    const { engine, synth } = setup();
     engine.listen();
-    await Promise.resolve();
+    synth.spoken[0]?.onstart?.();
     engine.dispose();
     expect(engine.phase).toBe("idle");
     setStorytellerOwnsSpeech(false);
