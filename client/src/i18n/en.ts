@@ -957,6 +957,7 @@ export const EN: Record<string, string> = {
   "appraisal.backToHome": "Back to Home",
   "explore.tapDiscover": "Tap to Discover",
   "explore.inventions": "Inventions",
+  "explore.harnessedDiscoveries": "Harnessed discoveries",
   "flight.tapNodeInstruction": "Tap each node to activate. Complete all 60 to unlock the Synthesis page.",
   "frameworks.secondLaw": "We add the missing second law: Collaborate.",
   "frameworks.engineRoom": "The engine room can never walk the deck.",

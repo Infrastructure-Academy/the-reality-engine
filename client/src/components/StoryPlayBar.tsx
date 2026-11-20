@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { StoryChrome } from "@/lib/storyLocale";
 import { declareStoryPlayback, formatStoryTime } from "@/lib/storyAudio";
 import { setStorytellerOwnsSpeech, type StoryPhase } from "@/lib/storyteller";
@@ -18,16 +18,30 @@ interface StoryPlayBarProps {
   audioSrc: string | null;
   labels: StoryChrome;
   speech: SpeechControls;
+  /** Slim strip under the Fire preview. Other relays keep the full bar. */
+  compact?: boolean;
+}
+
+export interface StoryPlayHandle {
+  /** Start the recording. Rejects when the browser blocks it. Does not mute. */
+  begin: (options?: { quiet?: boolean }) => Promise<void>;
+  /** Pause the story while a card voice speaks, and remember to continue afterwards. */
+  pauseForCard: () => void;
+  resumeIfHeld: () => void;
 }
 
 /**
  * Play, Pause, and Stop for one relay story.
  * A recording never shows Playing until the audio element is actually playing.
- * Nothing starts until Play is pressed.
+ * Other relays wait for Play. The Fire door may call begin() when the door opens.
  */
-export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
+export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(function StoryPlayBar({
+  audioSrc, labels, speech, compact = false,
+}, ref) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const intent = useRef<"play" | "pause" | "stop">("stop");
+  const holdForCard = useRef(false);
+  const heldResume = useRef(false);
   const stopSpeech = useRef(speech.stop);
   stopSpeech.current = speech.stop;
   const [phase, setPhase] = useState<BarPhase>("idle");
@@ -39,6 +53,8 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
   useEffect(() => {
     const audio = audioRef.current;
     intent.current = "stop";
+    holdForCard.current = false;
+    heldResume.current = false;
     setPhase("idle");
     setArming(false);
     setNotice("");
@@ -86,6 +102,7 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
     const timer = window.setTimeout(() => {
       const audio = audioRef.current;
       if (intent.current !== "play") return;
+      if (holdForCard.current) return;
       if (audio && !audio.paused && audio.currentTime > 0.05) {
         setPhase("playing");
         return;
@@ -130,27 +147,59 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
         ? labels.starting
         : "";
 
-  function onPlay() {
-    if (audioSrc) {
-      const audio = audioRef.current;
-      if (!audio) return;
-      declareStoryPlayback();
-      intent.current = "play";
+  function begin(options?: { quiet?: boolean }): Promise<void> {
+    if (!audioSrc) {
+      if (!speech.available) return Promise.resolve();
       setNotice("");
-      setPhase("starting");
-      const pending = audio.play();
-      pending?.catch(() => {
-        if (intent.current !== "play") return;
-        setPhase("idle");
-        setNotice(labels.playbackFailed);
-      });
-      return;
+      setArming(true);
+      if (speech.phase === "paused") speech.resume();
+      else speech.listen();
+      return Promise.resolve();
     }
-    if (!speech.available) return;
+    const audio = audioRef.current;
+    if (!audio) return Promise.reject(new Error("missing story audio"));
+    if (!audio.paused && intent.current === "play" && !holdForCard.current) return Promise.resolve();
+    declareStoryPlayback();
+    intent.current = "play";
     setNotice("");
-    setArming(true);
-    if (speech.phase === "paused") speech.resume();
-    else speech.listen();
+    setPhase("starting");
+    const pending = audio.play();
+    if (!pending) return Promise.resolve();
+    return pending.catch((error: unknown) => {
+      if (intent.current !== "play") return;
+      setPhase("idle");
+      if (!options?.quiet) setNotice(labels.playbackFailed);
+      throw error;
+    });
+  }
+
+  function pauseForCard() {
+    holdForCard.current = true;
+    const audio = audioRef.current;
+    const trying = intent.current === "play";
+    const moving = !!audio && !audio.paused;
+    heldResume.current = trying || moving;
+    if (moving) {
+      intent.current = "pause";
+      audio.pause();
+      setPhase("paused");
+    }
+  }
+
+  function resumeIfHeld() {
+    const shouldResume = heldResume.current;
+    holdForCard.current = false;
+    heldResume.current = false;
+    if (!shouldResume) return;
+    void begin();
+  }
+
+  useImperativeHandle(ref, () => ({ begin, pauseForCard, resumeIfHeld }), [audioSrc, labels.playbackFailed, speech]);
+
+  function onPlay() {
+    holdForCard.current = false;
+    heldResume.current = false;
+    void begin();
   }
 
   function onPause() {
@@ -172,6 +221,8 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
       return;
     }
     intent.current = "stop";
+    holdForCard.current = false;
+    heldResume.current = false;
     const audio = audioRef.current;
     if (audio) {
       audio.pause();
@@ -182,7 +233,9 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
     setNotice("");
   }
 
-  const button = "inline-flex min-h-11 w-full items-center justify-center rounded-lg px-3 text-base font-semibold disabled:cursor-not-allowed";
+  const button = compact
+    ? "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md px-2 text-sm font-semibold disabled:cursor-not-allowed"
+    : "inline-flex min-h-11 w-full items-center justify-center rounded-lg px-3 text-base font-semibold disabled:cursor-not-allowed";
   const solid = `${button} bg-amber-400 text-black`;
   const quiet = `${button} border-2 border-amber-300 bg-amber-950 text-amber-50`;
 
@@ -191,7 +244,10 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
       role="group"
       aria-label={labels.group}
       data-testid="story-play-bar"
-      className="relative rounded-xl border border-amber-400/50 bg-[#1a1208] p-3"
+      data-compact={compact ? "true" : "false"}
+      className={compact
+        ? "relative mt-2 rounded-lg border border-amber-400/40 bg-[#1a1208]/90 px-2 py-1.5"
+        : "relative rounded-xl border border-amber-400/50 bg-[#1a1208] p-3"}
       onKeyDown={(event) => {
         if (event.key === "Escape") {
           event.preventDefault();
@@ -199,17 +255,19 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
         }
       }}
     >
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <span className="text-xs font-bold uppercase tracking-wider text-amber-300">{labels.story}</span>
-        <span
-          aria-live="polite"
-          data-testid="story-status"
-          className="min-h-4 text-xs font-semibold uppercase tracking-wider text-amber-100"
-        >
-          {status}
-        </span>
-      </div>
-      <div className="grid grid-cols-3 gap-2">
+      {!compact && (
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <span className="text-xs font-bold uppercase tracking-wider text-amber-300">{labels.story}</span>
+          <span
+            aria-live="polite"
+            data-testid="story-status"
+            className="min-h-4 text-xs font-semibold uppercase tracking-wider text-amber-100"
+          >
+            {status}
+          </span>
+        </div>
+      )}
+      <div className={compact ? "flex items-center gap-1.5" : "grid grid-cols-3 gap-2"}>
         <button
           type="button"
           data-testid="story-play"
@@ -237,13 +295,24 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
         >
           {labels.stop}
         </button>
+        {compact && (
+          <span
+            aria-live="polite"
+            data-testid="story-status"
+            className="ml-auto font-mono text-[11px] tabular-nums text-amber-100"
+          >
+            {status ? `${status} ` : ""}{formatStoryTime(current)} / {formatStoryTime(duration)}
+          </span>
+        )}
       </div>
       {audioSrc && (
-        <div className="mt-2">
-          <div className="flex items-center justify-between font-mono text-[11px] text-amber-100/80">
-            <span>{formatStoryTime(current)}</span>
-            <span>{formatStoryTime(duration)}</span>
-          </div>
+        <div className={compact ? "mt-0.5" : "mt-2"}>
+          {!compact && (
+            <div className="flex items-center justify-between font-mono text-[11px] text-amber-100/80">
+              <span>{formatStoryTime(current)}</span>
+              <span>{formatStoryTime(duration)}</span>
+            </div>
+          )}
           <input
             type="range"
             data-testid="story-scrubber"
@@ -253,7 +322,9 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
             value={Math.min(current, duration || 0)}
             aria-label={labels.position}
             disabled={!duration}
-            className="h-11 w-full accent-amber-400 disabled:opacity-40"
+            className={compact
+              ? "h-6 w-full accent-amber-400 disabled:opacity-40"
+              : "h-11 w-full accent-amber-400 disabled:opacity-40"}
             onChange={(event) => {
               const audio = audioRef.current;
               const next = Number(event.target.value);
@@ -261,7 +332,7 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
               setCurrent(next);
             }}
           />
-          <p className="text-[11px] leading-snug text-amber-100/75">{labels.recorded}</p>
+          {!compact && <p className="text-[11px] leading-snug text-amber-100/75">{labels.recorded}</p>}
         </div>
       )}
       {notice && (
@@ -275,8 +346,14 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
           src={audioSrc}
           preload="auto"
           onPlaying={() => {
-            if (intent.current !== "play") return;
+            if (intent.current !== "play" && !holdForCard.current) return;
             const audio = audioRef.current;
+            if (holdForCard.current) {
+              if (audio && !audio.paused) audio.pause();
+              intent.current = "pause";
+              setPhase("paused");
+              return;
+            }
             if (audio) setCurrent(audio.currentTime);
             setPhase("playing");
             setNotice("");
@@ -311,4 +388,4 @@ export function StoryPlayBar({ audioSrc, labels, speech }: StoryPlayBarProps) {
       )}
     </div>
   );
-}
+});

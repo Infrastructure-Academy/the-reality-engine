@@ -22,6 +22,8 @@ interface RelaySummaryCardProps {
   timeSpent?: number; // seconds
   onContinue: () => void;
   nextRelayNumber?: number;
+  /** Visitor-facing name for this relay's set. Fire uses harnessed discoveries. */
+  discoveryNoun?: string;
 }
 
 export function RelaySummaryCard({
@@ -32,6 +34,7 @@ export function RelaySummaryCard({
   timeSpent,
   onContinue,
   nextRelayNumber,
+  discoveryNoun,
 }: RelaySummaryCardProps) {
   const t = useT();
   const relay = RELAYS.find((r) => r.number === relayNumber);
@@ -120,8 +123,12 @@ export function RelaySummaryCard({
           <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
           <p className="text-xs text-muted-foreground leading-relaxed">
             {isPerfect
-              ? `Perfect discovery! You found every invention in the ${relay?.name} relay. The ${relay?.webType} web reveals its secrets to the persistent explorer.`
-              : `You discovered ${inventionsFound} of ${totalInventions} inventions. Return later to uncover what you missed — each relay holds hidden connections.`
+              ? discoveryNoun
+                ? `Perfect discovery. You found every harnessed discovery in the ${relay?.name} relay. The ${relay?.webType} web reveals its secrets to the persistent explorer.`
+                : `Perfect discovery! You found every invention in the ${relay?.name} relay. The ${relay?.webType} web reveals its secrets to the persistent explorer.`
+              : discoveryNoun
+                ? `You discovered ${inventionsFound} of ${totalInventions} harnessed discoveries. Return later to uncover what you missed — each relay holds hidden connections.`
+                : `You discovered ${inventionsFound} of ${totalInventions} inventions. Return later to uncover what you missed — each relay holds hidden connections.`
             }
           </p>
         </div>

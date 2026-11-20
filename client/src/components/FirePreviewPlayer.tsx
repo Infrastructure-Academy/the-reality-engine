@@ -49,7 +49,7 @@ export function FirePreviewPlayer() {
         aria-label="Fire preview, Ignition — The Composer"
         className={
           portrait
-            ? "mx-auto block h-auto max-h-[70vh] w-auto max-w-full rounded-xl bg-black"
+            ? "mx-auto block h-auto max-h-[38vh] w-auto max-w-full rounded-xl bg-black sm:max-h-[70vh]"
             : "mx-auto block aspect-video h-auto max-h-[70vh] w-full rounded-xl bg-black object-contain"
         }
       />

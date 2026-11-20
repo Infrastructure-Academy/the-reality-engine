@@ -51,8 +51,10 @@ describe("fire preview videos", () => {
     expect(player).not.toContain(".play(");
 
     const relay = source("client/src/pages/ExplorerRelay.tsx");
-    expect(relay).toContain("{relayNum === 1 && <FirePreviewPlayer />}");
+    expect(relay).toContain("const fireDoor = relayValid && relayNum === 1;");
+    expect(relay).toContain("<FirePreviewPlayer />");
     expect(relay).toContain("StoryPlayBar");
+    expect(relay).not.toContain("fire-preview-video");
 
     const bar = source("client/src/components/StoryPlayBar.tsx");
     expect(bar).not.toMatch(/autoPlay|autoplay/);
