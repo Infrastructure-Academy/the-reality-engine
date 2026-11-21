@@ -24,6 +24,8 @@ import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePit } from "@/components/FirePit";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
+import { TectonTreesLearnMore } from "@/components/TectonTreesLearnMore";
+import { TreeCanopy } from "@/components/TreeCanopy";
 import { DISCOVERY_TECTON_NUMBER } from "@shared/tectonFireDeck";
 import { storyAudioUrl } from "@/lib/storyAudio";
 import { fireCaptionAt } from "@/lib/fireStoryCues";
@@ -653,6 +655,7 @@ export default function ExplorerRelay() {
   const canGoPrev = relayNum > 1;
   const canGoNext = relayNum < 12;
   const fireDoor = relayValid && relayNum === 1;
+  const treeDoor = relayValid && relayNum === 2;
 
   // ─── Hooks MUST be called before any early return (React rules of hooks) ───
 
@@ -679,12 +682,21 @@ export default function ExplorerRelay() {
 
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
 
+  const [storySeconds, setStorySeconds] = useState(0);
+  const [openTecton, setOpenTecton] = useState<number | null>(null);
+  const [openTree, setOpenTree] = useState<number | null>(null);
+
   useEffect(() => {
     if (!fireDoor) return;
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [fireDoor]);
-  const [storySeconds, setStorySeconds] = useState(0);
-  const [openTecton, setOpenTecton] = useState<number | null>(null);
+  useEffect(() => {
+    if (!treeDoor) {
+      setOpenTree(null);
+      return;
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [treeDoor]);
 
   if (!relayValid) return null;
 
@@ -843,6 +855,25 @@ export default function ExplorerRelay() {
                     onHear={(recordedAs) => doorAudio.playCard(recordedAs)}
                   />
                 </div>
+              </div>
+            ) : treeDoor ? (
+              <div data-testid="tree-stage" className="space-y-6">
+                <div className="-mx-4 sm:-mx-6">
+                  <TreeCanopy />
+                </div>
+                <div data-testid="tree-room">
+                  <p className="text-sm leading-relaxed text-emerald-50">
+                    Bark and seed specimens. Planting beds of fresh earth and grass. Botanical scents. Temperate, 22°C. Birdsong, wind through the leaves, and rain.
+                  </p>
+                </div>
+                {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
+                {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
+                {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
+                <TectonTreesLearnMore
+                  opened={openTree}
+                  onOpen={setOpenTree}
+                  onClose={() => setOpenTree(null)}
+                />
               </div>
             ) : (
               <>
