@@ -14,6 +14,7 @@ import {
   fireDoorGesture,
   fireDoorOpened,
 } from "@/lib/fireDoorAudio";
+import { fireBedSettled } from "@/lib/firePlayback";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
 import {
   FIRE_STORY_CUES,
@@ -59,10 +60,20 @@ describe("fire door experience", () => {
     expect(fireDoorGesture(opened)).toEqual(opened);
 
     const door = source("client/src/hooks/useFireDoor.ts");
-    expect(door).toContain("begin({ quiet })");
-    expect(door).toContain("beginBed(true)");
+    const playback = source("client/src/lib/firePlayback.ts");
+    expect(door).toContain("begin({ quiet: true })");
+    expect(door).toContain("beginFireBedFromGesture");
+    expect(door).toContain("fireBedSettled");
     expect(door).toContain('addEventListener("pointerdown"');
     expect(door).not.toMatch(/muted\s*=/);
+    expect(playback).toContain("story.play()");
+    expect(playback).toContain("ambience.play()");
+    expect(playback).toContain("FIRE_STORY_AUDIO_URL");
+    expect(source("client/src/pages/ExhibitionPortal.tsx")).toContain("beginFireBedFromGesture");
+    expect(source("client/src/components/PlanetOpening.tsx")).toContain("beginFireBedFromGesture");
+    expect(fireBedSettled(true, false)).toBe(false);
+    expect(fireBedSettled(false, true)).toBe(false);
+    expect(fireBedSettled(true, true)).toBe(true);
     const preview = source("client/src/components/FirePreviewPlayer.tsx");
     expect(preview).not.toMatch(/autoPlay|autoplay|\.play\(/);
     const relay = source("client/src/pages/ExplorerRelay.tsx");
@@ -112,6 +123,8 @@ describe("fire door experience", () => {
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");
     expect(pit).toContain("relay-1-fire-plate.jpg");
+    expect(pit).toContain("bison");
+    expect(pit).toContain("handprints");
     expect(pit).toContain("drawImage");
     expect(pit).not.toContain("<img");
     expect(pit).not.toContain("fire-hall-plate");

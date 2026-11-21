@@ -22,6 +22,7 @@ import {
   type ReturnTurn,
 } from "@shared/exhibitionPortal";
 import { PlanetOpening } from "@/components/PlanetOpening";
+import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 type Stage = "opening" | "film" | "halls";
 type Tone = "approach" | "smoulder" | "settled";
@@ -44,32 +45,21 @@ function formatFilmTime(totalSeconds: number): string {
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
 }
 
-function PlanetZero({ tone, onReset, showCaption = true }: { tone: Tone; onReset: () => void; showCaption?: boolean }) {
-  const face =
-    tone === "settled"
-      ? "bg-[radial-gradient(circle_at_32%_30%,#e7f7ff_0%,#7ec8e3_18%,#3e8f6a_46%,#1a4d38_72%,#07140f_100%)]"
-      : tone === "smoulder"
-        ? "bg-[radial-gradient(circle_at_32%_30%,#ffe0b5_0%,#f97316_34%,#7c2d12_68%,#1c0a06_100%)]"
-        : "bg-[radial-gradient(circle_at_32%_30%,#dbeafe_0%,#1e3a5f_42%,#0b1220_78%)]";
-
+function PlanetZero({ onReset, showCaption = true }: { tone: Tone; onReset: () => void; showCaption?: boolean }) {
   return (
     <div className="flex flex-col items-center">
       <button
         type="button"
         data-testid="portal-zero"
         onClick={onReset}
-        aria-label="0. The planet. Boundary-condition reset to explore."
-        className="relative h-32 w-32 touch-manipulation rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050912]"
+        aria-label="0. The planet. Planetary Engine. Boundary-condition reset to explore."
+        className="flex h-28 w-28 touch-manipulation flex-col items-center justify-center rounded-full border border-amber-100/50 bg-[#07111c] font-heading text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050912]"
       >
-        <span className={`absolute inset-0 rounded-full shadow-[0_0_40px_rgba(232,168,74,0.35)] ${face}`} />
-        {tone === "smoulder" ? (
-          <span className="absolute inset-0 animate-pulse rounded-full bg-[radial-gradient(circle_at_64%_68%,transparent_30%,rgba(255,120,40,0.62)_54%,transparent_72%)]" />
-        ) : null}
-        <span className="absolute inset-[10%] rounded-full border border-amber-100/30" />
-        <span className="relative font-heading text-4xl text-amber-50">0</span>
+        <span className="text-4xl leading-none">0</span>
+        <span className="mt-1 text-[10px] tracking-wide">Planetary Engine</span>
       </button>
       {showCaption ? (
-        <p className="mt-2 max-w-[16rem] text-center text-sm text-amber-50">The planet is the zero.</p>
+        <p className="mt-2 max-w-[16rem] text-center text-sm text-amber-50">The planet is the zero. It holds the halls up. It is not a fourteenth hall.</p>
       ) : null}
     </div>
   );
@@ -190,6 +180,7 @@ function ReturnNotice({ notice, onClose }: { notice: ReturnTurn; onClose: () => 
         </button>
         <Link
           href={FIRE_HALL_PATH}
+          onClick={() => beginFireBedFromGesture()}
           className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg bg-amber-400/15 px-3 text-sm text-amber-50 underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
         >
           Open the Fire hall
@@ -220,7 +211,7 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
 
   if (hall.href) {
     return (
-      <Link href={hall.href} data-testid={`portal-hall-${hall.id}`} className={className}>
+      <Link href={hall.href} data-testid={`portal-hall-${hall.id}`} className={className} onClick={() => beginFireBedFromGesture()}>
         {body}
       </Link>
     );
@@ -254,6 +245,16 @@ export default function ExhibitionPortal() {
     const id = stage === "opening" ? "portal-opening-title" : stage === "film" ? "portal-film-title" : "portal-halls-title";
     document.getElementById(id)?.focus();
   }, [stage, run]);
+
+  useEffect(() => {
+    const station = new URLSearchParams(window.location.search).get("station");
+    if (!station) return;
+    const turn = turnFromHall(station);
+    if (turn.kind === "return") {
+      setStage("halls");
+      setNotice(turn);
+    }
+  }, []);
 
   function resetToZero() {
     videoRef.current?.pause();
@@ -330,7 +331,7 @@ export default function ExhibitionPortal() {
         >
           Back to the landing
         </Link>
-        <p className="text-[11px] uppercase tracking-[0.18em] text-amber-100/80">First cut</p>
+        <p className="text-[11px] uppercase tracking-[0.18em] text-amber-100/80">Rematched draft</p>
       </header>
 
       <div className="mx-auto max-w-5xl">
@@ -503,7 +504,13 @@ export default function ExhibitionPortal() {
                   );
                   if (door.href) {
                     return (
-                      <Link key={door.id} href={door.href} data-testid={`portal-door-${door.id}`} className={className}>
+                      <Link
+                        key={door.id}
+                        href={door.href}
+                        data-testid={`portal-door-${door.id}`}
+                        className={className}
+                        onClick={() => beginFireBedFromGesture()}
+                      >
                         {label}
                       </Link>
                     );

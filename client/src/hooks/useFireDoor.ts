@@ -5,13 +5,21 @@ import {
   FIRE_AMBIENCE_URL,
   fireCardVoiceUrl,
 } from "@/lib/fireDoorAudio";
+import {
+  beginFireBedFromGesture,
+  fireBedAttempt,
+  fireBedSettled,
+  pauseFireBed,
+  setFireAmbienceLevel,
+} from "@/lib/firePlayback";
 import { declareStoryPlayback } from "@/lib/storyAudio";
 import type { StoryPlayHandle } from "@/components/StoryPlayBar";
 
 /**
- * Story recording plus fire ambience for the Fire door.
- * Tries to start when the door opens. If the browser blocks that, the next
- * tap anywhere starts both. A card voice pauses the story until the card ends.
+ * Recorded briefing plus fire crackle for the Fire door.
+ * The click that opens the hall starts both tracks. If that click was spent on
+ * navigation, or the browser blocked one of them, the next tap starts both
+ * again. A card voice pauses the briefing until the card ends.
  * The preview video is never started here.
  */
 export function useFireDoor(active: boolean) {
@@ -21,48 +29,69 @@ export function useFireDoor(active: boolean) {
   const started = useRef(false);
 
   const setAmbience = useCallback((level: number) => {
-    const ambience = ambienceRef.current;
-    if (!ambience) return;
-    ambience.volume = level;
-    if (ambience.paused) {
-      const pending = ambience.play();
-      pending?.catch(() => {});
-    }
+    setFireAmbienceLevel(level);
   }, []);
 
   const beginBed = useCallback((quiet: boolean) => {
     declareStoryPlayback();
-    setAmbience(FIRE_AMBIENCE_UNDER_STORY);
+    const attempt = beginFireBedFromGesture();
     const pending = storyRef.current?.begin({ quiet });
-    pending?.then(() => {
-      started.current = true;
-    }).catch(() => {});
-    return pending ?? Promise.reject(new Error("story control missing"));
-  }, [setAmbience]);
+    const story = pending ?? attempt.story;
+    return Promise.all([story, attempt.ambience]).then(([storyResult, ambienceResult]) => {
+      void storyResult;
+      void ambienceResult;
+    });
+  }, []);
 
   useEffect(() => {
     if (!active) return;
     started.current = false;
     let removeGesture = () => {};
+    let cancelled = false;
+
     const armGesture = () => {
       const onDown = () => {
         if (started.current) return;
-        beginBed(false)?.then(() => {
-          started.current = true;
-          window.removeEventListener("pointerdown", onDown, true);
-        }).catch(() => {});
+        beginBed(false)
+          .then(() => {
+            if (!fireBedSettled(true, true)) return;
+            started.current = true;
+            window.removeEventListener("pointerdown", onDown, true);
+          })
+          .catch(() => {});
       };
       window.addEventListener("pointerdown", onDown, true);
       removeGesture = () => window.removeEventListener("pointerdown", onDown, true);
     };
-    beginBed(true)?.then(() => {
-      started.current = true;
-    }).catch(() => {
-      armGesture();
-    });
+
+    const settle = (storyOk: Promise<unknown>, ambienceOk: Promise<unknown>) => {
+      Promise.all([storyOk, ambienceOk])
+        .then(() => {
+          if (cancelled) return;
+          if (!fireBedSettled(true, true)) {
+            armGesture();
+            return;
+          }
+          started.current = true;
+        })
+        .catch(() => {
+          if (!cancelled) armGesture();
+        });
+    };
+
+    const existing = fireBedAttempt();
+    if (existing) {
+      settle(existing.story, existing.ambience);
+    } else {
+      const attempt = beginFireBedFromGesture();
+      const pending = storyRef.current?.begin({ quiet: true });
+      settle(pending ?? attempt.story, attempt.ambience);
+    }
+
     return () => {
+      cancelled = true;
       removeGesture();
-      ambienceRef.current?.pause();
+      pauseFireBed();
       cardRef.current?.pause();
       started.current = false;
     };

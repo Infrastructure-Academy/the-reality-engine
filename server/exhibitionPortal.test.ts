@@ -196,6 +196,9 @@ describe("exhibition portal first cut", () => {
     expect(opening).toContain("portal-planet-sequence");
     expect(opening).toContain("portal-pillar-");
     expect(opening).toContain("smouldering");
+    expect(opening).toContain("entrance-portal.jpg");
+    expect(opening).not.toContain("drawPlanet");
+    expect(opening).not.toContain("quadraticCurveTo");
     expect(opening).not.toContain('beat === "pillars" && !done');
     expect(opening).not.toContain("Substrate, not a hall");
     expect(page).not.toContain("Substrate, not a hall");

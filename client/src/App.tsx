@@ -12,6 +12,7 @@ import { NetworkBar } from "./components/NetworkBar";
 import { EyeOpenAnimation } from "./components/EyeOpenAnimation";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
+import { FIRE_AMBIENCE_BED_ID, FIRE_AMBIENCE_BED_SRC, FIRE_STORY_BED_ID, FIRE_STORY_BED_SRC } from "@/lib/firePlayback";
 
 // ─── Eagerly loaded (critical path) ───
 import Home from "./pages/Home";
@@ -167,12 +168,22 @@ function HideManusWatermark() {
   return null;
 }
 
+function FireBedHost() {
+  return (
+    <>
+      <audio id={FIRE_STORY_BED_ID} data-testid="fire-story-bed" src={FIRE_STORY_BED_SRC} preload="auto" />
+      <audio id={FIRE_AMBIENCE_BED_ID} data-testid="fire-ambience" src={FIRE_AMBIENCE_BED_SRC} preload="auto" loop />
+    </>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <FireBedHost />
           <HideManusWatermark />
           <ServiceWorkerRegistrar />
           <NetworkBar />
