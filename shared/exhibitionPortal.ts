@@ -11,6 +11,7 @@ import { RELAYS } from "./gameData";
 
 export const PORTAL_PATH = "/portal";
 export const FIRE_HALL_PATH = "/explore/1";
+export const TREE_HALL_PATH = "/explore/2";
 export const FILM_SRC = "/portal/film-0201.mp4";
 export const PLATE_SRC = "/portal/exhibition-plan-composite.png";
 export const FILM_SHA256 = "cacc1ada942163efbb2bdd5a964e29524fd4557a041dc228bd85773d5c4a3d2e";
@@ -23,7 +24,7 @@ export const RECEIVED_ZERO =
 export const ZERO_IS_NOT_A_HALL = "The zero is not a fourteenth hall.";
 
 export const CUT_LINE =
-  "Rematched first draft. The portal sequence and the Fire hall are in this cut. Relays 2 to 12 stay on the issued floor plan and are not finished halls.";
+  "The portal sequence, the Fire hall, and the Tree hall are in this cut. Relays 3 to 12 stay on the issued floor plan and are not finished halls.";
 
 /** Script room lines for stations this cut does not open. No new hall is drawn. */
 export const ROOM_DIRECTION: Record<string, string> = {
@@ -90,13 +91,13 @@ export type HallCard = {
   name: string;
   plate: string;
   when: string;
-  href: typeof FIRE_HALL_PATH | null;
+  href: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH | null;
 };
 
 /** Exhibition twin, numbered with the locked relay line. Fractal Connector stays the thirteenth card. */
 export const HALL_CARDS: readonly HallCard[] = [
   { id: "fire", number: 1, name: "Fire", plate: "The First Infrastructure", when: "pre-10,000 BCE", href: FIRE_HALL_PATH },
-  { id: "tree", number: 2, name: "Tree", plate: "The Living Structure", when: "pre-10,000 BCE", href: null },
+  { id: "tree", number: 2, name: "Tree", plate: "The Living Structure", when: "pre-10,000 BCE", href: TREE_HALL_PATH },
   { id: "river", number: 3, name: "River", plate: "Hydraulic Civilisation", when: "8,000 BCE", href: null },
   { id: "horse", number: 4, name: "Horse", plate: "The Mobile Engine", when: "4,000 BCE", href: null },
   { id: "roads", number: 5, name: "Roads", plate: "The Roman Network", when: "300 BCE", href: null },
@@ -117,7 +118,7 @@ export type DoorStop = {
   mark: string;
   name: string;
   role: DoorRole;
-  href: typeof FIRE_HALL_PATH | null;
+  href: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH | null;
 };
 
 /** Beside the hall cards. The zero is a substrate door, never a hall. */
@@ -128,13 +129,14 @@ export const DOOR_FRAME: readonly DoorStop[] = [
     mark: String(relay.number),
     name: relay.name,
     role: "relay",
-    href: relay.number === 1 ? FIRE_HALL_PATH : null,
+    href: relay.number === 1 ? FIRE_HALL_PATH : relay.number === 2 ? TREE_HALL_PATH : null,
   })),
   { id: "fractal-epilogue", mark: "Epilogue", name: "Fractal Connector", role: "epilogue", href: null },
 ];
 
 export type ReturnTurn = { kind: "return"; station: string; title: string; body: string };
-export type PortalTurn = { kind: "fire" } | { kind: "reset" } | ReturnTurn;
+export type HallTurn = { kind: "hall"; path: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH };
+export type PortalTurn = HallTurn | { kind: "reset" } | ReturnTurn;
 
 const LOST_NOTHING = "You are back on the floor. Nothing is taken away.";
 
@@ -160,7 +162,7 @@ export function turnFromHall(id: string): PortalTurn {
   if (!hall) {
     return returned("unknown", "Back on the floor", `That turn comes back to the floor. ${LOST_NOTHING}`);
   }
-  if (hall.href) return { kind: "fire" };
+  if (hall.href) return { kind: "hall", path: hall.href };
   if (hall.id === "human-nodes") {
     return returned(
       hall.id,
@@ -179,7 +181,7 @@ export function turnFromHall(id: string): PortalTurn {
   return returned(
     hall.id,
     `${hall.name} returns you to the floor`,
-    `${hall.name} is marked on the issued plate. ${direction} This cut does not open it as a finished hall. Fire is the live hall. ${LOST_NOTHING}`,
+    `${hall.name} is marked on the issued plate. ${direction} This cut does not open it as a finished hall. Fire and Tree are the live halls. ${LOST_NOTHING}`,
   );
 }
 
@@ -189,7 +191,7 @@ export function turnFromDoor(id: string): PortalTurn {
   if (!door) {
     return returned("unknown", "Back on the floor", `That turn comes back to the floor. ${LOST_NOTHING}`);
   }
-  if (door.href) return { kind: "fire" };
+  if (door.href) return { kind: "hall", path: door.href };
   if (door.id === "relay-12") {
     return returned(
       door.id,
@@ -209,4 +211,31 @@ export function turnFromDoor(id: string): PortalTurn {
     `${door.name} returns you to the floor`,
     `${door.name} is a door in the fourteen-door frame, not a finished hall. ${LOST_NOTHING}`,
   );
+}
+
+/**
+ * Finished halls step only into another finished hall.
+ * Fire goes on to Tree. Tree goes back to Fire and does not open River.
+ * Later relays keep their own numeric neighbours.
+ */
+export function stepFromRelay(relayNum: number, direction: "back" | "forward"): string | null {
+  const target = relayNum + (direction === "forward" ? 1 : -1);
+  if (target < 1 || target > 12) return null;
+  if (relayNum === 1 || relayNum === 2) {
+    if (target === 1) return FIRE_HALL_PATH;
+    if (target === 2) return TREE_HALL_PATH;
+    return null;
+  }
+  return `/explore/${target}`;
+}
+
+/** From Fire or Tree, the emoji row opens only those two halls. */
+export function relayNavigatorHref(currentRelay: number, target: number): string | null {
+  if (target < 1 || target > 12) return null;
+  if (currentRelay === 1 || currentRelay === 2) {
+    if (target === 1) return FIRE_HALL_PATH;
+    if (target === 2) return TREE_HALL_PATH;
+    return null;
+  }
+  return `/explore/${target}`;
 }

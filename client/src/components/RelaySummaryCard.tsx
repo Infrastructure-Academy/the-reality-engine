@@ -24,6 +24,10 @@ interface RelaySummaryCardProps {
   nextRelayNumber?: number;
   /** Visitor-facing name for this relay's set. Fire uses harnessed discoveries. */
   discoveryNoun?: string;
+  /** Spoken summary. Tree has no track, so the door does not invent one. */
+  narrate?: boolean;
+  /** Label when this hall does not open another finished hall. */
+  endLabel?: string;
 }
 
 export function RelaySummaryCard({
@@ -35,6 +39,8 @@ export function RelaySummaryCard({
   onContinue,
   nextRelayNumber,
   discoveryNoun,
+  narrate = true,
+  endLabel,
 }: RelaySummaryCardProps) {
   const t = useT();
   const relay = RELAYS.find((r) => r.number === relayNumber);
@@ -45,15 +51,13 @@ export function RelaySummaryCard({
 
   // DAVID narrates a unique line when the summary card appears
   useEffect(() => {
-    if (!narrated) {
-      // Small delay so the card animation plays first
-      const timer = setTimeout(() => {
-        narrateRelaySummary(relayNumber, inventionsFound, totalInventions);
-        setNarrated(true);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [relayNumber, inventionsFound, totalInventions, narrated]);
+    if (!narrate || narrated) return;
+    const timer = setTimeout(() => {
+      narrateRelaySummary(relayNumber, inventionsFound, totalInventions);
+      setNarrated(true);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [relayNumber, inventionsFound, totalInventions, narrated, narrate]);
 
   return (
     <motion.div
@@ -148,7 +152,7 @@ export function RelaySummaryCard({
         ) : (
           <>
             <CheckCircle2 className="w-4 h-4 mr-2" />
-            All Relays Complete!
+            {endLabel ?? "All Relays Complete!"}
           </>
         )}
       </Button>
@@ -160,7 +164,7 @@ export function RelaySummaryCard({
       )}
 
       {/* DAVID voice indicator */}
-      {getVoiceEnabled() && (
+      {narrate && getVoiceEnabled() && (
         <div className="flex items-center justify-center gap-1.5 mt-3">
           <Volume2 className="w-3 h-3 text-amber-400/60 animate-pulse" />
           <span className="text-[9px] text-amber-400/60 font-mono">DAVID NARRATING</span>

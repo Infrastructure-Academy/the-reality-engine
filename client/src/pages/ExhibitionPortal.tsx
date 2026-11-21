@@ -1,6 +1,6 @@
 import { flushSync } from "react-dom";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   APPROACH_LINES,
   CUT_LINE,
@@ -8,6 +8,7 @@ import {
   FILM_LABEL,
   FILM_SRC,
   FIRE_HALL_PATH,
+  TREE_HALL_PATH,
   HALL_CARDS,
   PLATE_SRC,
   EPISODE_ONE,
@@ -197,7 +198,11 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
         <span className="block font-heading text-base text-amber-50">{`${hall.number} · ${hall.name}`}</span>
         <span className="mt-0.5 block text-xs text-amber-100/80">{`${hall.plate} · ${hall.when}`}</span>
         <span className="mt-1 block text-sm text-amber-50">
-          {hall.href ? "Open the live hall and its harnessed discoveries." : "Entrance. This returns you to the floor."}
+          {hall.id === "fire"
+            ? "Open the live hall and its harnessed discoveries."
+            : hall.id === "tree"
+              ? "Open the live Tree hall."
+              : "Entrance. This returns you to the floor."}
         </span>
       </span>
       <span className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-amber-300/15 px-3 text-xs font-heading tracking-wide text-amber-50">
@@ -211,7 +216,14 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
 
   if (hall.href) {
     return (
-      <Link href={hall.href} data-testid={`portal-hall-${hall.id}`} className={className} onClick={() => beginFireBedFromGesture()}>
+      <Link
+        href={hall.href}
+        data-testid={`portal-hall-${hall.id}`}
+        className={className}
+        onClick={() => {
+          if (hall.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+        }}
+      >
         {body}
       </Link>
     );
@@ -225,6 +237,7 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
 }
 
 export default function ExhibitionPortal() {
+  const [, navigate] = useLocation();
   const reduced = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stage, setStage] = useState<Stage>("opening");
@@ -250,11 +263,16 @@ export default function ExhibitionPortal() {
     const station = new URLSearchParams(window.location.search).get("station");
     if (!station) return;
     const turn = turnFromHall(station);
+    if (turn.kind === "hall") {
+      if (turn.path === FIRE_HALL_PATH) beginFireBedFromGesture();
+      navigate(turn.path);
+      return;
+    }
     if (turn.kind === "return") {
       setStage("halls");
       setNotice(turn);
     }
-  }, []);
+  }, [navigate]);
 
   function resetToZero() {
     videoRef.current?.pause();
@@ -438,7 +456,7 @@ export default function ExhibitionPortal() {
               Thirteen halls, held up by the zero
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-amber-50">
-              Fire is first and opens the live hall. The other entrances return you to the floor. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
+              Fire and Tree open their live halls. The other entrances return you to the floor. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
             </p>
             {notice ? (
               <div className="mt-3">
@@ -495,9 +513,11 @@ export default function ExhibitionPortal() {
                             ? "The planet. Boundary-condition reset to explore."
                             : door.role === "epilogue"
                               ? "Epilogue. Not Human Nodes."
-                              : door.href
+                              : door.href === FIRE_HALL_PATH
                                 ? "Relay 1. Opens the live Fire hall."
-                                : "Relay door. Returns you to the floor."}
+                                : door.href === TREE_HALL_PATH
+                                  ? "Relay 2. Opens the live Tree hall."
+                                  : "Relay door. Returns you to the floor."}
                         </span>
                       </span>
                     </>
@@ -509,7 +529,9 @@ export default function ExhibitionPortal() {
                         href={door.href}
                         data-testid={`portal-door-${door.id}`}
                         className={className}
-                        onClick={() => beginFireBedFromGesture()}
+                        onClick={() => {
+                          if (door.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+                        }}
                       >
                         {label}
                       </Link>

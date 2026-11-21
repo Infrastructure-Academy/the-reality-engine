@@ -24,6 +24,9 @@ import RelaySpinner from "./pages/RelaySpinner";
 // The exhibition portal is opened from the landing. Keep it on the
 // first load so iPhone Safari does not wait on a lazy chunk.
 import ExhibitionPortal from "./pages/ExhibitionPortal";
+// iGO is opened from the bottom bar. A lazy chunk can stay pending on
+// iPhone Safari and leave a dark shell, so this face loads with the app.
+import IGOUmbrella from "./pages/IGOUmbrella";
 
 // ─── Lazy loaded (heavy pages, code-split) ───
 const FlightDeck = lazy(() => import("./pages/FlightDeck"));
@@ -46,7 +49,6 @@ const DungeonCrawl = lazy(() => import("./pages/DungeonCrawl"));
 const GreyMatter = lazy(() => import("./pages/GreyMatter"));
 const AppraisalQuestionnaire = lazy(() => import("./pages/AppraisalQuestionnaire"));
 const Prologue = lazy(() => import("./pages/Prologue"));
-const IGOUmbrella = lazy(() => import("./pages/IGOUmbrella"));
 const IgoAdmin = lazy(() => import("./pages/IgoAdmin"));
 
 // ─── Loading fallback ───
@@ -169,6 +171,9 @@ function HideManusWatermark() {
 }
 
 function FireBedHost() {
+  const [location] = useLocation();
+  const carryFireAudio = location === "/explore/1" || location.startsWith("/portal");
+  if (!carryFireAudio) return null;
   return (
     <>
       <audio id={FIRE_STORY_BED_ID} data-testid="fire-story-bed" src={FIRE_STORY_BED_SRC} preload="auto" />

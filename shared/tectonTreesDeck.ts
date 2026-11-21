@@ -1,6 +1,6 @@
 /**
  * Tecton Trees Deck, Relay Block 2 of 12.
- * Pages 3–50 of the pack are these 48 trees, in deck order.
+ * The unique plates, in deck order. The repeated Árbol del Tule plate is not listed again.
  * The cover, the relay map, the master stats grid, and the Dearden Field
  * are not trees. The number on each plate is the number printed on that iCard.
  * Nothing here is given a new recording.
@@ -426,15 +426,6 @@ export const TECTON_TREES_DECK: readonly TectonTreeCard[] = [
   },
   {
     order: 46,
-    number: 40,
-    name: "Árbol del Tule",
-    latin: "Taxodium mucronatum",
-    category: "Brehon",
-    file: "46-arbol-del-tule-repeat.webp",
-    note: "The Árbol del Tule in Oaxaca, Mexico, has the widest trunk of any tree on Earth, 58 metres around. The Zapotec people believe the wind god Ehecatl planted it 1,400 years ago.",
-  },
-  {
-    order: 47,
     number: 41,
     name: "Monkey Puzzle",
     latin: "Araucaria araucana",
@@ -443,7 +434,7 @@ export const TECTON_TREES_DECK: readonly TectonTreeCard[] = [
     note: "The monkey puzzle has been on Earth for 200 million years, and it lived alongside the dinosaurs. Its seeds fed the Mapuche people of Chile for millennia. The name comes from a Victorian joke: it would puzzle a monkey to climb it.",
   },
   {
-    order: 48,
+    order: 47,
     number: 42,
     name: "Sugar Maple",
     latin: "Acer saccharum",

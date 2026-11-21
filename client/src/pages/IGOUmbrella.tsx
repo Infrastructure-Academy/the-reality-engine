@@ -87,7 +87,7 @@ const IMPACT_STATS = [
 
 export default function IGOUmbrella() {
   const t = useT();
-  const [showContent, setShowContent] = useState(false);
+  const [showContent, setShowContent] = useState(true);
   const [selectedAge, setSelectedAge] = useState<number | null>(null);
   const [filterEpisode, setFilterEpisode] = useState<number | null>(null);
   const [selectedMode, setSelectedMode] = useState<typeof MODES[0] | null>(null);

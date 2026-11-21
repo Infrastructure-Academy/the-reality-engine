@@ -6,6 +6,7 @@ import {
   tectonTreeSrc,
   type TectonTreeCard,
 } from "@shared/tectonTreesDeck";
+import { protocolLine, treeProtocolFor } from "@shared/tectonTreesProtocol";
 
 function pad(number: number): string {
   return String(number).padStart(2, "0");
@@ -25,7 +26,7 @@ function categoryRuns(deck: readonly TectonTreeCard[]): { category: string; card
 }
 
 /**
- * The 48 Tecton tree iCards, in deck order, under the nine Tree discoveries.
+ * The Tecton tree iCards, in deck order, under the nine Tree discoveries.
  * A tap opens the illustrated plate. No new speech is generated.
  */
 export function TectonTreesLearnMore({
@@ -39,19 +40,30 @@ export function TectonTreesLearnMore({
 }) {
   const openedCard = opened ? TECTON_TREES_DECK[opened - 1] : undefined;
   const runs = categoryRuns(TECTON_TREES_DECK);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  // Opening a plate adds one history entry on this same hall. Back pops that
+  // entry and closes the plate. It does not leave /explore/2 for Fire.
+  useEffect(() => {
+    if (opened == null) return;
+    window.history.pushState({ treePlate: opened }, "");
+    const onPop = () => onCloseRef.current();
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [opened]);
 
   return (
     <section
       aria-labelledby="tecton-trees-title"
       data-testid="tecton-trees-learn-more"
-      className="mt-10 border-t border-emerald-300/25 pt-8"
+      className="mt-10 scroll-mb-28 border-t border-emerald-300/25 pb-28 pt-8"
     >
       <p className="font-sans text-xs tracking-[0.22em] text-emerald-200/80 uppercase">Learn more</p>
       <h2 id="tecton-trees-title" className="mt-1 font-sans text-xl font-semibold tracking-normal text-emerald-50">
         Tecton Trees Deck
       </h2>
       <p className="mt-2 max-w-prose font-sans text-sm leading-relaxed text-emerald-100/90">
-        Relay Block 2 of 12. Forty-eight trees, in deck order. Each one opens its Tecton iCard. The nine discoveries above are unchanged.
+        Relay Block 2 of 12. Forty-seven trees, in deck order. Each one opens its Tecton iCard. The nine discoveries above are unchanged.
       </p>
       <div className="mt-5 flex flex-col gap-6">
         {runs.map((run) => (
@@ -71,51 +83,33 @@ export function TectonTreesLearnMore({
 }
 
 function TreeFace({ card, onOpen }: { card: TectonTreeCard; onOpen: () => void }) {
-  const faceRef = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const face = faceRef.current;
-    if (!face) return;
-    const src = tectonTreeSrc(card.order);
-    const paint = () => {
-      if (face.getAttribute("src") !== src) face.src = src;
-    };
-    if (typeof IntersectionObserver === "undefined") {
-      paint();
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          paint();
-          observer.disconnect();
-        }
-      },
-      { root: null, rootMargin: "800px 0px", threshold: 0.01 },
-    );
-    observer.observe(face);
-    return () => observer.disconnect();
-  }, [card.order]);
-
+  const protocol = treeProtocolFor(card);
   return (
-    <li className="list-none">
+    <li className="list-none scroll-mb-28">
       <button
         type="button"
         onClick={onOpen}
         data-testid={`tree-card-${pad(card.order)}`}
-        className="w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200"
+        className="w-full touch-manipulation scroll-mb-28 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-200"
       >
         <img
-          ref={faceRef}
+          src={tectonTreeSrc(card.order)}
           alt=""
           width={TREE_CARD_WIDTH}
           height={TREE_CARD_HEIGHT}
           decoding="async"
-          className="aspect-[408/607] w-full rounded-md border border-emerald-200/40 bg-[#06140c] object-cover"
+          fetchPriority={card.order <= 4 ? "high" : "auto"}
+          className="block aspect-[408/607] w-full rounded-md border border-emerald-200/40 bg-[#06140c] object-cover"
         />
         <span className="mt-1.5 block font-sans text-sm font-medium leading-snug text-emerald-50">
           {`${pad(card.number)} ${card.name}`}
         </span>
         <span className="mt-0.5 block font-sans text-xs leading-snug text-emerald-100/75">{card.latin}</span>
+        {protocol ? (
+          <span className="mt-1 block scroll-mb-28 font-sans text-[11px] leading-snug text-emerald-100/80" data-testid={`tree-protocol-${pad(card.order)}`}>
+            {protocolLine(protocol)}
+          </span>
+        ) : null}
       </button>
     </li>
   );

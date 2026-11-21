@@ -16,6 +16,7 @@ import {
   PORTAL_PATH,
   RECEIVED_ZERO,
   SPIRAL_HELD,
+  TREE_HALL_PATH,
   spiralSlot,
   turnFromDoor,
   turnFromHall,
@@ -107,7 +108,9 @@ describe("exhibition portal first cut", () => {
       "Fractal Connector",
     ]);
     expect(HALL_CARDS[0].href).toBe("/explore/1");
-    expect(HALL_CARDS.slice(1).every((hall) => hall.href === null)).toBe(true);
+    expect(HALL_CARDS[1]).toMatchObject({ id: "tree", name: "Tree", plate: "The Living Structure", href: TREE_HALL_PATH });
+    expect(TREE_HALL_PATH).toBe("/explore/2");
+    expect(HALL_CARDS.slice(2).every((hall) => hall.href === null)).toBe(true);
     expect(HALL_CARDS.map((hall) => hall.id)).not.toContain("planet");
     expect(HALL_CARDS.slice(0, 12).map((hall) => hall.name)).toEqual(RELAYS.map((relay) => relay.name));
     expect(HALL_CARDS.slice(4, 8).map((hall) => `${hall.number} ${hall.name} ${hall.plate} ${hall.when}`)).toEqual([
@@ -128,8 +131,12 @@ describe("exhibition portal first cut", () => {
     expect(DOOR_FRAME[12].id).not.toBe(DOOR_FRAME[13].id);
     expect(HALL_CARDS[11].id).not.toBe(HALL_CARDS[12].id);
     expect(turnFromDoor("planet").kind).toBe("reset");
-    expect(turnFromDoor("relay-1").kind).toBe("fire");
-    expect(turnFromHall("fire").kind).toBe("fire");
+    expect(turnFromDoor("relay-1")).toEqual({ kind: "hall", path: "/explore/1" });
+    expect(turnFromDoor("relay-2")).toEqual({ kind: "hall", path: "/explore/2" });
+    expect(turnFromDoor("relay-3").kind).toBe("return");
+    expect(turnFromHall("fire")).toEqual({ kind: "hall", path: "/explore/1" });
+    expect(turnFromHall("tree")).toEqual({ kind: "hall", path: "/explore/2" });
+    expect(turnFromHall("river").kind).toBe("return");
     const relayTwelve = turnFromDoor("relay-12");
     const epilogue = turnFromDoor("fractal-epilogue");
     const hallTwelve = turnFromHall("human-nodes");
@@ -144,8 +151,11 @@ describe("exhibition portal first cut", () => {
     expect(new Set([relayTwelve.station, epilogue.station, hallTwelve.station, hallCard.station]).size).toBe(4);
     expect(relayTwelve.body).not.toBe(epilogue.body);
     expect(hallTwelve.body).not.toBe(hallCard.body);
-    expect(turnFromHall("tree").kind).toBe("return");
     expect(turnFromHall("missing").kind).toBe("return");
+    const river = turnFromHall("river");
+    if (river.kind !== "return") throw new Error("expected a return");
+    expect(river.body).toContain("Fire and Tree are the live halls.");
+    expect(river.body).not.toContain("first draft");
   });
 
   it("plays the issued film in the portal and does not add a later episode, speech, or a fire preview", () => {
@@ -166,6 +176,13 @@ describe("exhibition portal first cut", () => {
     expect(page).not.toContain("gender vision");
     expect(model).not.toContain("gender vision");
     expect(page).toContain("harnessed discoveries");
+    expect(page).toContain("Open the live Tree hall.");
+    expect(page).toContain("Fire and Tree open their live halls.");
+    expect(page).toContain("navigate(turn.path)");
+    expect(page).toContain("hall.href === FIRE_HALL_PATH");
+    expect(page).not.toContain("first draft, not issued");
+    expect(page).not.toContain("Substrate, not a hall");
+    expect(model).not.toContain("first draft");
     expect(page).toContain('href={hall.href}');
     expect(page).toContain("portal-episode-1");
     expect(page).toContain("portal-later-episodes");
@@ -192,6 +209,7 @@ describe("exhibition portal first cut", () => {
     expect(model).toContain("The zero is not a fourteenth hall.");
     expect(page).toContain("<PlanetOpening");
     const opening = source("client/src/components/PlanetOpening.tsx");
+    expect(opening).toContain("hall.href === FIRE_HALL_PATH");
     expect(opening).toContain("requestAnimationFrame");
     expect(opening).toContain("portal-planet-sequence");
     expect(opening).toContain("portal-pillar-");

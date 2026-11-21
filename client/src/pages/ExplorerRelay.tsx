@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
+import { stepFromRelay } from "@shared/exhibitionPortal";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { classicXpPerDiscovery, presentPlayerCopy } from "@shared/playerProgress";
 import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
@@ -22,7 +23,7 @@ import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePit } from "@/components/FirePit";
-import { beginFireBedFromGesture } from "@/lib/firePlayback";
+import { beginFireBedFromGesture, pauseFireBed } from "@/lib/firePlayback";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
 import { TectonTreesLearnMore } from "@/components/TectonTreesLearnMore";
 import { TreeCanopy } from "@/components/TreeCanopy";
@@ -70,7 +71,7 @@ function RelayHeader({
 }) {
   return (
     <div className="flex items-center justify-between mb-6">
-      <Button variant="ghost" size="sm" disabled={!canGoPrev} onClick={() => navigate(`/explore/${relayNum - 1}`)}>
+      <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) navigate(to); }}>
         <ChevronLeft className="w-5 h-5" />
       </Button>
       <div className="text-center">
@@ -81,7 +82,7 @@ function RelayHeader({
         <p className="text-sm text-muted-foreground" data-testid="relay-subtitle">{subtitle || relayMeta.subtitle}</p>
         <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
       </div>
-      <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
+      <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) navigate(to); }}>
         <ChevronRight className="w-5 h-5" />
       </Button>
     </div>
@@ -239,7 +240,7 @@ function ProgressBar({ discovered, total, completionPct }: { discovered: number;
 
 function RelayNavigator({ currentRelay }: { currentRelay: number }) {
   return (
-    <div className="flex flex-wrap justify-center gap-1.5">
+    <div className="flex flex-wrap justify-center gap-1.5" data-testid="relay-navigator">
       {RELAYS.map((r) => (
         <Link key={r.number} href={`/explore/${r.number}`}>
           <button
@@ -249,6 +250,7 @@ function RelayNavigator({ currentRelay }: { currentRelay: number }) {
                 : "border border-border/30 hover:border-border/60"
             }`}
             title={r.name}
+            aria-label={r.name}
           >
             {r.emoji}
           </button>
@@ -362,7 +364,7 @@ function LayoutMissionBriefing({
     <div className="space-y-6">
       {/* Compact header with era timeline */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" disabled={!canGoPrev} onClick={() => navigate(`/explore/${relayNum - 1}`)}>
+        <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) navigate(to); }}>
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="text-center flex-1">
@@ -377,7 +379,7 @@ function LayoutMissionBriefing({
             </div>
           </div>
         </div>
-        <Button variant="ghost" size="sm" disabled={!canGoNext} onClick={() => navigate(`/explore/${relayNum + 1}`)}>
+        <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) navigate(to); }}>
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
@@ -612,7 +614,7 @@ export default function ExplorerRelay() {
       // DAVID voice narration for discovery
       const invName = inventionData[idx]?.name || `Invention ${idx + 1}`;
       const relName = relayMeta.name;
-      if (relayNum !== 1) narrateDiscovery(invName, relName);
+      if (relayNum !== 1 && relayNum !== 2) narrateDiscovery(invName, relName);
 
       // Persist to DB if we have a profile
       if (profileId) {
@@ -652,8 +654,10 @@ export default function ExplorerRelay() {
   const xpPerItem = classicXpPerDiscovery(relay?.xpReward, inventions.length);
   const totalXpEarned = discoveredItems.size * xpPerItem;
   const completionPct = inventions.length > 0 ? Math.round((discoveredItems.size / inventions.length) * 100) : 0;
-  const canGoPrev = relayNum > 1;
-  const canGoNext = relayNum < 12;
+  const backTo = stepFromRelay(relayNum, "back");
+  const forwardTo = stepFromRelay(relayNum, "forward");
+  const canGoPrev = backTo !== null;
+  const canGoNext = forwardTo !== null;
   const fireDoor = relayValid && relayNum === 1;
   const treeDoor = relayValid && relayNum === 2;
 
@@ -661,24 +665,63 @@ export default function ExplorerRelay() {
 
   // Swipe navigation between relays
   const swipeRef = useSwipeNavigation<HTMLDivElement>({
-    onSwipeLeft: fireDoor
-      ? () => navigate("/portal?station=tree")
-      : canGoNext ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); } : undefined,
-    onSwipeRight: canGoPrev ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); } : undefined,
+    onSwipeLeft: forwardTo
+      ? () => { playRelayTransitionSound(); hapticTransition(); navigate(forwardTo); }
+      : undefined,
+    onSwipeRight: backTo
+      ? () => { playRelayTransitionSound(); hapticTransition(); navigate(backTo); }
+      : undefined,
   });
 
   // Gamepad navigation
   const handleGamepadButton = useCallback(
     (button: GamepadButtonName) => {
-      if (button === "RB" && fireDoor) { navigate("/portal?station=tree"); }
-      else if (button === "RB" && canGoNext) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); }
-      else if (button === "LB" && canGoPrev) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); }
+      if (button === "RB") {
+        if (forwardTo) { playRelayTransitionSound(); hapticTransition(); navigate(forwardTo); }
+      }
+      else if (button === "LB") {
+        if (backTo) { playRelayTransitionSound(); hapticTransition(); navigate(backTo); }
+      }
       else if (button === "X") setShowChat((prev) => !prev);
       else if (button === "B") navigate("/");
     },
-    [canGoNext, canGoPrev, relayNum, navigate, fireDoor]
+    [backTo, forwardTo, navigate]
   );
   useGamepad(handleGamepadButton);
+
+  useEffect(() => {
+    if (!treeDoor) return;
+    pauseFireBed();
+  }, [treeDoor]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const target = event.target;
+      if (target instanceof HTMLElement) {
+        const tag = target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable) return;
+        if (target.closest("[role='dialog']")) return;
+      }
+      if (event.key === "ArrowRight") {
+        if (forwardTo) {
+          event.preventDefault();
+          playRelayTransitionSound();
+          hapticTransition();
+          navigate(forwardTo);
+        }
+      } else if (event.key === "ArrowLeft") {
+        if (backTo) {
+          event.preventDefault();
+          playRelayTransitionSound();
+          hapticTransition();
+          navigate(backTo);
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [backTo, forwardTo, navigate]);
 
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
 
@@ -708,7 +751,7 @@ export default function ExplorerRelay() {
     if (plate) setOpenTecton(plate);
   };
 
-  const storyPlayer = authored && !fireDoor ? (
+  const storyPlayer = authored && !fireDoor && !treeDoor ? (
     <StoryPlayBar
       audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
       labels={authored.labels}
@@ -769,14 +812,10 @@ export default function ExplorerRelay() {
             profileId={profileId}
             onComplete={() => {
               setShowDilemma(false);
-              if (fireDoor) {
-                navigate("/portal?station=tree");
-                return;
-              }
-              if (canGoNext) {
+              if (forwardTo) {
                 playRelayTransitionSound();
                 hapticTransition();
-                navigate(`/explore/${relayNum + 1}`);
+                navigate(forwardTo);
               }
             }}
           />
@@ -787,12 +826,14 @@ export default function ExplorerRelay() {
             totalInventions={inventions.length}
             xpEarned={totalXpEarned}
             discoveryNoun={fireDoor ? "harnessed discoveries" : undefined}
+            narrate={!treeDoor}
+            endLabel={treeDoor ? "Continue in the Tree hall" : undefined}
             timeSpent={Math.round((Date.now() - relayStartTime) / 1000)}
             onContinue={() => {
               setShowRelaySummary(false);
               setShowDilemma(true); // Transition to dilemma phase
             }}
-            nextRelayNumber={canGoNext ? relayNum + 1 : undefined}
+            nextRelayNumber={forwardTo ? Number(forwardTo.slice("/explore/".length)) : undefined}
           />
         ) : (
           <>
