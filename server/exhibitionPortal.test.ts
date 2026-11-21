@@ -196,6 +196,9 @@ describe("exhibition portal first cut", () => {
     expect(opening).toContain("portal-planet-sequence");
     expect(opening).toContain("portal-pillar-");
     expect(opening).toContain("smouldering");
+    expect(opening).not.toContain('beat === "pillars" && !done');
+    expect(opening).not.toContain("Substrate, not a hall");
+    expect(page).not.toContain("Substrate, not a hall");
     expect(opening).not.toContain("fire-preview");
     expect(opening).not.toContain("speechSynthesis");
     expect(opening).not.toContain("gender vision");

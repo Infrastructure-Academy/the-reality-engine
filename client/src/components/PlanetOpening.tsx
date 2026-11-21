@@ -8,12 +8,12 @@ import type { HallCard } from "@shared/exhibitionPortal";
  * The static sun-and-zero diagram is not this sequence.
  */
 
-const SMOULDER_AT = 1.15;
-const SETTLED_AT = 7.4;
-const PILLAR_AT = 13.6;
-const STAGGER = 0.36;
-const RISE_FOR = 0.92;
-const DONE_AT = PILLAR_AT + 12 * STAGGER + RISE_FOR + 0.35;
+const SMOULDER_AT = 4.6;
+const SETTLED_AT = 13.2;
+const PILLAR_AT = 19.4;
+const STAGGER = 0.48;
+const RISE_FOR = 1.15;
+const DONE_AT = PILLAR_AT + 12 * STAGGER + RISE_FOR + 0.45;
 
 type Beat = "solar" | "smoulder" | "settled" | "pillars";
 
@@ -145,29 +145,47 @@ function drawPlanet(
   context.fillStyle = base;
   context.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
 
-  const spin = time * 0.35;
-  for (let band = 0; band < 11; band += 1) {
-    const shift = (band / 11 + spin * 0.07) % 1;
-    const y = cy - radius + shift * radius * 2;
-    const land = cool < 0.5 ? 0 : smooth((cool - 0.5) / 0.5);
-    if (cool < 0.62) {
-      context.fillStyle = band % 2 === 0 ? "rgba(255, 214, 120, 0.22)" : "rgba(70, 16, 4, 0.42)";
-    } else {
-      context.fillStyle = band % 3 === 0 ? `rgba(36, 92, 58, ${0.35 + land * 0.35})` : `rgba(18, 58, 110, ${0.2 + land * 0.35})`;
+  const spin = time * 0.22;
+  if (cool < 0.38) {
+    for (let index = 0; index < 5; index += 1) {
+      const angle = spin + index * 1.25;
+      const px = cx + Math.cos(angle) * radius * 0.28;
+      const py = cy + Math.sin(angle * 0.85) * radius * 0.32;
+      const magma = context.createRadialGradient(px, py, 2, px, py, radius * 0.28);
+      magma.addColorStop(0, "rgba(255, 244, 210, 0.95)");
+      magma.addColorStop(0.35, "rgba(255, 120, 20, 0.75)");
+      magma.addColorStop(1, "rgba(120, 20, 0, 0)");
+      context.fillStyle = magma;
+      context.beginPath();
+      context.ellipse(px, py, radius * 0.22, radius * 0.12, angle, 0, Math.PI * 2);
+      context.fill();
     }
-    context.fillRect(cx - radius, y, radius * 2, Math.max(3, radius * 0.055));
-  }
-
-  if (cool < 0.75) {
-    context.strokeStyle = `rgba(255, 226, 150, ${(1 - cool) * 0.85})`;
-    context.lineWidth = Math.max(1.5, radius * 0.018);
+    context.strokeStyle = "rgba(255, 236, 170, 0.9)";
+    context.lineWidth = Math.max(2.5, radius * 0.028);
+    context.shadowColor = "#ffb45a";
+    context.shadowBlur = 12;
     context.beginPath();
-    for (let index = 0; index < 4; index += 1) {
-      const y = cy - radius + ((index * 0.23 + spin * 0.15) % 1) * radius * 2;
-      context.moveTo(cx - radius, y);
-      context.bezierCurveTo(cx - radius * 0.2, y - radius * 0.08, cx + radius * 0.25, y + radius * 0.1, cx + radius, y);
+    for (let index = 0; index < 6; index += 1) {
+      const y = cy - radius * 0.75 + ((index * 0.18 + spin * 0.2) % 1) * radius * 1.5;
+      context.moveTo(cx - radius * 0.85, y);
+      context.bezierCurveTo(cx - radius * 0.2, y - radius * 0.16, cx + radius * 0.15, y + radius * 0.14, cx + radius * 0.8, y - radius * 0.04);
     }
     context.stroke();
+    context.shadowBlur = 0;
+  } else {
+    const land = smooth((cool - 0.38) / 0.62);
+    const continents = [
+      [0.1, -0.15, 0.34, 0.2],
+      [-0.28, 0.12, 0.26, 0.16],
+      [0.22, 0.2, 0.22, 0.14],
+      [-0.05, -0.38, 0.2, 0.1],
+    ];
+    context.fillStyle = `rgba(46, 120, 72, ${0.35 + land * 0.55})`;
+    for (const [ox, oy, rx, ry] of continents) {
+      context.beginPath();
+      context.ellipse(cx + ox * radius, cy + oy * radius, rx * radius, ry * radius, ox, 0, Math.PI * 2);
+      context.fill();
+    }
   }
 
   if (cool > 0.62) {
@@ -230,31 +248,40 @@ function paintWorld(
   drawStars(context, width, height, time, stars, starFade);
 
   const cool =
-    time < SMOULDER_AT ? 0.05 : time < SETTLED_AT ? smooth((time - SMOULDER_AT) / (SETTLED_AT - SMOULDER_AT)) * 0.42 : smooth(Math.min(1, (time - SETTLED_AT) / 3.2));
+    time < SMOULDER_AT
+      ? 0.02
+      : time < SETTLED_AT
+        ? 0.06 + smooth((time - SMOULDER_AT) / (SETTLED_AT - SMOULDER_AT)) * 0.16
+        : 0.22 + smooth(Math.min(1, (time - SETTLED_AT) / (PILLAR_AT - SETTLED_AT))) * 0.78;
 
   let radius = Math.min(width, height) * 0.34;
   let cx = width * 0.5;
-  let cy = height * 0.46;
+  let cy = height * 0.42;
   if (time < SMOULDER_AT) {
     const u = smooth(time / SMOULDER_AT);
-    radius = 36 + u * (Math.min(width, height) * 0.28);
-    cx = width * (0.68 - u * 0.18);
-    cy = height * (0.58 - u * 0.08);
-    drawSun(context, width * 0.18, height * 0.16, 22, 1 - u * 0.35);
+    radius = 22 + u * Math.min(width, height) * 0.16;
+    cx = width * (0.72 - u * 0.16);
+    cy = height * (0.56 - u * 0.06);
+    drawSun(context, width * 0.28, height * 0.3, 34, 1);
   } else if (time < PILLAR_AT) {
-    radius = Math.min(width, height) * (0.36 + smooth((time - SMOULDER_AT) / 3.2) * 0.1);
-    drawSun(context, width * 0.16, height * 0.12, 16, Math.max(0, 1 - (time - SMOULDER_AT) / 2.4));
-  } else {
-    const u = smooth(Math.min(1, (time - PILLAR_AT) / 1.3));
-    radius = Math.min(width, height) * (0.36 + u * 1.35);
-    cy = height * (0.46 + u * 0.78);
+    const u = smooth(Math.min(1, (time - SMOULDER_AT) / 2.4));
+    radius = Math.min(width, height) * (0.28 + u * 0.16);
+    const glow = context.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 2.2);
+    const heat = time < SETTLED_AT ? 0.85 : 0.85 * (1 - smooth((time - SETTLED_AT) / (PILLAR_AT - SETTLED_AT)));
+    glow.addColorStop(0, `rgba(255, 120, 30, ${0.45 * heat})`);
+    glow.addColorStop(1, "rgba(255, 60, 0, 0)");
+    context.fillStyle = glow;
+    context.beginPath();
+    context.arc(cx, cy, radius * 2.2, 0, Math.PI * 2);
+    context.fill();
+    drawSun(context, width * 0.14, height * 0.12, 14, Math.max(0, 1 - (time - SMOULDER_AT) / 3.2));
   }
 
-  drawPlanet(context, cx, cy, radius, time, time >= PILLAR_AT ? 1 : cool);
+  if (time < PILLAR_AT) drawPlanet(context, cx, cy, radius, time, cool);
 
   if (beat === "pillars") {
-    drawFlame(context, width * 0.22, height * 0.78, 54, time);
-    drawFlame(context, width * 0.28, height * 0.8, 36, time + 0.6);
+    drawFlame(context, width * 0.2, height * 0.7, 46, time);
+    drawFlame(context, width * 0.27, height * 0.72, 30, time + 0.6);
   }
 }
 
@@ -273,25 +300,57 @@ function PillarShaft({
   onReturn: (id: string) => void;
 }) {
   const className =
-    "relative flex h-full w-full flex-col items-center rounded-t-sm border-x border-t border-amber-100/40 bg-gradient-to-b from-[#f3e0b8] via-[#7a5330] to-[#2c1c12] pt-2 shadow-[0_0_18px_rgba(255,150,50,0.22)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200";
+    "relative flex h-full w-full flex-col items-center overflow-hidden px-0.5 pt-1.5 text-center bg-gradient-to-br from-[#f4e2c4] via-[#8d5c38] to-[#2a1a12] shadow-[inset_-7px_0_12px_rgba(0,0,0,0.4),inset_5px_0_8px_rgba(255,228,190,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200";
+  const stone = { clipPath: "polygon(8% 0%, 94% 5%, 100% 100%, 0% 100%)" };
   const label = `${hall.number}. ${hall.name}. ${hall.plate}. ${hall.href ? "Opens the live hall." : "Returns you to the floor."}`;
   const body = (
     <>
-      <span className="absolute -top-1 left-[-18%] right-[-18%] h-2 rounded-sm bg-gradient-to-b from-[#fff4d4] to-[#c4924a]" />
-      <span className="font-heading text-[11px] leading-none text-[#2a1608]">{hall.number}</span>
+      <span className="font-heading text-base leading-none text-[#2a1608]">{hall.number}</span>
+      <span className="mt-1 block px-0.5 font-heading text-[10px] leading-tight text-[#2a1608]">{hall.name}</span>
     </>
   );
   if (hall.href) {
     return (
-      <Link href={hall.href} data-testid={`portal-pillar-${hall.id}`} aria-label={label} className={className}>
+      <Link href={hall.href} data-testid={`portal-pillar-${hall.id}`} aria-label={label} className={className} style={stone}>
         {body}
       </Link>
     );
   }
   return (
-    <button type="button" data-testid={`portal-pillar-${hall.id}`} aria-label={label} className={className} onClick={() => onReturn(hall.id)}>
+    <button type="button" data-testid={`portal-pillar-${hall.id}`} aria-label={label} className={className} style={stone} onClick={() => onReturn(hall.id)}>
       {body}
     </button>
+  );
+}
+
+function PillarSlot({
+  hall,
+  index,
+  height,
+  shaftRefs,
+  onReturn,
+}: {
+  hall: HallCard;
+  index: number;
+  height: number;
+  shaftRefs: { current: (HTMLDivElement | null)[] };
+  onReturn: (id: string) => void;
+}) {
+  return (
+    <div
+      ref={(node) => {
+        shaftRefs.current[index] = node;
+        if (node && node.dataset.posed !== "1") {
+          node.style.transform = "translateY(120%)";
+          node.style.opacity = "0";
+          node.dataset.posed = "1";
+        }
+      }}
+      className="min-w-0 flex-1"
+      style={{ height }}
+    >
+      <PillarShaft hall={hall} onReturn={onReturn} />
+    </div>
   );
 }
 
@@ -356,7 +415,8 @@ export function PlanetOpening({
     if (!context) return;
     const params = new URLSearchParams(window.location.search);
     const forced = params.get("beat");
-    const forcedTime = forced === "smoulder" ? 4.4 : forced === "settled" ? 10.2 : forced === "pillars" ? 15.55 : forced === "solar" ? 0.6 : null;
+    const forcedTime =
+      forced === "smoulder" ? 8.8 : forced === "settled" ? 16.2 : forced === "pillars" ? 22.4 : forced === "end" ? DONE_AT : forced === "solar" ? 2.2 : null;
     const stars: Star[] = Array.from({ length: 90 }, () => ({
       x: Math.random(),
       y: Math.random() * 0.82,
@@ -412,7 +472,7 @@ export function PlanetOpening({
       }
       if (earthRef.current) earthRef.current.style.opacity = beat === "pillars" ? "1" : "0";
       if (shaftWrapRef.current) {
-        const showShafts = beat === "pillars" && !done;
+        const showShafts = beat === "pillars";
         shaftWrapRef.current.style.opacity = showShafts ? "1" : "0";
         shaftWrapRef.current.style.pointerEvents = "none";
       }
@@ -432,7 +492,7 @@ export function PlanetOpening({
       shaftRefs.current.forEach((shaft, index) => {
         if (!shaft) return;
         const rise = done ? 1 : riseAt(clock.time, index);
-        shaft.style.transform = `translateY(${(1 - rise) * 118}%)`;
+        shaft.style.transform = `translateY(${(1 - rise) * 120}%)`;
         shaft.style.opacity = rise < 0.03 ? "0" : "1";
         shaft.style.pointerEvents = rise < 0.2 ? "none" : "auto";
       });
@@ -460,33 +520,23 @@ export function PlanetOpening({
 
   return (
     <div ref={rootRef} data-testid="portal-planet-sequence" data-beat={beat} data-settled={arrived ? "true" : "false"}>
-      <div className="relative h-[70svh] min-h-[460px] overflow-hidden rounded-2xl border border-amber-200/35 bg-[#070b16]">
+      <div className="relative h-[78svh] min-h-[560px] overflow-hidden rounded-2xl border border-amber-200/35 bg-[#070b16]">
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
-        <div
-          ref={shaftWrapRef}
-          className="absolute inset-x-2 bottom-[22%] top-[18%] flex items-end justify-between gap-1 opacity-0"
-        >
-          {halls.map((hall, index) => (
-            <div
-              key={hall.id}
-              ref={(node) => {
-                shaftRefs.current[index] = node;
-                if (node && node.dataset.posed !== "1") {
-                  node.style.transform = "translateY(118%)";
-                  node.style.opacity = "0";
-                  node.dataset.posed = "1";
-                }
-              }}
-              className="min-w-0 flex-1"
-              style={{ height: `${62 + ((index * 13) % 28)}%` }}
-            >
-              <PillarShaft hall={hall} onReturn={onReturn} />
-            </div>
-          ))}
+        <div ref={shaftWrapRef} className="absolute inset-0 opacity-0">
+          <div className="absolute inset-x-3 bottom-[22%] flex items-end justify-between gap-1">
+            {halls.slice(7).map((hall, index) => (
+              <PillarSlot key={hall.id} hall={hall} index={index + 7} height={118 + (index % 3) * 16} shaftRefs={shaftRefs} onReturn={onReturn} />
+            ))}
+          </div>
+          <div className="absolute inset-x-2 bottom-[10%] flex items-end justify-between gap-1.5">
+            {halls.slice(0, 7).map((hall, index) => (
+              <PillarSlot key={hall.id} hall={hall} index={index} height={168 + (index % 3) * 22} shaftRefs={shaftRefs} onReturn={onReturn} />
+            ))}
+          </div>
         </div>
         <div
           ref={earthRef}
-          className="pointer-events-none absolute -bottom-[18%] left-[-18%] right-[-18%] h-[46%] rounded-[50%] bg-[radial-gradient(circle_at_50%_0%,#e6c48a_0%,#7fb56e_10%,#2f6b45_28%,#16382c_62%,#07140f_100%)] opacity-0 shadow-[inset_0_12px_28px_rgba(255,214,150,0.35)]"
+          className="pointer-events-none absolute -bottom-[18%] left-[-22%] right-[-22%] h-[44%] rounded-[50%] bg-[radial-gradient(circle_at_50%_0%,#e6c48a_0%,#7fb56e_10%,#2f6b45_28%,#16382c_62%,#07140f_100%)] opacity-0 shadow-[inset_0_12px_28px_rgba(255,214,150,0.35)]"
           aria-hidden="true"
         />
         <button
@@ -495,7 +545,7 @@ export function PlanetOpening({
           data-testid="portal-zero"
           data-face="quiet"
           onClick={onReset}
-          aria-label="0. The planet. Boundary-condition reset to explore. Not a hall."
+          aria-label="0. The planet. Boundary-condition reset to explore."
           className="absolute bottom-[8%] left-1/2 z-20 flex h-16 w-16 -translate-x-1/2 touch-manipulation items-center justify-center rounded-full font-heading text-2xl text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 data-[face=marked]:border data-[face=marked]:border-amber-100/50 data-[face=marked]:bg-[#12352c]/85 data-[face=quiet]:opacity-0"
         >
           0
