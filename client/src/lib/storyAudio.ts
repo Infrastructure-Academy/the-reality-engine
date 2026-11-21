@@ -1,5 +1,5 @@
-/** British English recording of the Fire briefing, the story, and the quote. */
-/** Card-paced read of the issued Fire wording. Not the 44.5 s stand-in. */
+/** British English recording of the complete Fire briefing, through the Van Dyke close. */
+/** Card-paced read of the issued Volume 1 paragraph. Not the 44.5 s stand-in. */
 export const FIRE_STORY_AUDIO_URL = "/audio/fire-cards/volume-1-briefing.mp3";
 
 /**
