@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -48,12 +48,19 @@ function formatXp(xp: number): string {
 export default function Leaderboard() {
   const t = useT();
   const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
+  const [boardWaited, setBoardWaited] = useState(false);
 
-  // Fetch live leaderboard data from DB
-  const { data: liveEntries, isLoading } = trpc.leaderboard.live.useQuery(
+  // Fetch live leaderboard data from DB. On the static door the API may never answer.
+  const { data: liveEntries, isLoading, isError } = trpc.leaderboard.live.useQuery(
     modeFilter === "all" ? undefined : { mode: modeFilter },
-    { refetchInterval: 30000 } // Refresh every 30 seconds
+    { retry: false, refetchOnWindowFocus: false }
   );
+
+  useEffect(() => {
+    setBoardWaited(false);
+    const timer = window.setTimeout(() => setBoardWaited(true), 4000);
+    return () => window.clearTimeout(timer);
+  }, [modeFilter]);
 
   const entries = useMemo(() => liveEntries ?? [], [liveEntries]);
 
@@ -122,7 +129,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Loading State */}
-        {isLoading && (
+        {isLoading && !isError && !boardWaited && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-6 h-6 animate-spin text-amber-400 mr-2" />
             <span className="text-muted-foreground text-sm">{t("leaderboard.loading")}</span>
@@ -130,7 +137,7 @@ export default function Leaderboard() {
         )}
 
         {/* Empty State */}
-        {!isLoading && entries.length === 0 && (
+        {(isError || boardWaited || !isLoading) && entries.length === 0 && (
           <div className="text-center py-12">
             <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
             <p className="text-muted-foreground text-sm">{t("leaderboard.noPlayers")}</p>
@@ -143,7 +150,7 @@ export default function Leaderboard() {
         )}
 
         {/* Leaderboard Table */}
-        {!isLoading && entries.length > 0 && (
+        {!isLoading && !isError && entries.length > 0 && (
           <div className="rounded-xl border border-border/50 overflow-hidden">
             {/* Header Row */}
             <div className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[50px_1fr_100px_100px_80px_80px] gap-2 px-4 py-3 bg-muted/30 text-xs uppercase tracking-wider text-muted-foreground border-b border-border/50">

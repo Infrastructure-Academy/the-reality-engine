@@ -22,6 +22,7 @@ export function BottomTabBar() {
 
   const handleGamepadButton = useCallback(
     (button: GamepadButtonName) => {
+      if (location === "/explore/1" || location === "/explore/2") return;
       // Find current tab index
       const currentIdx = TABS.findIndex(
         (t) => location === t.path || (t.path !== "/" && location.startsWith(t.path.split("/").slice(0, 2).join("/")))
