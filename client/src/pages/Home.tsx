@@ -1255,6 +1255,20 @@ export default function Home() {
         </div>
       </header>
 
+      <div className="relative z-10 px-3 pt-3">
+        <Link
+          href="/portal"
+          data-testid="home-exhibition-portal"
+          className="mx-auto flex min-h-14 max-w-6xl touch-manipulation items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-[#07111f] px-4 text-amber-50 shadow-[0_0_24px_rgba(251,191,36,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+        >
+          <span>
+            <span className="block font-heading text-sm tracking-wide">Exhibition portal</span>
+            <span className="block text-xs text-amber-100/85">Episode 1 · Earthbound Foundations — The Lineage. Planet at zero, the issued film, and 13 halls.</span>
+          </span>
+          <ChevronRight className="h-5 w-5 shrink-0 text-amber-200" aria-hidden="true" />
+        </Link>
+      </div>
+
       <GameModeGates />
       <RelayCollectionTracker />
       <DoorBadges />

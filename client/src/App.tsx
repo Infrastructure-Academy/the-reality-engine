@@ -20,6 +20,9 @@ import ExplorerRelay from "./pages/ExplorerRelay";
 // can stay pending on iPhone Safari, so /explore/spinner never leaves
 // "LOADING MODULE...". Home's Play control opens this route.
 import RelaySpinner from "./pages/RelaySpinner";
+// The exhibition portal is opened from the landing. Keep it on the
+// first load so iPhone Safari does not wait on a lazy chunk.
+import ExhibitionPortal from "./pages/ExhibitionPortal";
 
 // ─── Lazy loaded (heavy pages, code-split) ───
 const FlightDeck = lazy(() => import("./pages/FlightDeck"));
@@ -111,6 +114,7 @@ function Router() {
         <Route path={"/play/igo"} component={IGOUmbrella} />
         <Route path={"/admin/igo"} component={IgoAdmin} />
         <Route path={"/exhibition"} component={IGOUmbrella} />
+        <Route path={"/portal"} component={ExhibitionPortal} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />
       </Switch>
