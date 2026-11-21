@@ -1,16 +1,26 @@
-import { useState } from "react";
-import { TECTON_FIRE_DECK, type TectonFireCard } from "@shared/tectonFireDeck";
+import { useEffect, useRef } from "react";
+import { TECTON_FIRE_DECK, tectonIcardSrc, type TectonFireCard } from "@shared/tectonFireDeck";
 
 function pad(number: number): string {
   return String(number).padStart(2, "0");
 }
 
 /**
- * Learn-more reading for the 48 Tecton phenomena.
- * Sits under the nine harnessed discoveries. No new speech is generated.
+ * The 48 Tecton iCards, in deck order, under the nine harnessed discoveries.
+ * A tap opens the illustrated plate. No new speech is generated.
  */
-export function TectonFireLearnMore({ onHear }: { onHear?: (recordedAs: string) => void }) {
-  const [openNumber, setOpenNumber] = useState<number | null>(null);
+export function TectonFireLearnMore({
+  opened,
+  onOpen,
+  onClose,
+  onHear,
+}: {
+  opened: number | null;
+  onOpen: (number: number) => void;
+  onClose: () => void;
+  onHear?: (recordedAs: string) => void;
+}) {
+  const openedCard = opened ? TECTON_FIRE_DECK[opened - 1] : undefined;
 
   return (
     <section
@@ -23,68 +33,117 @@ export function TectonFireLearnMore({ onHear }: { onHear?: (recordedAs: string) 
         Tecton Fire Deck
       </h2>
       <p className="mt-2 max-w-prose font-sans text-sm leading-relaxed text-amber-100/90">
-        Relay Block 1 of 12. Forty-eight fire phenomena, in deck order, for anyone who wants to read further. The nine discoveries above are unchanged.
+        Relay Block 1 of 12. Forty-eight fire phenomena, in deck order. Each one opens its Tecton iCard. The nine discoveries above are unchanged.
       </p>
-      <ol className="mt-5 flex flex-col gap-3">
+      <div className="mt-5 flex flex-col gap-6">
         {TECTON_FIRE_DECK.map((card, index) => {
           const previous = TECTON_FIRE_DECK[index - 1];
           const showCategory = !previous || previous.category !== card.category;
-          const open = openNumber === card.number;
           return (
-            <li key={card.number} className="flex flex-col gap-2">
+            <div key={card.number} className={showCategory ? "" : "contents"}>
               {showCategory ? (
-                <p className="pt-2 font-sans text-xs tracking-[0.18em] text-amber-200/70 uppercase">{card.category}</p>
+                <p className="font-sans text-xs tracking-[0.18em] text-amber-200/70 uppercase">{card.category}</p>
               ) : null}
-              <TectonRow card={card} open={open} onToggle={() => setOpenNumber(open ? null : card.number)} onHear={onHear} />
-            </li>
+              {showCategory ? (
+                <ol className="grid grid-cols-2 gap-3">
+                  {TECTON_FIRE_DECK.filter((item) => item.category === card.category).map((item) => (
+                    <TectonFace key={item.number} card={item} onOpen={() => onOpen(item.number)} />
+                  ))}
+                </ol>
+              ) : null}
+            </div>
           );
         })}
-      </ol>
+      </div>
+      {openedCard ? <TectonPlate card={openedCard} onClose={onClose} onHear={onHear} /> : null}
     </section>
   );
 }
 
-function TectonRow({
+function TectonFace({ card, onOpen }: { card: TectonFireCard; onOpen: () => void }) {
+  return (
+    <li className="list-none">
+      <button
+        type="button"
+        onClick={onOpen}
+        data-testid={`tecton-card-${pad(card.number)}`}
+        className="w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+      >
+        <img
+          src={tectonIcardSrc(card.number)}
+          alt=""
+          width={1400}
+          height={1885}
+          loading="lazy"
+          className="aspect-[1400/1885] w-full rounded-md border border-amber-200/40 bg-[#07101c] object-cover"
+        />
+        <span className="mt-1.5 block font-sans text-sm font-medium leading-snug text-amber-50">
+          {`${pad(card.number)} ${card.name}`}
+        </span>
+        <span className="mt-0.5 block font-sans text-xs leading-snug text-amber-100/75">{card.latin}</span>
+      </button>
+    </li>
+  );
+}
+
+function TectonPlate({
   card,
-  open,
-  onToggle,
+  onClose,
   onHear,
 }: {
   card: TectonFireCard;
-  open: boolean;
-  onToggle: () => void;
+  onClose: () => void;
   onHear?: (recordedAs: string) => void;
 }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, [card.number]);
+
   return (
-    <article className="rounded-xl border border-amber-300/30 bg-[#100c09]" data-testid={`tecton-card-${pad(card.number)}`}>
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={onToggle}
-        className="flex min-h-14 w-full touch-manipulation items-start gap-3 px-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
-      >
-        <span className="mt-0.5 w-8 shrink-0 font-mono text-xs text-amber-200">{pad(card.number)}</span>
-        <span className="min-w-0 flex-1">
-          <span className="block font-sans text-base font-medium leading-snug text-amber-50">{card.name}</span>
-          <span className="mt-0.5 block font-sans text-sm leading-snug text-amber-100/75">{card.latin}</span>
-        </span>
-      </button>
-      {open ? (
-        <div className="border-t border-amber-300/20 px-3 py-3" data-testid={`tecton-note-${pad(card.number)}`}>
-          <p className="font-sans text-base leading-relaxed text-amber-50">{card.note}</p>
-          {card.recordedAs && onHear ? (
-            <button
-              type="button"
-              onClick={() => onHear(card.recordedAs!)}
-              className="mt-3 inline-flex min-h-11 touch-manipulation items-center rounded-lg border border-amber-300/50 px-3 font-sans text-sm text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
-            >
-              Hear the recorded discovery
-            </button>
-          ) : (
-            <p className="mt-3 font-sans text-sm leading-relaxed text-amber-100/70">Read the note. This phenomenon has no separate recording.</p>
-          )}
-        </div>
-      ) : null}
-    </article>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tecton-plate-title"
+      data-testid="tecton-plate"
+      className="fixed inset-0 z-[80] overflow-y-auto bg-[#070b14]"
+    >
+      <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-amber-200/20 bg-[#070b14]/95 px-3 py-2">
+        <p id="tecton-plate-title" className="font-sans text-sm font-medium text-amber-50">
+          {`${pad(card.number)} ${card.name}`}
+        </p>
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          data-testid="tecton-plate-close"
+          className="inline-flex min-h-11 touch-manipulation items-center rounded-lg border border-amber-200/40 px-3 font-sans text-sm text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+        >
+          Close
+        </button>
+      </div>
+      <img
+        src={tectonIcardSrc(card.number)}
+        alt={`${card.name}. ${card.latin}.`}
+        width={1400}
+        height={1885}
+        data-testid="tecton-plate-image"
+        className="mx-auto block w-full max-w-[430px]"
+      />
+      <div className="mx-auto max-w-[430px] px-4 py-4 pb-24" data-testid={`tecton-note-${pad(card.number)}`}>
+        <p className="font-sans text-base leading-relaxed text-amber-50">{card.note}</p>
+        {card.recordedAs && onHear ? (
+          <button
+            type="button"
+            onClick={() => onHear(card.recordedAs!)}
+            className="mt-3 inline-flex min-h-11 touch-manipulation items-center rounded-lg border border-amber-300/50 px-3 font-sans text-sm text-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+          >
+            Hear the recorded discovery
+          </button>
+        ) : (
+          <p className="mt-3 font-sans text-sm leading-relaxed text-amber-100/70">Read the note. This phenomenon has no separate recording.</p>
+        )}
+      </div>
+    </div>
   );
 }

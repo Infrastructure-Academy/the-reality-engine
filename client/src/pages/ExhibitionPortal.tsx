@@ -16,12 +16,12 @@ import {
   SOUND_NOTE,
   SPIRAL_HELD,
   ZERO_IS_NOT_A_HALL,
-  spiralSlot,
   turnFromDoor,
   turnFromHall,
   type HallCard,
   type ReturnTurn,
 } from "@shared/exhibitionPortal";
+import { PlanetOpening } from "@/components/PlanetOpening";
 
 type Stage = "opening" | "film" | "halls";
 type Tone = "approach" | "smoulder" | "settled";
@@ -39,20 +39,9 @@ function useReducedMotion() {
   return reduced;
 }
 
-function toneFor(phase: number): Tone {
-  if (phase >= 2) return "settled";
-  if (phase === 1) return "smoulder";
-  return "approach";
-}
-
 function formatFilmTime(totalSeconds: number): string {
   const whole = Math.max(0, Math.floor(totalSeconds));
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
-}
-
-function spiralPath(): string {
-  const points = HALL_CARDS.map((_, index) => spiralSlot(index));
-  return [`M 50 100`, ...points.map((point) => `L ${point.x.toFixed(2)} ${point.y.toFixed(2)}`)].join(" ");
 }
 
 function PlanetZero({ tone, onReset, showCaption = true }: { tone: Tone; onReset: () => void; showCaption?: boolean }) {
@@ -90,18 +79,23 @@ function OpeningScene({
   phase,
   risen,
   reduced,
+  run,
+  onPhase,
+  onRisen,
   onReset,
+  onReturn,
   onPlay,
 }: {
   phase: number;
   risen: number;
   reduced: boolean;
+  run: number;
+  onPhase: (phase: number) => void;
+  onRisen: (count: number) => void;
   onReset: () => void;
+  onReturn: (id: string) => void;
   onPlay: () => void;
 }) {
-  const tone = toneFor(phase);
-  const draw = reduced || phase >= 3 ? 0 : 1;
-
   return (
     <section aria-labelledby="portal-opening-title" data-testid="portal-approach" className="px-4">
       <h2 id="portal-opening-title" tabIndex={-1} className="font-heading text-2xl text-amber-50 focus:outline-none">
@@ -113,63 +107,16 @@ function OpeningScene({
       <p className="mt-1 text-sm text-amber-50">{EPISODE_ONE.line}</p>
       <p className="text-sm text-amber-100">{EPISODE_ONE.state}</p>
 
-      <div className="relative mt-4 h-[20rem] overflow-hidden rounded-2xl border border-amber-300/40 bg-[#050912] sm:h-[32rem]">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-          style={{
-            backgroundImage:
-              "radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.8), transparent), radial-gradient(1px 1px at 72% 26%, rgba(255,255,255,0.7), transparent), radial-gradient(1.5px 1.5px at 40% 12%, rgba(255,236,200,0.9), transparent), radial-gradient(1px 1px at 84% 48%, rgba(255,255,255,0.55), transparent), radial-gradient(1px 1px at 22% 62%, rgba(255,255,255,0.45), transparent)",
-          }}
+      <div className="mt-4">
+        <PlanetOpening
+          reduced={reduced}
+          run={run}
+          halls={HALL_CARDS}
+          onPhase={onPhase}
+          onRisen={onRisen}
+          onReset={onReset}
+          onReturn={onReturn}
         />
-
-        <div
-          className={`pointer-events-none absolute left-1/2 top-6 -translate-x-1/2 ${reduced ? "" : "transition-opacity duration-700"} ${phase === 0 ? "opacity-100" : "opacity-0"}`}
-          aria-hidden="true"
-        >
-          <div className="relative h-10 w-10">
-            <div className="h-10 w-10 rounded-full bg-amber-100 shadow-[0_0_36px_rgba(253,224,171,0.95)]" />
-            {[80, 128, 176].map((size) => (
-              <div
-                key={size}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-amber-100/30"
-                style={{ width: size, height: size * 0.38 }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <svg viewBox="0 0 100 100" className="absolute inset-x-0 top-0 h-[calc(100%-8.5rem)] w-full" aria-hidden="true">
-          <path
-            d={spiralPath()}
-            fill="none"
-            stroke="rgba(232,196,122,0.9)"
-            strokeWidth="0.7"
-            pathLength={1}
-            strokeDasharray={1}
-            strokeDashoffset={draw}
-            style={{ transition: reduced ? "none" : "stroke-dashoffset 6.4s linear" }}
-          />
-          <text x="4" y="8" fill="rgba(253,230,186,0.9)" fontSize="3.4">
-            0–13
-          </text>
-          {HALL_CARDS.map((hall, index) => {
-            const slot = spiralSlot(index);
-            const visible = reduced || index < risen;
-            return (
-              <g key={hall.id} opacity={visible ? 1 : 0.12} style={{ transition: reduced ? "none" : "opacity 0.45s ease" }}>
-                <circle cx={slot.x} cy={slot.y} r="2.6" fill="#140c04" stroke="#f0d59a" strokeWidth="0.35" />
-                <text x={slot.x} y={slot.y + 0.9} textAnchor="middle" fontSize="2.3" fill="#f8e7c1">
-                  {hall.number}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-
-        <div className="absolute inset-x-0 bottom-2 flex justify-center">
-          <PlanetZero tone={tone} onReset={onReset} showCaption={false} />
-        </div>
       </div>
       <p className="mt-2 text-center text-sm text-amber-50">The planet below. Substrate, not a hall.</p>
 
@@ -298,21 +245,9 @@ export default function ExhibitionPortal() {
   const [notice, setNotice] = useState<ReturnTurn | null>(null);
 
   useEffect(() => {
-    if (stage !== "opening") return;
-    if (reduced) {
-      setPhase(3);
-      setRisen(HALL_CARDS.length);
-      return;
-    }
-    setPhase(0);
-    setRisen(0);
-    const timers = [
-      window.setTimeout(() => setPhase(1), 3800),
-      window.setTimeout(() => setPhase(2), 7600),
-      window.setTimeout(() => setPhase(3), 11200),
-      ...HALL_CARDS.map((_, index) => window.setTimeout(() => setRisen(index + 1), 11200 + (index + 1) * 420)),
-    ];
-    return () => timers.forEach((timer) => window.clearTimeout(timer));
+    if (stage !== "opening" || !reduced) return;
+    setPhase(3);
+    setRisen(HALL_CARDS.length);
   }, [stage, reduced, run]);
 
   useEffect(() => {
@@ -408,11 +343,20 @@ export default function ExhibitionPortal() {
 
         {stage === "opening" ? (
           <div className="mt-4">
+            {notice ? (
+              <div className="px-4 pb-3">
+                <ReturnNotice notice={notice} onClose={() => setNotice(null)} />
+              </div>
+            ) : null}
             <OpeningScene
               phase={reduced ? 3 : phase}
               risen={reduced ? HALL_CARDS.length : risen}
               reduced={reduced}
+              run={run}
+              onPhase={setPhase}
+              onRisen={setRisen}
               onReset={resetToZero}
+              onReturn={chooseHall}
               onPlay={startFilm}
             />
           </div>
