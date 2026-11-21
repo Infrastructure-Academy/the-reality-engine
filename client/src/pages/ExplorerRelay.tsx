@@ -23,6 +23,7 @@ import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePit } from "@/components/FirePit";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
+import { DISCOVERY_TECTON_NUMBER } from "@shared/tectonFireDeck";
 import { storyAudioUrl } from "@/lib/storyAudio";
 import { fireCaptionAt } from "@/lib/fireStoryCues";
 import { useFireDoor } from "@/hooks/useFireDoor";
@@ -153,6 +154,7 @@ function DiscoveryGrid({
           return (
             <motion.button
               key={idx}
+              data-testid={livingFire ? `fire-discovery-${idx}` : undefined}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 onCardVoice?.(idx);
@@ -180,6 +182,7 @@ function DiscoveryGrid({
               <p className={`text-sm font-medium ${isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
                 {isDiscovered ? inv : "???"}
               </p>
+              {livingFire ? <p className="mt-1 text-[10px] text-amber-200/80">Tecton iCard</p> : null}
               {isDiscovered && !isExpanded && (
                 <p className="text-[10px] text-muted-foreground mt-1 font-mono">+{xpPerItem.toLocaleString()} XP</p>
               )}
@@ -672,12 +675,16 @@ export default function ExplorerRelay() {
   const fireDoor = relayValid && relayNum === 1;
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
   const [storySeconds, setStorySeconds] = useState(0);
+  const [openTecton, setOpenTecton] = useState<number | null>(null);
 
   if (!relayValid) return null;
 
   const playFireCard = (idx: number) => {
     const name = inventionData[idx]?.name;
-    if (name) doorAudio.playCard(name);
+    if (!name) return;
+    doorAudio.playCard(name);
+    const plate = DISCOVERY_TECTON_NUMBER[name];
+    if (plate) setOpenTecton(plate);
   };
 
   const storyPlayer = authored && !fireDoor ? (
@@ -803,7 +810,12 @@ export default function ExplorerRelay() {
                     livingFire
                     onCardVoice={playFireCard}
                   />
-                  <TectonFireLearnMore onHear={(recordedAs) => doorAudio.playCard(recordedAs)} />
+                  <TectonFireLearnMore
+                    opened={openTecton}
+                    onOpen={setOpenTecton}
+                    onClose={() => setOpenTecton(null)}
+                    onHear={(recordedAs) => doorAudio.playCard(recordedAs)}
+                  />
                 </div>
               </div>
             ) : (

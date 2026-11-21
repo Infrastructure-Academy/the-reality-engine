@@ -46,6 +46,7 @@ export const TECTON_FIRE_DECK: readonly TectonFireCard[] = [
     latin: "Ignis Signalis",
     category: "Signal",
     note: "Beacons lit on hilltops transmitted military intelligence across hundreds of miles in minutes. The fall of Troy was signalled to Mycenae by a chain of beacons — the first long-distance communication network.",
+    recordedAs: "Signal Fire",
   },
   {
     number: 5,
@@ -154,6 +155,7 @@ export const TECTON_FIRE_DECK: readonly TectonFireCard[] = [
     latin: "Cocus Metallurgicus",
     category: "Fuel",
     note: "Abraham Darby’s coke-smelted iron in 1709 broke the dependence on charcoal and enabled mass production of iron. Without coke smelting there is no Industrial Revolution, no railways, no steel, no modern world.",
+    recordedAs: "Smelting",
   },
   {
     number: 20,
@@ -413,3 +415,73 @@ export const TECTON_GRID_NAMES = [
   "Savanna Grassfire",
   "Peat Bog Fire",
 ] as const;
+
+/** Full illustrated plates, deck order 01–48. Pages 1–4 of the pack are not phenomena. */
+export const TECTON_ICARD_FILES = [
+  "01-hearth-fire.jpg",
+  "02-campfire.jpg",
+  "03-torch.jpg",
+  "04-beacon-fire.jpg",
+  "05-olympic-torch.jpg",
+  "06-eternal-flame.jpg",
+  "07-forge-fire.jpg",
+  "08-candle.jpg",
+  "09-lantern.jpg",
+  "10-diwali-diya.jpg",
+  "11-bonfire.jpg",
+  "12-cremation-fire.jpg",
+  "13-funeral-pyre.jpg",
+  "14-zoroastrian-sacred-fire.jpg",
+  "15-agni.jpg",
+  "16-prometheus.jpg",
+  "17-hephaestus-vulcan.jpg",
+  "18-charcoal.jpg",
+  "19-coke-smelting.jpg",
+  "20-coal-power-station.jpg",
+  "21-oil-refinery-flare.jpg",
+  "22-kiln-fire.jpg",
+  "23-pottery-fire.jpg",
+  "24-bread-oven.jpg",
+  "25-lime-kiln.jpg",
+  "26-glass-making.jpg",
+  "27-steam-engine.jpg",
+  "28-gas-turbine-power-station.jpg",
+  "29-internal-combustion-engine.jpg",
+  "30-jet-engine.jpg",
+  "31-rocket-engine.jpg",
+  "32-nuclear-fission.jpg",
+  "33-solar-concentrator.jpg",
+  "34-fire-suppression.jpg",
+  "35-controlled-burn.jpg",
+  "36-slash-and-burn.jpg",
+  "37-fire-ecology.jpg",
+  "38-volcanic-eruption.jpg",
+  "39-lightning-strike.jpg",
+  "40-forest-crown-fire.jpg",
+  "41-savanna-grassfire.jpg",
+  "42-peat-bog-fire.jpg",
+  "43-dresden-firestorm.jpg",
+  "44-great-fire-of-london.jpg",
+  "45-chicago-fire.jpg",
+  "46-thermodynamics.jpg",
+  "47-combustion-chemistry.jpg",
+  "48-fire-triangle.jpg",
+] as const;
+
+/** The nine harnessed discoveries, each opening its Tecton iCard. Names and recordings stay as they are. */
+export const DISCOVERY_TECTON_NUMBER: Readonly<Record<string, number>> = {
+  Hearth: 1,
+  Torch: 3,
+  Kiln: 22,
+  Charcoal: 18,
+  Smelting: 19,
+  Forge: 7,
+  "Signal Fire": 4,
+  Cremation: 12,
+  "Slash-and-Burn": 36,
+};
+
+export function tectonIcardSrc(number: number): string {
+  const file = TECTON_ICARD_FILES[number - 1];
+  return `/tecton-icards/${file}`;
+}

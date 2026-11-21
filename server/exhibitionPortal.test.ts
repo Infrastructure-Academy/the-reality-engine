@@ -190,5 +190,15 @@ describe("exhibition portal first cut", () => {
     expect(model).not.toContain("unnamed");
     expect(page).toContain("{ZERO_IS_NOT_A_HALL}");
     expect(model).toContain("The zero is not a fourteenth hall.");
+    expect(page).toContain("<PlanetOpening");
+    const opening = source("client/src/components/PlanetOpening.tsx");
+    expect(opening).toContain("requestAnimationFrame");
+    expect(opening).toContain("portal-planet-sequence");
+    expect(opening).toContain("portal-pillar-");
+    expect(opening).toContain("smouldering");
+    expect(opening).not.toContain("fire-preview");
+    expect(opening).not.toContain("speechSynthesis");
+    expect(opening).not.toContain("gender vision");
+    expect(opening).not.toContain("relay-1-fire-plate");
   });
 });
