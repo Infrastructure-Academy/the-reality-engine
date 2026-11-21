@@ -289,7 +289,7 @@ function LayoutClassic({
       <RelayHeader relayMeta={relayMeta} relayNum={relayNum} canGoPrev={canGoPrev} canGoNext={canGoNext} navigate={navigate} subtitle={relay?.subtitle} />
       {storyPlayer}
       <NarrativeBlock relay={relay} />
-      <MissionBlock relay={relay} />
+      {!livingFire && <MissionBlock relay={relay} />}
       <DiscoveryGrid inventions={inventions} inventionData={inventionData} discoveredItems={discoveredItems} handleDiscover={handleDiscover} xpPerItem={xpPerItem} livingFire={livingFire} onCardVoice={onCardVoice} />
       <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
       <RelayNavigator currentRelay={relayNum} />
@@ -328,7 +328,7 @@ function LayoutSplitHorizon({
         {/* Right: Narrative + Mission + Progress stacked */}
         <div className="space-y-4">
           <NarrativeBlock relay={relay} />
-          <MissionBlock relay={relay} />
+          {!livingFire && <MissionBlock relay={relay} />}
           <ProgressBar discovered={discoveredItems.size} total={inventions.length} completionPct={completionPct} />
         </div>
       </div>
@@ -377,7 +377,7 @@ function LayoutMissionBriefing({
       {storyPlayer}
 
       {/* Full-width mission banner (hero position) */}
-      {relay?.missionObjective && (
+      {!livingFire && relay?.missionObjective && (
         <div className="p-5 rounded-xl border-2 border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent" lang={relay?.speechLang}>
           <div className="flex items-center gap-2 mb-2">
             <div className="w-8 h-8 rounded bg-amber-500/20 flex items-center justify-center">

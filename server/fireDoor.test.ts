@@ -32,6 +32,7 @@ describe("fire door experience", () => {
   it("keeps the issued story recording and adds a voice for each of the nine cards", () => {
     expect(sha256("client/public/audio/relay-1-fire-en.mp3")).toBe(STORY_HASH);
     expect(sha256("docs/audio/relay-1-fire-en.mp3")).toBe(STORY_HASH);
+    expect(sha256("client/public/audio/fire-cards/volume-1-briefing.mp3")).not.toBe(STORY_HASH);
     expect(INVENTIONS[1]).toHaveLength(9);
     for (const card of INVENTIONS[1]) {
       expect(fireCardSpeech(card)).toBe(`${card.name}. ${card.description}`);
@@ -110,7 +111,12 @@ describe("fire door experience", () => {
     const pit = source("client/src/components/FirePit.tsx");
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");
+    expect(pit).toContain("/exhibition/relay-1-fire-plate.jpg");
     expect(pit).not.toContain("fire-preview");
+    expect(pit).not.toContain("speechSynthesis");
+    const story = source("client/src/lib/storyAudio.ts");
+    expect(story).toContain('"/audio/fire-cards/volume-1-briefing.mp3"');
+    expect(story).not.toContain("relay-1-fire-en.mp3");
     const relay = source("client/src/pages/ExplorerRelay.tsx");
     expect(relay).toContain("<FirePit");
     expect(relay).not.toContain("FirePreviewPlayer");

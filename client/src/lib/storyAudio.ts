@@ -1,5 +1,6 @@
 /** British English recording of the Fire briefing, the story, and the quote. */
-export const FIRE_STORY_AUDIO_URL = "/audio/relay-1-fire-en.mp3";
+/** Card-paced read of the issued Fire wording. Not the 44.5 s stand-in. */
+export const FIRE_STORY_AUDIO_URL = "/audio/fire-cards/volume-1-briefing.mp3";
 
 /**
  * Recorded storyteller for Fire in English.
