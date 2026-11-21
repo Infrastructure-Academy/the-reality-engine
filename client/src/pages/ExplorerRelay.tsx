@@ -22,6 +22,7 @@ import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePit } from "@/components/FirePit";
+import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
 import { storyAudioUrl } from "@/lib/storyAudio";
 import { fireCaptionAt } from "@/lib/fireStoryCues";
 import { useFireDoor } from "@/hooks/useFireDoor";
@@ -802,6 +803,7 @@ export default function ExplorerRelay() {
                     livingFire
                     onCardVoice={playFireCard}
                   />
+                  <TectonFireLearnMore onHear={(recordedAs) => doorAudio.playCard(recordedAs)} />
                 </div>
               </div>
             ) : (
