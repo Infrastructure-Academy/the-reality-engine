@@ -763,18 +763,20 @@ export default function ExplorerRelay() {
           />
         ) : (
           <>
-            {fireDoor && (
-              <div data-testid="fire-stage">
+            {fireDoor ? (
+              <div data-testid="fire-stage" className="-mx-4 sm:-mx-6">
                 <FirePit caption={fireCaptionAt(storySeconds)} />
                 {authored && (
-                  <StoryPlayBar
-                    ref={doorAudio.storyRef}
-                    compact
-                    audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
-                    labels={authored.labels}
-                    speech={storyteller}
-                    onTime={setStorySeconds}
-                  />
+                  <div className="px-4 pt-2">
+                    <StoryPlayBar
+                      ref={doorAudio.storyRef}
+                      compact
+                      audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
+                      labels={authored.labels}
+                      speech={storyteller}
+                      onTime={setStorySeconds}
+                    />
+                  </div>
                 )}
                 <audio
                   ref={doorAudio.ambienceRef}
@@ -790,12 +792,25 @@ export default function ExplorerRelay() {
                   onEnded={doorAudio.finishCard}
                   onError={doorAudio.finishCard}
                 />
+                <div className="px-4 pt-6">
+                  <DiscoveryGrid
+                    inventions={inventions}
+                    inventionData={inventionData}
+                    discoveredItems={discoveredItems}
+                    handleDiscover={handleDiscover}
+                    xpPerItem={xpPerItem}
+                    livingFire
+                    onCardVoice={playFireCard}
+                  />
+                </div>
               </div>
+            ) : (
+              <>
+                {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
+                {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
+                {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
+              </>
             )}
-            {/* Render the randomly selected layout */}
-            {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
-            {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
-            {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
           </>
         )}
       </div>

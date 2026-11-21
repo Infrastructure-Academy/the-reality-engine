@@ -111,7 +111,9 @@ describe("fire door experience", () => {
     const pit = source("client/src/components/FirePit.tsx");
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");
-    expect(pit).toContain("/exhibition/relay-1-fire-plate.jpg");
+    expect(pit).toContain("drawImage");
+    expect(pit).not.toContain("<img");
+    expect(pit).not.toContain("fire-hall-plate");
     expect(pit).not.toContain("fire-preview");
     expect(pit).not.toContain("speechSynthesis");
     const story = source("client/src/lib/storyAudio.ts");

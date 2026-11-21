@@ -8,10 +8,13 @@ interface Ember {
   drift: number;
 }
 
+/** Chamber inside the held plate. The poster frame, title, and notes are not shown. */
+const CHAMBER = { x: 80, y: 330, width: 1000, height: 640 };
+const PLATE_URL = "/exhibition/relay-1-fire-plate.jpg";
+
 /**
- * Relay 1 hall, held to the exhibition plate.
- * The plate is shown whole. Flames are drawn over the stone pit each frame
- * so the fire is living, not a flat still.
+ * The player stands in the Fire hall: cave art, a circular stone pit, warm light.
+ * The plate file is only the photograph of that chamber. Words stay under the picture.
  */
 export function FirePit({ caption }: { caption: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,12 +24,14 @@ export function FirePit({ caption }: { caption: string }) {
     if (!canvas) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    const embers: Ember[] = Array.from({ length: 22 }, () => ({
-      x: 0.3 + Math.random() * 0.4,
-      y: 0.55 + Math.random() * 0.3,
-      speed: 0.05 + Math.random() * 0.12,
-      size: 1.4 + Math.random() * 2.4,
-      drift: (Math.random() - 0.5) * 0.05,
+    const plate = new Image();
+    plate.src = PLATE_URL;
+    const embers: Ember[] = Array.from({ length: 24 }, () => ({
+      x: 0.4 + Math.random() * 0.2,
+      y: 0.58 + Math.random() * 0.1,
+      speed: 0.025 + Math.random() * 0.06,
+      size: 1.1 + Math.random() * 1.8,
+      drift: (Math.random() - 0.5) * 0.02,
     }));
     let frame = 0;
     let width = 0;
@@ -47,57 +52,38 @@ export function FirePit({ caption }: { caption: string }) {
     const observer = new ResizeObserver(fit);
     observer.observe(canvas);
 
-    const drawFlame = (time: number, centre: number, spread: number, lift: number, phase: number) => {
-      const flicker = 0.7 + 0.3 * Math.sin(time * 8.2 + phase) * Math.sin(time * 3.4 + phase * 1.4);
-      const tongue = height * lift * flicker;
-      const base = height * 0.86;
-      const left = centre - spread;
-      const right = centre + spread;
-      const tipX = centre + Math.sin(time * 6.2 + phase) * spread * 0.28;
-      const gradient = context.createLinearGradient(centre, base, centre, base - tongue);
-      gradient.addColorStop(0, "rgba(255, 244, 210, 0.95)");
-      gradient.addColorStop(0.22, "rgba(255, 176, 48, 0.88)");
-      gradient.addColorStop(0.55, "rgba(230, 64, 8, 0.45)");
-      gradient.addColorStop(1, "rgba(120, 10, 0, 0)");
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.moveTo(left, base);
-      context.quadraticCurveTo(left + spread * 0.2, base - tongue * 0.42, tipX, base - tongue);
-      context.quadraticCurveTo(right - spread * 0.12, base - tongue * 0.38, right, base);
-      context.closePath();
-      context.fill();
-    };
-
     const paint = (now: number) => {
       frame = requestAnimationFrame(paint);
       if (width < 2) return;
       const time = now / 1000;
-      context.clearRect(0, 0, width, height);
-      const glow = context.createRadialGradient(width / 2, height * 0.86, 4, width / 2, height * 0.7, width * 0.46);
-      glow.addColorStop(0, "rgba(255, 186, 70, 0.55)");
-      glow.addColorStop(0.4, "rgba(255, 90, 10, 0.18)");
-      glow.addColorStop(1, "rgba(255, 40, 0, 0)");
-      context.fillStyle = glow;
+      const flicker = 0.9 + 0.1 * Math.sin(time * 7.2) * Math.sin(time * 2.8);
+
+      context.fillStyle = "#140e0a";
       context.fillRect(0, 0, width, height);
-      const tongues = [
-        { offset: -0.18, spread: 0.07, lift: 0.28, phase: 0.4 },
-        { offset: -0.08, spread: 0.09, lift: 0.42, phase: 1.3 },
-        { offset: 0.02, spread: 0.11, lift: 0.55, phase: 2.2 },
-        { offset: 0.12, spread: 0.08, lift: 0.36, phase: 0.9 },
-        { offset: 0.2, spread: 0.06, lift: 0.24, phase: 1.7 },
-      ];
-      for (const tongue of tongues) {
-        drawFlame(time, width * (0.5 + tongue.offset), width * tongue.spread, tongue.lift, tongue.phase);
+      if (plate.complete && plate.naturalWidth > 0) {
+        const scale = Math.max(width / CHAMBER.width, height / CHAMBER.height);
+        const drawW = CHAMBER.width * scale;
+        const drawH = CHAMBER.height * scale;
+        const dx = (width - drawW) / 2;
+        const dy = (height - drawH) / 2;
+        context.drawImage(plate, CHAMBER.x, CHAMBER.y, CHAMBER.width, CHAMBER.height, dx, dy, drawW, drawH);
       }
-      context.fillStyle = "#ffd7a2";
+
+      const wash = context.createRadialGradient(width * 0.5, height * 0.62, 10, width * 0.5, height * 0.55, width * 0.55);
+      wash.addColorStop(0, `rgba(255, 140, 40, ${0.12 * flicker})`);
+      wash.addColorStop(1, "rgba(0, 0, 0, 0)");
+      context.fillStyle = wash;
+      context.fillRect(0, 0, width, height);
+
+      context.fillStyle = "#ffe2b8";
       for (const ember of embers) {
-        ember.y -= ember.speed * 0.016;
-        ember.x += ember.drift * 0.016;
-        if (ember.y < 0.05) {
-          ember.y = 0.84;
-          ember.x = 0.34 + Math.random() * 0.32;
+        ember.y -= ember.speed * 0.01;
+        ember.x += ember.drift * 0.01;
+        if (ember.y < 0.34) {
+          ember.y = 0.62;
+          ember.x = 0.42 + Math.random() * 0.16;
         }
-        context.globalAlpha = Math.max(0, ember.y * 0.85);
+        context.globalAlpha = Math.max(0, (ember.y - 0.3) * 1.2);
         context.fillRect(ember.x * width, ember.y * height, ember.size, ember.size);
       }
       context.globalAlpha = 1;
@@ -110,38 +96,18 @@ export function FirePit({ caption }: { caption: string }) {
   }, []);
 
   return (
-    <figure data-testid="fire-pit" className="relative w-full overflow-hidden rounded-xl border border-amber-600/50 shadow-[0_0_40px_rgba(180,70,10,0.28)]">
-      <img
-        src="/exhibition/relay-1-fire-plate.jpg"
-        alt="Relay 1, Fire. A circular stone fire pit burns in a cave-art exhibition hall."
-        width={1170}
-        height={1557}
-        data-testid="fire-hall-plate"
-        className="block h-auto w-full"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 mix-blend-soft-light"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 46%, rgba(255,150,40,0.38), transparent 42%)",
-          animation: "fire-hall-wash 1.6s ease-in-out infinite",
-        }}
-      />
+    <figure data-testid="fire-pit" className="w-full">
       <canvas
         ref={canvasRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute left-[17%] top-[31%] h-[24%] w-[66%] mix-blend-screen"
+        aria-label="Fire hall. A circular stone pit burns beneath cave art."
+        className="block h-[68svh] min-h-[420px] w-full bg-[#140e0a]"
       />
-      <style>
-      {`@keyframes fire-hall-wash { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.9; } }`}
-    </style>
-    <figcaption
-      data-testid="fire-caption"
-      className="bg-black/70 px-3 py-2 text-center text-[13px] leading-snug text-amber-50"
-    >
-      {caption}
-    </figcaption>
-  </figure>
+      <figcaption
+        data-testid="fire-caption"
+        className="bg-[#140e0a] px-4 py-3 text-center font-sans text-base not-italic leading-relaxed tracking-normal text-amber-50"
+      >
+        {caption}
+      </figcaption>
+    </figure>
   );
 }
