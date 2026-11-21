@@ -74,6 +74,8 @@ describe("Tecton Fire Deck learn-more", () => {
     }
     const page = source("client/src/components/TectonFireLearnMore.tsx");
     expect(page).toContain('data-testid="tecton-plate"');
+    expect(page).toContain("IntersectionObserver");
+    expect(page).not.toContain('loading="lazy"');
     expect(page).not.toContain("speechSynthesis");
   });
 });

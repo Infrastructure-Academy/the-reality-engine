@@ -179,8 +179,8 @@ function DiscoveryGrid({
                   </motion.div>
                 )}
               </AnimatePresence>
-              <p className={`text-sm font-medium ${isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
-                {isDiscovered ? inv : "???"}
+              <p className={`text-sm font-medium ${livingFire || isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
+                {livingFire || isDiscovered ? inv : "???"}
               </p>
               {livingFire ? <p className="mt-1 text-[10px] text-amber-200/80">Tecton iCard</p> : null}
               {isDiscovered && !isExpanded && (
