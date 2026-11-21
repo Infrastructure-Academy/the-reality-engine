@@ -39,7 +39,8 @@ describe("fire preview videos", () => {
     expect(statSync(portrait).size).toBeGreaterThan(1_000_000);
     expect(statSync(wide).size).toBeGreaterThan(1_000_000);
     expect(statSync(story).size).toBeGreaterThan(10_000);
-    expect(FIRE_STORY_AUDIO_URL).toBe("/audio/relay-1-fire-en.mp3");
+    expect(FIRE_STORY_AUDIO_URL).toBe("/audio/fire-cards/volume-1-briefing.mp3");
+    expect(FIRE_STORY_AUDIO_URL).not.toBe("/audio/relay-1-fire-en.mp3");
   });
 
   it("offers one user-controlled player on the Fire relay and does not autoplay", () => {
