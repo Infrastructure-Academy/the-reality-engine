@@ -58,7 +58,7 @@ function PlanetZero({ tone, onReset, showCaption = true }: { tone: Tone; onReset
         type="button"
         data-testid="portal-zero"
         onClick={onReset}
-        aria-label="0. The planet. Boundary-condition reset to explore. Not a hall."
+        aria-label="0. The planet. Boundary-condition reset to explore."
         className="relative h-32 w-32 touch-manipulation rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050912]"
       >
         <span className={`absolute inset-0 rounded-full shadow-[0_0_40px_rgba(232,168,74,0.35)] ${face}`} />
@@ -69,7 +69,7 @@ function PlanetZero({ tone, onReset, showCaption = true }: { tone: Tone; onReset
         <span className="relative font-heading text-4xl text-amber-50">0</span>
       </button>
       {showCaption ? (
-        <p className="mt-2 max-w-[16rem] text-center text-sm text-amber-50">The planet below. Substrate, not a hall.</p>
+        <p className="mt-2 max-w-[16rem] text-center text-sm text-amber-50">The planet is the zero.</p>
       ) : null}
     </div>
   );
@@ -118,7 +118,7 @@ function OpeningScene({
           onReturn={onReturn}
         />
       </div>
-      <p className="mt-2 text-center text-sm text-amber-50">The planet below. Substrate, not a hall.</p>
+      <p className="mt-2 text-center text-sm text-amber-50">The planet is the zero. The thirteen rise from it.</p>
 
       <div className="mt-4">
         <button
@@ -491,7 +491,7 @@ export default function ExhibitionPortal() {
                         <span className="block text-sm text-amber-50">{door.name}</span>
                         <span className="block text-xs text-amber-100/75">
                           {door.role === "substrate"
-                            ? "Substrate. Boundary-condition reset. Not a hall."
+                            ? "The planet. Boundary-condition reset to explore."
                             : door.role === "epilogue"
                               ? "Epilogue. Not Human Nodes."
                               : door.href

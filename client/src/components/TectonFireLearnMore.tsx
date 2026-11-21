@@ -61,6 +61,31 @@ export function TectonFireLearnMore({
 }
 
 function TectonFace({ card, onOpen }: { card: TectonFireCard; onOpen: () => void }) {
+  const faceRef = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const face = faceRef.current;
+    if (!face) return;
+    const src = tectonIcardSrc(card.number);
+    const paint = () => {
+      if (face.getAttribute("src") !== src) face.src = src;
+    };
+    if (typeof IntersectionObserver === "undefined") {
+      paint();
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          paint();
+          observer.disconnect();
+        }
+      },
+      { root: null, rootMargin: "1400px 0px", threshold: 0.01 },
+    );
+    observer.observe(face);
+    return () => observer.disconnect();
+  }, [card.number]);
+
   return (
     <li className="list-none">
       <button
@@ -70,11 +95,11 @@ function TectonFace({ card, onOpen }: { card: TectonFireCard; onOpen: () => void
         className="w-full touch-manipulation text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
       >
         <img
-          src={tectonIcardSrc(card.number)}
+          ref={faceRef}
           alt=""
           width={1400}
           height={1885}
-          loading="lazy"
+          decoding="async"
           className="aspect-[1400/1885] w-full rounded-md border border-amber-200/40 bg-[#07101c] object-cover"
         />
         <span className="mt-1.5 block font-sans text-sm font-medium leading-snug text-amber-50">

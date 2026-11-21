@@ -111,9 +111,8 @@ describe("fire door experience", () => {
     const pit = source("client/src/components/FirePit.tsx");
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");
-    expect(pit).toContain("flame");
-    expect(pit).not.toContain("drawImage");
-    expect(pit).not.toContain("relay-1-fire-plate");
+    expect(pit).toContain("relay-1-fire-plate.jpg");
+    expect(pit).toContain("drawImage");
     expect(pit).not.toContain("<img");
     expect(pit).not.toContain("fire-hall-plate");
     expect(pit).not.toContain("fire-preview");
@@ -133,6 +132,7 @@ describe("fire door experience", () => {
     expect(relay).toContain('t("explore.harnessedDiscoveries")');
     expect(relay).toContain("livingFire");
     expect(relay).toContain("fire-card");
+    expect(relay).toContain("livingFire || isDiscovered ? inv : \"???\"");
     expect(relay).toContain('discoveryNoun={fireDoor ? "harnessed discoveries" : undefined}');
     const home = source("client/src/components/GameModeGates.tsx");
     expect(home).toContain('href="/explore/spinner"');
