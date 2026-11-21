@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useT } from "@/contexts/LanguageContext";
+import { beginFireBedFromGesture } from "@/lib/firePlayback";
 import { useLitRelays, useSharedDiscoveryXp } from "@/lib/sharedProgress";
 import { getPlayerBadge } from "@shared/badges";
 import {
@@ -269,6 +270,7 @@ export function GameModeGates() {
               <Link
                 href="/explore/1"
                 data-testid="gate-listen-fire"
+                onClick={() => beginFireBedFromGesture()}
                 className="inline-flex min-h-11 items-center text-sm text-amber-200 underline underline-offset-2"
               >
                 {t("home.gates.listenFire")}

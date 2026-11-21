@@ -22,6 +22,7 @@ import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { FirePit } from "@/components/FirePit";
+import { beginFireBedFromGesture } from "@/lib/firePlayback";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
 import { DISCOVERY_TECTON_NUMBER } from "@shared/tectonFireDeck";
 import { storyAudioUrl } from "@/lib/storyAudio";
@@ -651,29 +652,37 @@ export default function ExplorerRelay() {
   const completionPct = inventions.length > 0 ? Math.round((discoveredItems.size / inventions.length) * 100) : 0;
   const canGoPrev = relayNum > 1;
   const canGoNext = relayNum < 12;
+  const fireDoor = relayValid && relayNum === 1;
 
   // ─── Hooks MUST be called before any early return (React rules of hooks) ───
 
   // Swipe navigation between relays
   const swipeRef = useSwipeNavigation<HTMLDivElement>({
-    onSwipeLeft: canGoNext ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); } : undefined,
+    onSwipeLeft: fireDoor
+      ? () => navigate("/portal?station=tree")
+      : canGoNext ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); } : undefined,
     onSwipeRight: canGoPrev ? () => { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); } : undefined,
   });
 
   // Gamepad navigation
   const handleGamepadButton = useCallback(
     (button: GamepadButtonName) => {
-      if (button === "RB" && canGoNext) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); }
+      if (button === "RB" && fireDoor) { navigate("/portal?station=tree"); }
+      else if (button === "RB" && canGoNext) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum + 1}`); }
       else if (button === "LB" && canGoPrev) { playRelayTransitionSound(); hapticTransition(); navigate(`/explore/${relayNum - 1}`); }
       else if (button === "X") setShowChat((prev) => !prev);
       else if (button === "B") navigate("/");
     },
-    [canGoNext, canGoPrev, relayNum, navigate]
+    [canGoNext, canGoPrev, relayNum, navigate, fireDoor]
   );
   useGamepad(handleGamepadButton);
 
-  const fireDoor = relayValid && relayNum === 1;
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
+
+  useEffect(() => {
+    if (!fireDoor) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [fireDoor]);
   const [storySeconds, setStorySeconds] = useState(0);
   const [openTecton, setOpenTecton] = useState<number | null>(null);
 
@@ -748,6 +757,10 @@ export default function ExplorerRelay() {
             profileId={profileId}
             onComplete={() => {
               setShowDilemma(false);
+              if (fireDoor) {
+                navigate("/portal?station=tree");
+                return;
+              }
               if (canGoNext) {
                 playRelayTransitionSound();
                 hapticTransition();
@@ -774,11 +787,31 @@ export default function ExplorerRelay() {
             {fireDoor ? (
               <div data-testid="fire-stage" className="-mx-4 sm:-mx-6">
                 <FirePit caption={fireCaptionAt(storySeconds)} />
+                <div className="px-4 pt-3" data-testid="fire-room">
+                  <p className="text-sm leading-relaxed text-amber-50">
+                    Cave walls. A real fire pit. Cave paintings — bison and handprints — brighten with the flame. pre-10,000 BCE.
+                  </p>
+                  <button
+                    type="button"
+                    data-testid="fire-hear"
+                    onClick={() => beginFireBedFromGesture()}
+                    className="mt-2 inline-flex min-h-11 items-center rounded-lg border border-amber-300/70 px-3 text-sm text-amber-50"
+                  >
+                    Hear the fire
+                  </button>
+                  <ol data-testid="fire-iumc" className="mt-3 space-y-1 text-sm leading-relaxed text-amber-100">
+                    <li>Identify the hearth and the paintings.</li>
+                    <li>Understand the recorded briefing. It plays at the card voice and pace.</li>
+                    <li>Manage the harnessed discoveries.</li>
+                    <li>Control the fire. A turn that is not this hall brings you back to the floor. Nothing is taken away.</li>
+                  </ol>
+                </div>
                 {authored && (
                   <div className="px-4 pt-2">
                     <StoryPlayBar
                       ref={doorAudio.storyRef}
                       compact
+                      handoff
                       audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
                       labels={authored.labels}
                       speech={storyteller}
@@ -786,13 +819,6 @@ export default function ExplorerRelay() {
                     />
                   </div>
                 )}
-                <audio
-                  ref={doorAudio.ambienceRef}
-                  data-testid="fire-ambience"
-                  src={doorAudio.ambienceUrl}
-                  loop
-                  preload="auto"
-                />
                 <audio
                   ref={doorAudio.cardRef}
                   data-testid="fire-card-voice"

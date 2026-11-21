@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
 
 /**
- * The visitor stands in the Relay 1 chamber taken from the held exhibition plate.
+ * The visitor stands in the Relay 1 chamber from the issued exhibition plate.
  * Poster frame, title, and sensory notes stay off the picture.
- * The cave, stone pit, and visitors are that chamber. The fire in the pit is
- * redrawn every frame from the plate's own flames so it flickers.
+ * Cave walls, bison, and handprints are that plate. They are not redrawn.
+ * The fire in the stone pit is a living flame, and the paintings brighten with it.
  */
 const PLATE_URL = "/exhibition/relay-1-fire-plate.jpg";
 const CHAMBER = { x: 92, y: 348, width: 986, height: 630 };
-const FLAME = { x: 0.37, y: 0.52, width: 0.26, height: 0.14 };
 
 interface Ember {
   x: number;
@@ -55,50 +54,41 @@ function paintChamber(
     frame.height,
   );
 
-  const flameX = frame.x + FLAME.x * frame.width;
-  const flameY = frame.y + FLAME.y * frame.height;
-  const flameW = FLAME.width * frame.width;
-  const flameH = FLAME.height * frame.height;
-  const slices = 24;
-
+  const flicker = 0.55 + 0.45 * Math.sin(time * 7.4);
+  const pitX = frame.x + frame.width * 0.5;
+  const pitY = frame.y + frame.height * 0.69;
+  const paintings = [
+    { x: 0.16, y: 0.34, rx: 0.14, ry: 0.16 },
+    { x: 0.5, y: 0.28, rx: 0.18, ry: 0.14 },
+    { x: 0.84, y: 0.34, rx: 0.12, ry: 0.16 },
+  ];
   context.save();
-  context.beginPath();
-  context.ellipse(flameX + flameW * 0.5, flameY + flameH * 0.58, flameW * 0.5, flameH * 0.62, 0, 0, Math.PI * 2);
-  context.clip();
-  for (let index = 0; index < slices; index += 1) {
-    const across = index / slices;
-    const sway = Math.sin(time * 6.2 + across * 10) * flameW * 0.02;
-    const lift = (0.35 + 0.65 * Math.sin(time * 9 + across * 13)) * flameH * 0.07;
-    const sourceX = CHAMBER.x + (FLAME.x + across * FLAME.width) * CHAMBER.width;
-    const sourceWidth = (CHAMBER.width * FLAME.width) / slices + 2;
-    const sliceWidth = flameW / slices;
-    context.drawImage(
-      plate,
-      sourceX,
-      CHAMBER.y + FLAME.y * CHAMBER.height,
-      sourceWidth,
-      CHAMBER.height * FLAME.height,
-      flameX + across * flameW + sway - sliceWidth * 0.25,
-      flameY - lift,
-      sliceWidth * 1.6,
-      flameH + lift * 0.5,
-    );
+  context.globalCompositeOperation = "lighter";
+  for (const spot of paintings) {
+    const px = frame.x + spot.x * frame.width;
+    const py = frame.y + spot.y * frame.height;
+    const paint = context.createRadialGradient(px, py, 4, px, py, spot.rx * frame.width);
+    paint.addColorStop(0, `rgba(255, 186, 90, ${0.1 * flicker})`);
+    paint.addColorStop(1, "rgba(255, 120, 40, 0)");
+    context.fillStyle = paint;
+    context.beginPath();
+    context.ellipse(px, py, spot.rx * frame.width, spot.ry * frame.height, 0, 0, Math.PI * 2);
+    context.fill();
   }
+  const breath = 0.1 + 0.08 * Math.sin(time * 8.2);
+  const light = context.createRadialGradient(pitX, pitY, 6, pitX, pitY, frame.width * 0.16);
+  light.addColorStop(0, `rgba(255, 170, 50, ${breath})`);
+  light.addColorStop(1, "rgba(255, 70, 0, 0)");
+  context.fillStyle = light;
+  context.beginPath();
+  context.ellipse(pitX, pitY, frame.width * 0.15, frame.height * 0.07, 0, 0, Math.PI * 2);
+  context.fill();
   context.restore();
 
-  const glow = 0.08 + 0.07 * Math.sin(time * 7.4);
-  const light = context.createRadialGradient(
-    flameX + flameW * 0.5,
-    flameY + flameH * 0.45,
-    8,
-    flameX + flameW * 0.5,
-    flameY + flameH * 0.2,
-    flameW * 1.35,
-  );
-  light.addColorStop(0, `rgba(255, 170, 60, ${glow})`);
-  light.addColorStop(1, "rgba(255, 80, 0, 0)");
-  context.fillStyle = light;
-  context.fillRect(flameX - flameW, flameY - flameH, flameW * 3, flameH * 3);
+  const flameX = pitX - frame.width * 0.08;
+  const flameY = pitY;
+  const flameW = frame.width * 0.16;
+  const flameH = frame.height * 0.08;
 
   context.save();
   context.shadowColor = "#ffd7a1";
@@ -185,7 +175,7 @@ export function FirePit({ caption }: { caption: string }) {
       <canvas
         ref={canvasRef}
         data-testid="fire-flames"
-        aria-label="Fire hall. The exhibition chamber, with a stone pit and flickering flames."
+        aria-label="Fire hall. Cave walls, a stone fire pit with flickering flames, and cave paintings of bison and handprints."
         className="block h-[68svh] min-h-[420px] w-full bg-[#140c08]"
       />
       <figcaption

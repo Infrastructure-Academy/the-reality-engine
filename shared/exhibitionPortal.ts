@@ -22,7 +22,24 @@ export const RECEIVED_ZERO =
 
 export const ZERO_IS_NOT_A_HALL = "The zero is not a fourteenth hall.";
 
-export const CUT_LINE = "First portal cut. Not issued. This is not the finished hall walk-through.";
+export const CUT_LINE =
+  "Rematched first draft. The portal sequence and the Fire hall are in this cut. Relays 2 to 12 stay on the issued floor plan and are not finished halls.";
+
+/** Script room lines for stations this cut does not open. No new hall is drawn. */
+export const ROOM_DIRECTION: Record<string, string> = {
+  tree: "The script marks an ancient forest, timber, and the first shelters.",
+  river: "The script marks water, irrigation, and the hydraulic civilisations.",
+  horse: "The script marks horse and rider, reins, chariots, and the Nomad.",
+  roads: "The script marks Roman roads, the Silk Road, and standardised surfaces.",
+  ships: "The script marks clinker boats, treasure fleets, and maritime empires.",
+  loom: "The script marks the Jacquard loom and the first programmable machine.",
+  rail: "The script marks the steam locomotive, a standard gauge, and timetables.",
+  engine: "The script marks internal combustion, electricity, and steel bridges.",
+  "aaa-triad": "The script marks automobiles, aviation, and armaments.",
+  orbit: "The script marks rockets, satellites, and the moon.",
+  "human-nodes": "The script marks the holodeck, the suit, and programmable humans.",
+  "fractal-connector": "The plate marks the Fractal Connector as the exhibition itself.",
+};
 
 export const FILM_LABEL = "FILM-0201 · Video 2 — Dungeon Crawl · ages 10–12 · 24 seconds";
 
@@ -119,7 +136,7 @@ export const DOOR_FRAME: readonly DoorStop[] = [
 export type ReturnTurn = { kind: "return"; station: string; title: string; body: string };
 export type PortalTurn = { kind: "fire" } | { kind: "reset" } | ReturnTurn;
 
-const LOST_NOTHING = "Nothing is lost. You are back on the floor.";
+const LOST_NOTHING = "You are back on the floor. Nothing is taken away.";
 
 function returned(station: string, title: string, body: string): ReturnTurn {
   return { kind: "return", station, title, body };
@@ -148,20 +165,21 @@ export function turnFromHall(id: string): PortalTurn {
     return returned(
       hall.id,
       "Human Nodes stays its own hall",
-      `Human Nodes stays its own hall card. It is not the Fractal Connector. This first cut does not open it as a finished hall. ${LOST_NOTHING}`,
+      `Human Nodes stays its own hall card. It is not the Fractal Connector. ${ROOM_DIRECTION["human-nodes"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
     );
   }
   if (hall.id === "fractal-connector") {
     return returned(
       hall.id,
       "The Fractal Connector hall card",
-      `This is the Fractal Connector hall card, as printed on the plate. It is not Relay 12, and it is not the epilogue door. This first cut does not open it as a finished hall. ${LOST_NOTHING}`,
+      `This is the Fractal Connector hall card, as printed on the plate. It is not Relay 12, and it is not the epilogue door. ${ROOM_DIRECTION["fractal-connector"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
     );
   }
+  const direction = ROOM_DIRECTION[hall.id] ?? "";
   return returned(
     hall.id,
     `${hall.name} returns you to the floor`,
-    `${hall.name} is not open as a finished hall in this first cut. Fire is the live hall, and its set is harnessed discoveries. ${LOST_NOTHING}`,
+    `${hall.name} is marked on the issued plate. ${direction} This cut does not open it as a finished hall. Fire is the live hall. ${LOST_NOTHING}`,
   );
 }
 
@@ -176,14 +194,14 @@ export function turnFromDoor(id: string): PortalTurn {
     return returned(
       door.id,
       "Relay 12 is Human Nodes",
-      `Relay 12 is Human Nodes. It stays its own door. It is not the Fractal Connector. This first cut does not open it as a finished hall. ${LOST_NOTHING}`,
+      `Relay 12 is Human Nodes. It stays its own door. It is not the Fractal Connector. ${ROOM_DIRECTION["human-nodes"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
     );
   }
   if (door.id === "fractal-epilogue") {
     return returned(
       door.id,
       "The Fractal Connector is the epilogue",
-      `The Fractal Connector is the epilogue. It stays apart from Human Nodes and apart from the hall card. This first cut does not open it as a finished hall. ${LOST_NOTHING}`,
+      `The Fractal Connector is the epilogue. It stays apart from Human Nodes and apart from the hall card. This cut does not open it as a finished hall. ${LOST_NOTHING}`,
     );
   }
   return returned(

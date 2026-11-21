@@ -3,11 +3,14 @@ import type { Invention } from "@shared/inventions";
 /** Looping crackle with a low drum pulse. Quieter than the story and the card reads. */
 export const FIRE_AMBIENCE_URL = "/audio/fire-ambience.mp3";
 
-/** Spoken story stays at full level. Ambience sits underneath it. */
-export const FIRE_AMBIENCE_UNDER_STORY = 0.18;
+/**
+ * Spoken story stays at full level. The crackle sits under it, loud enough
+ * to hear on a phone once the click has actually started it.
+ */
+export const FIRE_AMBIENCE_UNDER_STORY = 0.42;
 
 /** A tapped card is the voice in front. The fire bed drops further. */
-export const FIRE_AMBIENCE_UNDER_CARD = 0.08;
+export const FIRE_AMBIENCE_UNDER_CARD = 0.16;
 
 export function fireCardSlug(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
