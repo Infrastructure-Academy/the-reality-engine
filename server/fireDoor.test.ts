@@ -108,17 +108,44 @@ describe("fire door experience", () => {
     expect(bar).not.toMatch(/autoPlay|autoplay/);
   });
 
-  it("reads the existing Fire script in Sonia's voice, with captions and a full-width pit", () => {
+  it("reads the complete Fire briefing in Sonia's voice, with captions and a full-width pit", () => {
     const script = buildStoryScript(localizeRelayStory(1, "en")!).map((part) => part.text);
-    expect(FIRE_STORY_CUES.map((cue) => cue.text)).toEqual(script);
+    const cues = FIRE_STORY_CUES.map((cue) => cue.text);
+    const ignition = "Civilisation ignited — an epic of incalculable possibility.";
+    const kept = script.indexOf(ignition);
+    expect(kept).toBeGreaterThan(0);
+    expect(cues.slice(0, kept + 1)).toEqual(script.slice(0, kept + 1));
+    expect(FIRE_STORY_CUES.slice(0, kept + 1).map((cue) => cue.start)).toEqual([
+      0, 1.543, 4.661, 11.666, 12.801, 18.37, 24.07, 29.14,
+    ]);
+    expect(cues.slice(kept + 1)).toEqual([
+      "United, mankind could build the impossible, raising cathedrals in the sky and unlocking the ethereal depths of our being.",
+      "Division brings collapse, but unification multiplies strength — the grand design that lifts us toward higher intelligence and higher learning.",
+      "What can be imagined may now be achieved, for imagination itself has become infrastructure.",
+      "Man is the only creature that dares to light a fire and live with it.",
+      "Henry Jackson Van Dyke.",
+    ]);
+    expect(FIRE_STORY_CUES.slice(kept + 1).map((cue) => cue.start)).toEqual([
+      34.35, 43.9, 54.3, 62.646, 68.698,
+    ]);
+    expect(cues).not.toContain("Ferdinand Foch");
+    expect(script.at(-1)).toBe("Ferdinand Foch");
     expect(FIRE_STORY_VOICE).toBe("en-GB-SoniaNeural");
-    expect(FIRE_STORY_WORDS).toBe(86);
+    expect(FIRE_STORY_SPEECH_SECONDS).toBe(71.568);
+    expect(FIRE_STORY_WORDS).toBe(144);
     const wordsPerMinute = FIRE_STORY_WORDS / (FIRE_STORY_SPEECH_SECONDS / 60);
     expect(wordsPerMinute).toBeGreaterThanOrEqual(120);
     expect(wordsPerMinute).toBeLessThanOrEqual(140);
     expect(fireCaptionAt(0)).toBe("Mission Briefing");
     expect(fireCaptionAt(21)).toContain("explosion of intent");
-    expect(fireCaptionAt(44)).toBe("Ferdinand Foch");
+    expect(fireCaptionAt(34)).toBe(ignition);
+    expect(fireCaptionAt(44)).toBe(
+      "Division brings collapse, but unification multiplies strength — the grand design that lifts us toward higher intelligence and higher learning.",
+    );
+    expect(fireCaptionAt(70)).toBe("Henry Jackson Van Dyke.");
+    const briefingHash = "ac4ada234afaad1989e0c62f4e58e140b2a5f34723fb2e4c330540c94c82a9d0";
+    expect(sha256("client/public/audio/fire-cards/volume-1-briefing.mp3")).toBe(briefingHash);
+    expect(sha256("docs/audio/fire-cards/volume-1-briefing.mp3")).toBe(briefingHash);
     const pit = source("client/src/components/FirePit.tsx");
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");
