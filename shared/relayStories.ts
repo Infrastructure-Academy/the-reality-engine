@@ -28,21 +28,21 @@ export const RELAY_STORIES: readonly RelayStory[] = [
   {
     number: 1,
     xpReward: 443000,
-    quoteAuthor: "Ferdinand Foch",
+    quoteAuthor: "Henry Jackson Van Dyke",
     subtitle: {
       en: "The First Platform",
       "zh-HK": "第一個平台",
       "zh-CN": "第一个平台",
     },
     quote: {
-      en: "The most powerful weapon on earth is the human soul on fire.",
-      "zh-HK": "世上最強大的武器，是燃燒着的人類靈魂。",
-      "zh-CN": "世上最强大的武器，是燃烧着的人类灵魂。",
+      en: "Man is the only creature that dares to light a fire and live with it.",
+      "zh-HK": "人是唯一敢於點起火、並與火同住的生物。",
+      "zh-CN": "人是唯一敢于点起火、并与火同住的生物。",
     },
     narrative: {
-      en: "Twelve thousand years ago, a great change erupted of unimaginable proportions. In an explosion of intent, man rose from hunter and prey to apex predator. The seed was sown, the threads spun, and the age of intelligence began. Civilisation ignited — an epic of incalculable possibility.",
-      "zh-HK": "一萬二千年前，一場難以想像的巨變爆發。在意向的迸發之中，人從獵者與獵物崛起為頂級掠食者。種子已經播下，絲線已經紡成，智能的時代就此開始。文明被點燃——一部無法估算的可能史詩。",
-      "zh-CN": "一万二千年前，一场难以想象的巨变爆发。在意向的迸发之中，人从猎者与猎物崛起为顶级掠食者。种子已经播下，丝线已经纺成，智能的时代就此开始。文明被点燃——一部无法估算的可能史诗。",
+      en: "Twelve thousand years ago, a great change erupted of unimaginable proportions. In an explosion of intent, man rose from hunter and prey to apex predator. The seed was sown, the threads spun, and the age of intelligence began. Civilisation ignited — an epic of incalculable possibility. United, mankind could build the impossible, raising cathedrals in the sky and unlocking the ethereal depths of our being. Division brings collapse, but unification multiplies strength — the grand design that lifts us toward higher intelligence and higher learning. What can be imagined may now be achieved, for imagination itself has become infrastructure.",
+      "zh-HK": "一萬二千年前，一場難以想像的巨變爆發。在意向的迸發之中，人從獵者與獵物崛起為頂級掠食者。種子已經播下，絲線已經紡成，智能的時代就此開始。文明被點燃——一部無法估算的可能史詩。團結起來，人類可以建造不可能之事，在天空築起大教堂，並揭開我們存在的空靈深處。分裂帶來崩潰，但統一倍增力量——那宏大的設計把我們推向更高的智能與更高的學習。所能想像的，如今可以達成，因為想像本身已經成為基礎設施。",
+      "zh-CN": "一万二千年前，一场难以想象的巨变爆发。在意向的迸发之中，人从猎者与猎物崛起为顶级掠食者。种子已经播下，丝线已经纺成，智能的时代就此开始。文明被点燃——一部无法估算的可能史诗。团结起来，人类可以建造不可能之事，在天空筑起大教堂，并揭开我们存在的空灵深处。分裂带来崩溃，但统一倍增力量——那宏大的设计把我们推向更高的智能与更高的学习。所能想象的，如今可以达成，因为想象本身已经成为基础设施。",
     },
     missionObjective: {
       en: "Understand the fundamental role of controlled fire in early human survival and societal development.",

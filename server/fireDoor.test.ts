@@ -28,12 +28,15 @@ const source = (path: string) => readFileSync(new URL(`../${path}`, import.meta.
 const sha256 = (path: string) => createHash("sha256").update(readFileSync(new URL(`../${path}`, import.meta.url))).digest("hex");
 
 const STORY_HASH = "8edf3af7e66e227e4a7b2aa004312f7ae242829a871d576d4406fb3b9db9ee20";
+const BRIEFING_HASH = "c59a3440f837a33dd51b81b71f73ed359d48e2736f6dcbc90690e5f3630af6e2";
 
 describe("fire door experience", () => {
   it("keeps the issued story recording and adds a voice for each of the nine cards", () => {
     expect(sha256("client/public/audio/relay-1-fire-en.mp3")).toBe(STORY_HASH);
     expect(sha256("docs/audio/relay-1-fire-en.mp3")).toBe(STORY_HASH);
-    expect(sha256("client/public/audio/fire-cards/volume-1-briefing.mp3")).not.toBe(STORY_HASH);
+    expect(sha256("client/public/audio/fire-cards/volume-1-briefing.mp3")).toBe(BRIEFING_HASH);
+    expect(sha256("docs/audio/fire-cards/volume-1-briefing.mp3")).toBe(BRIEFING_HASH);
+    expect(BRIEFING_HASH).not.toBe(STORY_HASH);
     expect(INVENTIONS[1]).toHaveLength(9);
     for (const card of INVENTIONS[1]) {
       expect(fireCardSpeech(card)).toBe(`${card.name}. ${card.description}`);
@@ -112,13 +115,15 @@ describe("fire door experience", () => {
     const script = buildStoryScript(localizeRelayStory(1, "en")!).map((part) => part.text);
     expect(FIRE_STORY_CUES.map((cue) => cue.text)).toEqual(script);
     expect(FIRE_STORY_VOICE).toBe("en-GB-SoniaNeural");
-    expect(FIRE_STORY_WORDS).toBe(86);
+    expect(FIRE_STORY_WORDS).toBe(144);
     const wordsPerMinute = FIRE_STORY_WORDS / (FIRE_STORY_SPEECH_SECONDS / 60);
     expect(wordsPerMinute).toBeGreaterThanOrEqual(120);
     expect(wordsPerMinute).toBeLessThanOrEqual(140);
     expect(fireCaptionAt(0)).toBe("Mission Briefing");
     expect(fireCaptionAt(21)).toContain("explosion of intent");
-    expect(fireCaptionAt(44)).toBe("Ferdinand Foch");
+    expect(fireCaptionAt(FIRE_STORY_SPEECH_SECONDS)).toBe("Henry Jackson Van Dyke");
+    expect(FIRE_STORY_CUES.map((cue) => cue.text).join(" ")).not.toContain("Ferdinand Foch");
+    expect(FIRE_STORY_CUES.at(-2)?.text).toContain("dares to light a fire");
     const pit = source("client/src/components/FirePit.tsx");
     expect(pit).toContain("w-full");
     expect(pit).toContain("requestAnimationFrame");

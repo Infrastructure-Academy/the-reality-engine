@@ -78,11 +78,12 @@ describe("authored Fire copy", () => {
   it("keeps the seeded English briefing, story, and quote", () => {
     const fire = getRelayStory(1);
     expect(fire?.narrative.en).toContain("Civilisation ignited — an epic of incalculable possibility.");
+    expect(fire?.narrative.en).toContain("imagination itself has become infrastructure.");
     expect(fire?.missionObjective.en).toBe(
       "Understand the fundamental role of controlled fire in early human survival and societal development.",
     );
-    expect(fire?.quote.en).toBe("The most powerful weapon on earth is the human soul on fire.");
-    expect(fire?.quoteAuthor).toBe("Ferdinand Foch");
+    expect(fire?.quote.en).toBe("Man is the only creature that dares to light a fire and live with it.");
+    expect(fire?.quoteAuthor).toBe("Henry Jackson Van Dyke");
   });
 
   it("translates only those strings into Traditional and Simplified Chinese", () => {
@@ -91,7 +92,10 @@ describe("authored Fire copy", () => {
     expect(hk?.narrative).toContain("文明被點燃");
     expect(hk?.narrative).not.toContain("文明被点燃");
     expect(cn?.narrative).toContain("文明被点燃");
-    expect(hk?.quoteAuthor).toBe("Ferdinand Foch");
+    expect(hk?.quote).toBe("人是唯一敢於點起火、並與火同住的生物。");
+    expect(cn?.quote).toBe("人是唯一敢于点起火、并与火同住的生物。");
+    expect(hk?.quoteAuthor).toBe("Henry Jackson Van Dyke");
+    expect(cn?.quoteAuthor).toBe("Henry Jackson Van Dyke");
     expect(cn?.missionObjective).toContain("受控之火");
   });
 
@@ -105,8 +109,10 @@ describe("authored Fire copy", () => {
     expect(spoken).toContain("controlled fire");
     expect(spoken).toContain("The Story");
     expect(spoken).toContain("Twelve thousand years ago");
-    expect(spoken).toContain("human soul on fire");
-    expect(spoken).toContain("Ferdinand Foch");
+    expect(spoken).toContain("imagination itself has become infrastructure.");
+    expect(spoken).toContain("dares to light a fire");
+    expect(spoken).toContain("Henry Jackson Van Dyke");
+    expect(spoken).not.toContain("Ferdinand Foch");
     expect(spoken).not.toContain("Welcome to Relay");
     expect(script.every((part) => part.lang === "en-GB")).toBe(true);
   });
