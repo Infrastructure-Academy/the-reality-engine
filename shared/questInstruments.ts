@@ -80,6 +80,13 @@ export type ScanReading = {
   vibration: VibrationMode;
   vibrationLabel: string;
   explanation: string;
+  /** Spoken aloud with the reading. Same words as the plate. */
+  spoken: string;
+  /**
+   * True only when a named species is matched. A photograph on its own
+   * identifies a candidate and does not invent a mid-scale plate index.
+   */
+  scored: boolean;
   matched: boolean;
 };
 
@@ -530,6 +537,7 @@ function composeReading(input: {
   integrationLevel: IntegrationLevel;
   confidence: number;
   amplitudeBias?: number;
+  scored: boolean;
 }): ScanReading {
   const rarity = input.rarity ?? "Common";
   const A = round1(clamp((input.species ? RARITY_AMPLITUDE[rarity] : 3.6) + (input.amplitudeBias ?? 0), 0.5, 10));
@@ -548,11 +556,20 @@ function composeReading(input: {
   const subject = input.species
     ? `${input.species.name} is an InfraDex ${input.species.rarity.toLowerCase()} species`
     : `${input.assetName} has no exact InfraDex match and is logged as a field observation`;
-  const explanation =
+  const scoredExplanation =
     `${subject} on the ${relayName} relay, in the ${input.web} web, at integration level ${input.integrationLevel}. ` +
     `Amplitude ${A.toFixed(1)} and persistence ${P.toFixed(1)} against a mean resistance of ${beta.toFixed(1)} give a signal of ${signal.toFixed(1)}. ` +
     `The plate index is ${plateIndex} out of 300. ${leading[0].toUpperCase()}${leading.slice(1)} is the leading resistance. ` +
     `The vibrational mode is ${vibration.mode.charAt(0)}${vibration.mode.slice(1).toLowerCase()} — ${vibration.label.toLowerCase()}.`;
+  const explanation = input.scored
+    ? scoredExplanation
+    : input.source === "photograph" && input.species
+      ? `The photograph reads as ${input.species.name}, on the ${relayName} relay, in the ${input.web} web. The plate index is not fixed from the photograph alone.`
+      : input.source === "photograph"
+        ? "The photograph is on the plate. No InfraDex species is fixed from it, and no plate index is given."
+        : input.species
+          ? `${input.species.name} is a possible InfraDex species on the ${relayName} relay, in the ${input.web} web. The name is not exact, so no plate index is given.`
+          : `${input.assetName} is not an exact InfraDex match. No plate index is given.`;
   return {
     source: input.source,
     species: input.species,
@@ -574,6 +591,8 @@ function composeReading(input: {
     vibration: vibration.mode,
     vibrationLabel: vibration.label,
     explanation,
+    spoken: explanation,
+    scored: input.scored,
     matched: Boolean(input.species),
   };
 }
@@ -582,6 +601,8 @@ export function scanAsset(input: {
   text?: string;
   cues?: ImageCue | null;
   relayHint?: RelayId | null;
+  /** A photograph is already on the plate, even if its colours could not be sampled. */
+  photographHeld?: boolean;
 }): ScanReading {
   const text = (input.text ?? "").trim();
   const cues = input.cues ?? null;
@@ -601,6 +622,7 @@ export function scanAsset(input: {
       integrationLevel: integrationFor(`${text} ${textMatch.species.name}`, textMatch.species.rarity),
       confidence: agrees ? (cues ? 0.9 : 0.84) : 0.7,
       amplitudeBias: agrees && cues ? 0.2 : 0,
+      scored: true,
     });
   }
 
@@ -614,6 +636,7 @@ export function scanAsset(input: {
       rarity: textMatch.species.rarity,
       integrationLevel: integrationFor(text, textMatch.species.rarity),
       confidence: cues ? 0.72 : 0.64,
+      scored: false,
     });
   }
 
@@ -631,6 +654,21 @@ export function scanAsset(input: {
       integrationLevel: integrationFor(chosen.name, chosen.rarity),
       confidence: 0.4,
       amplitudeBias: -0.4,
+      scored: false,
+    });
+  }
+
+  if (input.photographHeld) {
+    return composeReading({
+      source: "photograph",
+      species: null,
+      assetName: "Photograph",
+      relay: hint ?? "R06",
+      web: "Physical",
+      rarity: null,
+      integrationLevel: 1,
+      confidence: 0.2,
+      scored: false,
     });
   }
 
@@ -646,6 +684,7 @@ export function scanAsset(input: {
     rarity: null,
     integrationLevel: integrationFor(text, null),
     confidence: 0.24,
+    scored: false,
   });
 }
 

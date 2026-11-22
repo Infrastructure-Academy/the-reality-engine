@@ -1,8 +1,9 @@
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode, type Ref } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "wouter";
 import { useT } from "@/contexts/LanguageContext";
 import { cuesFromDataUrl, readPhotograph } from "@/lib/imageCues";
+import { speakPlate, stopPlateSpeech } from "@/lib/plateSpeech";
 import {
   REGIONS,
   RELAYS,
@@ -67,6 +68,29 @@ function saveBook(book: CaptureBook) {
   } catch {
     /* The reading still stands if the browser refuses the book. */
   }
+}
+
+/** Pixels the iOS Safari toolbar covers below the visual viewport. */
+function useBrowserChromeInset() {
+  const [inset, setInset] = useState(0);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+    const sync = () => {
+      const covered = Math.max(0, window.innerHeight - viewport.offsetTop - viewport.height);
+      setInset(Math.round(covered));
+    };
+    sync();
+    viewport.addEventListener("resize", sync);
+    viewport.addEventListener("scroll", sync);
+    window.addEventListener("orientationchange", sync);
+    return () => {
+      viewport.removeEventListener("resize", sync);
+      viewport.removeEventListener("scroll", sync);
+      window.removeEventListener("orientationchange", sync);
+    };
+  }, []);
+  return inset;
 }
 
 function doorFromPath(path: string): { label: string; relayHint: RelayId | null } {
@@ -154,6 +178,7 @@ export function QuestInstrumentBay({ variant }: { variant: "capture" | "both" })
   const [studio, setStudio] = useState<Studio | null>(null);
   const count = capturedCount(book);
   const titleId = useId();
+  const chromeInset = useBrowserChromeInset();
 
   useEffect(() => {
     if (!studio) return;
@@ -166,6 +191,7 @@ export function QuestInstrumentBay({ variant }: { variant: "capture" | "both" })
     return () => {
       document.body.style.overflow = previous;
       window.removeEventListener("keydown", onKey);
+      stopPlateSpeech();
     };
   }, [studio]);
 
@@ -182,7 +208,12 @@ export function QuestInstrumentBay({ variant }: { variant: "capture" | "both" })
             aria-modal="true"
             aria-labelledby={titleId}
             data-testid={studio.kind === "capture" ? "asset-capture-studio" : "time-machine-studio"}
-            className="flex max-h-[100dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-white/15 bg-[#070b14] shadow-[0_0_80px_rgba(0,0,0,0.55)] sm:max-h-[92dvh] sm:rounded-2xl"
+            className="flex w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl border border-white/15 bg-[#070b14] shadow-[0_0_80px_rgba(0,0,0,0.55)] sm:max-h-[92dvh] sm:rounded-2xl"
+            style={{
+              marginBottom: chromeInset,
+              height: `calc(100dvh - ${chromeInset}px)`,
+              maxHeight: `calc(100dvh - ${chromeInset}px)`,
+            }}
           >
             {studio.kind === "capture" ? (
               <CaptureStudio
@@ -300,6 +331,11 @@ function CaptureStudio({
   const [reading, setReading] = useState<ScanReading | null>(null);
   const [award, setAward] = useState<string | null>(null);
   const suggestion = useMemo(() => autofillSuggestion(text, relayHint), [text, relayHint]);
+  const readingRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    readingRef.current?.scrollIntoView({ block: "nearest" });
+  }, [reading?.spoken]);
 
   useEffect(() => () => stopCamera(), []);
 
@@ -334,6 +370,7 @@ function CaptureStudio({
   function takePhotograph() {
     const video = videoRef.current;
     if (!video) return;
+    speakPlate("Reading the photograph.");
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth || 1280;
     canvas.height = video.videoHeight || 720;
@@ -345,16 +382,39 @@ function CaptureStudio({
     stopCamera();
   }
 
+  function publish(nextText: string, nextCues: ImageCue | null, photographHeld: boolean) {
+    const next = scanAsset({ text: nextText, cues: nextCues, relayHint, photographHeld });
+    setReading(next);
+    if (next.species && next.scored) {
+      const result = awardCapture(book, next.species, next.integrationLevel);
+      onBook(result.book);
+      const fresh = result.award.isNew ? "New species" : "Already in the dex";
+      setAward(`${fresh} · +${result.award.xpAwarded.toLocaleString("en-GB")} XP`);
+    } else if (next.species) {
+      onBook(noteUnmatchedScan(book));
+      setAward("Candidate species. The plate index stays unset.");
+    } else {
+      onBook(noteUnmatchedScan(book));
+      setAward(photographHeld ? "Photograph held. No plate index." : "No exact InfraDex match. No plate index.");
+    }
+    return next;
+  }
+
   async function acceptFile(file: File | undefined) {
     if (!file) return;
+    speakPlate("Reading the photograph.");
     setError(null);
     setBusy(true);
     try {
       const photo = await readPhotograph(file);
       setPhotoUrl(photo.url);
       setCues(photo.cues);
+      const next = publish(text, photo.cues, true);
+      speakPlate(next.spoken, { queue: true });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not read that photograph.");
+      const message = caught instanceof Error ? caught.message : "Could not read that photograph.";
+      setError(message);
+      speakPlate(message, { queue: true });
     } finally {
       setBusy(false);
     }
@@ -364,40 +424,43 @@ function CaptureStudio({
     setBusy(true);
     setError(null);
     try {
-      const next = await cuesFromDataUrl(url);
+      let nextCues: ImageCue | null = null;
+      try {
+        nextCues = await cuesFromDataUrl(url);
+      } catch {
+        nextCues = null;
+      }
       setPhotoUrl(url);
-      setCues(next);
+      setCues(nextCues);
+      const next = publish(text, nextCues, true);
+      speakPlate(next.spoken, { queue: true });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Could not read that photograph.");
+      const message = caught instanceof Error ? caught.message : "Could not read that photograph.";
+      setError(message);
+      speakPlate(message, { queue: true });
     } finally {
       setBusy(false);
     }
   }
 
   function readAsset() {
-    if (!text.trim() && !cues) {
-      setError("Photograph an asset, choose a photograph, or type a name.");
+    const photographHeld = Boolean(photoUrl);
+    if (!text.trim() && !photographHeld) {
+      const message = "Photograph an asset, choose a photograph, or type a name.";
+      setError(message);
+      speakPlate(message);
       return;
     }
     setError(null);
-    const next = scanAsset({ text, cues, relayHint });
-    setReading(next);
-    if (next.species) {
-      const result = awardCapture(book, next.species, next.integrationLevel);
-      onBook(result.book);
-      const fresh = result.award.isNew ? "New species" : "Already in the dex";
-      setAward(`${fresh} · +${result.award.xpAwarded.toLocaleString("en-GB")} XP`);
-    } else {
-      onBook(noteUnmatchedScan(book));
-      setAward("Field observation · not one of the 143");
-    }
+    const next = publish(text, cues, photographHeld);
+    speakPlate(next.spoken);
   }
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col">
       <StudioHeader titleId={titleId} kicker={`${doorLabel} · ${t("igo.infraDexScan")}`} title={t("igo.assetCapture")} onClose={onClose} />
-      <div className="overflow-y-auto px-4 py-4 sm:px-5">
-        {view === "lattice" && reading ? (
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
+        {view === "lattice" && reading?.species ? (
           <Collidoscope
             hotRelay={reading.relay}
             hotWeb={reading.web}
@@ -407,10 +470,11 @@ function CaptureStudio({
             onBack={() => onView("form")}
           />
         ) : (
-          <div className="space-y-4">
-            <p className="text-sm leading-relaxed text-amber-50/80">
-              Point at an asset and photograph it, use a photograph you already have, or type a name. Quest reads the InfraDex on this door and returns the ISI plate.
-            </p>
+          <div className="min-w-0 space-y-4">
+            <div className="space-y-1 text-sm leading-snug text-amber-50/85" data-testid="asset-capture-lead">
+              <p>Photograph an asset, or use a photograph you already have.</p>
+              <p>A photograph on the plate is enough to read. A name is optional.</p>
+            </div>
             <div className="grid gap-2 sm:grid-cols-3">
               <button type="button" onClick={() => void openCamera()} className="min-h-11 rounded-lg border border-amber-200/30 bg-amber-200/10 px-3 py-2 text-left text-sm text-amber-50 hover:bg-amber-200/15">
                 <span className="block font-heading text-[11px] tracking-[0.16em] uppercase">Photograph</span>
@@ -418,15 +482,15 @@ function CaptureStudio({
               </button>
               <button type="button" onClick={() => fileRef.current?.click()} className="min-h-11 rounded-lg border border-amber-200/30 bg-amber-200/10 px-3 py-2 text-left text-sm text-amber-50 hover:bg-amber-200/15">
                 <span className="block font-heading text-[11px] tracking-[0.16em] uppercase">Use a photograph</span>
-                <span className="mt-1 block text-xs text-amber-100/70">JPEG, PNG, or WebP, up to 6 MB.</span>
+                <span className="mt-1 block text-xs text-amber-100/70">JPEG, PNG, WebP, or HEIC.</span>
               </button>
               <button type="button" onClick={() => nameRef.current?.focus()} className="min-h-11 rounded-lg border border-amber-200/30 bg-amber-200/10 px-3 py-2 text-left text-sm text-amber-50 hover:bg-amber-200/15">
                 <span className="block font-heading text-[11px] tracking-[0.16em] uppercase">Type a name</span>
                 <span className="mt-1 block text-xs text-amber-100/70">A bridge, a dam, a station, a grove.</span>
               </button>
             </div>
-            <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={(event) => void acceptFile(event.target.files?.[0])} />
-            <input ref={cameraFileRef} type="file" accept="image/jpeg,image/png,image/webp" capture="environment" className="sr-only" onChange={(event) => void acceptFile(event.target.files?.[0])} />
+            <input ref={fileRef} type="file" accept="image/*,.heic,.heif" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; void acceptFile(file); }} />
+            <input ref={cameraFileRef} type="file" accept="image/*,.heic,.heif" capture="environment" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ""; void acceptFile(file); }} />
             {live ? (
               <div className="overflow-hidden rounded-xl border border-amber-200/30 bg-black">
                 <video ref={videoRef} className="aspect-[4/3] w-full object-cover" playsInline muted data-testid="asset-capture-viewfinder" />
@@ -441,7 +505,7 @@ function CaptureStudio({
                 <img src={photoUrl} alt="Photograph held for this scan" className="max-h-56 w-full object-cover" />
               </figure>
             ) : null}
-            <label className="block">
+            <label className="block min-w-0">
               <span className="mb-1.5 block font-mono text-[10px] tracking-[0.18em] uppercase text-amber-200/70">Name or description</span>
               <input
                 ref={nameRef}
@@ -449,35 +513,46 @@ function CaptureStudio({
                 data-testid="asset-capture-name"
                 onChange={(event) => setText(event.target.value)}
                 onKeyDown={(event) => { if (event.key === "Enter") readAsset(); }}
-                placeholder="Suspension bridge, Tang harbour, a school…"
-                className="min-h-11 w-full rounded-lg border border-white/15 bg-black/40 px-3 text-sm text-amber-50 placeholder:text-white/30 focus:border-amber-200/60 focus:outline-none"
+                placeholder="Suspension bridge, a school, a dam"
+                className="min-h-11 w-full min-w-0 rounded-lg border border-white/15 bg-black/40 px-3 text-sm text-amber-50 placeholder:text-white/30 focus:border-amber-200/60 focus:outline-none"
               />
             </label>
             {suggestion ? (
               <p className="text-xs text-amber-200/80" data-testid="asset-capture-suggestion">InfraDex hears {suggestion.name}.</p>
             ) : null}
             {error ? <p className="text-sm text-rose-200" role="alert">{error}</p> : null}
-            <button
-              type="button"
-              data-testid="asset-capture-read"
-              disabled={busy}
-              onClick={readAsset}
-              className="min-h-11 w-full rounded-lg bg-amber-300 font-heading text-xs tracking-[0.18em] uppercase text-[#2a1c04] disabled:opacity-60"
-            >
-              {busy ? "Reading the photograph…" : "Read this asset"}
-            </button>
-            {reading ? <ScanPlate reading={reading} award={award} onAnalyse={() => onView("lattice")} /> : null}
+            {reading ? <ScanPlate readingRef={readingRef} reading={reading} award={award} onAnalyse={() => onView("lattice")} /> : null}
           </div>
         )}
       </div>
-    </>
+      {view === "form" || !reading?.species ? (
+        <div
+          data-testid="asset-capture-action"
+          className="shrink-0 border-t border-amber-200/25 bg-[#120e08] px-4 pt-3"
+          style={{ paddingBottom: "max(0.85rem, env(safe-area-inset-bottom))" }}
+        >
+          <button
+            type="button"
+            data-testid="asset-capture-read"
+            disabled={busy}
+            onClick={readAsset}
+            className="min-h-12 w-full rounded-lg bg-amber-300 font-heading text-sm tracking-[0.18em] uppercase text-[#2a1c04] shadow-[0_0_24px_rgba(240,193,74,0.35)] disabled:opacity-60"
+          >
+            {busy ? "Reading the photograph…" : photoUrl ? "Read this photograph" : "Read this asset"}
+          </button>
+          <p className="mt-2 text-center text-xs leading-snug text-amber-100/75">
+            {photoUrl ? "The photograph is enough. A name is optional." : "Type a name, or add a photograph."}
+          </p>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
-function ScanPlate({ reading, award, onAnalyse }: { reading: ScanReading; award: string | null; onAnalyse: () => void }) {
+function ScanPlate({ reading, award, onAnalyse, readingRef }: { reading: ScanReading; award: string | null; onAnalyse: () => void; readingRef?: Ref<HTMLElement> }) {
   const rarityColour = reading.species ? RARITY_COLOUR[reading.species.rarity] : "#9CA3AF";
   return (
-    <article className="space-y-3 rounded-xl border border-amber-200/25 bg-[#100d08] p-4" data-testid="asset-capture-reading">
+    <article ref={readingRef} className="space-y-3 rounded-xl border border-amber-200/25 bg-[#100d08] p-4" data-testid="asset-capture-reading">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-amber-200/60">{reading.matched ? "InfraDex species" : "Field observation"}</p>
@@ -489,26 +564,36 @@ function ScanPlate({ reading, award, onAnalyse }: { reading: ScanReading; award:
           </span>
         ) : null}
       </div>
-      <p className="font-mono text-[11px] tracking-wide text-amber-100/75">
-        {reading.relay} {reading.relayName} · {reading.web} · level {reading.integrationLevel}
-      </p>
-      <p className="font-heading text-4xl tabular-nums text-amber-200" aria-label={`Plate index ${reading.plateIndex} out of 300`}>
-        {reading.plateIndex}<span className="ml-1 text-lg text-amber-100/50">/300</span>
-      </p>
-      <dl className="grid grid-cols-4 gap-2 text-center">
-        <Figure label="A" value={reading.A.toFixed(1)} />
-        <Figure label="P" value={reading.P.toFixed(1)} />
-        <Figure label="β" value={reading.beta.toFixed(1)} />
-        <Figure label="λ" value={reading.lambdaAvg.toFixed(1)} />
-      </dl>
-      <p className="font-mono text-[11px] text-amber-100/70">S = (A × P) / β = {reading.signal.toFixed(1)} · {reading.vibrationLabel}</p>
+      {reading.species ? (
+        <p className="font-mono text-[11px] tracking-wide text-amber-100/75">
+          {reading.relay} {reading.relayName} · {reading.web} · level {reading.integrationLevel}
+        </p>
+      ) : null}
+      {reading.scored ? (
+        <>
+          <p className="font-heading text-4xl tabular-nums text-amber-200" aria-label={`Plate index ${reading.plateIndex} out of 300`}>
+            {reading.plateIndex}<span className="ml-1 text-lg text-amber-100/50">/300</span>
+          </p>
+          <dl className="grid grid-cols-4 gap-2 text-center">
+            <Figure label="A" value={reading.A.toFixed(1)} />
+            <Figure label="P" value={reading.P.toFixed(1)} />
+            <Figure label="β" value={reading.beta.toFixed(1)} />
+            <Figure label="λ" value={reading.lambdaAvg.toFixed(1)} />
+          </dl>
+          <p className="font-mono text-[11px] text-amber-100/70">S = (A × P) / β = {reading.signal.toFixed(1)} · {reading.vibrationLabel}</p>
+        </>
+      ) : (
+        <p className="font-mono text-[11px] tracking-wide text-amber-200/80" data-testid="asset-capture-unscored">Plate index not fixed</p>
+      )}
       <p className="text-sm italic leading-relaxed text-amber-50/85">{reading.explanation}</p>
       <p className="font-mono text-[10px] tracking-wide text-amber-200/60">
         Confidence {Math.round(reading.confidence * 100)} / 100{award ? ` · ${award}` : ""}
       </p>
-      <button type="button" data-testid="asset-capture-analyse" onClick={onAnalyse} className="min-h-11 w-full rounded-lg border border-amber-200/40 font-heading text-xs tracking-[0.16em] uppercase text-amber-100 hover:bg-amber-200/10">
-        Analyse on the Collidoscope
-      </button>
+      {reading.species ? (
+        <button type="button" data-testid="asset-capture-analyse" onClick={onAnalyse} className="min-h-11 w-full rounded-lg border border-amber-200/40 font-heading text-xs tracking-[0.16em] uppercase text-amber-100 hover:bg-amber-200/10">
+          Analyse on the Collidoscope
+        </button>
+      ) : null}
     </article>
   );
 }
@@ -561,9 +646,9 @@ function TimeStudio({
   }
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col">
       <StudioHeader titleId={titleId} kicker={`${doorLabel} · ${t("igo.historicalPortal")}`} title={t("igo.timeMachine")} onClose={onClose} />
-      <div className="overflow-y-auto px-4 py-4 sm:px-5">
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
         {view === "lattice" && reading ? (
           <Collidoscope
             hotRelay={reading.dominantRelay}
@@ -627,7 +712,7 @@ function TimeStudio({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
