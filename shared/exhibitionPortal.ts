@@ -239,3 +239,14 @@ export function relayNavigatorHref(currentRelay: number, target: number): string
   }
   return `/explore/${target}`;
 }
+
+/**
+ * Relays 3–12 stay on the floor plan. A direct address returns to the floor
+ * and does not open a finished hall. Fire and Tree keep their own doors.
+ */
+export function unfinishedRelayFloor(relayNum: number): string | null {
+  if (!Number.isInteger(relayNum) || relayNum < 3 || relayNum > 12) return null;
+  const hall = HALL_CARDS.find((card) => card.number === relayNum);
+  if (!hall || hall.href !== null) return null;
+  return `${PORTAL_PATH}?station=${hall.id}`;
+}

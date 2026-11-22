@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
-import { stepFromRelay } from "@shared/exhibitionPortal";
+import { relayNavigatorHref, stepFromRelay, unfinishedRelayFloor } from "@shared/exhibitionPortal";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { classicXpPerDiscovery, presentPlayerCopy } from "@shared/playerProgress";
 import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
@@ -241,21 +241,33 @@ function ProgressBar({ discovered, total, completionPct }: { discovered: number;
 function RelayNavigator({ currentRelay }: { currentRelay: number }) {
   return (
     <div className="flex flex-wrap justify-center gap-1.5" data-testid="relay-navigator">
-      {RELAYS.map((r) => (
-        <Link key={r.number} href={`/explore/${r.number}`}>
-          <button
-            className={`w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all ${
-              r.number === currentRelay
-                ? "border-2 border-gold/60 bg-gold/10 scale-110"
-                : "border border-border/30 hover:border-border/60"
-            }`}
-            title={r.name}
-            aria-label={r.name}
-          >
-            {r.emoji}
-          </button>
-        </Link>
-      ))}
+      {RELAYS.map((r) => {
+        const href = relayNavigatorHref(currentRelay, r.number);
+        const className = `w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all ${
+          r.number === currentRelay
+            ? "border-2 border-gold/60 bg-gold/10 scale-110"
+            : "border border-border/30 hover:border-border/60"
+        }`;
+        if (!href) {
+          return (
+            <span
+              key={r.number}
+              data-testid={`relay-nav-${r.number}`}
+              className={className}
+              title={r.name}
+            >
+              {r.emoji}
+            </span>
+          );
+        }
+        return (
+          <Link key={r.number} href={href} data-testid={`relay-nav-${r.number}`}>
+            <button type="button" className={className} title={r.name} aria-label={r.name}>
+              {r.emoji}
+            </button>
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -454,6 +466,7 @@ export default function ExplorerRelay() {
   const rawRelay = params.relayNum || "";
   const relayNum = parseInt(rawRelay, 10);
   const relayValid = Number.isInteger(relayNum) && relayNum >= 1 && relayNum <= 12;
+  const floor = unfinishedRelayFloor(relayNum);
   const relayMeta = RELAYS.find(r => r.number === relayNum) || RELAYS[0];
   const storyLocale = useStoryLocale();
   const authored = useMemo(
@@ -468,8 +481,10 @@ export default function ExplorerRelay() {
       navigate("/explore/greymatter", { replace: true });
     } else if (!relayValid) {
       navigate("/explore", { replace: true });
+    } else if (floor) {
+      navigate(floor, { replace: true });
     }
-  }, [rawRelay, relayValid, navigate]);
+  }, [rawRelay, relayValid, floor, navigate]);
 
   const [guestId] = useState(getGuestId);
   const [showChat, setShowChat] = useState(false);
@@ -741,7 +756,7 @@ export default function ExplorerRelay() {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [treeDoor]);
 
-  if (!relayValid) return null;
+  if (!relayValid || floor) return null;
 
   const playFireCard = (idx: number) => {
     const name = inventionData[idx]?.name;
