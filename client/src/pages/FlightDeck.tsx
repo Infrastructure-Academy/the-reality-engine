@@ -29,6 +29,9 @@ import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "craft_select" | "fire_relay" | "hud";
 
+const FLIGHT_INTRO_CLIP =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-clip-v5_b45064f9.mp4";
+
 export default function FlightDeck() {
   const t = useT();
   const { user, isAuthenticated } = useAuth();
@@ -232,8 +235,16 @@ export default function FlightDeck() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8">
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center px-4">
+        <div className="text-center w-full max-w-md mx-auto py-8">
+          <ExplorerVideo
+            videoUrl={FLIGHT_INTRO_CLIP}
+            title={t("flight.videoTitle")}
+            subtitle="32s intro"
+            accentColor="#06b6d4"
+            glowColor="rgba(6,182,212,0.3)"
+            ensurePlayback
+          />
           <Rocket className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{t("flight.accessRequired")}</h2>
           <p className="text-muted-foreground text-sm mb-6">
@@ -283,7 +294,7 @@ export default function FlightDeck() {
         <div className="container py-8 max-w-5xl mx-auto">
           {/* Intro Video */}
           <ExplorerVideo
-            videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-clip-v5_b45064f9.mp4"
+            videoUrl={FLIGHT_INTRO_CLIP}
             title={t("flight.videoTitle")}
             subtitle="32s intro"
             accentColor="#06b6d4"

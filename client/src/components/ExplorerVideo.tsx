@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from "react";
+import { flushSync } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Volume2, VolumeX, CheckCircle2 } from "lucide-react";
 
@@ -8,6 +9,8 @@ interface ExplorerVideoProps {
   subtitle: string;
   accentColor: string;
   glowColor: string;
+  /** Start the clip in the same tap that opens it. Used on the public gates. */
+  ensurePlayback?: boolean;
 }
 
 // localStorage helper — safe for SSR/private browsing
@@ -33,12 +36,27 @@ function markWatched(videoUrl: string): void {
   }
 }
 
-export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor }: ExplorerVideoProps) {
+export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, ensurePlayback = false }: ExplorerVideoProps) {
   const watched = useMemo(() => isWatched(videoUrl), [videoUrl]);
   const [showVideo, setShowVideo] = useState(false);
   const [muted, setMuted] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(watched);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const openIntro = useCallback(() => {
+    if (!ensurePlayback) {
+      setShowVideo(true);
+      return;
+    }
+    flushSync(() => setShowVideo(true));
+    const video = videoRef.current;
+    if (!video) return;
+    video.play().catch(() => {
+      video.muted = true;
+      setMuted(true);
+      video.play().catch(() => undefined);
+    });
+  }, [ensurePlayback]);
 
   const handleClose = useCallback(() => {
     setShowVideo(false);
@@ -61,7 +79,7 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
         <motion.button
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          onClick={() => setShowVideo(true)}
+          onClick={openIntro}
           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border/40 bg-card/20 backdrop-blur-sm hover:bg-card/40 transition-all group mb-4"
           style={{ borderColor: `${accentColor}30` }}
         >
