@@ -19,6 +19,7 @@ import { useT } from "@/contexts/LanguageContext";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 import { useLitRelays, useSharedDiscoveryXp } from "@/lib/sharedProgress";
 import { getPlayerBadge } from "@shared/badges";
+import { QuestInstrumentBay } from "@/components/QuestInstruments";
 import {
   PLATE_EPISODES,
   PLATE_FOUNDATION,
@@ -231,6 +232,10 @@ export function GameModeGates() {
             {PLATE_TITLE}
           </h2>
           <p className="mt-1 text-xs text-amber-200/80 md:text-sm">{PLATE_SUBTITLE}</p>
+        </div>
+
+        <div className="mb-3 text-left">
+          <QuestInstrumentBay variant="capture" />
         </div>
 
         <div className="space-y-2" role="group" aria-label={t("home.gates.chooseEpisode")}>

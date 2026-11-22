@@ -14,6 +14,7 @@ import {
   CheckCircle2, Sparkles, Target, BookOpen, Shield, Zap, Trophy, Clock
 } from "lucide-react";
 import { useT } from "@/contexts/LanguageContext";
+import { QuestInstrumentBay } from "@/components/QuestInstruments";
 
 // ─── 12 MODES A–L (v4 terminology) ───
 const MODES = [
@@ -84,9 +85,6 @@ const IMPACT_STATS = [
   { value: "8–65+", labelKey: "igo.stats.ageRange", icon: Users },
   { value: "24M", labelKey: "igo.stats.xpCap", icon: Trophy },
 ];
-
-/** Residual Asset Capture instrument. Not the sister explorer, and not an in-repo rebuild. */
-const ASSET_CAPTURE_URL = "https://isicalc-uwdgcubw.manus.space";
 
 export default function IGOUmbrella() {
   const t = useT();
@@ -228,35 +226,9 @@ export default function IGOUmbrella() {
             </p>
           </div>
 
-          <a
-            href={ASSET_CAPTURE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-door="asset-capture"
-            className="glow-gold group mx-auto mb-10 flex w-full max-w-xl items-center gap-4 rounded-xl border border-amber-300/55 px-4 py-4 text-left transition-colors hover:border-amber-200"
-            style={{
-              background:
-                "linear-gradient(100deg, rgba(255,196,60,0.22) 0%, rgba(48,36,8,0.55) 38%, rgba(6,8,16,0.94) 100%)",
-            }}
-          >
-            <span
-              className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-amber-200/50 bg-black/45 shadow-[0_0_16px_rgba(255,215,0,0.35)]"
-              aria-hidden="true"
-            >
-              <span className="absolute h-7 w-7 rounded-full border border-amber-300/80" />
-              <span className="absolute h-3.5 w-3.5 rounded-full border border-amber-100/90" />
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-300 shadow-[0_0_8px_rgba(255,215,0,0.95)]" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-heading text-sm font-bold tracking-[0.22em] text-amber-100 uppercase">
-                {t("igo.assetCapture")}
-              </span>
-              <span className="mt-1 block font-mono text-[11px] tracking-[0.28em] text-amber-200/75 uppercase">
-                {t("igo.infraDexScan")}
-              </span>
-            </span>
-            <ChevronRight className="h-5 w-5 shrink-0 text-amber-200/80 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-          </a>
+          <div className="mb-10">
+            <QuestInstrumentBay variant="both" />
+          </div>
 
           {/* Value proposition */}
           <div className="max-w-3xl mx-auto mb-8">
