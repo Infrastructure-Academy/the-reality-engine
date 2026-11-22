@@ -630,6 +630,8 @@ export const EN: Record<string, string> = {
   "explorer.theStory": "The Story",
   "explorer.shareYourFeedback": "Share Your Feedback",
   "igo.ages": "Ages {ages}",
+  "igo.assetCapture": "Asset Capture",
+  "igo.infraDexScan": "InfraDex Scan",
   "igo.epDetails": "Ages {ages} · Modes {modes}",
   "igo.from2500": "From 2,500 BCE to 2026. Open your eye. iAAi.",
   "igo.helpScale": "Help us scale from PoC to global platform. Educators, institutions, sponsors welcome.",

@@ -18,6 +18,9 @@ import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
 
+const SCHOLAR_INTRO_CLIP =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-clip-v6_adca97d1.mp4";
+
 const FITS_QUESTIONS = [
   { q: "When facing a new infrastructure challenge, you first:", a: [
     { text: "Examine the physical evidence and materials", type: "senser" },
@@ -173,8 +176,16 @@ export default function ScholarCreate() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-8">
+      <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center px-4">
+        <div className="text-center w-full max-w-md mx-auto py-8">
+          <ExplorerVideo
+            videoUrl={SCHOLAR_INTRO_CLIP}
+            title={t("scholar.videoTitle")}
+            subtitle="32s intro"
+            accentColor="#f59e0b"
+            glowColor="rgba(245,158,11,0.3)"
+            ensurePlayback
+          />
           <GraduationCap className="w-16 h-16 text-amber-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{ t("scholar.accessRequired") }</h2>
           <p className="text-muted-foreground text-sm mb-6">
@@ -227,7 +238,7 @@ export default function ScholarCreate() {
 
         {/* Intro Video */}
         <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-clip-v6_adca97d1.mp4"
+          videoUrl={SCHOLAR_INTRO_CLIP}
           title={t("scholar.videoTitle")}
           subtitle="32s intro"
           accentColor="#f59e0b"
