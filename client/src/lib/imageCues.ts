@@ -25,9 +25,14 @@ export function cuesFromDataUrl(url: string): Promise<ImageCue> {
   });
 }
 
-export async function readPhotograph(file: File): Promise<{ url: string; cues: ImageCue }> {
-  if (!file.type.startsWith("image/")) {
-    throw new Error("Choose a JPEG, PNG, or WebP photograph.");
+function isPhotograph(file: File): boolean {
+  if (file.type.startsWith("image/")) return true;
+  return /\.(jpe?g|png|webp|gif|heic|heif)$/i.test(file.name);
+}
+
+export async function readPhotograph(file: File): Promise<{ url: string; cues: ImageCue | null }> {
+  if (!isPhotograph(file)) {
+    throw new Error("Choose a photograph. JPEG, PNG, WebP, and HEIC are accepted.");
   }
   if (file.size > 6 * 1024 * 1024) {
     throw new Error("That photograph is over 6 MB. Use a smaller one.");
@@ -38,6 +43,10 @@ export async function readPhotograph(file: File): Promise<{ url: string; cues: I
     reader.onerror = () => reject(new Error("Could not read that photograph."));
     reader.readAsDataURL(file);
   });
-  const cues = await cuesFromDataUrl(url);
-  return { url, cues };
+  try {
+    const cues = await cuesFromDataUrl(url);
+    return { url, cues };
+  } catch {
+    return { url, cues: null };
+  }
 }

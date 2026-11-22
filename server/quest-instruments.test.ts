@@ -51,13 +51,26 @@ describe("Quest InfraDex and Time Machine", () => {
     expect(reading.explanation).not.toMatch(/manus\.space/i);
   });
 
-  it("reads a warm photograph toward the Fire relay when no name is given", () => {
+  it("reads a warm photograph toward the Fire relay without inventing a plate index", () => {
     expect(relayFromCues(warmPlate)).toBe("R01");
-    const reading = scanAsset({ cues: warmPlate });
+    const reading = scanAsset({ cues: warmPlate, photographHeld: true });
     expect(reading.source).toBe("photograph");
     expect(reading.relay).toBe("R01");
     expect(reading.matched).toBe(true);
+    expect(reading.scored).toBe(false);
     expect(reading.confidence).toBeLessThan(0.6);
+    expect(reading.spoken).toContain(reading.assetName);
+    expect(reading.spoken).toContain("not fixed from the photograph alone");
+    expect(reading.spoken).not.toContain("out of 300");
+  });
+
+  it("reads a blue harbour photograph without requiring a typed name", () => {
+    const harbour: ImageCue = { warm: 0.08, green: 0.12, blue: 0.46, grey: 0.34, bright: 0.58, edge: 0.42, horizontal: 0.62 };
+    const reading = scanAsset({ cues: harbour, photographHeld: true });
+    expect(reading.scored).toBe(false);
+    expect(reading.species).not.toBeNull();
+    expect(reading.spoken.toLowerCase()).toContain("photograph reads as");
+    expect(reading.spoken).not.toMatch(/amplitude/i);
   });
 
   it("derives colour cues from pixels", () => {
@@ -129,6 +142,15 @@ describe("Quest InfraDex and Time Machine", () => {
       expect(at).toBeGreaterThan(-1);
       expect(app.slice(at, at + 180)).toContain("CaptureDoor");
     }
+    const plate = source("client/src/components/QuestInstruments.tsx");
+    const speech = source("client/src/lib/plateSpeech.ts");
+    expect(plate).toContain('data-testid="asset-capture-action"');
+    expect(plate).toContain("visualViewport");
+    expect(plate).toContain("speakPlate(next.spoken");
+    expect(plate).toContain("A photograph on the plate is enough to read.");
+    expect(plate).not.toContain("Point at an asset and photograph it, use a photograph you already have");
+    expect(speech).toContain("synth.speak");
+    expect(speech).not.toContain("manus.space");
     expect(app).not.toContain("isicalc-uwdgcubw");
     expect(app).not.toContain("isicalcexp-bqjsukv3");
     expect(source("shared/questInstruments.ts")).not.toContain("manus.space");
