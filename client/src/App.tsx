@@ -10,7 +10,8 @@ import { GamepadIndicator } from "./components/GamepadIndicator";
 import { DiscoveryHints } from "./components/DiscoveryHints";
 import { NetworkBar } from "./components/NetworkBar";
 import { EyeOpenAnimation } from "./components/EyeOpenAnimation";
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
+import { QuestInstrumentBay } from "./components/QuestInstruments";
 import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
 import { FIRE_AMBIENCE_BED_ID, FIRE_AMBIENCE_BED_SRC, FIRE_STORY_BED_ID, FIRE_STORY_BED_SRC } from "@/lib/firePlayback";
 
@@ -82,6 +83,17 @@ function QuestAnalytics() {
   return null;
 }
 
+function CaptureDoor({ page: Page }: { page: ComponentType }) {
+  return (
+    <>
+      <div className="relative z-30 px-3 pt-3" data-door-host="asset-capture">
+        <QuestInstrumentBay variant="capture" />
+      </div>
+      <Page />
+    </>
+  );
+}
+
 function Router() {
   return (
     <>
@@ -89,24 +101,24 @@ function Router() {
       <Suspense fallback={<PageLoader />}>
       <Switch>
         <Route path={"/"} component={Home} />
-        <Route path={"/explore"} component={ExplorerSelect} />
+        <Route path={"/explore"}>{() => <CaptureDoor page={ExplorerSelect} />}</Route>
         <Route path={"/explore/prologue"} component={Prologue} />
-        <Route path={"/explore/spinner"} component={RelaySpinner} />
-        <Route path={"/explore/dungeon"} component={DungeonCrawl} />
-        <Route path={"/explore/greymatter"} component={GreyMatter} />
-        <Route path={"/explore/grey-matter"} component={GreyMatter} />
-        <Route path={"/explore/:relayNum"} component={ExplorerRelay} />
-        <Route path={"/flight-deck"} component={FlightDeck} />
-        <Route path={"/create"} component={ScholarCreate} />
-        <Route path={"/scholar"} component={ScholarCreate} />
+        <Route path={"/explore/spinner"}>{() => <CaptureDoor page={RelaySpinner} />}</Route>
+        <Route path={"/explore/dungeon"}>{() => <CaptureDoor page={DungeonCrawl} />}</Route>
+        <Route path={"/explore/greymatter"}>{() => <CaptureDoor page={GreyMatter} />}</Route>
+        <Route path={"/explore/grey-matter"}>{() => <CaptureDoor page={GreyMatter} />}</Route>
+        <Route path={"/explore/:relayNum"}>{() => <CaptureDoor page={ExplorerRelay} />}</Route>
+        <Route path={"/flight-deck"}>{() => <CaptureDoor page={FlightDeck} />}</Route>
+        <Route path={"/create"}>{() => <CaptureDoor page={ScholarCreate} />}</Route>
+        <Route path={"/scholar"}>{() => <CaptureDoor page={ScholarCreate} />}</Route>
         <Route path={"/leaderboard"} component={Leaderboard} />
         <Route path={"/yoda"} component={YodaControl} />
         <Route path={"/frameworks"} component={Frameworks} />
         <Route path={"/cards"} component={CardCollection} />
         <Route path={"/governance"} component={GovernanceDeck} />
         <Route path={"/synthesis"} component={Synthesis} />
-        <Route path={"/m/explore"} component={MobileExplorer} />
-        <Route path={"/m/explore/:relayNum"} component={MobileExplorer} />
+        <Route path={"/m/explore"}>{() => <CaptureDoor page={MobileExplorer} />}</Route>
+        <Route path={"/m/explore/:relayNum"}>{() => <CaptureDoor page={MobileExplorer} />}</Route>
         <Route path={"/challenge/:code"} component={ChallengeLanding} />
         <Route path={"/network"} component={NetworkDirectory} />
         <Route path={"/journey"} component={Journey} />
