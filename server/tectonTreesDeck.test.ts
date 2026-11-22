@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { INVENTIONS } from "@shared/inventions";
-import { HALL_CARDS, relayNavigatorHref, stepFromRelay } from "@shared/exhibitionPortal";
+import { HALL_CARDS, relayNavigatorHref, stepFromRelay, turnFromHall, unfinishedRelayFloor } from "@shared/exhibitionPortal";
 import { FIRE_STORY_AUDIO_URL, storyAudioUrl } from "@/lib/storyAudio";
 import {
   TECTON_TREES_DECK,
@@ -172,7 +172,26 @@ describe("Tecton Trees Deck learn-more", () => {
     expect(relayNavigatorHref(2, 2)).toBe("/explore/2");
     expect(relayNavigatorHref(2, 3)).toBeNull();
     expect(relayNavigatorHref(1, 3)).toBeNull();
+    expect(unfinishedRelayFloor(1)).toBeNull();
+    expect(unfinishedRelayFloor(2)).toBeNull();
+    for (let number = 3; number <= 12; number += 1) {
+      expect(relayNavigatorHref(1, number)).toBeNull();
+      expect(relayNavigatorHref(2, number)).toBeNull();
+      const floor = unfinishedRelayFloor(number);
+      expect(floor).toBe(`/portal?station=${HALL_CARDS[number - 1].id}`);
+      const station = new URL(floor ?? "", "https://app.infrastructure-academy.com").searchParams.get("station");
+      expect(turnFromHall(station ?? "").kind).toBe("return");
+    }
     const relay = source("client/src/pages/ExplorerRelay.tsx");
+    expect(relay).toContain("relayNavigatorHref(currentRelay, r.number)");
+    expect(relay).not.toContain("href={`/explore/${r.number}`}");
+    expect(relay).toContain("const floor = unfinishedRelayFloor(relayNum)");
+    expect(relay).toContain("else if (floor)");
+    expect(relay).toContain("navigate(floor, { replace: true })");
+    expect(relay).toContain("if (!relayValid || floor) return null");
+    const fireOnly = relay.slice(relay.indexOf('data-testid="fire-stage"'), relay.indexOf('data-testid="tree-stage"'));
+    expect(fireOnly).not.toContain("relay-navigator");
+    expect(fireOnly).not.toContain("RelayNavigator");
     expect(relay).toContain("stepFromRelay(relayNum, \"back\")");
     expect(relay).toContain("stepFromRelay(relayNum, \"forward\")");
     expect(relay).toContain('data-testid="relay-prev"');
