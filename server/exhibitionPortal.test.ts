@@ -117,7 +117,19 @@ describe("exhibition portal first cut", () => {
     expect(HALL_CARDS[0].href).toBe("/explore/1");
     expect(HALL_CARDS[1]).toMatchObject({ id: "tree", name: "Tree", plate: "The Living Structure", href: TREE_HALL_PATH });
     expect(TREE_HALL_PATH).toBe("/explore/2");
-    expect(HALL_CARDS.slice(2).every((hall) => hall.href === null)).toBe(true);
+    expect(HALL_CARDS.slice(2, 12).map((hall) => hall.href)).toEqual([
+      "/explore/3",
+      "/explore/4",
+      "/explore/5",
+      "/explore/6",
+      "/explore/7",
+      "/explore/8",
+      "/explore/9",
+      "/explore/10",
+      "/explore/11",
+      "/explore/12",
+    ]);
+    expect(HALL_CARDS[12].href).toBe("/portal/close");
     expect(HALL_CARDS.map((hall) => hall.id)).not.toContain("planet");
     expect(HALL_CARDS.slice(0, 12).map((hall) => hall.name)).toEqual(RELAYS.map((relay) => relay.name));
     expect(HALL_CARDS.slice(4, 8).map((hall) => `${hall.number} ${hall.name} ${hall.plate} ${hall.when}`)).toEqual([
@@ -140,29 +152,18 @@ describe("exhibition portal first cut", () => {
     expect(turnFromDoor("planet").kind).toBe("reset");
     expect(turnFromDoor("relay-1")).toEqual({ kind: "hall", path: "/explore/1" });
     expect(turnFromDoor("relay-2")).toEqual({ kind: "hall", path: "/explore/2" });
-    expect(turnFromDoor("relay-3").kind).toBe("return");
+    expect(turnFromDoor("relay-3")).toEqual({ kind: "hall", path: "/explore/3" });
     expect(turnFromHall("fire")).toEqual({ kind: "hall", path: "/explore/1" });
     expect(turnFromHall("tree")).toEqual({ kind: "hall", path: "/explore/2" });
-    expect(turnFromHall("river").kind).toBe("return");
-    const relayTwelve = turnFromDoor("relay-12");
-    const epilogue = turnFromDoor("fractal-epilogue");
-    const hallTwelve = turnFromHall("human-nodes");
-    const hallCard = turnFromHall("fractal-connector");
-    expect(relayTwelve.kind).toBe("return");
-    expect(epilogue.kind).toBe("return");
-    expect(hallTwelve.kind).toBe("return");
-    expect(hallCard.kind).toBe("return");
-    if (relayTwelve.kind !== "return" || epilogue.kind !== "return" || hallTwelve.kind !== "return" || hallCard.kind !== "return") {
-      throw new Error("expected returns");
-    }
-    expect(new Set([relayTwelve.station, epilogue.station, hallTwelve.station, hallCard.station]).size).toBe(4);
-    expect(relayTwelve.body).not.toBe(epilogue.body);
-    expect(hallTwelve.body).not.toBe(hallCard.body);
+    expect(turnFromHall("river")).toEqual({ kind: "hall", path: "/explore/3" });
+    expect(turnFromDoor("relay-12")).toEqual({ kind: "hall", path: "/explore/12" });
+    expect(turnFromHall("human-nodes")).toEqual({ kind: "hall", path: "/explore/12" });
+    expect(turnFromDoor("fractal-epilogue")).toEqual({ kind: "hall", path: "/portal/close" });
+    expect(turnFromHall("fractal-connector")).toEqual({ kind: "hall", path: "/portal/close" });
+    expect(turnFromHall("human-nodes")).not.toEqual(turnFromHall("fractal-connector"));
     expect(turnFromHall("missing").kind).toBe("return");
-    const river = turnFromHall("river");
-    if (river.kind !== "return") throw new Error("expected a return");
-    expect(river.body).toContain("Fire and Tree are the live halls.");
-    expect(river.body).not.toContain("first draft");
+    expect(HALL_CARDS[11].name).toBe("Human Nodes");
+    expect(HALL_CARDS[11].plate).toBe("Programmable Humans");
   });
 
   it("plays the issued film in the portal and does not add a later episode, speech, or a fire preview", () => {
@@ -184,7 +185,7 @@ describe("exhibition portal first cut", () => {
     expect(model).not.toContain("gender vision");
     expect(page).toContain("harnessed discoveries");
     expect(page).toContain("Open the live Tree hall.");
-    expect(page).toContain("Fire and Tree open their live halls.");
+    expect(page).toContain("The twelve halls open.");
     expect(page).toContain("navigate(turn.path)");
     expect(page).toContain("hall.href === FIRE_HALL_PATH");
     expect(page).not.toContain("first draft, not issued");
@@ -277,18 +278,27 @@ describe("exhibition portal first cut", () => {
       "RELAY 7: GUNPOWDER - 1605",
       "RELAY 9: 9: STEEL \u2013 1869",
     ]);
-    expect(HALL_CARDS.find((hall) => hall.id === "roads")).toMatchObject({ number: 5, name: "Roads", href: null });
-    expect(HALL_CARDS.find((hall) => hall.id === "engine")).toMatchObject({ number: 9, name: "Engine", href: null });
+    expect(HALL_CARDS.find((hall) => hall.id === "roads")).toMatchObject({ number: 5, name: "Roads", href: "/explore/5" });
+    expect(HALL_CARDS.find((hall) => hall.id === "engine")).toMatchObject({ number: 9, name: "Engine", href: "/explore/9" });
 
     const page = source("client/src/pages/ExhibitionPortal.tsx");
     const player = source("client/src/components/ExhibitionClip.tsx");
     const video = source("client/src/components/ExplorerVideo.tsx");
     const relay = source("client/src/pages/ExplorerRelay.tsx");
+    const close = source("client/src/pages/ExhibitionClose.tsx");
+    const app = source("client/src/App.tsx");
     expect(page).toContain("portal-v6-intro");
     expect(page).toContain("portal-v6-floor");
     expect(page).toContain("portal-v6-films");
-    expect(page).toContain("v6HallClip(hall.id)");
-    expect(page).toContain('className="flex shrink-0 flex-col gap-2"');
+    expect(page).not.toContain("v6HallClip(hall.id)");
+    expect(relay).toContain("IssuedHallPlate");
+    expect(relay).toContain("v6HallClip(hall.id)");
+    expect(relay).toContain("This hall is walked from the issued plate.");
+    expect(relay).not.toContain("09_steel.mp4");
+    expect(relay).not.toContain("07_gunpowder.mp4");
+    expect(close).toContain("portal-close-film");
+    expect(close).toContain('clip.id === "13_close"');
+    expect(app).toContain('path={"/portal/close"}');
     expect(page).toContain("src={FILM_SRC}");
     expect(page).not.toContain("releases/download");
     expect(page).not.toContain("github.com");

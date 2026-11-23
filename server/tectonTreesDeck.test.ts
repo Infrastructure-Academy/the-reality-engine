@@ -163,24 +163,23 @@ describe("Tecton Trees Deck learn-more", () => {
     expect(relay).not.toContain("relay-1-fire-en.mp3");
   });
 
-  it("steps Fire forward into Tree and does not step Tree into an unfinished door", () => {
+  it("steps through the twelve halls and does not bounce a direct address back to the floor", () => {
     expect(stepFromRelay(1, "back")).toBeNull();
     expect(stepFromRelay(1, "forward")).toBe("/explore/2");
     expect(stepFromRelay(2, "back")).toBe("/explore/1");
-    expect(stepFromRelay(2, "forward")).toBeNull();
+    expect(stepFromRelay(2, "forward")).toBe("/explore/3");
+    expect(stepFromRelay(12, "forward")).toBeNull();
     expect(relayNavigatorHref(2, 1)).toBe("/explore/1");
     expect(relayNavigatorHref(2, 2)).toBe("/explore/2");
-    expect(relayNavigatorHref(2, 3)).toBeNull();
-    expect(relayNavigatorHref(1, 3)).toBeNull();
+    expect(relayNavigatorHref(2, 3)).toBe("/explore/3");
+    expect(relayNavigatorHref(1, 3)).toBe("/explore/3");
     expect(unfinishedRelayFloor(1)).toBeNull();
     expect(unfinishedRelayFloor(2)).toBeNull();
     for (let number = 3; number <= 12; number += 1) {
-      expect(relayNavigatorHref(1, number)).toBeNull();
-      expect(relayNavigatorHref(2, number)).toBeNull();
-      const floor = unfinishedRelayFloor(number);
-      expect(floor).toBe(`/portal?station=${HALL_CARDS[number - 1].id}`);
-      const station = new URL(floor ?? "", "https://app.infrastructure-academy.com").searchParams.get("station");
-      expect(turnFromHall(station ?? "").kind).toBe("return");
+      expect(relayNavigatorHref(1, number)).toBe(`/explore/${number}`);
+      expect(relayNavigatorHref(2, number)).toBe(`/explore/${number}`);
+      expect(unfinishedRelayFloor(number)).toBeNull();
+      expect(turnFromHall(HALL_CARDS[number - 1].id)).toEqual({ kind: "hall", path: `/explore/${number}` });
     }
     const relay = source("client/src/pages/ExplorerRelay.tsx");
     expect(relay).toContain("relayNavigatorHref(currentRelay, r.number)");

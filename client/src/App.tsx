@@ -25,6 +25,7 @@ import RelaySpinner from "./pages/RelaySpinner";
 // The exhibition portal is opened from the landing. Keep it on the
 // first load so iPhone Safari does not wait on a lazy chunk.
 import ExhibitionPortal from "./pages/ExhibitionPortal";
+import ExhibitionClose from "./pages/ExhibitionClose";
 // iGO is opened from the bottom bar. A lazy chunk can stay pending on
 // iPhone Safari and leave a dark shell, so this face loads with the app.
 import IGOUmbrella from "./pages/IGOUmbrella";
@@ -129,6 +130,7 @@ function Router() {
         <Route path={"/play/igo"} component={IGOUmbrella} />
         <Route path={"/admin/igo"} component={IgoAdmin} />
         <Route path={"/exhibition"} component={IGOUmbrella} />
+        <Route path={"/portal/close"} component={ExhibitionClose} />
         <Route path={"/portal"} component={ExhibitionPortal} />
         <Route path={"/404"} component={NotFound} />
         <Route component={NotFound} />

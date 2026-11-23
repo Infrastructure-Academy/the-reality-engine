@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
+import { CLOSE_PATH, FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 /**
@@ -72,7 +72,7 @@ function HallMark({
 }) {
   const className =
     "flex h-full min-h-16 w-full flex-col items-center justify-center rounded-md border border-amber-200/70 bg-[#102033] px-0.5 py-1 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200";
-  const label = `${hall.number}. ${hall.name}. ${hall.plate}. ${hall.href ? "Opens the live hall." : "Returns you to the floor."}`;
+  const label = `${hall.number}. ${hall.name}. ${hall.plate}. ${hall.href === CLOSE_PATH ? "Opens the epilogue." : hall.href ? "Opens the live hall." : "Returns you to the floor."}`;
   const body = (
     <>
       <span className="font-heading text-sm leading-none text-amber-50">{hall.number}</span>
