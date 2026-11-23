@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { doorReelFrom } from "@/lib/doorReel";
 import { playPhaseTransition, playMilestoneFanfare, hapticMilestone } from "@/hooks/useEngagementFx";
 import { MilestoneOverlay } from "@/components/MilestoneOverlay";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
@@ -180,6 +181,7 @@ export default function ScholarCreate() {
         <div className="text-center w-full max-w-md mx-auto py-8">
           <ExplorerVideo
             videoUrl={SCHOLAR_INTRO_CLIP}
+            playlist={doorReelFrom(SCHOLAR_INTRO_CLIP)}
             title={t("scholar.videoTitle")}
             subtitle="32s intro"
             accentColor="#f59e0b"
@@ -239,6 +241,7 @@ export default function ScholarCreate() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl={SCHOLAR_INTRO_CLIP}
+          playlist={doorReelFrom(SCHOLAR_INTRO_CLIP)}
           title={t("scholar.videoTitle")}
           subtitle="32s intro"
           accentColor="#f59e0b"
