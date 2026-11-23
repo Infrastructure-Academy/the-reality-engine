@@ -7,6 +7,7 @@ import {
   DOOR_FRAME,
   FILM_LABEL,
   FILM_SRC,
+  CLOSE_PATH,
   FIRE_HALL_PATH,
   TREE_HALL_PATH,
   HALL_CARDS,
@@ -21,7 +22,6 @@ import {
   turnFromHall,
   V6_FILM_CLIPS,
   V6_INTRO,
-  v6HallClip,
   type HallCard,
   type ReturnTurn,
 } from "@shared/exhibitionPortal";
@@ -211,7 +211,9 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
             ? "Open the live hall and its harnessed discoveries."
             : hall.id === "tree"
               ? "Open the live Tree hall."
-              : "Entrance. This returns you to the floor."}
+              : hall.href === CLOSE_PATH
+                ? "Open the epilogue."
+                : "Open the hall."}
         </span>
       </span>
       <span className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-amber-300/15 px-3 text-xs font-heading tracking-wide text-amber-50">
@@ -465,10 +467,10 @@ export default function ExhibitionPortal() {
               Thirteen halls, held up by the zero
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-amber-50">
-              Fire and Tree open their live halls. The other entrances return you to the floor. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
+              The twelve halls open. The Fractal Connector opens the epilogue. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
             </p>
             <p className="mt-3 text-amber-50" style={EXHIBITION_PLATE_TYPE} data-testid="portal-v6-cut">
-              Clips from the exhibition film sit with the halls they match. Fire and Tree remain the live halls.
+              Clips from the exhibition film play inside the halls they match. Horse, Ships, Loom, and Engine open from the issued plate.
             </p>
             <ExhibitionClip clip={V6_INTRO} testId="portal-v6-floor" />
             {notice ? (
@@ -483,15 +485,9 @@ export default function ExhibitionPortal() {
                   data-testid="portal-hall-stack"
                   className="flex max-h-[calc(100svh-14rem)] min-h-[22rem] flex-col gap-2 overflow-y-auto pr-1"
                 >
-                  {HALL_CARDS.map((hall) => {
-                    const clip = v6HallClip(hall.id);
-                    return (
-                      <div key={hall.id} className="flex shrink-0 flex-col gap-2">
-                        <HallButton hall={hall} onReturn={chooseHall} />
-                        {clip ? <ExhibitionClip clip={clip} testId={`portal-v6-hall-${hall.id}`} /> : null}
-                      </div>
-                    );
-                  })}
+                  {HALL_CARDS.map((hall) => (
+                    <HallButton key={hall.id} hall={hall} onReturn={chooseHall} />
+                  ))}
                 </div>
                 <div className="mt-3 rounded-2xl border border-amber-300/30 bg-[#07111c] py-4">
                   <PlanetZero tone="settled" onReset={resetToZero} />
@@ -518,7 +514,7 @@ export default function ExhibitionPortal() {
                 Films from the exhibition
               </h3>
               <p className="mt-2 text-amber-50" style={EXHIBITION_PLATE_TYPE}>
-                Stone and wheel, Forge, gunpowder, and steel keep the plaques from the film. Horse, Ships, Loom, and Engine remain on the issued plate.
+                Stone and wheel, Forge, gunpowder, and steel keep the plaques from the film. Horse, Ships, Loom, and Engine open from the issued plate.
               </p>
               <div className="mt-3 flex flex-col gap-3">
                 {V6_FILM_CLIPS.map((clip) => (
@@ -545,12 +541,12 @@ export default function ExhibitionPortal() {
                           {door.role === "substrate"
                             ? "The planet. Boundary-condition reset to explore."
                             : door.role === "epilogue"
-                              ? "Epilogue. Not Human Nodes."
+                              ? "Epilogue. Opens the close. Human Nodes stays its own hall."
                               : door.href === FIRE_HALL_PATH
                                 ? "Relay 1. Opens the live Fire hall."
                                 : door.href === TREE_HALL_PATH
                                   ? "Relay 2. Opens the live Tree hall."
-                                  : "Relay door. Returns you to the floor."}
+                                  : "Opens this hall."}
                         </span>
                       </span>
                     </>

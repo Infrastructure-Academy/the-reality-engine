@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
-import { relayNavigatorHref, stepFromRelay, unfinishedRelayFloor, V6_FIRE, V6_TREE } from "@shared/exhibitionPortal";
+import { HALL_CARDS, relayNavigatorHref, stepFromRelay, unfinishedRelayFloor, v6HallClip, V6_FIRE, V6_TREE } from "@shared/exhibitionPortal";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { classicXpPerDiscovery, presentPlayerCopy } from "@shared/playerProgress";
 import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
@@ -23,6 +23,7 @@ import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
 import { ExhibitionClip } from "@/components/ExhibitionClip";
+import { EXHIBITION_PLATE_TYPE } from "@/components/ExplorerVideo";
 import { FirePit } from "@/components/FirePit";
 import { beginFireBedFromGesture, pauseFireBed } from "@/lib/firePlayback";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
@@ -87,6 +88,28 @@ function RelayHeader({
         <ChevronRight className="w-5 h-5" />
       </Button>
     </div>
+  );
+}
+
+function IssuedHallPlate({ relayNum }: { relayNum: number }) {
+  const hall = HALL_CARDS.find((card) => card.number === relayNum);
+  if (!hall) return null;
+  const clip = v6HallClip(hall.id);
+  return (
+    <section
+      data-testid={`issued-hall-${hall.id}`}
+      className="mb-6 rounded-xl border border-amber-300/50 bg-[#120e08] px-4 py-4 shadow-[0_0_28px_rgba(252,211,77,0.12)]"
+    >
+      <h2 className="font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>{`${hall.number} · ${hall.name}`}</h2>
+      <p className="mt-1 text-amber-50" style={EXHIBITION_PLATE_TYPE}>{`${hall.plate} · ${hall.when}`}</p>
+      {clip ? (
+        <ExhibitionClip clip={clip} testId={`explore-v6-${hall.id}`} />
+      ) : (
+        <p className="mt-3 text-amber-100" style={EXHIBITION_PLATE_TYPE} data-testid={`issued-hall-held-${hall.id}`}>
+          This hall is walked from the issued plate. The held discoveries sit below.
+        </p>
+      )}
+    </section>
   );
 }
 
@@ -935,11 +958,12 @@ export default function ExplorerRelay() {
                 <ExhibitionClip clip={V6_TREE} testId="explore-v6-tree" />
               </div>
             ) : (
-              <>
+              <div data-testid="issued-hall-stage">
+                <IssuedHallPlate relayNum={relayNum} />
                 {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
                 {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}
                 {layoutVariant === 3 && <LayoutMissionBriefing {...layoutProps} />}
-              </>
+              </div>
             )}
           </>
         )}

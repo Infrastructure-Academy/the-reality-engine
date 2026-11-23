@@ -12,6 +12,14 @@ import { RELAYS } from "./gameData";
 export const PORTAL_PATH = "/portal";
 export const FIRE_HALL_PATH = "/explore/1";
 export const TREE_HALL_PATH = "/explore/2";
+/** Epilogue. Not a relay, and not a fourteenth hall. */
+export const CLOSE_PATH = "/portal/close";
+
+export function relayHallPath(number: number): string {
+  if (number === 1) return FIRE_HALL_PATH;
+  if (number === 2) return TREE_HALL_PATH;
+  return `/explore/${number}`;
+}
 export const FILM_SRC = "/portal/film-0201.mp4";
 export const PLATE_SRC = "/portal/exhibition-plan-composite.png";
 export const FILM_SHA256 = "cacc1ada942163efbb2bdd5a964e29524fd4557a041dc228bd85773d5c4a3d2e";
@@ -24,7 +32,7 @@ export const RECEIVED_ZERO =
 export const ZERO_IS_NOT_A_HALL = "The zero is not a fourteenth hall.";
 
 export const CUT_LINE =
-  "The portal sequence, the Fire hall, and the Tree hall are in this cut. Relays 3 to 12 stay on the issued floor plan and are not finished halls.";
+  "The twelve halls open from this floor. The Fractal Connector is the epilogue. The planet remains the zero.";
 
 /** Script room lines for stations this cut does not open. No new hall is drawn. */
 export const ROOM_DIRECTION: Record<string, string> = {
@@ -91,24 +99,24 @@ export type HallCard = {
   name: string;
   plate: string;
   when: string;
-  href: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH | null;
+  href: string | null;
 };
 
 /** Exhibition twin, numbered with the locked relay line. Fractal Connector stays the thirteenth card. */
 export const HALL_CARDS: readonly HallCard[] = [
   { id: "fire", number: 1, name: "Fire", plate: "The First Infrastructure", when: "pre-10,000 BCE", href: FIRE_HALL_PATH },
   { id: "tree", number: 2, name: "Tree", plate: "The Living Structure", when: "pre-10,000 BCE", href: TREE_HALL_PATH },
-  { id: "river", number: 3, name: "River", plate: "Hydraulic Civilisation", when: "8,000 BCE", href: null },
-  { id: "horse", number: 4, name: "Horse", plate: "The Mobile Engine", when: "4,000 BCE", href: null },
-  { id: "roads", number: 5, name: "Roads", plate: "The Roman Network", when: "300 BCE", href: null },
-  { id: "ships", number: 6, name: "Ships", plate: "The Ocean Relay", when: "1500 CE", href: null },
-  { id: "loom", number: 7, name: "Loom", plate: "The Pattern Engine", when: "1780 CE", href: null },
-  { id: "rail", number: 8, name: "Rail", plate: "The Iron Horse", when: "1830 CE", href: null },
-  { id: "engine", number: 9, name: "Engine", plate: "The Power Multiplier", when: "1880 CE", href: null },
-  { id: "aaa-triad", number: 10, name: "AAA Triad", plate: "The Modern Network", when: "1980 CE", href: null },
-  { id: "orbit", number: 11, name: "Orbit", plate: "The Third Dimension", when: "1960 CE", href: null },
-  { id: "human-nodes", number: 12, name: "Human Nodes", plate: "Programmable Humans", when: "2020 CE", href: null },
-  { id: "fractal-connector", number: 13, name: "Fractal Connector", plate: "The Exhibition Itself", when: "The hall card", href: null },
+  { id: "river", number: 3, name: "River", plate: "Hydraulic Civilisation", when: "8,000 BCE", href: relayHallPath(3) },
+  { id: "horse", number: 4, name: "Horse", plate: "The Mobile Engine", when: "4,000 BCE", href: relayHallPath(4) },
+  { id: "roads", number: 5, name: "Roads", plate: "The Roman Network", when: "300 BCE", href: relayHallPath(5) },
+  { id: "ships", number: 6, name: "Ships", plate: "The Ocean Relay", when: "1500 CE", href: relayHallPath(6) },
+  { id: "loom", number: 7, name: "Loom", plate: "The Pattern Engine", when: "1780 CE", href: relayHallPath(7) },
+  { id: "rail", number: 8, name: "Rail", plate: "The Iron Horse", when: "1830 CE", href: relayHallPath(8) },
+  { id: "engine", number: 9, name: "Engine", plate: "The Power Multiplier", when: "1880 CE", href: relayHallPath(9) },
+  { id: "aaa-triad", number: 10, name: "AAA Triad", plate: "The Modern Network", when: "1980 CE", href: relayHallPath(10) },
+  { id: "orbit", number: 11, name: "Orbit", plate: "The Third Dimension", when: "1960 CE", href: relayHallPath(11) },
+  { id: "human-nodes", number: 12, name: "Human Nodes", plate: "Programmable Humans", when: "2020 CE", href: relayHallPath(12) },
+  { id: "fractal-connector", number: 13, name: "Fractal Connector", plate: "The Exhibition Itself", when: "The hall card", href: CLOSE_PATH },
 ];
 
 export type DoorRole = "substrate" | "relay" | "epilogue";
@@ -118,7 +126,7 @@ export type DoorStop = {
   mark: string;
   name: string;
   role: DoorRole;
-  href: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH | null;
+  href: string | null;
 };
 
 /** Beside the hall cards. The zero is a substrate door, never a hall. */
@@ -129,9 +137,9 @@ export const DOOR_FRAME: readonly DoorStop[] = [
     mark: String(relay.number),
     name: relay.name,
     role: "relay",
-    href: relay.number === 1 ? FIRE_HALL_PATH : relay.number === 2 ? TREE_HALL_PATH : null,
+    href: relayHallPath(relay.number),
   })),
-  { id: "fractal-epilogue", mark: "Epilogue", name: "Fractal Connector", role: "epilogue", href: null },
+  { id: "fractal-epilogue", mark: "Epilogue", name: "Fractal Connector", role: "epilogue", href: CLOSE_PATH },
 ];
 
 export type ReturnTurn = { kind: "return"; station: string; title: string; body: string };
@@ -163,25 +171,11 @@ export function turnFromHall(id: string): PortalTurn {
     return returned("unknown", "Back on the floor", `That turn comes back to the floor. ${LOST_NOTHING}`);
   }
   if (hall.href) return { kind: "hall", path: hall.href };
-  if (hall.id === "human-nodes") {
-    return returned(
-      hall.id,
-      "Human Nodes stays its own hall",
-      `Human Nodes stays its own hall card. It is not the Fractal Connector. ${ROOM_DIRECTION["human-nodes"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
-    );
-  }
-  if (hall.id === "fractal-connector") {
-    return returned(
-      hall.id,
-      "The Fractal Connector hall card",
-      `This is the Fractal Connector hall card, as printed on the plate. It is not Relay 12, and it is not the epilogue door. ${ROOM_DIRECTION["fractal-connector"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
-    );
-  }
   const direction = ROOM_DIRECTION[hall.id] ?? "";
   return returned(
     hall.id,
     `${hall.name} returns you to the floor`,
-    `${hall.name} is marked on the issued plate. ${direction} This cut does not open it as a finished hall. Fire and Tree are the live halls. ${LOST_NOTHING}`,
+    `${hall.name} is marked on the issued plate. ${direction} ${LOST_NOTHING}`,
   );
 }
 
@@ -192,60 +186,33 @@ export function turnFromDoor(id: string): PortalTurn {
     return returned("unknown", "Back on the floor", `That turn comes back to the floor. ${LOST_NOTHING}`);
   }
   if (door.href) return { kind: "hall", path: door.href };
-  if (door.id === "relay-12") {
-    return returned(
-      door.id,
-      "Relay 12 is Human Nodes",
-      `Relay 12 is Human Nodes. It stays its own door. It is not the Fractal Connector. ${ROOM_DIRECTION["human-nodes"]} This cut does not open it as a finished hall. ${LOST_NOTHING}`,
-    );
-  }
-  if (door.id === "fractal-epilogue") {
-    return returned(
-      door.id,
-      "The Fractal Connector is the epilogue",
-      `The Fractal Connector is the epilogue. It stays apart from Human Nodes and apart from the hall card. This cut does not open it as a finished hall. ${LOST_NOTHING}`,
-    );
-  }
   return returned(
     door.id,
     `${door.name} returns you to the floor`,
-    `${door.name} is a door in the fourteen-door frame, not a finished hall. ${LOST_NOTHING}`,
+    `${door.name} is a door in the fourteen-door frame. ${LOST_NOTHING}`,
   );
 }
 
-/**
- * Finished halls step only into another finished hall.
- * Fire goes on to Tree. Tree goes back to Fire and does not open River.
- * Later relays keep their own numeric neighbours.
- */
+/** The twelve official halls step into one another. The epilogue is not a thirteenth relay. */
 export function stepFromRelay(relayNum: number, direction: "back" | "forward"): string | null {
   const target = relayNum + (direction === "forward" ? 1 : -1);
   if (target < 1 || target > 12) return null;
-  if (relayNum === 1 || relayNum === 2) {
-    if (target === 1) return FIRE_HALL_PATH;
-    if (target === 2) return TREE_HALL_PATH;
-    return null;
-  }
-  return `/explore/${target}`;
+  return relayHallPath(target);
 }
 
-/** From Fire or Tree, the emoji row opens only those two halls. */
+/** The emoji row opens any of the twelve halls. */
 export function relayNavigatorHref(currentRelay: number, target: number): string | null {
+  if (currentRelay < 1 || currentRelay > 12) return null;
   if (target < 1 || target > 12) return null;
-  if (currentRelay === 1 || currentRelay === 2) {
-    if (target === 1) return FIRE_HALL_PATH;
-    if (target === 2) return TREE_HALL_PATH;
-    return null;
-  }
-  return `/explore/${target}`;
+  return relayHallPath(target);
 }
 
 /**
- * Relays 3–12 stay on the floor plan. A direct address returns to the floor
- * and does not open a finished hall. Fire and Tree keep their own doors.
+ * Every official relay opens its own door.
+ * A number outside 1–12 has no floor to return to.
  */
 export function unfinishedRelayFloor(relayNum: number): string | null {
-  if (!Number.isInteger(relayNum) || relayNum < 3 || relayNum > 12) return null;
+  if (!Number.isInteger(relayNum) || relayNum < 1 || relayNum > 12) return null;
   const hall = HALL_CARDS.find((card) => card.number === relayNum);
   if (!hall || hall.href !== null) return null;
   return `${PORTAL_PATH}?station=${hall.id}`;
@@ -253,8 +220,7 @@ export function unfinishedRelayFloor(relayNum: number): string | null {
 
 /**
  * Hall clips from PRINCIPIA TECTONICA V6, played same-origin from the Pages tree.
- * The bytes stay as cut. These clips leave Relays 3 to 12 unfinished.
- * Horse, Ships, Loom, and Engine have no clip here.
+ * The bytes stay as cut. Horse, Ships, Loom, and Engine have no clip here.
  */
 export const V6_EXHIBITION_DIR = "/portal/v6-exhibition";
 
@@ -306,8 +272,8 @@ export const V6_CLIPS: readonly V6Clip[] = [
   {
     id: "03_river",
     file: "03_river.mp4",
-    sha256: "a861a827043d3c8ad4f32e2b522cd67a43e17e9e37a11645155a6a740e898972",
-    bytes: 15361592,
+    sha256: "7251975cff97f9dbc8f5997f4bc0a32e8bef7700036142cb36d9cf61cebfad99",
+    bytes: 22464435,
     label: "River",
     note: "Water channel and hydraulic models on the River hall.",
     place: { kind: "halls", hallIds: ["river"] },
