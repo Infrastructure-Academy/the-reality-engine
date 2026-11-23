@@ -14,6 +14,7 @@ import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
 import { QuestInstrumentBay } from "./components/QuestInstruments";
 import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
 import { FIRE_AMBIENCE_BED_ID, FIRE_AMBIENCE_BED_SRC, FIRE_STORY_BED_ID, FIRE_STORY_BED_SRC } from "@/lib/firePlayback";
+import { PortalTeaserHost } from "@/components/PortalTeaserHost";
 
 // ─── Eagerly loaded (critical path) ───
 import Home from "./pages/Home";
@@ -203,6 +204,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <FireBedHost />
+          <PortalTeaserHost />
           <HideManusWatermark />
           <ServiceWorkerRegistrar />
           <NetworkBar />
