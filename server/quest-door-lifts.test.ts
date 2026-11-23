@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { PORTAL_PATH } from "../shared/exhibitionPortal";
 import { filmById, filmsForDoor, QUEST_DOOR_FILMS } from "../shared/questDoorFilms";
 
 const source = (file: string) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
@@ -104,5 +105,26 @@ describe("quest door lifts", () => {
     expect(source("client/src/pages/ExhibitionPortal.tsx")).not.toContain("Rematched draft");
     expect(source("client/src/components/ExhibitionClip.tsx")).not.toContain("clip.note");
     expect(source("client/index.html")).toContain('lang="en"');
+  });
+
+  it("opens the existing exhibition portal from the Explore, Flight, and Scholar film lists", () => {
+    const bay = source("client/src/components/DoorFilmBay.tsx");
+    expect(bay).toContain("href={PORTAL_PATH}");
+    expect(bay).toContain("beginPortalTeaserFromGesture");
+    expect(bay).toContain('data-testid="door-exhibition-portal"');
+    expect(bay).toContain("Exhibition portal");
+    expect(PORTAL_PATH).toBe("/portal");
+    expect(source("client/src/pages/ExplorerSelect.tsx")).toContain('door="explore"');
+    expect(source("client/src/pages/FlightDeck.tsx")).toContain('door="flight"');
+    expect(source("client/src/pages/ScholarCreate.tsx")).toContain('door="scholar"');
+    const tabs = source("client/src/components/BottomTabBar.tsx");
+    expect(tabs.match(/\{ path:/g)).toHaveLength(6);
+    expect(tabs).not.toContain("/portal");
+    expect(tabs).toContain('path: "/"');
+    expect(tabs).toContain('path: "/play/igo"');
+    expect(tabs).toContain('path: "/explore"');
+    expect(tabs).toContain('path: "/flight-deck"');
+    expect(tabs).toContain('path: "/create"');
+    expect(tabs).toContain('path: "/leaderboard"');
   });
 });
