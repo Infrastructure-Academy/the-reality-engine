@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { RELAYS } from "@shared/gameData";
-import { relayNavigatorHref, stepFromRelay, unfinishedRelayFloor } from "@shared/exhibitionPortal";
+import { relayNavigatorHref, stepFromRelay, unfinishedRelayFloor, V6_FIRE, V6_TREE } from "@shared/exhibitionPortal";
 import { INVENTIONS, type Invention } from "@shared/inventions";
 import { classicXpPerDiscovery, presentPlayerCopy } from "@shared/playerProgress";
 import { mergeServerDiscoveries, noteDiscovery } from "@/lib/sharedProgress";
@@ -22,6 +22,7 @@ import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { RelaySummaryCard } from "@/components/RelaySummaryCard";
 import { XpCounter } from "@/components/XpCounter";
 import { StoryPlayBar } from "@/components/StoryPlayBar";
+import { ExhibitionClip } from "@/components/ExhibitionClip";
 import { FirePit } from "@/components/FirePit";
 import { beginFireBedFromGesture, pauseFireBed } from "@/lib/firePlayback";
 import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
@@ -910,6 +911,7 @@ export default function ExplorerRelay() {
                     onClose={() => setOpenTecton(null)}
                     onHear={(recordedAs) => doorAudio.playCard(recordedAs)}
                   />
+                  <ExhibitionClip clip={V6_FIRE} testId="explore-v6-fire" onOpen={() => pauseFireBed()} />
                 </div>
               </div>
             ) : treeDoor ? (
@@ -930,6 +932,7 @@ export default function ExplorerRelay() {
                   onOpen={setOpenTree}
                   onClose={() => setOpenTree(null)}
                 />
+                <ExhibitionClip clip={V6_TREE} testId="explore-v6-tree" />
               </div>
             ) : (
               <>

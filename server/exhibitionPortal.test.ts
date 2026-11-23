@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { RELAYS } from "../shared/gameData";
 import { PLATE_EPISODES } from "../shared/plateGates";
@@ -17,9 +17,16 @@ import {
   RECEIVED_ZERO,
   SPIRAL_HELD,
   TREE_HALL_PATH,
+  V6_CLIPS,
+  V6_FILM_CLIPS,
+  V6_FIRE,
+  V6_INTRO,
+  V6_TREE,
   spiralSlot,
   turnFromDoor,
   turnFromHall,
+  v6ClipSrc,
+  v6HallClip,
 } from "../shared/exhibitionPortal";
 
 const source = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -224,5 +231,83 @@ describe("exhibition portal first cut", () => {
     expect(opening).not.toContain("speechSynthesis");
     expect(opening).not.toContain("gender vision");
     expect(opening).not.toContain("relay-1-fire-plate");
+  });
+
+  it("plays the V6 hall clips same-origin and leaves FILM-0201 untouched", () => {
+    expect(V6_CLIPS).toHaveLength(13);
+    expect(new Set(V6_CLIPS.map((clip) => clip.file)).size).toBe(13);
+    for (const clip of V6_CLIPS) {
+      const src = v6ClipSrc(clip.file);
+      expect(src).toBe(`/portal/v6-exhibition/${clip.file}`);
+      expect(src).not.toContain("http");
+      expect(src).not.toContain("github");
+      for (const root of ["client/public", "docs"]) {
+        const path = `${root}/portal/v6-exhibition/${clip.file}`;
+        expect(sha256(path)).toBe(clip.sha256);
+        expect(statSync(new URL(`../${path}`, import.meta.url)).size).toBe(clip.bytes);
+      }
+    }
+    expect(sha256("client/public/portal/film-0201.mp4")).toBe(FILM_SHA256);
+    expect(sha256("docs/portal/film-0201.mp4")).toBe(FILM_SHA256);
+    expect(V6_INTRO).toMatchObject({ file: "00_intro.mp4", label: "iAAi Exhibition approach", place: { kind: "portal-floor" } });
+    expect(V6_FIRE).toMatchObject({ file: "01_fire.mp4", label: "Fire", place: { kind: "explore", hall: "fire" } });
+    expect(V6_TREE).toMatchObject({ file: "02_tree.mp4", label: "Tree", place: { kind: "explore", hall: "tree" } });
+    expect(v6HallClip("river")?.file).toBe("03_river.mp4");
+    expect(v6HallClip("roads")).toMatchObject({ file: "06_road.mp4", label: "RELAY 6: ROAD - 2000 BC" });
+    expect(v6HallClip("rail")?.file).toBe("08_rail_steam.mp4");
+    expect(v6HallClip("human-nodes")).toMatchObject({ label: "RELAY 12 PROGRAMMABLE HUMANS - NOW" });
+    expect(v6HallClip("aaa-triad")).toBe(v6HallClip("orbit"));
+    expect(v6HallClip("aaa-triad")?.file).toBe("10_11_modern_orbit.mp4");
+    expect(v6HallClip("aaa-triad")?.label).toBe("RELAY 10-11");
+    expect(v6HallClip("fractal-connector")).toMatchObject({ file: "13_close.mp4", label: "Episode 1 Complete / N+T=D" });
+    expect(v6HallClip("fire")).toBeNull();
+    expect(v6HallClip("tree")).toBeNull();
+    for (const id of ["horse", "ships", "loom", "engine"]) {
+      expect(v6HallClip(id)).toBeNull();
+    }
+    expect(V6_FILM_CLIPS.map((clip) => clip.file)).toEqual([
+      "04_stone_wheel.mp4",
+      "05_forge.mp4",
+      "07_gunpowder.mp4",
+      "09_steel.mp4",
+    ]);
+    expect(V6_FILM_CLIPS.map((clip) => clip.label)).toEqual([
+      "Stone and wheel (provisional)",
+      "Forge (provisional)",
+      "RELAY 7: GUNPOWDER - 1605",
+      "RELAY 9: 9: STEEL \u2013 1869",
+    ]);
+    expect(HALL_CARDS.find((hall) => hall.id === "roads")).toMatchObject({ number: 5, name: "Roads", href: null });
+    expect(HALL_CARDS.find((hall) => hall.id === "engine")).toMatchObject({ number: 9, name: "Engine", href: null });
+
+    const page = source("client/src/pages/ExhibitionPortal.tsx");
+    const player = source("client/src/components/ExhibitionClip.tsx");
+    const video = source("client/src/components/ExplorerVideo.tsx");
+    const relay = source("client/src/pages/ExplorerRelay.tsx");
+    expect(page).toContain("portal-v6-intro");
+    expect(page).toContain("portal-v6-floor");
+    expect(page).toContain("portal-v6-films");
+    expect(page).toContain("v6HallClip(hall.id)");
+    expect(page).toContain('className="flex shrink-0 flex-col gap-2"');
+    expect(page).toContain("src={FILM_SRC}");
+    expect(page).not.toContain("releases/download");
+    expect(page).not.toContain("github.com");
+    expect(player).toContain("ensurePlayback");
+    expect(player).toContain("v6ClipSrc(clip.file)");
+    expect(player).not.toContain("http");
+    expect(video).toContain('fontSize: "20pt"');
+    expect(video).toContain("playsInline");
+    expect(video).toContain("Watch Intro");
+    const fireStage = relay.slice(relay.indexOf('data-testid="fire-stage"'), relay.indexOf('data-testid="tree-stage"'));
+    const treeStart = relay.indexOf('data-testid="tree-stage"');
+    const treeStage = relay.slice(treeStart, relay.indexOf(") : (", treeStart));
+    expect(fireStage.indexOf("<StoryPlayBar")).toBeLessThan(fireStage.indexOf("explore-v6-fire"));
+    expect(fireStage.indexOf("<DiscoveryGrid")).toBeLessThan(fireStage.indexOf("explore-v6-fire"));
+    expect(fireStage.indexOf("<TectonFireLearnMore")).toBeLessThan(fireStage.indexOf("explore-v6-fire"));
+    expect(fireStage).toContain("pauseFireBed()");
+    expect(treeStage.indexOf("<TectonTreesLearnMore")).toBeLessThan(treeStage.indexOf("explore-v6-tree"));
+    expect(treeStage).not.toContain("explore-v6-fire");
+    expect(treeStage).not.toContain("pauseFireBed");
+    expect(treeStage).not.toContain("<audio");
   });
 });
