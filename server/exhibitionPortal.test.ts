@@ -249,7 +249,7 @@ describe("exhibition portal first cut", () => {
     for (const root of ["client/public", "docs"]) {
       const path = `${root}${TEASER_SRC}`;
       const file = new URL(`../${path}`, import.meta.url);
-      if (!existsSync(file)) continue;
+      expect(existsSync(file)).toBe(true);
       expect(sha256(path)).toBe(TEASER_SHA256);
       expect(statSync(file).size).toBe(TEASER_BYTES);
     }
