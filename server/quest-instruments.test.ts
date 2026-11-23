@@ -51,26 +51,50 @@ describe("Quest InfraDex and Time Machine", () => {
     expect(reading.explanation).not.toMatch(/manus\.space/i);
   });
 
-  it("reads a warm photograph toward the Fire relay without inventing a plate index", () => {
+  it("reads a warm photograph toward the Fire relay without inventing a species or a plate index", () => {
     expect(relayFromCues(warmPlate)).toBe("R01");
     const reading = scanAsset({ cues: warmPlate, photographHeld: true });
     expect(reading.source).toBe("photograph");
     expect(reading.relay).toBe("R01");
-    expect(reading.matched).toBe(true);
+    expect(reading.species).toBeNull();
+    expect(reading.matched).toBe(false);
     expect(reading.scored).toBe(false);
-    expect(reading.confidence).toBeLessThan(0.6);
-    expect(reading.spoken).toContain(reading.assetName);
-    expect(reading.spoken).toContain("not fixed from the photograph alone");
+    expect(reading.integrationLevel).toBe(1);
+    expect(reading.assetName).toBe("Warm light");
+    expect(reading.spoken).toContain("Candidate");
+    expect(reading.spoken).toContain("warm light");
+    expect(reading.spoken).toContain("Type the name to confirm");
     expect(reading.spoken).not.toContain("out of 300");
   });
 
-  it("reads a blue harbour photograph without requiring a typed name", () => {
-    const harbour: ImageCue = { warm: 0.08, green: 0.12, blue: 0.46, grey: 0.34, bright: 0.58, edge: 0.42, horizontal: 0.62 };
-    const reading = scanAsset({ cues: harbour, photographHeld: true });
+  it("reads a built waterfront photograph as a candidate, not as Fishing Harbour", () => {
+    const waterfront: ImageCue = { warm: 0.08, green: 0.12, blue: 0.46, grey: 0.34, bright: 0.58, edge: 0.42, horizontal: 0.62 };
+    const reading = scanAsset({ cues: waterfront, photographHeld: true });
     expect(reading.scored).toBe(false);
-    expect(reading.species).not.toBeNull();
-    expect(reading.spoken.toLowerCase()).toContain("photograph reads as");
-    expect(reading.spoken).not.toMatch(/amplitude/i);
+    expect(reading.species).toBeNull();
+    expect(reading.matched).toBe(false);
+    expect(reading.assetName).toBe("Built waterfront");
+    expect(reading.integrationLevel).toBe(1);
+    expect(reading.spoken).toContain("a built waterfront");
+    expect(reading.spoken).toContain("Candidate");
+    expect(reading.spoken).toContain("Type the name to confirm");
+    expect(reading.spoken).not.toContain("Fishing Harbour");
+    expect(reading.spoken.toLowerCase()).not.toContain("photograph reads as");
+    expect(reading.spoken).not.toContain("out of 300");
+  });
+
+  it("keeps a typed plaza name when the photograph is watery", () => {
+    const waterfront: ImageCue = { warm: 0.08, green: 0.12, blue: 0.46, grey: 0.34, bright: 0.58, edge: 0.42, horizontal: 0.62 };
+    expect(matchSpecies("Discovery Bay Plaza")).toBeNull();
+    const reading = scanAsset({ text: "Discovery Bay Plaza", cues: waterfront, photographHeld: true });
+    expect(reading.assetName).toBe("Discovery Bay Plaza");
+    expect(reading.species).toBeNull();
+    expect(reading.matched).toBe(false);
+    expect(reading.scored).toBe(false);
+    expect(reading.spoken).toContain("Discovery Bay Plaza is kept as typed");
+    expect(reading.spoken).toContain("a built waterfront");
+    expect(reading.spoken).not.toContain("Fishing Harbour");
+    expect(reading.spoken).not.toContain("out of 300");
   });
 
   it("derives colour cues from pixels", () => {
@@ -148,6 +172,10 @@ describe("Quest InfraDex and Time Machine", () => {
     expect(plate).toContain("visualViewport");
     expect(plate).toContain("speakPlate(next.spoken");
     expect(plate).toContain("A photograph on the plate is enough to read.");
+    expect(plate).toContain("lattice-pulse");
+    expect(plate).toContain('data-testid="collidoscope-photo"');
+    expect(plate).toContain('fontSize: "20pt"');
+    expect(plate).not.toContain("photograph reads as");
     expect(plate).not.toContain("Point at an asset and photograph it, use a photograph you already have");
     expect(speech).toContain("synth.speak");
     expect(speech).not.toContain("manus.space");
