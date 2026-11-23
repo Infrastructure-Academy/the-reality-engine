@@ -12,6 +12,7 @@ import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSou
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { doorReelFrom } from "@/lib/doorReel";
 import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
@@ -424,6 +425,7 @@ export default function DungeonCrawl() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4"
+          playlist={doorReelFrom("https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4")}
           title={t("dungeon.videoTitle")}
           subtitle="26s intro"
           accentColor="#10b981"

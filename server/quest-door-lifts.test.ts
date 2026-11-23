@@ -44,6 +44,8 @@ describe("quest door lifts", () => {
     expect(gate).toContain("<ExplorerVideo");
     expect(gate).toContain("ensurePlayback");
     expect(gate).toContain("FLIGHT_INTRO_CLIP");
+    expect(gate).toContain("playlist={doorReelFrom(FLIGHT_INTRO_CLIP)}");
+    expect(gate).not.toContain("tap to rewatch");
     expect(gate.indexOf("<ExplorerVideo")).toBeLessThan(gate.indexOf('t("flight.signIn")'));
     expect(gate).not.toContain("handleSelectCraft");
     const craft = flight.slice(craftStart);
@@ -63,6 +65,7 @@ describe("quest door lifts", () => {
     expect(gate).toContain("<ExplorerVideo");
     expect(gate).toContain("ensurePlayback");
     expect(gate).toContain("SCHOLAR_INTRO_CLIP");
+    expect(gate).toContain("playlist={doorReelFrom(SCHOLAR_INTRO_CLIP)}");
     expect(gate.indexOf("<ExplorerVideo")).toBeLessThan(gate.indexOf('t("scholar.signIn")'));
     expect(gate).not.toContain("thesisTitle");
     const signedIn = scholar.slice(signedInStart);

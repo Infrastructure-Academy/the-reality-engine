@@ -1,7 +1,7 @@
-import { useState, useRef, useCallback, useMemo, type CSSProperties } from "react";
+import { useState, useRef, useCallback, useEffect, useMemo, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Volume2, VolumeX, CheckCircle2 } from "lucide-react";
+import { doorFilmTitle } from "@/lib/doorReel";
 
 /** Required exhibition type. Locked at 20pt so iOS Safari does not inflate it. */
 export const EXHIBITION_PLATE_TYPE: CSSProperties = {
@@ -21,6 +21,8 @@ interface ExplorerVideoProps {
   ensurePlayback?: boolean;
   /** Exhibition plate: 20pt film label, one tap, inline playback. */
   plate?: boolean;
+  /** Already-held films. The door loops this list instead of closing. */
+  playlist?: string[];
   testId?: string;
   onOpen?: () => void;
 }
@@ -48,10 +50,17 @@ function markWatched(videoUrl: string): void {
   }
 }
 
-export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, ensurePlayback = false, plate = false, testId, onOpen }: ExplorerVideoProps) {
+export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, ensurePlayback = false, plate = false, playlist, testId, onOpen }: ExplorerVideoProps) {
   const watched = useMemo(() => isWatched(videoUrl), [videoUrl]);
   const [showVideo, setShowVideo] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [forcedMute, setForcedMute] = useState(false);
+  const reel = useMemo(
+    () => (playlist && playlist.length > 0 ? playlist : [videoUrl]),
+    [playlist, videoUrl],
+  );
+  const [index, setIndex] = useState(0);
+  const src = reel[index % reel.length] ?? videoUrl;
   const [hasCompleted, setHasCompleted] = useState(watched);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -89,10 +98,54 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
   }, []);
 
   const handleEnded = useCallback(() => {
+    if (!plate) {
+      if (reel.length > 1) setIndex((i) => (i + 1) % reel.length);
+      return;
+    }
     markWatched(videoUrl);
     setHasCompleted(true);
     handleClose();
-  }, [videoUrl, handleClose]);
+  }, [plate, reel.length, videoUrl, handleClose]);
+
+  const hearDoor = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = false;
+    setMuted(false);
+    setForcedMute(false);
+    const pending = video.play();
+    if (pending) pending.catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    if (plate) return;
+    const video = videoRef.current;
+    if (!video) return;
+    let stop = () => {};
+    const withSound = () => {
+      video.muted = false;
+      setMuted(false);
+      setForcedMute(false);
+      return video.play();
+    };
+    const pending = withSound();
+    if (pending) {
+      pending.catch(() => {
+        video.muted = true;
+        setMuted(true);
+        setForcedMute(true);
+        video.play().catch(() => undefined);
+        const onDown = () => {
+          withSound()
+            .then(() => window.removeEventListener("pointerdown", onDown, true))
+            .catch(() => undefined);
+        };
+        window.addEventListener("pointerdown", onDown, true);
+        stop = () => window.removeEventListener("pointerdown", onDown, true);
+      });
+    }
+    return () => stop();
+  }, [plate, src]);
 
   if (plate) {
     return (
@@ -167,94 +220,64 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
     );
   }
 
+  const filmTitle = doorFilmTitle(src);
+  const place = `${index + 1} of ${reel.length}`;
+
   return (
-    <>
-      {/* Compact button — shows "Watched" indicator after first complete view */}
-      {!showVideo && (
-        <motion.button
-          type="button"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          onClick={openIntro}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border/40 bg-card/20 backdrop-blur-sm hover:bg-card/40 transition-all group mb-4"
-          style={{ borderColor: `${accentColor}30` }}
-        >
-          {hasCompleted ? (
-            <>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span className="text-xs font-heading tracking-wider uppercase text-emerald-400">
-                Watched
-              </span>
-              <span className="text-[10px] text-muted-foreground ml-1">— tap to rewatch</span>
-            </>
-          ) : (
-            <>
-              <div
-                className="w-7 h-7 rounded-full flex items-center justify-center transition-all group-hover:scale-110"
-                style={{ backgroundColor: `${accentColor}20`, boxShadow: `0 0 12px ${glowColor}` }}
-              >
-                <Play className="w-3.5 h-3.5 ml-0.5" style={{ color: accentColor }} />
-              </div>
-              <span className="text-xs font-heading tracking-wider uppercase" style={{ color: accentColor }}>
-                Watch Intro
-              </span>
-              <span className="text-[10px] text-muted-foreground">({subtitle})</span>
-            </>
-          )}
-        </motion.button>
-      )}
-
-      {/* Expanded video player */}
-      <AnimatePresence>
-        {showVideo && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mb-4 overflow-hidden"
+    <div className="mb-4" data-testid={testId ?? "door-reel"}>
+      <div
+        className="overflow-hidden rounded-xl border bg-black"
+        style={{ borderColor: `${accentColor}55`, boxShadow: `0 0 28px ${glowColor}` }}
+      >
+        <video
+          ref={videoRef}
+          src={src}
+          autoPlay
+          loop={reel.length < 2}
+          muted={muted}
+          playsInline
+          preload="auto"
+          aria-label={filmTitle}
+          className="aspect-video w-full bg-black object-contain"
+          onEnded={handleEnded}
+        />
+        <div className="flex items-center gap-3 px-3 py-2.5" style={{ backgroundColor: "#0c1218" }}>
+          <div className="min-w-0 flex-1 text-left">
+            <p className="font-heading text-sm tracking-wide text-white">{filmTitle}</p>
+            <p className="text-xs text-white/60">{title} · {place}</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const video = videoRef.current;
+              if (!video) return;
+              const next = !video.muted;
+              video.muted = next;
+              setMuted(next);
+              if (!next) {
+                setForcedMute(false);
+                video.play().catch(() => undefined);
+              }
+            }}
+            aria-label={muted ? "Hear the film" : "Silence the film"}
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white"
           >
-            <div
-              className="relative rounded-xl border overflow-hidden"
-              style={{ borderColor: `${accentColor}40`, boxShadow: `0 0 30px ${glowColor}` }}
-            >
-              <video
-                ref={videoRef}
-                src={videoUrl}
-                autoPlay
-                muted={muted}
-                playsInline
-                className="w-full aspect-video object-cover"
-                onEnded={handleEnded}
-              />
-
-              {/* Controls overlay */}
-              <div className="absolute top-2 right-2 flex items-center gap-1.5">
-                <button
-                  onClick={() => setMuted(!muted)}
-                  className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/80 transition-colors"
-                >
-                  {muted ? (
-                    <VolumeX className="w-3.5 h-3.5 text-white/80" />
-                  ) : (
-                    <Volume2 className="w-3.5 h-3.5 text-white/80" />
-                  )}
-                </button>
-                <button
-                  onClick={handleClose}
-                  className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center hover:bg-black/80 transition-colors"
-                >
-                  <X className="w-3.5 h-3.5 text-white/80" />
-                </button>
-              </div>
-
-              {/* Title overlay at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-                <p className="text-xs font-heading tracking-wider uppercase text-white/90">{title}</p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>
+        </div>
+        {forcedMute ? (
+          <button
+            type="button"
+            onClick={hearDoor}
+            className="flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 border-t px-3 text-sm font-heading tracking-wide"
+            style={{ borderColor: `${accentColor}40`, color: accentColor }}
+          >
+            <Volume2 className="h-4 w-4" />
+            Tap to hear the film
+          </button>
+        ) : null}
+      </div>
+      {subtitle ? <p className="sr-only">{subtitle}</p> : null}
+    </div>
   );
 }
