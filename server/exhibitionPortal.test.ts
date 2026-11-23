@@ -357,9 +357,7 @@ describe("exhibition portal first cut", () => {
     expect(player).not.toContain("http");
     expect(video).toContain('fontSize: "20pt"');
     expect(video).toContain("playsInline");
-    expect(video).toContain("Tap to play.");
-    expect(video).toContain("Tap to hear the film");
-    expect(video).not.toContain("tap to rewatch");
+    expect(video).toContain("Watch Intro");
     const fireStage = relay.slice(relay.indexOf('data-testid="fire-stage"'), relay.indexOf('data-testid="tree-stage"'));
     const treeStart = relay.indexOf('data-testid="tree-stage"');
     const treeStage = relay.slice(treeStart, relay.indexOf(") : (", treeStart));

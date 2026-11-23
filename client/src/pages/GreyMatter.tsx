@@ -10,7 +10,6 @@ import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSou
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
-import { doorReelFrom } from "@/lib/doorReel";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useT } from "@/contexts/LanguageContext";
 import { PROGRESS_EVENT, hydrateTotalXp } from "@shared/playerProgress";
@@ -261,7 +260,6 @@ export default function GreyMatter() {
         {/* Intro Video */}
         <ExplorerVideo
           videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4"
-          playlist={doorReelFrom("https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4")}
           title={t("greymatter.videoTitle")}
           subtitle="30s intro"
           accentColor="#d4a843"
