@@ -5,7 +5,8 @@ import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 /**
- * Episode 1 opening. The Fractal Connector teaser plays as you arrive.
+ * Episode 1 opening. The teaser plays the whole exhibition as you arrive:
+ * halls 1 to 12, connected. Not a thirteenth hall beside them.
  * No planet is drawn. The zero sits below and holds up the thirteen hall buttons.
  * Solar system, smoulder, settled earth, then the control panel.
  */
@@ -49,7 +50,7 @@ function risenCount(time: number): number {
 }
 
 const BEAT_LINE: Record<Beat, string> = {
-  solar: "The Fractal Connector teaser plays as you arrive. It introduces the twelve pillars and brings you back.",
+  solar: "The teaser plays the whole exhibition as you arrive. Halls 1 to 12, connected, on a loop. The Fractal Connector is that connection, not a thirteenth hall beside them.",
   smoulder: "A smouldering planet, slowly becoming settled earth. The zero is below.",
   settled: "Settled earth. Fire is harnessed, some 12,000 years ago.",
   pillars: "The thirteen rise from the zero. They are the control panel.",
@@ -313,7 +314,7 @@ export function PlanetOpening({
             playsInline
             preload="auto"
             data-testid="portal-entrance-teaser"
-            aria-label="Fractal Connector teaser. It introduces the twelve pillars and brings you back."
+            aria-label="The whole exhibition. Halls 1 to 12, connected, on a loop."
             className="h-[42svh] min-h-[240px] w-full bg-[#070b16] object-contain"
             onEnded={(event) => {
               const video = event.currentTarget;
@@ -323,7 +324,10 @@ export function PlanetOpening({
           />
           <div className={`pointer-events-none absolute inset-0 ${WASH[beat]}`} data-testid="portal-wash" />
           <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-[#070b16] to-transparent px-3 pb-2 pt-8">
-            <p className="min-w-0 flex-1 text-left font-heading text-sm text-amber-50">Fractal Connector teaser</p>
+            <p className="min-w-0 flex-1 text-left font-heading text-sm leading-snug text-amber-50">
+              The whole exhibition
+              <span className="mt-0.5 block text-xs font-normal text-amber-100/80">Halls 1 to 12, connected. Not a thirteenth hall beside them.</span>
+            </p>
             <button
               type="button"
               onClick={() => {

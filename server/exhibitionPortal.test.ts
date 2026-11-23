@@ -232,6 +232,12 @@ describe("exhibition portal first cut", () => {
     expect(opening).toContain("playsInline");
     expect(opening).toContain("pointerdown");
     expect(opening).toContain("portal-entrance-teaser");
+    expect(opening).toContain("The whole exhibition");
+    expect(opening).toContain("Halls 1 to 12, connected");
+    expect(opening).toContain("not a thirteenth hall beside them");
+    expect(opening).not.toContain("13_close.mp4");
+    expect(opening).not.toContain("twelve pillars");
+    expect(TEASER_SRC).not.toContain("13_close");
     expect(opening).not.toContain("entrance-portal.jpg");
     expect(opening).not.toContain("portal-entrance-still");
     expect(opening).not.toContain("0d17d284ba4cb711");
