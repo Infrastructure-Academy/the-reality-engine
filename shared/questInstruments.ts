@@ -490,22 +490,25 @@ export function relayFromCues(cues: ImageCue): RelayId {
   return RELAYS.reduce((best, relay) => (scores[relay.id] > scores[best] ? relay.id : best), "R01" as RelayId);
 }
 
-function archetype(relay: RelayId, cues: ImageCue | null): Species {
-  const inRelay = INFRADEX.filter((species) => species.relay === relay);
-  if (!cues) return inRelay[0]!;
-  const ranked = [...inRelay].sort((a, b) => visualAffinity(b, cues) - visualAffinity(a, cues) || a.id - b.id);
-  return ranked[0]!;
+/** Plain words for a photograph. Colour never becomes an InfraDex species name. */
+export function photographCue(cues: ImageCue): string {
+  const built = cues.edge > 0.28 && (cues.grey > 0.22 || cues.horizontal > 0.5);
+  if (cues.blue > 0.28 && built) return "a built waterfront";
+  if (cues.blue > 0.34) return "open water";
+  if (cues.warm > 0.45 && cues.warm > cues.green && cues.warm > cues.blue) return "warm light";
+  if (cues.green > 0.38 && cues.green > cues.blue) return "living growth";
+  if (built) return "a built structure";
+  return "the plate in front of you";
 }
 
-function visualAffinity(species: Species, cues: ImageCue): number {
-  const name = species.name.toLowerCase();
-  let score = 0;
-  if (/fire|furnace|kiln|forge|boiler|reactor|fusion|pyro|incinerat|beacon/.test(name)) score += cues.warm * 2;
-  if (/wood|orchard|timber|grove|forest|arboretum|tree|reforest/.test(name)) score += cues.green * 2;
-  if (/water|dam|canal|reservoir|harbour|pier|ferry|lighthouse|dock|aqueduct|flood|hydro/.test(name)) score += cues.blue * 2;
-  if (/bridge|road|rail|tunnel|station|viaduct|highway|motorway/.test(name)) score += cues.grey * cues.edge * 2;
-  if (/satellite|data|server|quantum|digital|radio|telescope/.test(name)) score += cues.grey * (1 - cues.warm);
-  return score;
+function cueTitle(cue: string): string {
+  const bare = cue.replace(/^a /, "");
+  return bare.charAt(0).toUpperCase() + bare.slice(1);
+}
+
+function webFromCues(cues: ImageCue): WebName {
+  if (cues.green > 0.38 && cues.green > cues.blue && cues.green > cues.warm) return "Biological";
+  return "Physical";
 }
 
 function integrationFor(text: string, rarity: Rarity | null): IntegrationLevel {
@@ -538,6 +541,7 @@ function composeReading(input: {
   confidence: number;
   amplitudeBias?: number;
   scored: boolean;
+  note?: string;
 }): ScanReading {
   const rarity = input.rarity ?? "Common";
   const A = round1(clamp((input.species ? RARITY_AMPLITUDE[rarity] : 3.6) + (input.amplitudeBias ?? 0), 0.5, 10));
@@ -561,15 +565,13 @@ function composeReading(input: {
     `Amplitude ${A.toFixed(1)} and persistence ${P.toFixed(1)} against a mean resistance of ${beta.toFixed(1)} give a signal of ${signal.toFixed(1)}. ` +
     `The plate index is ${plateIndex} out of 300. ${leading[0].toUpperCase()}${leading.slice(1)} is the leading resistance. ` +
     `The vibrational mode is ${vibration.mode.charAt(0)}${vibration.mode.slice(1).toLowerCase()} — ${vibration.label.toLowerCase()}.`;
-  const explanation = input.scored
-    ? scoredExplanation
-    : input.source === "photograph" && input.species
-      ? `The photograph reads as ${input.species.name}, on the ${relayName} relay, in the ${input.web} web. The plate index is not fixed from the photograph alone.`
-      : input.source === "photograph"
-        ? "The photograph is on the plate. No InfraDex species is fixed from it, and no plate index is given."
-        : input.species
-          ? `${input.species.name} is a possible InfraDex species on the ${relayName} relay, in the ${input.web} web. The name is not exact, so no plate index is given.`
-          : `${input.assetName} is not an exact InfraDex match. No plate index is given.`;
+  const explanation = input.note
+    ? input.note
+    : input.scored
+      ? scoredExplanation
+      : input.species
+        ? `${input.species.name} is a possible InfraDex species on the ${relayName} relay, in the ${input.web} web. The name is not exact, so no plate index is given.`
+        : `${input.assetName} is not an exact InfraDex match. No plate index is given.`;
   return {
     source: input.source,
     species: input.species,
@@ -640,35 +642,46 @@ export function scanAsset(input: {
     });
   }
 
-  if (cues && photoRelay) {
-    const species = archetype(hint && hint === photoRelay ? hint : photoRelay, cues);
-    const hinted = hint ? archetype(hint, cues) : null;
-    const chosen = text.length < 2 && hinted && hint ? hinted : species;
+  if (text.length >= 2) {
+    const keyword = RELAY_WORDS.find((item) => item.test.test(text.toLowerCase()));
+    const relay = photoRelay ?? hint ?? keyword?.relay ?? "R05";
+    const web: WebName = cues
+      ? webFromCues(cues)
+      : relay === "R02" ? "Biological" : relay === "R12" ? "Social" : relay === "R07" || relay === "R11" ? "Digital" : "Physical";
+    const relayName = relayById(relay).name;
+    const cue = cues ? photographCue(cues) : null;
     return composeReading({
-      source: "photograph",
-      species: chosen,
-      assetName: chosen.name,
-      relay: chosen.relay,
-      web: chosen.web,
-      rarity: chosen.rarity,
-      integrationLevel: integrationFor(chosen.name, chosen.rarity),
-      confidence: 0.4,
-      amplitudeBias: -0.4,
+      source: cues || input.photographHeld ? "both" : "field",
+      species: null,
+      assetName: text,
+      relay,
+      web,
+      rarity: null,
+      integrationLevel: 1,
+      confidence: cues ? 0.46 : 0.24,
       scored: false,
+      note: cue
+        ? `${text} is kept as typed. The photograph suggests ${cue}, guessed on the ${relayName} relay, in the ${web} web. It is not an exact InfraDex species, so no plate index is given.`
+        : undefined,
     });
   }
 
-  if (input.photographHeld) {
+  if ((cues && photoRelay) || input.photographHeld) {
+    const relay = photoRelay ?? hint ?? "R06";
+    const web: WebName = cues ? webFromCues(cues) : "Physical";
+    const cue = cues ? photographCue(cues) : "the plate in front of you";
+    const relayName = relayById(relay).name;
     return composeReading({
       source: "photograph",
       species: null,
-      assetName: "Photograph",
-      relay: hint ?? "R06",
-      web: "Physical",
+      assetName: cueTitle(cue),
+      relay,
+      web,
       rarity: null,
       integrationLevel: 1,
-      confidence: 0.2,
+      confidence: cues ? 0.4 : 0.2,
       scored: false,
+      note: `Candidate. The photograph suggests ${cue}, guessed on the ${relayName} relay, in the ${web} web. Type the name to confirm. No InfraDex species is fixed from the photograph alone, and no plate index is given.`,
     });
   }
 

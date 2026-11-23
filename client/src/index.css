@@ -357,10 +357,32 @@
     0%, 100% { opacity: 0.28; }
     50% { opacity: 0.7; }
   }
+  @keyframes latticeRun {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes latticePulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+  }
+  .lattice-run {
+    transform-box: view-box;
+    transform-origin: 320px 230px;
+    animation: latticeRun 48s linear infinite;
+  }
+  .lattice-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: latticePulse 2.6s ease-in-out infinite;
+  }
   @media (prefers-reduced-motion: reduce) {
     .tree-canopy-light {
       animation: none;
       opacity: 0.4;
+    }
+    .lattice-run,
+    .lattice-pulse {
+      animation: none;
     }
   }
 
