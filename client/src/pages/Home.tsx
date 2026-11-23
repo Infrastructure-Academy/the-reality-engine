@@ -20,6 +20,7 @@ import { STATED_GENERATIONS } from "@shared/playerProgress";
 import { useLitRelays } from "@/lib/sharedProgress";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { trpc } from "@/lib/trpc";
+import { beginPortalTeaserFromGesture } from "@/lib/portalTeaser";
 
 
 
@@ -1259,6 +1260,9 @@ export default function Home() {
         <Link
           href="/portal"
           data-testid="home-exhibition-portal"
+          onPointerDown={() => {
+            void beginPortalTeaserFromGesture();
+          }}
           className="mx-auto flex min-h-14 max-w-6xl touch-manipulation items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-[#07111f] px-4 text-amber-50 shadow-[0_0_24px_rgba(251,191,36,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
         >
           <span>

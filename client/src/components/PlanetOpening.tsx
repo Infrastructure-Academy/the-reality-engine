@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { CLOSE_PATH, FIRE_HALL_PATH, TEASER_SRC, type HallCard } from "@shared/exhibitionPortal";
+import { CLOSE_PATH, FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
 import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
+import { beginPortalTeaserFromGesture, setPortalTeaserSlot, subscribePortalTeaserFace, type TeaserFace } from "@/lib/portalTeaser";
 
 /**
  * Episode 1 opening. The teaser plays the whole exhibition as you arrive:
@@ -189,40 +190,21 @@ export function PlanetOpening({
   const shaftWrapRef = useRef<HTMLDivElement>(null);
   const zeroRef = useRef<HTMLButtonElement>(null);
   const shaftRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const teaserRef = useRef<HTMLVideoElement>(null);
+  const slotRef = useRef<HTMLDivElement>(null);
   const [beat, setBeat] = useState<Beat>(reduced ? "pillars" : "solar");
   const [arrived, setArrived] = useState(reduced);
-  const [muted, setMuted] = useState(false);
-  const [forcedMute, setForcedMute] = useState(false);
+  const [face, setFace] = useState<TeaserFace>("pending");
+  const [silenced, setSilenced] = useState(false);
 
-  useEffect(() => {
-    const video = teaserRef.current;
-    if (!video) return;
-    let stop = () => {};
-    const withSound = () => {
-      video.muted = false;
-      setMuted(false);
-      setForcedMute(false);
-      return video.play();
-    };
-    const pending = withSound();
-    if (pending) {
-      pending.catch(() => {
-        video.muted = true;
-        setMuted(true);
-        setForcedMute(true);
-        video.play().catch(() => undefined);
-        const onDown = () => {
-          withSound()
-            .then(() => window.removeEventListener("pointerdown", onDown, true))
-            .catch(() => undefined);
-        };
-        window.addEventListener("pointerdown", onDown, true);
-        stop = () => window.removeEventListener("pointerdown", onDown, true);
-      });
-    }
-    return () => stop();
-  }, [run]);
+  useLayoutEffect(() => {
+    setPortalTeaserSlot(slotRef.current);
+    return () => setPortalTeaserSlot(null);
+  }, []);
+
+  useEffect(() => subscribePortalTeaserFace((next) => {
+    setFace(next);
+    if (next === "audible") setSilenced(false);
+  }), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -305,58 +287,42 @@ export function PlanetOpening({
     <div ref={rootRef} data-testid="portal-planet-sequence" data-beat={beat} data-settled={arrived ? "true" : "false"}>
       <div className="overflow-hidden rounded-2xl border border-amber-200/35 bg-[#070b16]">
         <div className="relative">
-          <video
-            ref={teaserRef}
-            src={TEASER_SRC}
-            autoPlay
-            loop
-            muted={muted}
-            playsInline
-            preload="auto"
-            data-testid="portal-entrance-teaser"
-            aria-label="The whole exhibition. Halls 1 to 12, connected, on a loop."
-            className="h-[42svh] min-h-[240px] w-full bg-[#070b16] object-contain"
-            onEnded={(event) => {
-              const video = event.currentTarget;
-              video.currentTime = 0;
-              video.play().catch(() => undefined);
-            }}
-          />
+          <div ref={slotRef} data-testid="portal-teaser-slot" />
           <div className={`pointer-events-none absolute inset-0 ${WASH[beat]}`} data-testid="portal-wash" />
           <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-[#070b16] to-transparent px-3 pb-2 pt-8">
             <p className="min-w-0 flex-1 text-left font-heading text-sm leading-snug text-amber-50">
               The whole exhibition
               <span className="mt-0.5 block text-xs font-normal text-amber-100/80">Halls 1 to 12, connected. Not a thirteenth hall beside them.</span>
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                const video = teaserRef.current;
-                if (!video) return;
-                const next = !video.muted;
-                video.muted = next;
-                setMuted(next);
-                if (!next) {
-                  setForcedMute(false);
-                  video.play().catch(() => undefined);
-                }
-              }}
-              aria-label={muted ? "Hear the film" : "Silence the film"}
-              className="inline-flex h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border border-amber-200/40 bg-black/50 px-3 font-heading text-xs text-amber-50"
-            >
-              {muted ? "Hear" : "Sound"}
-            </button>
+            {face !== "blocked" ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const node = document.getElementById("portal-teaser-bed");
+                  if (!(node instanceof HTMLVideoElement)) return;
+                  if (node.muted || node.paused) {
+                    setSilenced(false);
+                    void beginPortalTeaserFromGesture();
+                    return;
+                  }
+                  node.muted = true;
+                  setSilenced(true);
+                }}
+                aria-label={silenced ? "Hear the film" : "Silence the film"}
+                className="inline-flex h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border border-amber-200/40 bg-black/50 px-3 font-heading text-xs text-amber-50"
+              >
+                {silenced ? "Hear" : "Sound"}
+              </button>
+            ) : null}
           </div>
-          {forcedMute ? (
+          {face === "blocked" ? (
             <button
               type="button"
+              onPointerDown={() => {
+                void beginPortalTeaserFromGesture();
+              }}
               onClick={() => {
-                const video = teaserRef.current;
-                if (!video) return;
-                video.muted = false;
-                setMuted(false);
-                setForcedMute(false);
-                video.play().catch(() => undefined);
+                void beginPortalTeaserFromGesture();
               }}
               className="absolute inset-x-3 top-3 min-h-12 touch-manipulation rounded-xl border border-amber-200/50 bg-[#070b16]/80 px-3 font-heading text-sm text-amber-50"
             >
