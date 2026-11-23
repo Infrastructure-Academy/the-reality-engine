@@ -18,7 +18,6 @@ import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
 import { ExplorerVideo } from "@/components/ExplorerVideo";
-import { doorReelFrom } from "@/lib/doorReel";
 import { VoiceToggle } from "@/components/VoiceToggle";
 import { narrateBadgeEarned, davidSpeak, davidStop } from "@/hooks/useDavidVoice";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
@@ -240,7 +239,6 @@ export default function FlightDeck() {
         <div className="text-center w-full max-w-md mx-auto py-8">
           <ExplorerVideo
             videoUrl={FLIGHT_INTRO_CLIP}
-            playlist={doorReelFrom(FLIGHT_INTRO_CLIP)}
             title={t("flight.videoTitle")}
             subtitle="32s intro"
             accentColor="#06b6d4"
@@ -297,7 +295,6 @@ export default function FlightDeck() {
           {/* Intro Video */}
           <ExplorerVideo
             videoUrl={FLIGHT_INTRO_CLIP}
-            playlist={doorReelFrom(FLIGHT_INTRO_CLIP)}
             title={t("flight.videoTitle")}
             subtitle="32s intro"
             accentColor="#06b6d4"
