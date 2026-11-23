@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { RELAYS } from "../shared/gameData";
 import { PLATE_EPISODES } from "../shared/plateGates";
@@ -8,6 +8,9 @@ import {
   EPISODE_ONE,
   FILM_SHA256,
   FILM_SRC,
+  TEASER_BYTES,
+  TEASER_SHA256,
+  TEASER_SRC,
   HALL_CARDS,
   LATER_EPISODES,
   TRILOGY_EPISODES,
@@ -222,7 +225,34 @@ describe("exhibition portal first cut", () => {
     expect(opening).toContain("portal-planet-sequence");
     expect(opening).toContain("portal-pillar-");
     expect(opening).toContain("smouldering");
-    expect(opening).toContain("entrance-portal.jpg");
+    expect(opening).toContain("src={TEASER_SRC}");
+    expect(source("shared/exhibitionPortal.ts")).toContain(`export const TEASER_SRC = "${TEASER_SRC}"`);
+    expect(opening).toContain("autoPlay");
+    expect(opening).toContain("loop");
+    expect(opening).toContain("playsInline");
+    expect(opening).toContain("pointerdown");
+    expect(opening).toContain("portal-entrance-teaser");
+    expect(opening).toContain("The whole exhibition");
+    expect(opening).toContain("Halls 1 to 12, connected");
+    expect(opening).toContain("not a thirteenth hall beside them");
+    expect(opening).not.toContain("13_close.mp4");
+    expect(opening).not.toContain("twelve pillars");
+    expect(TEASER_SRC).not.toContain("13_close");
+    expect(opening).not.toContain("entrance-portal.jpg");
+    expect(opening).not.toContain("portal-entrance-still");
+    expect(opening).not.toContain("0d17d284ba4cb711");
+    expect(opening).not.toContain("1032bf4ca81672d3");
+    expect(opening).not.toContain("6b35989234b76400");
+    expect(opening).not.toContain("releases/download");
+    expect(TEASER_SHA256).toBe("79d75df9932a4e122146792456a28777ae19deb753896fbd646e074cc5a2d8c0");
+    expect(TEASER_BYTES).toBe(27950258);
+    for (const root of ["client/public", "docs"]) {
+      const path = `${root}${TEASER_SRC}`;
+      const file = new URL(`../${path}`, import.meta.url);
+      expect(existsSync(file)).toBe(true);
+      expect(sha256(path)).toBe(TEASER_SHA256);
+      expect(statSync(file).size).toBe(TEASER_BYTES);
+    }
     expect(opening).not.toContain("drawPlanet");
     expect(opening).not.toContain("quadraticCurveTo");
     expect(opening).not.toContain('beat === "pillars" && !done');

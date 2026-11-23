@@ -25,6 +25,17 @@ export const PLATE_SRC = "/portal/exhibition-plan-composite.png";
 export const FILM_SHA256 = "cacc1ada942163efbb2bdd5a964e29524fd4557a041dc228bd85773d5c4a3d2e";
 export const PLATE_SHA256 = "e9f17f7338f73c3ac89c061120de6fd7ab68b66443e5184f2de48de4d6063d91";
 
+/**
+ * Untitled FILM-0126 / iaai#16, 72 seconds.
+ * The entrance teaser plays the whole exhibition: halls 1 to 12, connected.
+ * The Fractal Connector is that connection, not a thirteenth hall beside them.
+ * Register title and provisional classification stay as held.
+ * Live door uses the 1280×720 original, not 13_close.mp4 and not the 832×464 transcodes.
+ */
+export const TEASER_SRC = "/portal/fractal-connector-teaser.mp4";
+export const TEASER_SHA256 = "79d75df9932a4e122146792456a28777ae19deb753896fbd646e074cc5a2d8c0";
+export const TEASER_BYTES = 27950258;
+
 /** Nigel’s placement, held as received. */
 export const RECEIVED_ZERO =
   "The planet is the zero (0). Without it there would be no our reality or the contest. It is the substrate from which the 13 rise, in episodes 1–3, spiralling upward, a boundary-condition reset to explore.";

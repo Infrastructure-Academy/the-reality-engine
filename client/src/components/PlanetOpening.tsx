@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { CLOSE_PATH, FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
+import { CLOSE_PATH, FIRE_HALL_PATH, TEASER_SRC, type HallCard } from "@shared/exhibitionPortal";
 import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 /**
- * Episode 1 opening. The issued entrance still carries the star field.
+ * Episode 1 opening. The teaser plays the whole exhibition as you arrive:
+ * halls 1 to 12, connected. Not a thirteenth hall beside them.
  * No planet is drawn. The zero sits below and holds up the thirteen hall buttons.
  * Solar system, smoulder, settled earth, then the control panel.
  */
-
-const ENTRANCE_SRC = "/exhibition/entrance-portal.jpg";
 
 const SMOULDER_AT = 4.6;
 const SETTLED_AT = 13.2;
@@ -51,7 +50,7 @@ function risenCount(time: number): number {
 }
 
 const BEAT_LINE: Record<Beat, string> = {
-  solar: "Watching in from the solar system. The issued entrance still holds the star field.",
+  solar: "The teaser plays the whole exhibition as you arrive. Halls 1 to 12, connected, on a loop. The Fractal Connector is that connection, not a thirteenth hall beside them.",
   smoulder: "A smouldering planet, slowly becoming settled earth. The zero is below.",
   settled: "Settled earth. Fire is harnessed, some 12,000 years ago.",
   pillars: "The thirteen rise from the zero. They are the control panel.",
@@ -190,8 +189,40 @@ export function PlanetOpening({
   const shaftWrapRef = useRef<HTMLDivElement>(null);
   const zeroRef = useRef<HTMLButtonElement>(null);
   const shaftRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const teaserRef = useRef<HTMLVideoElement>(null);
   const [beat, setBeat] = useState<Beat>(reduced ? "pillars" : "solar");
   const [arrived, setArrived] = useState(reduced);
+  const [muted, setMuted] = useState(false);
+  const [forcedMute, setForcedMute] = useState(false);
+
+  useEffect(() => {
+    const video = teaserRef.current;
+    if (!video) return;
+    let stop = () => {};
+    const withSound = () => {
+      video.muted = false;
+      setMuted(false);
+      setForcedMute(false);
+      return video.play();
+    };
+    const pending = withSound();
+    if (pending) {
+      pending.catch(() => {
+        video.muted = true;
+        setMuted(true);
+        setForcedMute(true);
+        video.play().catch(() => undefined);
+        const onDown = () => {
+          withSound()
+            .then(() => window.removeEventListener("pointerdown", onDown, true))
+            .catch(() => undefined);
+        };
+        window.addEventListener("pointerdown", onDown, true);
+        stop = () => window.removeEventListener("pointerdown", onDown, true);
+      });
+    }
+    return () => stop();
+  }, [run]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -274,13 +305,64 @@ export function PlanetOpening({
     <div ref={rootRef} data-testid="portal-planet-sequence" data-beat={beat} data-settled={arrived ? "true" : "false"}>
       <div className="overflow-hidden rounded-2xl border border-amber-200/35 bg-[#070b16]">
         <div className="relative">
-          <img
-            src={ENTRANCE_SRC}
-            alt="Issued exhibition entrance. Star field above the doors. The planet is not drawn here."
-            data-testid="portal-entrance-still"
+          <video
+            ref={teaserRef}
+            src={TEASER_SRC}
+            autoPlay
+            loop
+            muted={muted}
+            playsInline
+            preload="auto"
+            data-testid="portal-entrance-teaser"
+            aria-label="The whole exhibition. Halls 1 to 12, connected, on a loop."
             className="h-[42svh] min-h-[240px] w-full bg-[#070b16] object-contain"
+            onEnded={(event) => {
+              const video = event.currentTarget;
+              video.currentTime = 0;
+              video.play().catch(() => undefined);
+            }}
           />
           <div className={`pointer-events-none absolute inset-0 ${WASH[beat]}`} data-testid="portal-wash" />
+          <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-[#070b16] to-transparent px-3 pb-2 pt-8">
+            <p className="min-w-0 flex-1 text-left font-heading text-sm leading-snug text-amber-50">
+              The whole exhibition
+              <span className="mt-0.5 block text-xs font-normal text-amber-100/80">Halls 1 to 12, connected. Not a thirteenth hall beside them.</span>
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                const video = teaserRef.current;
+                if (!video) return;
+                const next = !video.muted;
+                video.muted = next;
+                setMuted(next);
+                if (!next) {
+                  setForcedMute(false);
+                  video.play().catch(() => undefined);
+                }
+              }}
+              aria-label={muted ? "Hear the film" : "Silence the film"}
+              className="inline-flex h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border border-amber-200/40 bg-black/50 px-3 font-heading text-xs text-amber-50"
+            >
+              {muted ? "Hear" : "Sound"}
+            </button>
+          </div>
+          {forcedMute ? (
+            <button
+              type="button"
+              onClick={() => {
+                const video = teaserRef.current;
+                if (!video) return;
+                video.muted = false;
+                setMuted(false);
+                setForcedMute(false);
+                video.play().catch(() => undefined);
+              }}
+              className="absolute inset-x-3 top-3 min-h-12 touch-manipulation rounded-xl border border-amber-200/50 bg-[#070b16]/80 px-3 font-heading text-sm text-amber-50"
+            >
+              Tap to hear the film
+            </button>
+          ) : null}
         </div>
         <div ref={shaftWrapRef} className="px-2 pt-3 opacity-0">
           <div className="flex items-end gap-1 overflow-x-auto pb-1">
