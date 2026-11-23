@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { CLOSE_PATH, FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
+import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 /**
@@ -88,6 +89,7 @@ function HallMark({
         className={className}
         onClick={() => {
           if (hall.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+          else beginHallStoryForPath(hall.href);
         }}
       >
         {body}
@@ -153,6 +155,7 @@ function PanelRow({ hall, onReturn }: { hall: HallCard; onReturn: (id: string) =
         className={className}
         onClick={() => {
           if (hall.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+          else beginHallStoryForPath(hall.href);
         }}
       >
         {body}

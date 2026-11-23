@@ -28,6 +28,7 @@ import {
 import { ExhibitionClip } from "@/components/ExhibitionClip";
 import { EXHIBITION_PLATE_TYPE } from "@/components/ExplorerVideo";
 import { PlanetOpening } from "@/components/PlanetOpening";
+import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
 type Stage = "opening" | "film" | "halls";
@@ -233,6 +234,7 @@ function HallButton({ hall, onReturn }: { hall: HallCard; onReturn: (id: string)
         className={className}
         onClick={() => {
           if (hall.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+          else beginHallStoryForPath(hall.href);
         }}
       >
         {body}
@@ -560,6 +562,7 @@ export default function ExhibitionPortal() {
                         className={className}
                         onClick={() => {
                           if (door.href === FIRE_HALL_PATH) beginFireBedFromGesture();
+                          else beginHallStoryForPath(door.href);
                         }}
                       >
                         {label}

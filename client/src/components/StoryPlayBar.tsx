@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "re
 import type { StoryChrome } from "@/lib/storyLocale";
 import { declareStoryPlayback, formatStoryTime } from "@/lib/storyAudio";
 import { fireStoryBed } from "@/lib/firePlayback";
+import { hallStoryElement } from "@/lib/hallStory";
 import { setStorytellerOwnsSpeech, type StoryPhase } from "@/lib/storyteller";
 
 type BarPhase = "idle" | "starting" | "playing" | "paused";
@@ -26,6 +27,8 @@ interface StoryPlayBarProps {
    * click that opened the hall. This bar must not pause or reload it on mount.
    */
   handoff?: boolean;
+  /** Halls 2–12. Sonia plays from the shared hall element. No browser voice. */
+  storyBed?: "hall";
   onTime?: (seconds: number) => void;
 }
 
@@ -43,7 +46,7 @@ export interface StoryPlayHandle {
  * Other relays wait for Play. The Fire door may call begin() when the door opens.
  */
 export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(function StoryPlayBar({
-  audioSrc, labels, speech, compact = false, handoff = false, onTime,
+  audioSrc, labels, speech, compact = false, handoff = false, storyBed, onTime,
 }, ref) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const intent = useRef<"play" | "pause" | "stop">("stop");
@@ -53,9 +56,14 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
   onTimeRef.current = onTime;
   const handoffRef = useRef(handoff);
   handoffRef.current = handoff;
+  const storyBedRef = useRef(storyBed);
+  storyBedRef.current = storyBed;
+  const external = handoff || storyBed === "hall";
 
   function media(): HTMLAudioElement | null {
-    return handoffRef.current ? fireStoryBed() : audioRef.current;
+    if (handoffRef.current) return fireStoryBed();
+    if (storyBedRef.current === "hall") return hallStoryElement();
+    return audioRef.current;
   }
   const stopSpeech = useRef(speech.stop);
   stopSpeech.current = speech.stop;
@@ -66,7 +74,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    if (handoff) return;
+    if (handoff || storyBed === "hall") return;
     const audio = audioRef.current;
     intent.current = "stop";
     holdForCard.current = false;
@@ -80,11 +88,10 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
       audio.pause();
       audio.currentTime = 0;
     }
-  }, [audioSrc, handoff]);
+  }, [audioSrc, handoff, storyBed]);
 
   useEffect(() => {
-    if (!handoff) return;
-    const audio = fireStoryBed();
+    const audio = handoff ? fireStoryBed() : storyBed === "hall" ? hallStoryElement() : null;
     if (!audio) return;
     const sync = () => {
       if (!Number.isFinite(audio.duration)) return;
@@ -132,7 +139,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("durationchange", sync);
     };
-  }, [handoff, audioSrc]);
+  }, [handoff, storyBed, audioSrc]);
 
   useEffect(() => {
     return () => {
@@ -216,16 +223,13 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
         : "";
 
   function begin(options?: { quiet?: boolean }): Promise<void> {
-    if (!audioSrc) {
-      if (!speech.available) return Promise.resolve();
-      setNotice("");
-      setArming(true);
-      if (speech.phase === "paused") speech.resume();
-      else speech.listen();
-      return Promise.resolve();
-    }
+    if (!audioSrc) return Promise.resolve();
     const audio = media();
     if (!audio) return Promise.reject(new Error("missing story audio"));
+    if (storyBedRef.current === "hall") {
+      const absolute = new URL(audioSrc, window.location.href).href;
+      if (audio.src !== absolute) audio.src = audioSrc;
+    }
     if (!audio.paused && intent.current === "play" && !holdForCard.current) return Promise.resolve();
     declareStoryPlayback();
     intent.current = "play";
@@ -272,7 +276,6 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
 
   function onPause() {
     if (!audioSrc) {
-      speech.pause();
       setArming(false);
       return;
     }
@@ -283,9 +286,9 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
 
   function onStop() {
     if (!audioSrc) {
-      speech.stop();
       setArming(false);
       setNotice("");
+      setPhase("idle");
       return;
     }
     intent.current = "stop";
@@ -341,7 +344,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
           type="button"
           data-testid="story-play"
           onClick={onPlay}
-          disabled={shown === "playing" || shown === "starting" || (!audioSrc && !speech.available)}
+          disabled={shown === "playing" || shown === "starting" || !audioSrc}
           className={shown === "playing" ? quiet : solid}
         >
           {labels.play}
@@ -409,7 +412,7 @@ export const StoryPlayBar = forwardRef<StoryPlayHandle, StoryPlayBarProps>(funct
           {notice}
         </p>
       )}
-      {audioSrc && !handoff && (
+      {audioSrc && !external && (
         <audio
           ref={audioRef}
           src={audioSrc}

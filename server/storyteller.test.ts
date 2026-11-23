@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { RELAYS } from "@shared/gameData";
 import { getRelayStory, RELAY_STORIES } from "@shared/relayStories";
 import { EN } from "@/i18n/en";
-import { FIRE_STORY_AUDIO_URL, formatStoryTime, storyAudioUrl } from "@/lib/storyAudio";
+import { createHash } from "node:crypto";
+import { FIRE_STORY_AUDIO_URL, HALL_STORY_AUDIO, formatStoryTime, relayCardVoiceUrl, storyAudioUrl } from "@/lib/storyAudio";
 import {
   buildStoryScript,
   chineseVariant,
@@ -151,9 +152,25 @@ describe("fire recording", () => {
   it("plays a file for English Fire and does not autoplay", () => {
     expect(storyAudioUrl(1, "en")).toBe(FIRE_STORY_AUDIO_URL);
     expect(storyAudioUrl(1, "zh-HK")).toBeNull();
-    expect(storyAudioUrl(2, "en")).toBeNull();
-    expect(existsSync(new URL("../client/public/audio/relay-1-fire-en.mp3", import.meta.url))).toBe(true);
+    expect(storyAudioUrl(2, "en")).toBe("/audio/hall-stories/02_the-living-machine.mp3");
+    expect(storyAudioUrl(9, "en")).toBe("/audio/hall-stories/09_the-machine-that-multiplied-muscle.mp3");
+    expect(storyAudioUrl(12, "en")).toBe("/audio/hall-stories/12_robots-ai-biosynthetics-quantum.mp3");
+    expect(storyAudioUrl(9, "zh-CN")).toBeNull();
+    expect(storyAudioUrl(2, "zh-HK")).toBeNull();
+    expect(relayCardVoiceUrl(4, "Horse Collar")).toBe("/audio/relay-cards/04/horse-collar.mp3");
+    expect(relayCardVoiceUrl(9, "Internal Combustion")).toBe("/audio/relay-cards/09/internal-combustion.mp3");
+    expect(relayCardVoiceUrl(1, "Hearth")).toBeNull();
+    for (const row of HALL_STORY_AUDIO) {
+      for (const root of ["client/public", "docs"]) {
+        const bytes = readFileSync(new URL(`../${root}/audio/hall-stories/${row.file}`, import.meta.url));
+        expect(createHash("sha256").update(bytes).digest("hex")).toBe(row.sha256);
+      }
+      expect(storyAudioUrl(row.relay, "en")).toBe(`/audio/hall-stories/${row.file}`);
+    }
     const bar = source("client/src/components/StoryPlayBar.tsx");
+    expect(bar).not.toContain("speech.listen(");
+    expect(source("client/src/pages/ExplorerRelay.tsx")).not.toContain("narrateDiscovery");
+    expect(existsSync(new URL("../client/public/audio/relay-1-fire-en.mp3", import.meta.url))).toBe(true);
     expect(bar).not.toMatch(/autoPlay|autoplay/);
     expect(bar).toContain('data-testid="story-play"');
     expect(bar).toContain("min-h-11");
