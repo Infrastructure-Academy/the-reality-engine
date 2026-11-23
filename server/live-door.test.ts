@@ -1,9 +1,11 @@
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { TRPCError } from "@trpc/server";
 import { RELAYS } from "../shared/gameData";
 import { INVENTIONS } from "../shared/inventions";
 import { PROLOGUE_BEGIN_LABEL, PROLOGUE_SCENES } from "../shared/prologueScenes";
+import { PROLOGUE_RECORDINGS, prologueRecordingUrl } from "../client/src/lib/prologueAudio";
 import {
   ACADEMY_HOST,
   ACADEMY_URL,
@@ -125,6 +127,22 @@ describe("live-door route and progress fixes", () => {
     expect(PROLOGUE_BEGIN_LABEL).toBe("BEGIN RELAY 1");
     expect(source("client/src/pages/Prologue.tsx")).toContain("scene.text");
     expect(source("client/src/pages/Prologue.tsx")).toContain("PROLOGUE_BEGIN_LABEL");
+    const page = source("client/src/pages/Prologue.tsx");
+    expect(page).not.toContain("davidSpeak");
+    expect(page).not.toContain("speechSynthesis");
+    expect(page).toContain("pointerdown");
+    expect(page).toContain("prologueRecordingUrl");
+    expect(prologueRecordingUrl("scene2", "en")).toBe("/audio/prologue/02_signal.mp3");
+    expect(prologueRecordingUrl("scene2", "zh-HK")).toBeNull();
+    expect(PROLOGUE_RECORDINGS.map((row) => row.sceneId)).toEqual(PROLOGUE_SCENES.map((scene) => scene.id));
+    for (const row of PROLOGUE_RECORDINGS) {
+      for (const root of ["client/public", "docs"]) {
+        const path = new URL(`../${root}/audio/prologue/${row.file}`, import.meta.url);
+        const bytes = readFileSync(path);
+        expect(createHash("sha256").update(bytes).digest("hex")).toBe(row.sha256);
+        expect(statSync(path).size).toBe(row.bytes);
+      }
+    }
   });
 
   it("repairs missing spaces and raw markdown in player-facing narrative", () => {

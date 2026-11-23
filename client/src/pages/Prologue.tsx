@@ -6,13 +6,16 @@
  * and GDP v2.1 Section 15.4 Design Implications.
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Volume2, VolumeX } from "lucide-react";
-import { davidSpeak, davidStop, getVoiceEnabled, setVoiceEnabled } from "@/hooks/useDavidVoice";
-import { useT } from "@/contexts/LanguageContext";
+import { davidStop } from "@/hooks/useDavidVoice";
+import { useLanguage, useT } from "@/contexts/LanguageContext";
+import { declareStoryPlayback } from "@/lib/storyAudio";
+import { resolveStoryLocale } from "@/lib/storyLocale";
+import { prologueRecordingUrl } from "@/lib/prologueAudio";
 import { PROLOGUE_BEGIN_LABEL, PROLOGUE_SCENES } from "@shared/prologueScenes";
 
 const VISUAL_ELEMENTS: Record<string, { emoji: string; gradient: string }> = {
@@ -26,11 +29,49 @@ const VISUAL_ELEMENTS: Record<string, { emoji: string; gradient: string }> = {
 
 export default function Prologue() {
   const t = useT();
+  const { lang } = useLanguage();
+  const locale = resolveStoryLocale(lang, typeof navigator === "undefined" ? [] : navigator.languages ?? []);
   const [, navigate] = useLocation();
   const [currentScene, setCurrentScene] = useState(0);
-  const [voiceOn, setVoiceOn] = useState(getVoiceEnabled);
+  const [voiceOn, setVoiceOn] = useState(true);
   const [isNarrating, setIsNarrating] = useState(false);
   const [hasSeenPrologue, setHasSeenPrologue] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const voiceOnRef = useRef(voiceOn);
+  voiceOnRef.current = voiceOn;
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
+  const generation = useRef(0);
+
+  const startScene = useCallback((index: number): Promise<void> => {
+    const audio = audioRef.current;
+    if (!audio) return Promise.resolve();
+    generation.current += 1;
+    const mine = generation.current;
+    if (!voiceOnRef.current) {
+      audio.pause();
+      return Promise.resolve();
+    }
+    const scene = PROLOGUE_SCENES[index];
+    const url = scene ? prologueRecordingUrl(scene.id, localeRef.current) : null;
+    if (!url) {
+      audio.pause();
+      return Promise.resolve();
+    }
+    declareStoryPlayback();
+    const absolute = new URL(url, window.location.href).href;
+    if (audio.src !== absolute) {
+      audio.src = url;
+      audio.currentTime = 0;
+    } else if (audio.ended) {
+      audio.currentTime = 0;
+    }
+    const pending = audio.play();
+    if (!pending) return Promise.resolve();
+    return pending.then(() => {
+      if (generation.current !== mine) return;
+    });
+  }, []);
 
   // Check if player has already seen the prologue
   useEffect(() => {
@@ -40,48 +81,83 @@ export default function Prologue() {
     }
   }, []);
 
-  // DAVID narrates each scene
   useEffect(() => {
-    if (voiceOn && currentScene < PROLOGUE_SCENES.length) {
-      setIsNarrating(true);
-      const timer = setTimeout(() => {
-        davidSpeak(PROLOGUE_SCENES[currentScene].davidLine, {
-          rate: 0.82,
-          pitch: 0.85,
-          onEnd: () => setIsNarrating(false),
-        });
-      }, 800);
-      return () => {
-        clearTimeout(timer);
-        davidStop();
-      };
+    davidStop();
+    return () => {
+      audioRef.current?.pause();
+    };
+  }, []);
+
+  // Sonia reads the scene. A blocked autoplay waits for the next tap.
+  useEffect(() => {
+    if (!voiceOn) {
+      audioRef.current?.pause();
+      setIsNarrating(false);
+      return;
     }
-  }, [currentScene, voiceOn]);
+    let removeGesture = () => {};
+    let cancelled = false;
+    const attempt = startScene(currentScene);
+    const mine = generation.current;
+    attempt
+      .then(() => {
+        if (!cancelled && prologueRecordingUrl(PROLOGUE_SCENES[currentScene]?.id ?? "", locale)) setIsNarrating(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setIsNarrating(false);
+        const onDown = () => {
+          startScene(currentScene)
+            .then(() => setIsNarrating(true))
+            .catch(() => setIsNarrating(false));
+          window.removeEventListener("pointerdown", onDown, true);
+        };
+        window.addEventListener("pointerdown", onDown, true);
+        removeGesture = () => window.removeEventListener("pointerdown", onDown, true);
+      });
+    return () => {
+      cancelled = true;
+      removeGesture();
+      if (generation.current === mine) audioRef.current?.pause();
+    };
+  }, [currentScene, voiceOn, locale, startScene]);
 
   const handleNext = useCallback(() => {
     davidStop();
-    setIsNarrating(false);
     if (currentScene < PROLOGUE_SCENES.length - 1) {
-      setCurrentScene(prev => prev + 1);
+      const next = currentScene + 1;
+      void startScene(next).then(() => setIsNarrating(true)).catch(() => setIsNarrating(false));
+      setCurrentScene(next);
     } else {
+      audioRef.current?.pause();
+      setIsNarrating(false);
       // Mark prologue as seen and proceed to Relay 1
       localStorage.setItem("tre_prologue_seen", "true");
       navigate("/explore/1");
     }
-  }, [currentScene, navigate]);
+  }, [currentScene, navigate, startScene]);
 
   const handleSkip = useCallback(() => {
     davidStop();
+    generation.current += 1;
+    audioRef.current?.pause();
+    setIsNarrating(false);
     localStorage.setItem("tre_prologue_seen", "true");
     navigate("/explore/1");
   }, [navigate]);
 
   const toggleVoice = useCallback(() => {
-    const next = !voiceOn;
+    const next = !voiceOnRef.current;
+    voiceOnRef.current = next;
     setVoiceOn(next);
-    setVoiceEnabled(next);
-    if (!next) davidStop();
-  }, [voiceOn]);
+    if (!next) {
+      generation.current += 1;
+      audioRef.current?.pause();
+      setIsNarrating(false);
+      return;
+    }
+    void startScene(currentScene).then(() => setIsNarrating(true)).catch(() => setIsNarrating(false));
+  }, [currentScene, startScene]);
 
   const scene = PROLOGUE_SCENES[currentScene];
   const visual = VISUAL_ELEMENTS[scene.visual];
@@ -90,6 +166,7 @@ export default function Prologue() {
 
   return (
     <div className="min-h-screen bg-background text-foreground bg-starfield relative overflow-hidden mobile-content-pad">
+      <audio ref={audioRef} data-testid="prologue-recording" preload="auto" onEnded={() => setIsNarrating(false)} />
       {/* Ambient gradient background */}
       <div className={`absolute inset-0 bg-gradient-to-br ${visual.gradient} transition-all duration-1000 pointer-events-none`} />
 
