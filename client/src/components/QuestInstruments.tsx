@@ -30,6 +30,7 @@ import {
 import { RARITY_COLOUR } from "@shared/infradexCatalogue";
 
 const STORAGE_KEY = "quest-infradex-143";
+const REQUIRED_TYPE = { fontSize: "20pt", lineHeight: 1.3, WebkitTextSizeAdjust: "100%", textSizeAdjust: "100%" } as const;
 const NODES = latticeNodes();
 const ERA_STOPS = [-10000, -8000, -5000, -4000, -3000, -2000, -1000, 800, 1450, 1769, 1825, 1903, 1957, 2026];
 
@@ -395,7 +396,7 @@ function CaptureStudio({
       setAward("Candidate species. The plate index stays unset.");
     } else {
       onBook(noteUnmatchedScan(book));
-      setAward(photographHeld ? "Photograph held. No plate index." : "No exact InfraDex match. No plate index.");
+      setAward(photographHeld ? "Candidate. Type the name to confirm." : "No exact InfraDex match. No plate index.");
     }
     return next;
   }
@@ -460,13 +461,15 @@ function CaptureStudio({
     <div className="flex min-h-0 flex-1 flex-col">
       <StudioHeader titleId={titleId} kicker={`${doorLabel} · ${t("igo.infraDexScan")}`} title={t("igo.assetCapture")} onClose={onClose} />
       <div className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
-        {view === "lattice" && reading?.species ? (
+        {view === "lattice" && reading ? (
           <Collidoscope
             hotRelay={reading.relay}
             hotWeb={reading.web}
             hotLevel={reading.integrationLevel}
             asleep={[]}
-            caption={`${reading.assetName} · ${reading.relayName} · ${reading.web} · level ${reading.integrationLevel}`}
+            status={reading.matched ? "confirmed" : "candidate"}
+            photoUrl={photoUrl}
+            caption={`${reading.matched ? "Confirmed" : "Candidate"} · ${reading.assetName} · ${reading.relayName} · ${reading.web} · level ${reading.integrationLevel}`}
             onBack={() => onView("form")}
           />
         ) : (
@@ -525,7 +528,7 @@ function CaptureStudio({
           </div>
         )}
       </div>
-      {view === "form" || !reading?.species ? (
+      {view === "form" ? (
         <div
           data-testid="asset-capture-action"
           className="shrink-0 border-t border-amber-200/25 bg-[#120e08] px-4 pt-3"
@@ -555,8 +558,8 @@ function ScanPlate({ reading, award, onAnalyse, readingRef }: { reading: ScanRea
     <article ref={readingRef} className="space-y-3 rounded-xl border border-amber-200/25 bg-[#100d08] p-4" data-testid="asset-capture-reading">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-amber-200/60">{reading.matched ? "InfraDex species" : "Field observation"}</p>
-          <h3 className="font-heading text-xl text-amber-50">{reading.assetName}</h3>
+          <p className="font-heading text-amber-200" style={REQUIRED_TYPE} data-testid="asset-capture-status">{reading.matched ? "Confirmed species" : "Candidate"}</p>
+          <h3 className="font-heading text-amber-50" style={REQUIRED_TYPE}>{reading.assetName}</h3>
         </div>
         {reading.species ? (
           <span className="rounded-full border px-2 py-1 font-mono text-[10px] tracking-wide uppercase" style={{ color: rarityColour, borderColor: rarityColour }}>
@@ -585,15 +588,13 @@ function ScanPlate({ reading, award, onAnalyse, readingRef }: { reading: ScanRea
       ) : (
         <p className="font-mono text-[11px] tracking-wide text-amber-200/80" data-testid="asset-capture-unscored">Plate index not fixed</p>
       )}
-      <p className="text-sm italic leading-relaxed text-amber-50/85">{reading.explanation}</p>
+      <p className="leading-relaxed text-amber-50" style={REQUIRED_TYPE}>{reading.explanation}</p>
       <p className="font-mono text-[10px] tracking-wide text-amber-200/60">
         Confidence {Math.round(reading.confidence * 100)} / 100{award ? ` · ${award}` : ""}
       </p>
-      {reading.species ? (
-        <button type="button" data-testid="asset-capture-analyse" onClick={onAnalyse} className="min-h-11 w-full rounded-lg border border-amber-200/40 font-heading text-xs tracking-[0.16em] uppercase text-amber-100 hover:bg-amber-200/10">
-          Analyse on the Collidoscope
-        </button>
-      ) : null}
+      <button type="button" data-testid="asset-capture-analyse" onClick={onAnalyse} className="min-h-12 w-full rounded-lg border border-amber-200/40 font-heading text-amber-100 hover:bg-amber-200/10" style={REQUIRED_TYPE}>
+        {reading.matched ? "Open the confirmed node" : "Open the candidate on the lattice"}
+      </button>
     </article>
   );
 }
@@ -809,12 +810,26 @@ function EraPlate({ reading, onAnalyse }: { reading: HistoricalReading; onAnalys
   );
 }
 
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduced(media.matches);
+    apply();
+    media.addEventListener("change", apply);
+    return () => media.removeEventListener("change", apply);
+  }, []);
+  return reduced;
+}
+
 function Collidoscope({
   hotRelay,
   hotWeb,
   hotLevel,
   asleep,
   caption,
+  status,
+  photoUrl = null,
   onBack,
 }: {
   hotRelay: RelayId;
@@ -822,79 +837,109 @@ function Collidoscope({
   hotLevel: number;
   asleep: readonly RelayId[];
   caption: string;
+  status?: "candidate" | "confirmed";
+  photoUrl?: string | null;
   onBack: () => void;
 }) {
+  const reduced = useReducedMotion();
   const [picked, setPicked] = useState<LatticeNode | null>(null);
   const hot = useMemo(
     () => NODES.find((node) => node.relay === hotRelay && node.web === hotWeb && node.level === hotLevel) ?? null,
     [hotRelay, hotWeb, hotLevel],
   );
+  useEffect(() => {
+    setPicked(null);
+  }, [hot?.id]);
   const focus = picked ?? hot;
   const asleepSet = useMemo(() => new Set(asleep), [asleep]);
+  const quietNodes = NODES.filter((node) => node.id !== hot?.id);
+
+  function drawNode(node: LatticeNode, featured: boolean) {
+    const point = pointFor(node);
+    const dark = asleepSet.has(node.relay);
+    const kin = node.relay === hotRelay || node.web === hotWeb;
+    return (
+      <g key={node.id} className={featured && !reduced ? "lattice-pulse" : undefined}>
+        <circle
+          cx={point.x}
+          cy={point.y}
+          r={featured ? 8 : 2.6}
+          fill={dark ? "#241c10" : WEB_COLOUR[node.web]}
+          opacity={dark ? 0.35 : featured ? 1 : kin ? 0.8 : 0.42}
+          stroke={featured ? "#fff6d8" : "transparent"}
+          strokeWidth={featured ? 2 : 0}
+          className="cursor-pointer"
+          onClick={() => setPicked(node)}
+        >
+          <title>{`${node.relayName} · ${node.web} · level ${node.level}`}</title>
+        </circle>
+      </g>
+    );
+  }
 
   return (
     <div data-testid="collidoscope" className="space-y-3">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-amber-200/70">300-node lattice</p>
-          <h3 className="font-heading text-lg text-amber-50">Collidoscope</h3>
-          <p className="text-xs text-amber-100/70">5 webs × 12 relays × 5 integration levels</p>
+          <h3 className="font-heading text-amber-50" style={REQUIRED_TYPE}>Collidoscope</h3>
+          {status ? (
+            <p className="text-amber-100/80" style={REQUIRED_TYPE}>{status === "confirmed" ? "Confirmed species" : "Candidate. The name confirms the node."}</p>
+          ) : null}
         </div>
-        <button type="button" onClick={onBack} className="min-h-11 rounded-lg border border-white/15 px-3 text-sm text-amber-50">Back to the reading</button>
+        <button type="button" onClick={onBack} className="min-h-12 shrink-0 rounded-lg border border-white/15 px-3 text-amber-50" style={REQUIRED_TYPE}>Back to the reading</button>
       </div>
-      <p className="text-sm text-amber-50/80">{caption}</p>
-      <svg viewBox="0 0 640 460" className="w-full rounded-xl border border-amber-200/15 bg-[#05070d]" role="img" aria-label="Collidoscope, three hundred nodes">
-        <circle cx="320" cy="230" r="188" fill="none" stroke="rgba(228,194,122,0.12)" />
-        {WEBS.map((web, index) => (
-          <circle key={web} cx="320" cy="230" r={78 + index * 28} fill="none" stroke={WEB_COLOUR[web]} strokeOpacity="0.18" />
-        ))}
-        {NODES.map((node) => {
-          const point = pointFor(node);
-          const dark = asleepSet.has(node.relay);
-          const isHot = node.id === hot?.id;
-          const kin = node.relay === hotRelay || node.web === hotWeb;
-          return (
-            <circle
-              key={node.id}
-              cx={point.x}
-              cy={point.y}
-              r={isHot ? 5.5 : 2.5}
-              fill={dark ? "#241c10" : WEB_COLOUR[node.web]}
-              opacity={dark ? 0.35 : isHot ? 1 : kin ? 0.85 : 0.45}
-              stroke={isHot ? "#fff6d8" : "transparent"}
-              strokeWidth={isHot ? 1.5 : 0}
-              className="cursor-pointer"
-              onClick={() => setPicked(node)}
-            >
-              <title>{`${node.relayName} · ${node.web} · level ${node.level}`}</title>
-            </circle>
-          );
-        })}
-        {RELAYS.map((relay, index) => {
-          const angle = (index / RELAYS.length) * Math.PI * 2;
-          const x = 320 + Math.sin(angle) * 214;
-          const y = 230 - Math.cos(angle) * 214;
-          return (
-            <text key={relay.id} x={x} y={y} textAnchor="middle" fill="rgba(253,230,138,0.75)" fontSize="9" fontFamily="ui-sans-serif, system-ui">
-              {relay.name}
-            </text>
-          );
-        })}
-      </svg>
+      <p className="text-amber-50" style={REQUIRED_TYPE} data-testid="collidoscope-caption">{caption}</p>
+      <div className="grid gap-3">
+        {photoUrl ? (
+          <img src={photoUrl} alt="Photograph held beside the lattice" data-testid="collidoscope-photo" className="h-36 w-full rounded-xl border border-amber-200/25 object-cover" />
+        ) : null}
+        <svg viewBox="0 0 640 460" className="w-full rounded-xl border border-amber-200/15 bg-[#05070d]" role="img" aria-label="Collidoscope, three hundred nodes">
+          <circle cx="320" cy="230" r="188" fill="none" stroke="rgba(228,194,122,0.16)" />
+          <g className={reduced ? undefined : "lattice-run"} data-testid="collidoscope-run">
+            <circle cx="320" cy="230" r="156" fill="none" stroke="rgba(252,211,77,0.45)" strokeWidth="1.4" strokeDasharray="12 18" />
+          </g>
+          {WEBS.map((web, index) => (
+            <circle key={web} cx="320" cy="230" r={78 + index * 28} fill="none" stroke={WEB_COLOUR[web]} strokeOpacity="0.22" />
+          ))}
+          {quietNodes.map((node) => drawNode(node, false))}
+          {hot ? drawNode(hot, true) : null}
+          {RELAYS.map((relay, index) => {
+            const angle = (index / RELAYS.length) * Math.PI * 2;
+            const x = 320 + Math.sin(angle) * 214;
+            const y = 230 - Math.cos(angle) * 214;
+            return (
+              <text key={relay.id} x={x} y={y} textAnchor="middle" fill="rgba(253,230,138,0.9)" fontSize="13" fontFamily="ui-sans-serif, system-ui">
+                {relay.name}
+              </text>
+            );
+          })}
+        </svg>
+      </div>
       <div className="flex flex-wrap gap-2">
         {WEBS.map((web) => (
-          <span key={web} className="inline-flex items-center gap-1.5 font-mono text-[10px] tracking-wide text-amber-50/80">
-            <span className="h-2 w-2 rounded-full" style={{ background: WEB_COLOUR[web] }} />
+          <span key={web} className="inline-flex items-center gap-1.5 text-amber-50/90" style={REQUIRED_TYPE}>
+            <span className="h-2.5 w-2.5 rounded-full" style={{ background: WEB_COLOUR[web] }} />
             {web}
           </span>
         ))}
       </div>
       {focus ? (
-        <p className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-amber-50" data-testid="collidoscope-focus">
-          {focus.relayName} · {focus.web} · integration level {focus.level}
-          {asleepSet.has(focus.relay) ? " · this relay is still dark in the chosen era" : ""}
-          {focus.id === hot?.id ? " · the reading sits on this node" : ""}
+        <p className="rounded-lg border border-amber-200/30 bg-[#120e08] px-3 py-3 text-amber-50" style={REQUIRED_TYPE} data-testid="collidoscope-focus">
+          {focus.id === hot?.id
+            ? status === "confirmed"
+              ? `Confirmed. ${focus.relayName} · ${focus.web} · integration level ${focus.level}.`
+              : status === "candidate"
+                ? `Candidate. ${focus.relayName} · ${focus.web} · integration level ${focus.level}. The name confirms this node.`
+                : `${focus.relayName} · ${focus.web} · integration level ${focus.level}. The reading sits on this node.`
+            : `${focus.relayName} · ${focus.web} · integration level ${focus.level}. A neighbouring node.`}
+          {asleepSet.has(focus.relay) ? " This relay is still dark in the chosen era." : ""}
         </p>
+      ) : null}
+      {picked && hot && picked.id !== hot.id ? (
+        <button type="button" onClick={() => setPicked(null)} className="min-h-12 w-full rounded-lg border border-amber-200/40 text-amber-50" style={REQUIRED_TYPE}>
+          Return to the reading
+        </button>
       ) : null}
     </div>
   );

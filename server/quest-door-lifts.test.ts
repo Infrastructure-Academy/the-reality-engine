@@ -25,7 +25,8 @@ describe("quest door lifts", () => {
     expect(bay).toContain('door="asset-capture"');
     expect(bay).toContain('door="time-machine"');
     expect(bay).toContain("data-door={door}");
-    expect(bay).toContain("Analyse on the Collidoscope");
+    expect(bay).toContain("Open the confirmed node");
+    expect(bay).toContain("Open the candidate on the lattice");
     expect(bay).toContain("300-node lattice");
     expect(bay).not.toContain(RETIRED_CALCULATOR);
     expect(bay).not.toContain(SISTER_EXPLORER);

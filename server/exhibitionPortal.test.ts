@@ -1,13 +1,17 @@
 import { createHash } from "node:crypto";
-import { readFileSync, statSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { RELAYS } from "../shared/gameData";
 import { PLATE_EPISODES } from "../shared/plateGates";
+import { isPortalDoorHref } from "../client/src/lib/portalTeaser";
 import {
   DOOR_FRAME,
   EPISODE_ONE,
   FILM_SHA256,
   FILM_SRC,
+  TEASER_BYTES,
+  TEASER_SHA256,
+  TEASER_SRC,
   HALL_CARDS,
   LATER_EPISODES,
   TRILOGY_EPISODES,
@@ -49,6 +53,8 @@ describe("exhibition portal first cut", () => {
     expect(app).toContain('path={"/explore/:relayNum"}');
     expect(home).toContain(`href="${PORTAL_PATH}"`);
     expect(home).toContain('data-testid="home-exhibition-portal"');
+    expect(home).toContain("beginPortalTeaserFromGesture");
+    expect(home).toContain("onPointerDown");
     expect(source("client/src/components/GameModeGates.tsx")).not.toContain("harnessed discoveries");
   });
 
@@ -222,7 +228,51 @@ describe("exhibition portal first cut", () => {
     expect(opening).toContain("portal-planet-sequence");
     expect(opening).toContain("portal-pillar-");
     expect(opening).toContain("smouldering");
-    expect(opening).toContain("entrance-portal.jpg");
+    expect(source("shared/exhibitionPortal.ts")).toContain(`export const TEASER_SRC = "${TEASER_SRC}"`);
+    const host = source("client/src/components/PortalTeaserHost.tsx");
+    const bed = source("client/src/lib/portalTeaser.ts");
+    expect(bed).toContain("TEASER_SRC");
+    expect(bed).toContain("loop = true");
+    expect(bed).toContain("playsInline = true");
+    expect(host).toContain("src={TEASER_SRC}");
+    expect(host).toContain("playsInline");
+    expect(host).toContain("portal-entrance-teaser");
+    expect(host).toContain("pointerdown");
+    expect(host).toContain("claimPortalArrival");
+    expect(host).toContain("if (cancel || ok) return");
+    expect(host).not.toContain("13_close");
+    expect(bed).toContain("A later effect must not call play() again");
+    expect(bed).toContain("if (gestureAttempt && !node.muted) return gestureAttempt");
+    expect(bed).toContain('href === "/portal"');
+    expect(isPortalDoorHref("/portal")).toBe(true);
+    expect(isPortalDoorHref("/portal?beat=end")).toBe(true);
+    expect(isPortalDoorHref("/portal/close")).toBe(false);
+    expect(isPortalDoorHref("/")).toBe(false);
+    expect(opening).toContain("portal-teaser-slot");
+    expect(opening).toContain("beginPortalTeaserFromGesture");
+    expect(opening).toContain("Tap to hear the film");
+    expect(opening).not.toContain("video.play()");
+    expect(opening).toContain("The whole exhibition");
+    expect(opening).toContain("Halls 1 to 12, connected");
+    expect(opening).toContain("not a thirteenth hall beside them");
+    expect(opening).not.toContain("13_close.mp4");
+    expect(opening).not.toContain("twelve pillars");
+    expect(TEASER_SRC).not.toContain("13_close");
+    expect(opening).not.toContain("entrance-portal.jpg");
+    expect(opening).not.toContain("portal-entrance-still");
+    expect(opening).not.toContain("0d17d284ba4cb711");
+    expect(opening).not.toContain("1032bf4ca81672d3");
+    expect(opening).not.toContain("6b35989234b76400");
+    expect(opening).not.toContain("releases/download");
+    expect(TEASER_SHA256).toBe("79d75df9932a4e122146792456a28777ae19deb753896fbd646e074cc5a2d8c0");
+    expect(TEASER_BYTES).toBe(27950258);
+    for (const root of ["client/public", "docs"]) {
+      const path = `${root}${TEASER_SRC}`;
+      const file = new URL(`../${path}`, import.meta.url);
+      expect(existsSync(file)).toBe(true);
+      expect(sha256(path)).toBe(TEASER_SHA256);
+      expect(statSync(file).size).toBe(TEASER_BYTES);
+    }
     expect(opening).not.toContain("drawPlanet");
     expect(opening).not.toContain("quadraticCurveTo");
     expect(opening).not.toContain('beat === "pillars" && !done');

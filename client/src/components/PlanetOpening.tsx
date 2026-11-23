@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { CLOSE_PATH, FIRE_HALL_PATH, type HallCard } from "@shared/exhibitionPortal";
 import { beginHallStoryForPath } from "@/lib/hallStory";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
+import { beginPortalTeaserFromGesture, setPortalTeaserSlot, subscribePortalTeaserFace, type TeaserFace } from "@/lib/portalTeaser";
 
 /**
- * Episode 1 opening. The issued entrance still carries the star field.
+ * Episode 1 opening. The teaser plays the whole exhibition as you arrive:
+ * halls 1 to 12, connected. Not a thirteenth hall beside them.
  * No planet is drawn. The zero sits below and holds up the thirteen hall buttons.
  * Solar system, smoulder, settled earth, then the control panel.
  */
-
-const ENTRANCE_SRC = "/exhibition/entrance-portal.jpg";
 
 const SMOULDER_AT = 4.6;
 const SETTLED_AT = 13.2;
@@ -51,7 +51,7 @@ function risenCount(time: number): number {
 }
 
 const BEAT_LINE: Record<Beat, string> = {
-  solar: "Watching in from the solar system. The issued entrance still holds the star field.",
+  solar: "The teaser plays the whole exhibition as you arrive. Halls 1 to 12, connected, on a loop. The Fractal Connector is that connection, not a thirteenth hall beside them.",
   smoulder: "A smouldering planet, slowly becoming settled earth. The zero is below.",
   settled: "Settled earth. Fire is harnessed, some 12,000 years ago.",
   pillars: "The thirteen rise from the zero. They are the control panel.",
@@ -126,7 +126,7 @@ function HallSlot({
           node.dataset.posed = "1";
         }
       }}
-      className="w-[4.6rem] shrink-0"
+      className="w-[4.6rem] shrink-0 touch-pan-x"
       style={{ height }}
     >
       <HallMark hall={hall} onReturn={onReturn} />
@@ -190,8 +190,21 @@ export function PlanetOpening({
   const shaftWrapRef = useRef<HTMLDivElement>(null);
   const zeroRef = useRef<HTMLButtonElement>(null);
   const shaftRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const slotRef = useRef<HTMLDivElement>(null);
   const [beat, setBeat] = useState<Beat>(reduced ? "pillars" : "solar");
   const [arrived, setArrived] = useState(reduced);
+  const [face, setFace] = useState<TeaserFace>("pending");
+  const [silenced, setSilenced] = useState(false);
+
+  useLayoutEffect(() => {
+    setPortalTeaserSlot(slotRef.current);
+    return () => setPortalTeaserSlot(null);
+  }, []);
+
+  useEffect(() => subscribePortalTeaserFace((next) => {
+    setFace(next);
+    if (next === "audible") setSilenced(false);
+  }), []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -228,7 +241,9 @@ export function PlanetOpening({
       if (shaftWrapRef.current) {
         const showShafts = nextBeat === "pillars";
         shaftWrapRef.current.style.opacity = showShafts ? "1" : "0";
-        shaftWrapRef.current.style.pointerEvents = "none";
+        shaftWrapRef.current.style.pointerEvents = showShafts ? "auto" : "none";
+        const row = shaftWrapRef.current.querySelector("[data-testid='portal-hall-row']");
+        if (row instanceof HTMLElement) row.style.pointerEvents = showShafts ? "auto" : "none";
       }
       if (zeroRef.current) {
         const marked = nextBeat !== "solar";
@@ -274,16 +289,55 @@ export function PlanetOpening({
     <div ref={rootRef} data-testid="portal-planet-sequence" data-beat={beat} data-settled={arrived ? "true" : "false"}>
       <div className="overflow-hidden rounded-2xl border border-amber-200/35 bg-[#070b16]">
         <div className="relative">
-          <img
-            src={ENTRANCE_SRC}
-            alt="Issued exhibition entrance. Star field above the doors. The planet is not drawn here."
-            data-testid="portal-entrance-still"
-            className="h-[42svh] min-h-[240px] w-full bg-[#070b16] object-contain"
-          />
+          <div ref={slotRef} data-testid="portal-teaser-slot" />
           <div className={`pointer-events-none absolute inset-0 ${WASH[beat]}`} data-testid="portal-wash" />
+          <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-gradient-to-t from-[#070b16] to-transparent px-3 pb-2 pt-8">
+            <p className="min-w-0 flex-1 text-left font-heading text-sm leading-snug text-amber-50">
+              The whole exhibition
+              <span className="mt-0.5 block text-xs font-normal text-amber-100/80">Halls 1 to 12, connected. Not a thirteenth hall beside them.</span>
+            </p>
+            {face !== "blocked" ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const node = document.getElementById("portal-teaser-bed");
+                  if (!(node instanceof HTMLVideoElement)) return;
+                  if (node.muted || node.paused) {
+                    setSilenced(false);
+                    void beginPortalTeaserFromGesture();
+                    return;
+                  }
+                  node.muted = true;
+                  setSilenced(true);
+                }}
+                aria-label={silenced ? "Hear the film" : "Silence the film"}
+                className="inline-flex h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border border-amber-200/40 bg-black/50 px-3 font-heading text-xs text-amber-50"
+              >
+                {silenced ? "Hear" : "Sound"}
+              </button>
+            ) : null}
+          </div>
+          {face === "blocked" ? (
+            <button
+              type="button"
+              onPointerDown={() => {
+                void beginPortalTeaserFromGesture();
+              }}
+              onClick={() => {
+                void beginPortalTeaserFromGesture();
+              }}
+              className="absolute inset-x-3 top-3 min-h-12 touch-manipulation rounded-xl border border-amber-200/50 bg-[#070b16]/80 px-3 font-heading text-sm text-amber-50"
+            >
+              Tap to hear the film
+            </button>
+          ) : null}
         </div>
-        <div ref={shaftWrapRef} className="px-2 pt-3 opacity-0">
-          <div className="flex items-end gap-1 overflow-x-auto pb-1">
+        <div ref={shaftWrapRef} className="min-w-0 px-2 pt-3 opacity-0">
+          <div
+            data-testid="portal-hall-row"
+            className="w-full min-w-0 touch-pan-x overflow-x-auto overscroll-x-contain pb-1"
+          >
+            <div className="flex w-max items-end gap-1 pe-2">
             {halls.map((hall, index) => (
               <HallSlot
                 key={hall.id}
@@ -294,6 +348,7 @@ export function PlanetOpening({
                 onReturn={onReturn}
               />
             ))}
+            </div>
           </div>
         </div>
         <div className="flex justify-center py-3">
