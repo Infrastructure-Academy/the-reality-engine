@@ -37,8 +37,8 @@ export function relayCardSlug(name: string): string {
 }
 
 /**
- * Prepared path for a hall 2–12 discovery card.
- * The Sonia card files are not in this cut. A missing file stays silent.
+ * Sonia reading for a hall 2–12 discovery card.
+ * A missing file stays silent. There is no browser-voice fallback.
  */
 export function relayCardVoiceUrl(relayNumber: number, name: string): string | null {
   if (!Number.isInteger(relayNumber) || relayNumber < 2 || relayNumber > 12) return null;
