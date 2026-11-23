@@ -2,19 +2,19 @@
 /** Card-paced read of the issued Volume 1 paragraph. Not the 44.5 s stand-in. */
 export const FIRE_STORY_AUDIO_URL = "/audio/fire-cards/volume-1-briefing.mp3";
 
-/** Issued hall stories, en-GB Sonia, narrative plus quote plus author. */
+/** Issued hall stories, en-GB Sonia: narrative, quote, and author. The SSML shell is not spoken. */
 export const HALL_STORY_AUDIO: readonly { relay: number; file: string; sha256: string }[] = [
-  { relay: 2, file: "02_the-living-machine.mp3", sha256: "b354b6197d6aa716d9a26a7a5a4c6fe1bd334aba92ac19bf8f85b9e96d0dc851" },
-  { relay: 3, file: "03_the-liquid-highway.mp3", sha256: "43ba3572b7c79d6a6619b8bfb58e044abe8badb7258c6da4c7ff47f4a90ae075" },
-  { relay: 4, file: "04_the-steering-revolution.mp3", sha256: "8794eb4e93461bc8fdd95a545ca2055882c4bf2a89ae3dc0722cf325ca25ba54" },
-  { relay: 5, file: "05_the-path-that-connected-everything.mp3", sha256: "46337f04e361898a031aa29c39308be270499fc9f3dd0d44c6d78bb892122cbd" },
-  { relay: 6, file: "06_the-vessel-that-made-the-world-one.mp3", sha256: "d0c5579b7dfe71cc3b73081cf03c95840cb977fe01d14e445cfbc72a05a263c0" },
-  { relay: 7, file: "07_the-machine-that-wove-civilisation.mp3", sha256: "34c3c1fc739cdc0d40e262aedc8619ab3e80dc118d45b6d8b4df5f56c18a538e" },
-  { relay: 8, file: "08_the-iron-horse-that-standardised-time.mp3", sha256: "e8fd872f998000358657b5caa718d3e5eede18528065dcb671104833311fe89f" },
-  { relay: 9, file: "09_the-machine-that-multiplied-muscle.mp3", sha256: "63f842b31606247ff6a2e16c93f82d0d097dbe14d41094286f52e080222ff23f" },
-  { relay: 10, file: "10_automobiles-aviation-airwaves.mp3", sha256: "df7178fb564369d4c1217329b4a7f2a85919bef31c77ad6f9d7bcbe23a7b928b" },
-  { relay: 11, file: "11_satellites-space-stations-planetary-infrastructure.mp3", sha256: "24d0594b5c6217c1107bbad0c964c0f25dd6d974ed0544215d40c4d0802a1304" },
-  { relay: 12, file: "12_robots-ai-biosynthetics-quantum.mp3", sha256: "acbbbbbb932e2ac690001d9e053f3ded405631df2c8a8e106a186b740c1cfc7e" },
+  { relay: 2, file: "02_the-living-machine.mp3", sha256: "cb6ee36ed0571bea66690c6d1da5393558a84cd1dc829a9c8de25251138296a7" },
+  { relay: 3, file: "03_the-liquid-highway.mp3", sha256: "ee6162a370b7cea75ae70ce08e4f0f7624ce707c3c44c755c0b757a86d57af1e" },
+  { relay: 4, file: "04_the-steering-revolution.mp3", sha256: "d1cc0c6b8625f6b2fb0ee88944e75354bbfae0e4c9ab40b9f0e97a0e7c2e6553" },
+  { relay: 5, file: "05_the-path-that-connected-everything.mp3", sha256: "7aaf1a2befff9c5ce902fd6bab8dcb8088d9bc97a2e5a53a7bdee7ceb9e3aac5" },
+  { relay: 6, file: "06_the-vessel-that-made-the-world-one.mp3", sha256: "7e0369e75287108c7956df4ab5cba113e25ef81b947731d82eac536d185c2142" },
+  { relay: 7, file: "07_the-machine-that-wove-civilisation.mp3", sha256: "bb1449e5b6e1af1408474d6479afe8f32de8afc5cf16eb0150877dd869f268a2" },
+  { relay: 8, file: "08_the-iron-horse-that-standardised-time.mp3", sha256: "b657b51e4555d1489c6d75acdf08361dca9e3caf1da71d3b3714b9d1f0df2001" },
+  { relay: 9, file: "09_the-machine-that-multiplied-muscle.mp3", sha256: "0a4376b46d2a50222357107fdb1baa5ee78b272d8e7de2e087ed031558598d4c" },
+  { relay: 10, file: "10_automobiles-aviation-airwaves.mp3", sha256: "d913693fa22ba1d0a1028078f52b876acc37f923204aa39b52d46350c054847a" },
+  { relay: 11, file: "11_satellites-space-stations-planetary-infrastructure.mp3", sha256: "56963733e83040ed767b7318300c160a8c29b892881a477bbd9772bef5ded758" },
+  { relay: 12, file: "12_robots-ai-biosynthetics-quantum.mp3", sha256: "0b0bd287767ee7f80d472f8294e3554c8079b2d10ce3c76ed4e290921579edf4" },
 ];
 
 const HALL_STORY_BY_RELAY = new Map(HALL_STORY_AUDIO.map((row) => [row.relay, row.file]));

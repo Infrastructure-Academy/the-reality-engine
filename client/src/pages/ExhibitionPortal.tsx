@@ -20,12 +20,12 @@ import {
   ZERO_IS_NOT_A_HALL,
   turnFromDoor,
   turnFromHall,
-  V6_FILM_CLIPS,
   V6_INTRO,
   type HallCard,
   type ReturnTurn,
 } from "@shared/exhibitionPortal";
 import { ExhibitionClip } from "@/components/ExhibitionClip";
+import { ExhibitionWalk } from "@/components/ExhibitionWalk";
 import { EXHIBITION_PLATE_TYPE } from "@/components/ExplorerVideo";
 import { PlanetOpening } from "@/components/PlanetOpening";
 import { beginHallStoryForPath } from "@/lib/hallStory";
@@ -362,7 +362,6 @@ export default function ExhibitionPortal() {
         >
           Back to the landing
         </Link>
-        <p className="text-[11px] uppercase tracking-[0.18em] text-amber-100/80">Rematched draft</p>
       </header>
 
       <div className="mx-auto max-w-5xl">
@@ -472,8 +471,9 @@ export default function ExhibitionPortal() {
               The twelve halls open. The Fractal Connector opens the epilogue. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
             </p>
             <p className="mt-3 text-amber-50" style={EXHIBITION_PLATE_TYPE} data-testid="portal-v6-cut">
-              Clips from the exhibition film play inside the halls they match. Horse, Ships, Loom, and Engine open from the issued plate.
+              Walk the halls. Fire is first.
             </p>
+            <ExhibitionWalk />
             <ExhibitionClip clip={V6_INTRO} testId="portal-v6-floor" />
             {notice ? (
               <div className="mt-3">
@@ -510,20 +510,6 @@ export default function ExhibitionPortal() {
                 </figcaption>
               </figure>
             </div>
-
-            <section className="mt-8" aria-labelledby="portal-v6-films-title" data-testid="portal-v6-films">
-              <h3 id="portal-v6-films-title" className="font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>
-                Films from the exhibition
-              </h3>
-              <p className="mt-2 text-amber-50" style={EXHIBITION_PLATE_TYPE}>
-                Stone and wheel, Forge, gunpowder, and steel keep the plaques from the film. Horse, Ships, Loom, and Engine open from the issued plate.
-              </p>
-              <div className="mt-3 flex flex-col gap-3">
-                {V6_FILM_CLIPS.map((clip) => (
-                  <ExhibitionClip key={clip.id} clip={clip} testId={`portal-v6-film-${clip.id}`} />
-                ))}
-              </div>
-            </section>
 
             <div className="mt-8" data-testid="portal-door-frame">
               <h3 className="font-heading text-xl text-amber-50">Fourteen-door frame</h3>

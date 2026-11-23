@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Flame, Swords, Brain, Dices } from "lucide-react";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { useT } from "@/contexts/LanguageContext";
 import { parseRelayQuery } from "@shared/playerProgress";
 
@@ -114,6 +115,12 @@ export default function ExplorerSelect() {
               {t("explorer.description")}
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      <section className="relative z-10 pb-4">
+        <div className="container max-w-3xl">
+          <DoorFilmBay door="explore" rotate />
         </div>
       </section>
 

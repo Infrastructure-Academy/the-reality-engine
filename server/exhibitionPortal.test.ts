@@ -243,10 +243,13 @@ describe("exhibition portal first cut", () => {
     expect(host).not.toContain("13_close");
     expect(bed).toContain("A later effect must not call play() again");
     expect(bed).toContain("if (gestureAttempt && !node.muted) return gestureAttempt");
-    expect(bed).toContain('href === "/portal"');
+    expect(bed).toContain('path === "/portal"');
     expect(isPortalDoorHref("/portal")).toBe(true);
+    expect(isPortalDoorHref("/portal/")).toBe(true);
     expect(isPortalDoorHref("/portal?beat=end")).toBe(true);
+    expect(isPortalDoorHref("/portal/?beat=end")).toBe(true);
     expect(isPortalDoorHref("/portal/close")).toBe(false);
+    expect(isPortalDoorHref("/portal/close/")).toBe(false);
     expect(isPortalDoorHref("/")).toBe(false);
     expect(opening).toContain("portal-teaser-slot");
     expect(opening).toContain("beginPortalTeaserFromGesture");
@@ -304,8 +307,12 @@ describe("exhibition portal first cut", () => {
     expect(V6_FIRE).toMatchObject({ file: "01_fire.mp4", label: "Fire", place: { kind: "explore", hall: "fire" } });
     expect(V6_TREE).toMatchObject({ file: "02_tree.mp4", label: "Tree", place: { kind: "explore", hall: "tree" } });
     expect(v6HallClip("river")?.file).toBe("03_river.mp4");
+    expect(v6HallClip("horse")).toMatchObject({ file: "04_stone_wheel.mp4", label: "Stone and wheel (provisional)" });
+    expect(v6HallClip("ships")).toMatchObject({ file: "05_forge.mp4", label: "Forge (provisional)" });
     expect(v6HallClip("roads")).toMatchObject({ file: "06_road.mp4", label: "RELAY 6: ROAD - 2000 BC" });
+    expect(v6HallClip("loom")).toMatchObject({ file: "07_gunpowder.mp4", label: "RELAY 7: GUNPOWDER - 1605" });
     expect(v6HallClip("rail")?.file).toBe("08_rail_steam.mp4");
+    expect(v6HallClip("engine")).toMatchObject({ file: "09_steel.mp4", label: "RELAY 9: 9: STEEL \u2013 1869" });
     expect(v6HallClip("human-nodes")).toMatchObject({ label: "RELAY 12 PROGRAMMABLE HUMANS - NOW" });
     expect(v6HallClip("aaa-triad")).toBe(v6HallClip("orbit"));
     expect(v6HallClip("aaa-triad")?.file).toBe("10_11_modern_orbit.mp4");
@@ -313,21 +320,7 @@ describe("exhibition portal first cut", () => {
     expect(v6HallClip("fractal-connector")).toMatchObject({ file: "13_close.mp4", label: "Episode 1 Complete / N+T=D" });
     expect(v6HallClip("fire")).toBeNull();
     expect(v6HallClip("tree")).toBeNull();
-    for (const id of ["horse", "ships", "loom", "engine"]) {
-      expect(v6HallClip(id)).toBeNull();
-    }
-    expect(V6_FILM_CLIPS.map((clip) => clip.file)).toEqual([
-      "04_stone_wheel.mp4",
-      "05_forge.mp4",
-      "07_gunpowder.mp4",
-      "09_steel.mp4",
-    ]);
-    expect(V6_FILM_CLIPS.map((clip) => clip.label)).toEqual([
-      "Stone and wheel (provisional)",
-      "Forge (provisional)",
-      "RELAY 7: GUNPOWDER - 1605",
-      "RELAY 9: 9: STEEL \u2013 1869",
-    ]);
+    expect(V6_FILM_CLIPS).toEqual([]);
     expect(HALL_CARDS.find((hall) => hall.id === "roads")).toMatchObject({ number: 5, name: "Roads", href: "/explore/5" });
     expect(HALL_CARDS.find((hall) => hall.id === "engine")).toMatchObject({ number: 9, name: "Engine", href: "/explore/9" });
 
@@ -339,13 +332,13 @@ describe("exhibition portal first cut", () => {
     const app = source("client/src/App.tsx");
     expect(page).toContain("portal-v6-intro");
     expect(page).toContain("portal-v6-floor");
-    expect(page).toContain("portal-v6-films");
+    expect(page).toContain("<ExhibitionWalk");
+    expect(source("client/src/components/ExhibitionWalk.tsx")).toContain('data-testid="exhibition-walk"');
     expect(page).not.toContain("v6HallClip(hall.id)");
     expect(relay).toContain("IssuedHallPlate");
     expect(relay).toContain("v6HallClip(hall.id)");
-    expect(relay).toContain("This hall is walked from the issued plate.");
-    expect(relay).not.toContain("09_steel.mp4");
-    expect(relay).not.toContain("07_gunpowder.mp4");
+    expect(relay).not.toContain("This hall is walked from the issued plate.");
+    expect(relay).not.toContain("???");
     expect(close).toContain("portal-close-film");
     expect(close).toContain('clip.id === "13_close"');
     expect(app).toContain('path={"/portal/close"}');

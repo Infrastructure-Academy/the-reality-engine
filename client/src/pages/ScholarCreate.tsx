@@ -10,16 +10,13 @@ import {
   ChevronRight, MessageCircle, GraduationCap, Star, Sparkles
 } from "lucide-react";
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { playPhaseTransition, playMilestoneFanfare, hapticMilestone } from "@/hooks/useEngagementFx";
 import { MilestoneOverlay } from "@/components/MilestoneOverlay";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
 import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "fits_assessment" | "dice_roll" | "character_sheet" | "thesis_tracker";
-
-const SCHOLAR_INTRO_CLIP =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/scholar-clip-v6_adca97d1.mp4";
 
 const FITS_QUESTIONS = [
   { q: "When facing a new infrastructure challenge, you first:", a: [
@@ -178,14 +175,7 @@ export default function ScholarCreate() {
     return (
       <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center px-4">
         <div className="text-center w-full max-w-md mx-auto py-8">
-          <ExplorerVideo
-            videoUrl={SCHOLAR_INTRO_CLIP}
-            title={t("scholar.videoTitle")}
-            subtitle="32s intro"
-            accentColor="#f59e0b"
-            glowColor="rgba(245,158,11,0.3)"
-            ensurePlayback
-          />
+          <DoorFilmBay door="scholar" />
           <GraduationCap className="w-16 h-16 text-amber-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{ t("scholar.accessRequired") }</h2>
           <p className="text-muted-foreground text-sm mb-6">
@@ -236,14 +226,7 @@ export default function ScholarCreate() {
 
       <div className="container py-6 max-w-3xl mx-auto">
 
-        {/* Intro Video */}
-        <ExplorerVideo
-          videoUrl={SCHOLAR_INTRO_CLIP}
-          title={t("scholar.videoTitle")}
-          subtitle="32s intro"
-          accentColor="#f59e0b"
-          glowColor="rgba(245,158,11,0.3)"
-        />
+        <DoorFilmBay door="scholar" />
 
         {/* Phase Navigation */}
         <div className="flex items-center justify-center gap-2 mb-8">

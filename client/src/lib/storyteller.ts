@@ -183,11 +183,16 @@ export function browserStorySynth(): StorySynth | null {
         if (match) spoken.voice = match;
       }
       // iOS stays silent if lang is en-GB and that voice was never installed.
-      if (!spoken.voice && lang.toLowerCase().startsWith("en-gb") && voices.length > 0) {
-        const hasBritish = voices.some((voice) => voice.lang.toLowerCase().startsWith("en-gb"));
-        if (!hasBritish) {
-          const english = voices.find((voice) => voice.lang.toLowerCase().startsWith("en"));
-          if (english) lang = english.lang;
+      // A device whose only voices are German must not speak the English lines in German.
+      if (lang.toLowerCase().startsWith("en") && voices.length > 0) {
+        const english = voices.find((voice) => voice.lang.toLowerCase().startsWith("en"));
+        if (!english) return;
+        if (spoken.voice && !spoken.voice.lang.toLowerCase().startsWith("en")) return;
+        if (!spoken.voice) {
+          const british = voices.some((voice) => voice.lang.toLowerCase().startsWith("en-gb"));
+          lang = british ? "en-GB" : english.lang;
+        } else if (!spoken.voice.lang.toLowerCase().startsWith("en-gb")) {
+          lang = spoken.voice.lang;
         }
       }
       spoken.lang = lang;

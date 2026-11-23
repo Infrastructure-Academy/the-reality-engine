@@ -26,7 +26,7 @@ export default function ExhibitionClose() {
           The Exhibition Itself
         </p>
         <p className="mt-3 text-amber-50" style={EXHIBITION_PLATE_TYPE} data-testid="portal-close-line">
-          The epilogue of Episode 1. The motto is held as shown. {ZERO_IS_NOT_A_HALL}
+          The epilogue of Episode 1. {ZERO_IS_NOT_A_HALL}
         </p>
         {closeClip ? <ExhibitionClip clip={closeClip} testId="portal-close-film" /> : null}
         <p className="mt-6 text-amber-50" style={EXHIBITION_PLATE_TYPE}>

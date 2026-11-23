@@ -92,11 +92,11 @@ function findBestVoice(): SpeechSynthesisVoice | null {
   const enUS = voices.find(v => v.lang.startsWith("en-US"));
   if (enUS) return enUS;
 
-  // Last resort: any English voice
-  const anyEn = voices.find(v => v.lang.startsWith("en"));
+  // Last resort: any English voice. Never a German or other language voice.
+  const anyEn = voices.find(v => v.lang.toLowerCase().startsWith("en"));
   if (anyEn) return anyEn;
 
-  return voices[0] || null;
+  return null;
 }
 
 function getVoice(): SpeechSynthesisVoice | null {
@@ -130,11 +130,15 @@ export function davidSpeak(text: string, options?: {
   // Cancel any ongoing speech
   window.speechSynthesis.cancel();
 
-  const utterance = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
   const voice = getVoice();
-  if (voice) utterance.voice = voice;
+  const englishReady = voices.length === 0 || voices.some((item) => item.lang.toLowerCase().startsWith("en"));
+  if (!englishReady || (voice && !voice.lang.toLowerCase().startsWith("en"))) return;
 
-  // DAVID voice profile: measured, authoritative, slightly deep
+  const utterance = new SpeechSynthesisUtterance(text);
+  if (voice && voice.lang.toLowerCase().startsWith("en")) utterance.voice = voice;
+
+  // DAVID voice profile: measured, authoritative, slightly deep. English only.
   utterance.rate = options?.rate ?? 0.9;
   utterance.pitch = options?.pitch ?? 0.85;
   utterance.volume = options?.volume ?? 0.9;

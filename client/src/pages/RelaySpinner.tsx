@@ -11,7 +11,7 @@ import { ArrowLeft, Dices, Star, Sparkles, RotateCw, Gift, Zap, BookOpen, Chevro
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
@@ -292,14 +292,7 @@ export default function RelaySpinner() {
       </header>
 
       <div className="container py-3 max-w-lg mx-auto">
-        {/* Intro Video — compact button */}
-        <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v1-relay-spinner_641673d9.mp4"
-          title="Spin the Story of Everything"
-          subtitle="20s intro"
-          accentColor="#3b82f6"
-          glowColor="rgba(59,130,246,0.15)"
-        />
+        <DoorFilmBay door="explore" mode="spinner" />
 
         {/* Spins remaining — inline compact */}
         <div className="flex items-center justify-center gap-2 mb-3">

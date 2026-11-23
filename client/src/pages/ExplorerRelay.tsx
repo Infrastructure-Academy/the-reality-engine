@@ -104,13 +104,7 @@ function IssuedHallPlate({ relayNum }: { relayNum: number }) {
     >
       <h2 className="font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>{`${hall.number} · ${hall.name}`}</h2>
       <p className="mt-1 text-amber-50" style={EXHIBITION_PLATE_TYPE}>{`${hall.plate} · ${hall.when}`}</p>
-      {clip ? (
-        <ExhibitionClip clip={clip} testId={`explore-v6-${hall.id}`} />
-      ) : (
-        <p className="mt-3 text-amber-100" style={EXHIBITION_PLATE_TYPE} data-testid={`issued-hall-held-${hall.id}`}>
-          This hall is walked from the issued plate. The held discoveries sit below.
-        </p>
-      )}
+      {clip ? <ExhibitionClip clip={clip} testId={`explore-v6-${hall.id}`} /> : null}
     </section>
   );
 }
@@ -210,7 +204,7 @@ function DiscoveryGrid({
                 )}
               </AnimatePresence>
               <p className={`text-sm font-medium ${livingFire || isDiscovered ? "text-gold-gradient" : "text-foreground/70"}`}>
-                {livingFire || isDiscovered ? inv : "???"}
+                {inv}
               </p>
               {livingFire ? <p className="mt-1 text-[10px] text-amber-200/80">Tecton iCard</p> : null}
               {isDiscovered && !isExpanded && (
