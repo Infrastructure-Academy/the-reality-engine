@@ -250,3 +250,173 @@ export function unfinishedRelayFloor(relayNum: number): string | null {
   if (!hall || hall.href !== null) return null;
   return `${PORTAL_PATH}?station=${hall.id}`;
 }
+
+/**
+ * Hall clips from PRINCIPIA TECTONICA V6, played same-origin from the Pages tree.
+ * The bytes stay as cut. These clips leave Relays 3 to 12 unfinished.
+ * Horse, Ships, Loom, and Engine have no clip here.
+ */
+export const V6_EXHIBITION_DIR = "/portal/v6-exhibition";
+
+export type V6ClipPlace =
+  | { kind: "portal-floor" }
+  | { kind: "explore"; hall: "fire" | "tree" }
+  | { kind: "halls"; hallIds: readonly string[] }
+  | { kind: "film" };
+
+export type V6Clip = {
+  id: string;
+  file: string;
+  sha256: string;
+  bytes: number;
+  /** Film plaque, held as shown. */
+  label: string;
+  note: string;
+  place: V6ClipPlace;
+};
+
+export const V6_CLIPS: readonly V6Clip[] = [
+  {
+    id: "00_intro",
+    file: "00_intro.mp4",
+    sha256: "893d5b891e30487b2657d8bc75389121aad21bb4bbbc8f611739024739ed6e25",
+    bytes: 39996893,
+    label: "iAAi Exhibition approach",
+    note: "Title card and vestibule, through the fire-ring floor.",
+    place: { kind: "portal-floor" },
+  },
+  {
+    id: "01_fire",
+    file: "01_fire.mp4",
+    sha256: "43af2c89732f33e33bf22548c0658541f3a5db0ff152d5eea08baa8fa9ef4ebd",
+    bytes: 24240464,
+    label: "Fire",
+    note: "Cave, fire, and paintings from the exhibition film.",
+    place: { kind: "explore", hall: "fire" },
+  },
+  {
+    id: "02_tree",
+    file: "02_tree.mp4",
+    sha256: "73c2c66570d7de7b3b9105546f2f389ec9b9ece29db481184446401b6b05092f",
+    bytes: 34244413,
+    label: "Tree",
+    note: "Forest, timber, and the first shelters from the exhibition film.",
+    place: { kind: "explore", hall: "tree" },
+  },
+  {
+    id: "03_river",
+    file: "03_river.mp4",
+    sha256: "a861a827043d3c8ad4f32e2b522cd67a43e17e9e37a11645155a6a740e898972",
+    bytes: 15361592,
+    label: "River",
+    note: "Water channel and hydraulic models on the River hall.",
+    place: { kind: "halls", hallIds: ["river"] },
+  },
+  {
+    id: "04_stone_wheel",
+    file: "04_stone_wheel.mp4",
+    sha256: "6352b61b473da04f36d46460cdc80a79590c5b9fa4698aa56d05363e046ed7db",
+    bytes: 24448696,
+    label: "Stone and wheel (provisional)",
+    note: "Pyramid and millstone. The plaque is not yet read.",
+    place: { kind: "film" },
+  },
+  {
+    id: "05_forge",
+    file: "05_forge.mp4",
+    sha256: "2bc7a231db949e3ae29d557f25a501b8a0fdfc4924d982c45ab3a53253857c72",
+    bytes: 15359978,
+    label: "Forge (provisional)",
+    note: "Furnace, anvil, and molten metal. The plaque is not yet read.",
+    place: { kind: "film" },
+  },
+  {
+    id: "06_road",
+    file: "06_road.mp4",
+    sha256: "202bdb0e37a82b1e3528d816ce744608c05b0b5542a77486ea2866e297e1249f",
+    bytes: 29803200,
+    label: "RELAY 6: ROAD - 2000 BC",
+    note: "Roads remains official hall 5. This plaque keeps 6.",
+    place: { kind: "halls", hallIds: ["roads"] },
+  },
+  {
+    id: "07_gunpowder",
+    file: "07_gunpowder.mp4",
+    sha256: "7a1820121a99bb813209406bd0d0c33ede0a69435e9aaaeaa7c3d910ba4ef94d",
+    bytes: 26999450,
+    label: "RELAY 7: GUNPOWDER - 1605",
+    note: "The film plaque, as written.",
+    place: { kind: "film" },
+  },
+  {
+    id: "08_rail_steam",
+    file: "08_rail_steam.mp4",
+    sha256: "483b40d07da172a1ead0aa4a5cc3e9906affb98134712776a4cd730c77769a5c",
+    bytes: 28668197,
+    label: "Steam, Brunel, rail",
+    note: "Steam engine, railway model, and the Thames Brunel tunnel, on the Rail hall.",
+    place: { kind: "halls", hallIds: ["rail"] },
+  },
+  {
+    id: "09_steel",
+    file: "09_steel.mp4",
+    sha256: "ea2d539d0902b2a58dea175de330770424fee39e6e1411cc9a4ee698af42fd73",
+    bytes: 12702351,
+    label: "RELAY 9: 9: STEEL \u2013 1869",
+    note: "Pedestal lettering, as shown.",
+    place: { kind: "film" },
+  },
+  {
+    id: "10_11_modern_orbit",
+    file: "10_11_modern_orbit.mp4",
+    sha256: "b4f55c05ff9e36b95c7366439dbc5f7a9b00e757feaaa3197ee0a347e2bb90ec",
+    bytes: 28243860,
+    label: "RELAY 10-11",
+    note: "1969 and orbit. AAA Triad and Orbit share this one clip.",
+    place: { kind: "halls", hallIds: ["aaa-triad", "orbit"] },
+  },
+  {
+    id: "12_human",
+    file: "12_human.mp4",
+    sha256: "d6b10eb6cbfaf062e9e7125305e4d3f5072479c95c7a9049de25cbb6affc9e1d",
+    bytes: 43471631,
+    label: "RELAY 12 PROGRAMMABLE HUMANS - NOW",
+    note: "Human Nodes. The film plaque is held as shown.",
+    place: { kind: "halls", hallIds: ["human-nodes"] },
+  },
+  {
+    id: "13_close",
+    file: "13_close.mp4",
+    sha256: "8fe9ee4c7c9b34d7c7d2d6845ee550fa86e6f5fd2ff67502d16a455df08d28e7",
+    bytes: 7384624,
+    label: "Episode 1 Complete / N+T=D",
+    note: "End card on the Fractal Connector. The motto is held as shown.",
+    place: { kind: "halls", hallIds: ["fractal-connector"] },
+  },
+];
+
+export function v6ClipSrc(file: string): string {
+  return `${V6_EXHIBITION_DIR}/${file}`;
+}
+
+export function v6ClipById(id: string): V6Clip | null {
+  return V6_CLIPS.find((clip) => clip.id === id) ?? null;
+}
+
+export function v6HallClip(hallId: string): V6Clip | null {
+  for (const clip of V6_CLIPS) {
+    if (clip.place.kind === "halls" && clip.place.hallIds.includes(hallId)) return clip;
+  }
+  return null;
+}
+
+function requiredClip(id: string): V6Clip {
+  const clip = v6ClipById(id);
+  if (!clip) throw new Error(`Missing exhibition clip ${id}`);
+  return clip;
+}
+
+export const V6_INTRO = requiredClip("00_intro");
+export const V6_FIRE = requiredClip("01_fire");
+export const V6_TREE = requiredClip("02_tree");
+export const V6_FILM_CLIPS = V6_CLIPS.filter((clip) => clip.place.kind === "film");

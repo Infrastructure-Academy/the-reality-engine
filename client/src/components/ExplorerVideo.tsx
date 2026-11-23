@@ -1,7 +1,15 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Volume2, VolumeX, CheckCircle2 } from "lucide-react";
+
+/** Required exhibition type. Locked at 20pt so iOS Safari does not inflate it. */
+export const EXHIBITION_PLATE_TYPE: CSSProperties = {
+  fontSize: "20pt",
+  lineHeight: 1.3,
+  WebkitTextSizeAdjust: "100%",
+  textSizeAdjust: "100%",
+};
 
 interface ExplorerVideoProps {
   videoUrl: string;
@@ -11,6 +19,10 @@ interface ExplorerVideoProps {
   glowColor: string;
   /** Start the clip in the same tap that opens it. Used on the public gates. */
   ensurePlayback?: boolean;
+  /** Exhibition plate: 20pt film label, one tap, inline playback. */
+  plate?: boolean;
+  testId?: string;
+  onOpen?: () => void;
 }
 
 // localStorage helper — safe for SSR/private browsing
@@ -36,7 +48,7 @@ function markWatched(videoUrl: string): void {
   }
 }
 
-export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, ensurePlayback = false }: ExplorerVideoProps) {
+export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColor, ensurePlayback = false, plate = false, testId, onOpen }: ExplorerVideoProps) {
   const watched = useMemo(() => isWatched(videoUrl), [videoUrl]);
   const [showVideo, setShowVideo] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -44,6 +56,7 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const openIntro = useCallback(() => {
+    onOpen?.();
     if (!ensurePlayback) {
       setShowVideo(true);
       return;
@@ -56,7 +69,16 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
       setMuted(true);
       video.play().catch(() => undefined);
     });
-  }, [ensurePlayback]);
+  }, [ensurePlayback, onOpen]);
+
+  const hear = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = false;
+    setMuted(false);
+    const pending = video.play();
+    if (pending) pending.catch(() => undefined);
+  }, []);
 
   const handleClose = useCallback(() => {
     setShowVideo(false);
@@ -72,11 +94,85 @@ export function ExplorerVideo({ videoUrl, title, subtitle, accentColor, glowColo
     handleClose();
   }, [videoUrl, handleClose]);
 
+  if (plate) {
+    return (
+      <div className="mt-3" data-testid={testId}>
+        {!showVideo ? (
+          <button
+            type="button"
+            onClick={openIntro}
+            className="flex w-full touch-manipulation items-start gap-3 rounded-xl border border-amber-300/70 bg-[#1a120c] px-3 py-3 text-left shadow-[0_0_28px_rgba(252,211,77,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050912]"
+          >
+            <span
+              className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-amber-300 bg-amber-300/15"
+              style={{ boxShadow: `0 0 16px ${glowColor}` }}
+              aria-hidden
+            >
+              {hasCompleted ? (
+                <CheckCircle2 className="h-5 w-5 text-amber-200" />
+              ) : (
+                <Play className="ml-0.5 h-5 w-5" style={{ color: accentColor }} />
+              )}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>{title}</span>
+              {subtitle ? (
+                <span className="mt-1 block text-amber-50" style={EXHIBITION_PLATE_TYPE}>{subtitle}</span>
+              ) : null}
+              <span className="mt-1 block text-amber-100" style={EXHIBITION_PLATE_TYPE}>
+                {hasCompleted ? "Watched. Tap to play again." : "Tap to play."}
+              </span>
+            </span>
+          </button>
+        ) : (
+          <div className="overflow-hidden rounded-xl border border-amber-300/60 bg-black shadow-[0_0_30px_rgba(252,211,77,0.16)]">
+            <video
+              ref={videoRef}
+              src={videoUrl}
+              autoPlay
+              muted={muted}
+              playsInline
+              controls
+              preload="auto"
+              aria-label={title}
+              className="aspect-video w-full bg-black object-contain"
+              onEnded={handleEnded}
+            />
+            <div className="flex items-start gap-3 bg-[#1a120c] px-3 py-3">
+              <div className="min-w-0 flex-1">
+                <p className="font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>{title}</p>
+                {muted ? (
+                  <button
+                    type="button"
+                    onClick={hear}
+                    className="mt-2 inline-flex min-h-12 touch-manipulation items-center text-left text-amber-50 underline decoration-amber-300/70 underline-offset-4"
+                    style={EXHIBITION_PLATE_TYPE}
+                  >
+                    Tap to hear the film
+                  </button>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                onClick={handleClose}
+                aria-label="Close"
+                className="inline-flex h-11 w-11 shrink-0 touch-manipulation items-center justify-center rounded-full border border-amber-300/50 bg-black/50 text-amber-50"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       {/* Compact button — shows "Watched" indicator after first complete view */}
       {!showVideo && (
         <motion.button
+          type="button"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={openIntro}

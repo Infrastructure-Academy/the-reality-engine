@@ -19,9 +19,14 @@ import {
   ZERO_IS_NOT_A_HALL,
   turnFromDoor,
   turnFromHall,
+  V6_FILM_CLIPS,
+  V6_INTRO,
+  v6HallClip,
   type HallCard,
   type ReturnTurn,
 } from "@shared/exhibitionPortal";
+import { ExhibitionClip } from "@/components/ExhibitionClip";
+import { EXHIBITION_PLATE_TYPE } from "@/components/ExplorerVideo";
 import { PlanetOpening } from "@/components/PlanetOpening";
 import { beginFireBedFromGesture } from "@/lib/firePlayback";
 
@@ -121,6 +126,10 @@ function OpeningScene({
           Play FILM-0201 with sound
         </button>
         <p className="mt-2 text-sm leading-relaxed text-amber-50">{SOUND_NOTE}</p>
+        <p className="mt-4 text-amber-50" style={EXHIBITION_PLATE_TYPE}>
+          The exhibition approach, apart from FILM-0201.
+        </p>
+        <ExhibitionClip clip={V6_INTRO} testId="portal-v6-intro" />
       </div>
 
       <p className="mt-4 text-sm leading-relaxed text-amber-50" data-testid="portal-zero-placement">
@@ -458,6 +467,10 @@ export default function ExhibitionPortal() {
             <p className="mt-2 text-sm leading-relaxed text-amber-50">
               Fire and Tree open their live halls. The other entrances return you to the floor. Nothing is taken away. {ZERO_IS_NOT_A_HALL}
             </p>
+            <p className="mt-3 text-amber-50" style={EXHIBITION_PLATE_TYPE} data-testid="portal-v6-cut">
+              Clips from the exhibition film sit with the halls they match. Fire and Tree remain the live halls.
+            </p>
+            <ExhibitionClip clip={V6_INTRO} testId="portal-v6-floor" />
             {notice ? (
               <div className="mt-3">
                 <ReturnNotice notice={notice} onClose={() => setNotice(null)} />
@@ -470,9 +483,15 @@ export default function ExhibitionPortal() {
                   data-testid="portal-hall-stack"
                   className="flex max-h-[calc(100svh-14rem)] min-h-[22rem] flex-col gap-2 overflow-y-auto pr-1"
                 >
-                  {HALL_CARDS.map((hall) => (
-                    <HallButton key={hall.id} hall={hall} onReturn={chooseHall} />
-                  ))}
+                  {HALL_CARDS.map((hall) => {
+                    const clip = v6HallClip(hall.id);
+                    return (
+                      <div key={hall.id} className="flex shrink-0 flex-col gap-2">
+                        <HallButton hall={hall} onReturn={chooseHall} />
+                        {clip ? <ExhibitionClip clip={clip} testId={`portal-v6-hall-${hall.id}`} /> : null}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="mt-3 rounded-2xl border border-amber-300/30 bg-[#07111c] py-4">
                   <PlanetZero tone="settled" onReset={resetToZero} />
@@ -493,6 +512,20 @@ export default function ExhibitionPortal() {
                 </figcaption>
               </figure>
             </div>
+
+            <section className="mt-8" aria-labelledby="portal-v6-films-title" data-testid="portal-v6-films">
+              <h3 id="portal-v6-films-title" className="font-heading text-amber-50" style={EXHIBITION_PLATE_TYPE}>
+                Films from the exhibition
+              </h3>
+              <p className="mt-2 text-amber-50" style={EXHIBITION_PLATE_TYPE}>
+                Stone and wheel, Forge, gunpowder, and steel keep the plaques from the film. Horse, Ships, Loom, and Engine remain on the issued plate.
+              </p>
+              <div className="mt-3 flex flex-col gap-3">
+                {V6_FILM_CLIPS.map((clip) => (
+                  <ExhibitionClip key={clip.id} clip={clip} testId={`portal-v6-film-${clip.id}`} />
+                ))}
+              </div>
+            </section>
 
             <div className="mt-8" data-testid="portal-door-frame">
               <h3 className="font-heading text-xl text-amber-50">Fourteen-door frame</h3>
