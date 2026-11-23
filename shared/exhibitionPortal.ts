@@ -272,8 +272,8 @@ export const V6_CLIPS: readonly V6Clip[] = [
   {
     id: "03_river",
     file: "03_river.mp4",
-    sha256: "a861a827043d3c8ad4f32e2b522cd67a43e17e9e37a11645155a6a740e898972",
-    bytes: 15361592,
+    sha256: "7251975cff97f9dbc8f5997f4bc0a32e8bef7700036142cb36d9cf61cebfad99",
+    bytes: 22464435,
     label: "River",
     note: "Water channel and hydraulic models on the River hall.",
     place: { kind: "halls", hallIds: ["river"] },
