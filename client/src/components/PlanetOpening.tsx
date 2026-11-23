@@ -126,7 +126,7 @@ function HallSlot({
           node.dataset.posed = "1";
         }
       }}
-      className="w-[4.6rem] shrink-0"
+      className="w-[4.6rem] shrink-0 touch-pan-x"
       style={{ height }}
     >
       <HallMark hall={hall} onReturn={onReturn} />
@@ -241,7 +241,9 @@ export function PlanetOpening({
       if (shaftWrapRef.current) {
         const showShafts = nextBeat === "pillars";
         shaftWrapRef.current.style.opacity = showShafts ? "1" : "0";
-        shaftWrapRef.current.style.pointerEvents = "none";
+        shaftWrapRef.current.style.pointerEvents = showShafts ? "auto" : "none";
+        const row = shaftWrapRef.current.querySelector("[data-testid='portal-hall-row']");
+        if (row instanceof HTMLElement) row.style.pointerEvents = showShafts ? "auto" : "none";
       }
       if (zeroRef.current) {
         const marked = nextBeat !== "solar";
@@ -330,8 +332,12 @@ export function PlanetOpening({
             </button>
           ) : null}
         </div>
-        <div ref={shaftWrapRef} className="px-2 pt-3 opacity-0">
-          <div className="flex items-end gap-1 overflow-x-auto pb-1">
+        <div ref={shaftWrapRef} className="min-w-0 px-2 pt-3 opacity-0">
+          <div
+            data-testid="portal-hall-row"
+            className="w-full min-w-0 touch-pan-x overflow-x-auto overscroll-x-contain pb-1"
+          >
+            <div className="flex w-max items-end gap-1 pe-2">
             {halls.map((hall, index) => (
               <HallSlot
                 key={hall.id}
@@ -342,6 +348,7 @@ export function PlanetOpening({
                 onReturn={onReturn}
               />
             ))}
+            </div>
           </div>
         </div>
         <div className="flex justify-center py-3">
