@@ -114,6 +114,10 @@ describe("authored Fire copy", () => {
 });
 
 describe("storyteller voice", () => {
+  it("does not choose a German voice for an English line", () => {
+    expect(pickStorytellerVoice([{ name: "Anna", lang: "de-DE" }, { name: "Markus", lang: "de-DE" }], "en")).toBeNull();
+  });
+
   it("prefers a warm English voice over an announcer", () => {
     const chosen = pickStorytellerVoice(
       [

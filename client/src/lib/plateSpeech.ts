@@ -36,10 +36,13 @@ export function speakPlate(text: string, options?: { queue?: boolean }): boolean
   const synth = window.speechSynthesis;
   const idle = !synth.speaking && !synth.pending;
   if (!options?.queue && !idle) synth.cancel();
+  const voices = synth.getVoices();
+  if (voices.length > 0 && !voices.some((voice) => voice.lang.toLowerCase().startsWith("en"))) return false;
   const utterance = new SpeechSynthesisUtterance(text);
   const chosen = pickVoice(synth);
+  if (chosen.voice && !chosen.voice.lang.toLowerCase().startsWith("en")) return false;
   if (chosen.voice) utterance.voice = chosen.voice;
-  utterance.lang = chosen.lang;
+  utterance.lang = "en-GB";
   utterance.rate = 0.92;
   utterance.pitch = 1;
   utterance.volume = 1;

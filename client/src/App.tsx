@@ -1,7 +1,9 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Router as WouterRouter, Switch, useLocation } from "wouter";
+import { useBrowserLocation } from "wouter/use-browser-location";
+import { normaliseQuestPath } from "@shared/questPaths";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { BottomTabBar } from "./components/BottomTabBar";
@@ -14,6 +16,7 @@ import { lazy, Suspense, useEffect, useRef, type ComponentType } from "react";
 import { QuestInstrumentBay } from "./components/QuestInstruments";
 import { QUEST_GA_MEASUREMENT_ID, QUEST_PUBLIC_URL } from "@/const";
 import { FIRE_AMBIENCE_BED_ID, FIRE_AMBIENCE_BED_SRC, FIRE_STORY_BED_ID, FIRE_STORY_BED_SRC } from "@/lib/firePlayback";
+import { DoorFilmHost } from "@/components/DoorFilmHost";
 import { PortalTeaserHost } from "@/components/PortalTeaserHost";
 
 // ─── Eagerly loaded (critical path) ───
@@ -96,7 +99,12 @@ function CaptureDoor({ page: Page }: { page: ComponentType }) {
   );
 }
 
-function Router() {
+function useNormalisedLocation() {
+  const [path, navigate] = useBrowserLocation();
+  return [normaliseQuestPath(path), navigate] as [string, typeof navigate];
+}
+
+function QuestRoutes() {
   return (
     <>
       <QuestAnalytics />
@@ -203,19 +211,22 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <WouterRouter hook={useNormalisedLocation}>
           <FireBedHost />
           <PortalTeaserHost />
+          <DoorFilmHost />
           <HideManusWatermark />
           <ServiceWorkerRegistrar />
           <NetworkBar />
           <EyeOpenAnimation />
           <div style={{ paddingTop: "calc(36px + env(safe-area-inset-top, 0px))" }}>
-            <Router />
+            <QuestRoutes />
           </div>
           <BottomTabBar />
           <InstallBanner />
           <GamepadIndicator />
           <DiscoveryHints />
+          </WouterRouter>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

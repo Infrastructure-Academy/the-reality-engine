@@ -295,8 +295,8 @@ export const V6_CLIPS: readonly V6Clip[] = [
     sha256: "6352b61b473da04f36d46460cdc80a79590c5b9fa4698aa56d05363e046ed7db",
     bytes: 24448696,
     label: "Stone and wheel (provisional)",
-    note: "Pyramid and millstone. The plaque is not yet read.",
-    place: { kind: "film" },
+    note: "Pyramid and millstone. The plaque is held as written.",
+    place: { kind: "halls", hallIds: ["horse"] },
   },
   {
     id: "05_forge",
@@ -304,8 +304,8 @@ export const V6_CLIPS: readonly V6Clip[] = [
     sha256: "2bc7a231db949e3ae29d557f25a501b8a0fdfc4924d982c45ab3a53253857c72",
     bytes: 15359978,
     label: "Forge (provisional)",
-    note: "Furnace, anvil, and molten metal. The plaque is not yet read.",
-    place: { kind: "film" },
+    note: "Furnace, anvil, and molten metal. The plaque is held as written.",
+    place: { kind: "halls", hallIds: ["ships"] },
   },
   {
     id: "06_road",
@@ -323,7 +323,7 @@ export const V6_CLIPS: readonly V6Clip[] = [
     bytes: 26999450,
     label: "RELAY 7: GUNPOWDER - 1605",
     note: "The film plaque, as written.",
-    place: { kind: "film" },
+    place: { kind: "halls", hallIds: ["loom"] },
   },
   {
     id: "08_rail_steam",
@@ -340,8 +340,8 @@ export const V6_CLIPS: readonly V6Clip[] = [
     sha256: "ea2d539d0902b2a58dea175de330770424fee39e6e1411cc9a4ee698af42fd73",
     bytes: 12702351,
     label: "RELAY 9: 9: STEEL \u2013 1869",
-    note: "Pedestal lettering, as shown.",
-    place: { kind: "film" },
+    note: "Pedestal lettering, as shown. Steel is the plaque. It is not recut.",
+    place: { kind: "halls", hallIds: ["engine"] },
   },
   {
     id: "10_11_modern_orbit",

@@ -13,7 +13,7 @@ import {
 } from "@/lib/portalTeaser";
 
 function onPortalPath(location: string): boolean {
-  return location === "/portal" || location.startsWith("/portal?") || location.startsWith("/portal#");
+  return isPortalDoorHref(location);
 }
 
 /**

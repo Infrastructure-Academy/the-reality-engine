@@ -19,7 +19,7 @@ export function ExhibitionClip({
       onOpen={onOpen}
       videoUrl={v6ClipSrc(clip.file)}
       title={clip.label}
-      subtitle={clip.note}
+      subtitle=""
       accentColor="#fcd34d"
       glowColor="rgba(252, 211, 77, 0.22)"
     />

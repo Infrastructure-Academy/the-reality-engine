@@ -9,7 +9,7 @@ import { ArrowLeft, Brain, Zap, Clock, Shield, Eye, Lightbulb, ChevronRight, Che
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useT } from "@/contexts/LanguageContext";
 import { PROGRESS_EVENT, hydrateTotalXp } from "@shared/playerProgress";
@@ -257,14 +257,7 @@ export default function GreyMatter() {
       </header>
 
       <div className="container py-2 max-w-lg mx-auto">
-        {/* Intro Video */}
-        <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v3-grey-matter_5eaff673.mp4"
-          title={t("greymatter.videoTitle")}
-          subtitle="30s intro"
-          accentColor="#d4a843"
-          glowColor="rgba(212,168,67,0.15)"
-        />
+        <DoorFilmBay door="explore" mode="grey" />
 
         {/* Clock & Transformation Status */}
         <div className="rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-3 mb-2">

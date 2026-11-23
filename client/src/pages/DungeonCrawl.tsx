@@ -11,7 +11,7 @@ import { ArrowLeft, Swords, DoorOpen, Eye, Shield, Compass, ChevronRight, Chevro
 import { playDiscoverySound, playXpSound, hapticDiscovery } from "@/hooks/useSoundEffects";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { useT } from "@/contexts/LanguageContext";
 
 // ─── Guest ID ───
@@ -421,14 +421,7 @@ export default function DungeonCrawl() {
       </header>
 
       <div className="container py-2 max-w-lg mx-auto">
-        {/* Intro Video */}
-        <ExplorerVideo
-          videoUrl="https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/FINAL-v2-dungeon-crawl_3914ce50.mp4"
-          title={t("dungeon.videoTitle")}
-          subtitle="26s intro"
-          accentColor="#10b981"
-          glowColor="rgba(16,185,129,0.15)"
-        />
+        <DoorFilmBay door="explore" mode="dungeon" />
 
         {/* Dungeon Selector */}
         <div className="flex items-center justify-between mb-2">

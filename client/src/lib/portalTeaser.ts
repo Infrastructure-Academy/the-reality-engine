@@ -1,4 +1,5 @@
 import { TEASER_SRC } from "@shared/exhibitionPortal";
+import { normaliseQuestPath } from "@shared/questPaths";
 import { declareStoryPlayback } from "@/lib/storyAudio";
 
 /** One element for the life of the app, so the opening tap can start the teaser. */
@@ -100,8 +101,9 @@ export function portalTeaserSrc(): string {
   return TEASER_SRC;
 }
 
-/** True when an anchor is the in-app door to the portal, not the epilogue. */
+/** True when an anchor is the in-app door to the portal, not the epilogue. /portal/ is the same door. */
 export function isPortalDoorHref(href: string | null): boolean {
   if (!href) return false;
-  return href === "/portal" || href.startsWith("/portal?") || href.startsWith("/portal#");
+  const path = normaliseQuestPath(href);
+  return path === "/portal" || path.startsWith("/portal?") || path.startsWith("/portal#");
 }

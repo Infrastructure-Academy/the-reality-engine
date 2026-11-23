@@ -172,7 +172,8 @@ describe("fire door experience", () => {
     expect(relay).toContain('t("explore.harnessedDiscoveries")');
     expect(relay).toContain("livingFire");
     expect(relay).toContain("fire-card");
-    expect(relay).toContain("livingFire || isDiscovered ? inv : \"???\"");
+    expect(relay).toContain("{inv}");
+    expect(relay).not.toContain("???");
     expect(relay).toContain('discoveryNoun={fireDoor ? "harnessed discoveries" : undefined}');
     const home = source("client/src/components/GameModeGates.tsx");
     expect(home).toContain('href="/explore/spinner"');

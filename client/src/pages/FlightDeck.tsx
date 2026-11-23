@@ -17,7 +17,7 @@ import { DiscoveryBurst } from "@/components/DiscoveryBurst";
 import { trpc } from "@/lib/trpc";
 import { XpCounter } from "@/components/XpCounter";
 import { SoundToggle } from "@/components/SoundToggle";
-import { ExplorerVideo } from "@/components/ExplorerVideo";
+import { DoorFilmBay } from "@/components/DoorFilmBay";
 import { VoiceToggle } from "@/components/VoiceToggle";
 import { narrateBadgeEarned, davidSpeak, davidStop } from "@/hooks/useDavidVoice";
 import { usePinchZoom } from "@/hooks/usePinchZoom";
@@ -28,9 +28,6 @@ import { FireRelayGame } from "@/components/FireRelayGame";
 import { useT } from "@/contexts/LanguageContext";
 
 type Phase = "craft_select" | "fire_relay" | "hud";
-
-const FLIGHT_INTRO_CLIP =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310419663030220481/EPdHLKrneifLpbtrLUugQB/flightdeck-clip-v5_b45064f9.mp4";
 
 export default function FlightDeck() {
   const t = useT();
@@ -237,14 +234,7 @@ export default function FlightDeck() {
     return (
       <div className="min-h-screen bg-background text-foreground mobile-content-pad bg-starfield flex items-center justify-center px-4">
         <div className="text-center w-full max-w-md mx-auto py-8">
-          <ExplorerVideo
-            videoUrl={FLIGHT_INTRO_CLIP}
-            title={t("flight.videoTitle")}
-            subtitle="32s intro"
-            accentColor="#06b6d4"
-            glowColor="rgba(6,182,212,0.3)"
-            ensurePlayback
-          />
+          <DoorFilmBay door="flight" />
           <Rocket className="w-16 h-16 text-cyan-500 mx-auto mb-4" />
           <h2 className="font-heading text-2xl font-bold text-gold-gradient mb-3">{t("flight.accessRequired")}</h2>
           <p className="text-muted-foreground text-sm mb-6">
@@ -292,14 +282,7 @@ export default function FlightDeck() {
         </header>
 
         <div className="container py-8 max-w-5xl mx-auto">
-          {/* Intro Video */}
-          <ExplorerVideo
-            videoUrl={FLIGHT_INTRO_CLIP}
-            title={t("flight.videoTitle")}
-            subtitle="32s intro"
-            accentColor="#06b6d4"
-            glowColor="rgba(6,182,212,0.3)"
-          />
+          <DoorFilmBay door="flight" />
 
           <div className="text-center mb-8">
             <p className="text-xs tracking-[0.3em] uppercase text-cyan-400 mb-2">FITS Temperament Alignment</p>
