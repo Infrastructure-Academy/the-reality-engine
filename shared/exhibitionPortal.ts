@@ -143,7 +143,7 @@ export const DOOR_FRAME: readonly DoorStop[] = [
 ];
 
 export type ReturnTurn = { kind: "return"; station: string; title: string; body: string };
-export type HallTurn = { kind: "hall"; path: typeof FIRE_HALL_PATH | typeof TREE_HALL_PATH };
+export type HallTurn = { kind: "hall"; path: string };
 export type PortalTurn = HallTurn | { kind: "reset" } | ReturnTurn;
 
 const LOST_NOTHING = "You are back on the floor. Nothing is taken away.";

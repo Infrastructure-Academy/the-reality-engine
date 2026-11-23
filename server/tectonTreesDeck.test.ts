@@ -139,26 +139,28 @@ describe("Tecton Trees Deck learn-more", () => {
     expect(copy).toContain("22°C");
   });
 
-  it("keeps Fire's briefing and does not invent a Tree voice", () => {
+  it("keeps Fire's briefing and plays the recorded Tree story without a browser voice", () => {
     expect(FIRE_STORY_AUDIO_URL).toBe("/audio/fire-cards/volume-1-briefing.mp3");
     expect(storyAudioUrl(1, "en")).toBe("/audio/fire-cards/volume-1-briefing.mp3");
     expect(storyAudioUrl(1, "zh-HK")).toBeNull();
-    expect(storyAudioUrl(2, "en")).toBeNull();
+    expect(storyAudioUrl(2, "en")).toBe("/audio/hall-stories/02_the-living-machine.mp3");
     expect(storyAudioUrl(2, "zh-HK")).toBeNull();
     const story = source("client/src/lib/storyAudio.ts");
     expect(story).not.toContain("relay-1-fire-en.mp3");
     expect(existsSync(new URL("../client/public/audio/relay-1-fire-en.mp3", import.meta.url))).toBe(true);
     const relay = source("client/src/pages/ExplorerRelay.tsx");
     const fireStage = relay.slice(relay.indexOf('data-testid="fire-stage"'), relay.indexOf('data-testid="tree-stage"'));
-    const treeStage = relay.slice(relay.indexOf('data-testid="tree-stage"'));
+    const treeStart = relay.indexOf('data-testid="tree-stage"');
+    const treeStage = relay.slice(treeStart, relay.indexOf(") : (", treeStart));
     expect(fireStage).toContain("<StoryPlayBar");
     expect(fireStage).toContain("storyAudioUrl(relayMeta.number, storyLocale)");
-    expect(relay).toContain("authored && !fireDoor && !treeDoor");
-    expect(treeStage).not.toContain("<StoryPlayBar");
-    expect(treeStage).not.toContain("<audio");
+    expect(fireStage).not.toContain("storyBed=\"hall\"");
+    expect(treeStage).toContain("{hallStoryBar}");
+    expect(treeStage).not.toContain("fire-ambience");
     expect(treeStage).not.toContain("speechSynthesis");
-    expect(relay).toContain("if (relayNum !== 1 && relayNum !== 2) narrateDiscovery");
-    expect(relay).toContain("narrate={!treeDoor}");
+    expect(relay).not.toContain("narrateDiscovery");
+    expect(relay).toContain("narrate={false}");
+    expect(relay).toContain("speak={false}");
     expect(relay).not.toContain("/portal?station=tree");
     expect(relay).not.toContain("relay-1-fire-en.mp3");
   });

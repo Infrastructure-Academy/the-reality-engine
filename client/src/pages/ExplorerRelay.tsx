@@ -30,10 +30,12 @@ import { TectonFireLearnMore } from "@/components/TectonFireLearnMore";
 import { TectonTreesLearnMore } from "@/components/TectonTreesLearnMore";
 import { TreeCanopy } from "@/components/TreeCanopy";
 import { DISCOVERY_TECTON_NUMBER } from "@shared/tectonFireDeck";
+import { beginHallStoryForPath } from "@/lib/hallStory";
 import { storyAudioUrl } from "@/lib/storyAudio";
 import { fireCaptionAt } from "@/lib/fireStoryCues";
 import { useFireDoor } from "@/hooks/useFireDoor";
-import { narrateDiscovery, davidStop } from "@/hooks/useDavidVoice";
+import { davidStop } from "@/hooks/useDavidVoice";
+import { useHallStory } from "@/hooks/useHallStory";
 import { buildStoryScript, localizeRelayStory } from "@/lib/storyLocale";
 import { useStoryLocale, useStoryteller } from "@/hooks/useStoryteller";
 import { SocialFollowButtons } from "@/components/SocialFollowButtons";
@@ -73,7 +75,7 @@ function RelayHeader({
 }) {
   return (
     <div className="flex items-center justify-between mb-6">
-      <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) navigate(to); }}>
+      <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) { beginHallStoryForPath(to); navigate(to); } }}>
         <ChevronLeft className="w-5 h-5" />
       </Button>
       <div className="text-center">
@@ -84,7 +86,7 @@ function RelayHeader({
         <p className="text-sm text-muted-foreground" data-testid="relay-subtitle">{subtitle || relayMeta.subtitle}</p>
         <p className="text-xs text-muted-foreground/60 font-mono mt-1">{relayMeta.era}</p>
       </div>
-      <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) navigate(to); }}>
+      <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) { beginHallStoryForPath(to); navigate(to); } }}>
         <ChevronRight className="w-5 h-5" />
       </Button>
     </div>
@@ -400,7 +402,7 @@ function LayoutMissionBriefing({
     <div className="space-y-6">
       {/* Compact header with era timeline */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) navigate(to); }}>
+        <Button variant="ghost" size="sm" data-testid="relay-prev" disabled={!canGoPrev} onClick={() => { const to = stepFromRelay(relayNum, "back"); if (to) { beginHallStoryForPath(to); navigate(to); } }}>
           <ChevronLeft className="w-5 h-5" />
         </Button>
         <div className="text-center flex-1">
@@ -415,7 +417,7 @@ function LayoutMissionBriefing({
             </div>
           </div>
         </div>
-        <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) navigate(to); }}>
+        <Button variant="ghost" size="sm" data-testid="relay-next" disabled={!canGoNext} onClick={() => { const to = stepFromRelay(relayNum, "forward"); if (to) { beginHallStoryForPath(to); navigate(to); } }}>
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
@@ -650,11 +652,6 @@ export default function ExplorerRelay() {
       playDiscoverySound();
       hapticDiscovery();
 
-      // DAVID voice narration for discovery
-      const invName = inventionData[idx]?.name || `Invention ${idx + 1}`;
-      const relName = relayMeta.name;
-      if (relayNum !== 1 && relayNum !== 2) narrateDiscovery(invName, relName);
-
       // Persist to DB if we have a profile
       if (profileId) {
         const discoveredArr = Array.from(next);
@@ -747,6 +744,7 @@ export default function ExplorerRelay() {
           event.preventDefault();
           playRelayTransitionSound();
           hapticTransition();
+          beginHallStoryForPath(forwardTo);
           navigate(forwardTo);
         }
       } else if (event.key === "ArrowLeft") {
@@ -754,6 +752,7 @@ export default function ExplorerRelay() {
           event.preventDefault();
           playRelayTransitionSound();
           hapticTransition();
+          beginHallStoryForPath(backTo);
           navigate(backTo);
         }
       }
@@ -763,6 +762,8 @@ export default function ExplorerRelay() {
   }, [backTo, forwardTo, navigate]);
 
   const doorAudio = useFireDoor(fireDoor && !!authored && storyAudioUrl(relayMeta.number, storyLocale) !== null);
+  const hallAudioUrl = !fireDoor && relayNum >= 2 && relayNum <= 12 ? storyAudioUrl(relayNum, storyLocale) : null;
+  const hallAudio = useHallStory(hallAudioUrl !== null, hallAudioUrl);
 
   const [storySeconds, setStorySeconds] = useState(0);
   const [openTecton, setOpenTecton] = useState<number | null>(null);
@@ -790,19 +791,29 @@ export default function ExplorerRelay() {
     if (plate) setOpenTecton(plate);
   };
 
-  const storyPlayer = authored && !fireDoor && !treeDoor ? (
+  const hallStoryBar = hallAudioUrl && authored ? (
     <StoryPlayBar
-      audioSrc={storyAudioUrl(relayMeta.number, storyLocale)}
+      ref={hallAudio.storyRef}
+      compact
+      storyBed="hall"
+      audioSrc={hallAudioUrl}
       labels={authored.labels}
       speech={storyteller}
     />
   ) : null;
+  const storyPlayer = !treeDoor ? hallStoryBar : null;
+
+  const playHallCard = (idx: number) => {
+    const name = inventionData[idx]?.name;
+    if (!name) return;
+    hallAudio.playCard(relayNum, name);
+  };
 
   const layoutProps: LayoutProps = {
     relay, relayMeta, relayNum, inventions, inventionData, discoveredItems, handleDiscover,
     xpPerItem, completionPct, canGoPrev, canGoNext, navigate, storyPlayer,
     livingFire: fireDoor,
-    onCardVoice: fireDoor ? playFireCard : undefined,
+    onCardVoice: fireDoor ? playFireCard : hallAudioUrl ? playHallCard : undefined,
   };
 
   return (
@@ -837,6 +848,13 @@ export default function ExplorerRelay() {
         </div>
       </header>
 
+      <audio
+        ref={hallAudio.cardRef}
+        data-testid="hall-card-voice"
+        preload="none"
+        onEnded={hallAudio.finishCard}
+        onError={hallAudio.finishCard}
+      />
       <div className="container py-6 max-w-4xl mx-auto">
         {/* Streak Indicator (JG feedback) */}
         <StreakIndicator count={streakCount} visible={streakVisible} />
@@ -849,6 +867,7 @@ export default function ExplorerRelay() {
           <RelayDilemmaCard
             relayNumber={relayNum}
             profileId={profileId}
+            speak={false}
             onComplete={() => {
               setShowDilemma(false);
               if (forwardTo) {
@@ -865,7 +884,7 @@ export default function ExplorerRelay() {
             totalInventions={inventions.length}
             xpEarned={totalXpEarned}
             discoveryNoun={fireDoor ? "harnessed discoveries" : undefined}
-            narrate={!treeDoor}
+            narrate={false}
             endLabel={treeDoor ? "Continue in the Tree hall" : undefined}
             timeSpent={Math.round((Date.now() - relayStartTime) / 1000)}
             onContinue={() => {
@@ -946,6 +965,7 @@ export default function ExplorerRelay() {
                   <p className="text-sm leading-relaxed text-emerald-50">
                     Bark and seed specimens. Planting beds of fresh earth and grass. Botanical scents. Temperate, 22°C. Birdsong, wind through the leaves, and rain.
                   </p>
+                  {hallStoryBar}
                 </div>
                 {layoutVariant === 1 && <LayoutClassic {...layoutProps} />}
                 {layoutVariant === 2 && <LayoutSplitHorizon {...layoutProps} />}

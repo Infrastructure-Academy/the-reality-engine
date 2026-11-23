@@ -21,9 +21,11 @@ interface RelayDilemmaProps {
   relayNumber: number;
   profileId: number | null;
   onComplete: () => void;
+  /** Exhibition halls stay on recorded audio. A dilemma does not use the browser voice. */
+  speak?: boolean;
 }
 
-export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDilemmaProps) {
+export function RelayDilemmaCard({ relayNumber, profileId, onComplete, speak = true }: RelayDilemmaProps) {
   const [phase, setPhase] = useState<"loading" | "dilemma" | "response">("loading");
   const [selectedChoice, setSelectedChoice] = useState<DilemmaChoice | null>(null);
   const [isNarrating, setIsNarrating] = useState(false);
@@ -88,7 +90,7 @@ export function RelayDilemmaCard({ relayNumber, profileId, onComplete }: RelayDi
     }
 
     // DAVID speaks the response
-    if (getVoiceEnabled()) {
+    if (speak && getVoiceEnabled()) {
       setIsNarrating(true);
       setTimeout(() => {
         davidSpeak(choice.davidResponse, {
