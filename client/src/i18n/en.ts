@@ -23,6 +23,7 @@ export const EN: Record<string, string> = {
   "tab.flight": "Flight",
   "tab.scholar": "Scholar",
   "tab.board": "Board",
+  "tab.exhibition": "Exhibition",
 
   // ─── Common ───
   "common.loading": "Loading...",

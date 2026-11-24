@@ -18,6 +18,7 @@ export const AR: Record<string, string> = {
   "tab.flight": "الطيران",
   "tab.scholar": "الباحث",
   "tab.board": "الترتيب",
+  "tab.exhibition": "Exhibition",
   "common.loading": "جارٍ التحميل...",
   "common.back": "رجوع",
   "common.cancel": "إلغاء",

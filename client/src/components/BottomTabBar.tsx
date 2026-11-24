@@ -1,9 +1,11 @@
 import { useLocation, Link } from "wouter";
-import { Home, Flame, Rocket, GraduationCap, Trophy, Gamepad2, Library, MessageSquarePlus, Layers } from "lucide-react";
+import { Home, Flame, Rocket, GraduationCap, Trophy, Gamepad2, Library, MessageSquarePlus, Layers, Landmark } from "lucide-react";
 import { useIsMobile } from "@/hooks/useMobile";  // .tsx file
 import { useGamepad, type GamepadButtonName } from "@/hooks/useGamepad";
 import { useCallback, useState, useEffect } from "react";
 import { useT } from "@/contexts/LanguageContext";
+import { beginPortalTeaserFromGesture } from "@/lib/portalTeaser";
+import { PORTAL_PATH } from "@shared/exhibitionPortal";
 
 const TABS = [
   { path: "/", labelKey: "tab.home", icon: Home },
@@ -12,6 +14,7 @@ const TABS = [
   { path: "/flight-deck", labelKey: "tab.flight", icon: Rocket },
   { path: "/create", labelKey: "tab.scholar", icon: GraduationCap },
   { path: "/leaderboard", labelKey: "tab.board", icon: Trophy },
+  { path: PORTAL_PATH, labelKey: "tab.exhibition", icon: Landmark },
 ] as const;
 
 export function BottomTabBar() {
@@ -70,17 +73,31 @@ export function BottomTabBar() {
                 ? location === "/"
                 : location.startsWith(tab.path.split("/").slice(0, 2).join("/"));
 
+            const isPortal = tab.path === PORTAL_PATH;
+
             return (
-              <Link key={tab.path} href={tab.path}>
+              <Link
+                key={tab.path}
+                href={tab.path}
+                className="flex min-w-0 flex-1 justify-center"
+                data-testid={isPortal ? "bottom-exhibition-portal" : undefined}
+                onPointerDown={
+                  isPortal
+                    ? () => {
+                        void beginPortalTeaserFromGesture();
+                      }
+                    : undefined
+                }
+              >
                 <button
-                  className={`flex flex-col items-center justify-center gap-0.5 w-16 h-14 rounded-lg transition-all ${
+                  className={`flex min-w-0 w-full flex-col items-center justify-center gap-0.5 h-14 rounded-lg transition-all ${
                     isActive
                       ? "text-gold bg-gold/10"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Icon className={`w-5 h-5 ${isActive ? "drop-shadow-[0_0_6px_rgba(212,168,67,0.5)]" : ""}`} />
-                  <span className="text-[10px] font-medium tracking-wide">{t(tab.labelKey)}</span>
+                  <span className="whitespace-nowrap text-[10px] font-medium tracking-wide">{t(tab.labelKey)}</span>
                 </button>
               </Link>
             );

@@ -23,6 +23,7 @@ export const ZH: Record<string, string> = {
   "tab.flight": "驾驶台",
   "tab.scholar": "学者",
   "tab.board": "排行",
+  "tab.exhibition": "Exhibition",
 
   // ─── Common ───
   "common.loading": "加载中...",

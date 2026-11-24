@@ -18,6 +18,7 @@ export const JA: Record<string, string> = {
   "tab.flight": "飛行",
   "tab.scholar": "学者",
   "tab.board": "ランキング",
+  "tab.exhibition": "Exhibition",
   "common.loading": "読み込み中...",
   "common.back": "戻る",
   "common.cancel": "キャンセル",

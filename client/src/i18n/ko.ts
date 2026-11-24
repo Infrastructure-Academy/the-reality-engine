@@ -18,6 +18,7 @@ export const KO: Record<string, string> = {
   "tab.flight": "비행",
   "tab.scholar": "학자",
   "tab.board": "순위",
+  "tab.exhibition": "Exhibition",
   "common.loading": "로딩 중...",
   "common.back": "뒤로",
   "common.cancel": "취소",

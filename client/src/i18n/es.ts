@@ -18,6 +18,7 @@ export const ES: Record<string, string> = {
   "tab.flight": "Vuelo",
   "tab.scholar": "Erudito",
   "tab.board": "Ranking",
+  "tab.exhibition": "Exhibition",
   "common.loading": "Cargando...",
   "common.back": "Volver",
   "common.cancel": "Cancelar",

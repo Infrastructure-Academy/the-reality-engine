@@ -18,6 +18,7 @@ export const VI: Record<string, string> = {
   "tab.flight": "Bay",
   "tab.scholar": "Học giả",
   "tab.board": "Bảng xếp hạng",
+  "tab.exhibition": "Exhibition",
   "common.loading": "Đang tải...",
   "common.back": "Quay lại",
   "common.cancel": "Hủy",

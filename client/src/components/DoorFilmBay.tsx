@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { Link } from "wouter";
+import { ChevronRight } from "lucide-react";
 import { EXHIBITION_PLATE_TYPE } from "@/components/ExplorerVideo";
 import {
   beginDoorFilmFromGesture,
@@ -10,6 +12,8 @@ import {
   subscribeDoorFilmFace,
   type DoorFace,
 } from "@/lib/doorFilmPlayback";
+import { beginPortalTeaserFromGesture } from "@/lib/portalTeaser";
+import { PORTAL_PATH } from "@shared/exhibitionPortal";
 import {
   exploreIntro,
   filmsForDoor,
@@ -100,6 +104,20 @@ export function DoorFilmBay({
 
   return (
     <section className="mb-6" data-testid={`door-film-bay-${door}`} aria-label={`${intro.title}. This door only.`}>
+      <Link
+        href={PORTAL_PATH}
+        data-testid="door-exhibition-portal"
+        onPointerDown={() => {
+          void beginPortalTeaserFromGesture();
+        }}
+        className="mb-3 flex min-h-14 w-full touch-manipulation items-center justify-between gap-3 rounded-xl border border-amber-300/80 bg-[#07111f] px-4 py-3 text-left text-amber-50 shadow-[0_0_24px_rgba(251,191,36,0.18)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300"
+      >
+        <span>
+          <span className="block font-heading tracking-wide" style={EXHIBITION_PLATE_TYPE}>Exhibition portal</span>
+          <span className="mt-1 block text-xs text-amber-100/85">Episode 1 · Earthbound Foundations — The Lineage. Planet at zero, the issued film, and 13 halls.</span>
+        </span>
+        <ChevronRight className="h-5 w-5 shrink-0 text-amber-200" aria-hidden="true" />
+      </Link>
       {rotate ? (
         <div className="mb-3 flex gap-2 overflow-x-auto" data-testid="explore-door-modes">
           {EXPLORE_MODES.map((item) => (
