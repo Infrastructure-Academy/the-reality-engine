@@ -18,6 +18,7 @@ export const HI: Record<string, string> = {
   "tab.flight": "उड़ान",
   "tab.scholar": "विद्वान",
   "tab.board": "रैंकिंग",
+  "tab.exhibition": "Exhibition",
   "common.loading": "लोड हो रहा है...",
   "common.back": "वापस",
   "common.cancel": "रद्द करें",

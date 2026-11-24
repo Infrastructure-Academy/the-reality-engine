@@ -118,13 +118,22 @@ describe("quest door lifts", () => {
     expect(source("client/src/pages/FlightDeck.tsx")).toContain('door="flight"');
     expect(source("client/src/pages/ScholarCreate.tsx")).toContain('door="scholar"');
     const tabs = source("client/src/components/BottomTabBar.tsx");
-    expect(tabs.match(/\{ path:/g)).toHaveLength(6);
-    expect(tabs).not.toContain("/portal");
+    expect(tabs).toContain("PORTAL_PATH");
+    expect(tabs).toContain("beginPortalTeaserFromGesture");
+    expect(tabs).toContain('labelKey: "tab.exhibition"');
+    expect(tabs).toContain("bottom-exhibition-portal");
     expect(tabs).toContain('path: "/"');
     expect(tabs).toContain('path: "/play/igo"');
     expect(tabs).toContain('path: "/explore"');
     expect(tabs).toContain('path: "/flight-deck"');
     expect(tabs).toContain('path: "/create"');
     expect(tabs).toContain('path: "/leaderboard"');
+    for (const lang of ["en", "zh", "ko", "ja", "hi", "ar", "es", "vi"]) {
+      const dictionary = source(`client/src/i18n/${lang}.ts`);
+      expect(dictionary).toContain('"tab.home"');
+      expect(dictionary).toContain('"tab.igo"');
+      expect(dictionary).toContain('"tab.explore"');
+      expect(dictionary).toContain('"tab.exhibition": "Exhibition"');
+    }
   });
 });

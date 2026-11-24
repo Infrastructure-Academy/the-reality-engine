@@ -44,12 +44,19 @@ describe("PWA & Mobile Features", () => {
       expect(fs.existsSync(tabBarPath)).toBe(true);
     });
 
-    it("BottomTabBar has 6 tabs", () => {
+    it("BottomTabBar keeps the six doors and opens Exhibition", () => {
       const content = fs.readFileSync(path.join(clientDir, "src/components/BottomTabBar.tsx"), "utf-8");
-      // Count tab entries in TABS array (Home, Explore, Flight, Scholar, Board, Docs)
       const tabMatches = content.match(/\{ path:/g);
       expect(tabMatches).toBeDefined();
-      expect(tabMatches!.length).toBe(6);
+      expect(tabMatches!.length).toBe(7);
+      expect(content).toContain('path: "/"');
+      expect(content).toContain('path: "/play/igo"');
+      expect(content).toContain('path: "/explore"');
+      expect(content).toContain('path: "/flight-deck"');
+      expect(content).toContain('path: "/create"');
+      expect(content).toContain('path: "/leaderboard"');
+      expect(content).toContain("PORTAL_PATH");
+      expect(content).toContain('labelKey: "tab.exhibition"');
     });
   });
 
